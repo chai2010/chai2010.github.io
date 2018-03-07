@@ -1,0 +1,40 @@
+# Copyright 2018 <chaishushan{AT}gmail.com>. All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
+baseurl = "./"
+languageCode = "zh"
+title = "chai2010 的博客"
+googleAnalytics = ""
+disqusShortname = ""
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+preserveTaxonomyNames = true
+footnotereturnlinkcontents = "↩"
+
+[permalinks]
+    post = "/post/:year/:month/:day/:slug/"
+    note = "/note/:year/:month/:day/:slug/"
+
+[[menu.main]]
+    name = "主页"
+    url = "/"
+    weight = 1
+[[menu.main]]
+    name = "关于"
+    url = "/about/"
+    weight = 2
+[[menu.main]]
+    name = "分类"
+    url = "/categories/"
+    weight = 3
+[[menu.main]]
+    name = "标签"
+    url = "/tags/"
+    weight = 4
+[[menu.main]]
+    name = "订阅"
+    url = "/index.xml"
+
+[params]
+    description = "A website built through Hugo and blogdown."
+    footer = "&copy; [chai2010.me](https://chai2010.me) 2018 | [Github](https://github.com/chai2010) "
