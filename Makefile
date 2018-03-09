@@ -5,6 +5,9 @@
 default:
 	hugo && cd public && go run ../server.go
 
+debug:
+	hugo server --buildDrafts --watch
+
 caddy:
 	docker run --name chai2010.me -d -p 80:80 -p 443:443 --restart=always -v /root/.caddy:/root/.caddy -v /root/.ssh:/root/.ssh chai2010/chai2010.me
 
