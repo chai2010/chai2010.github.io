@@ -18,7 +18,7 @@ https://chai2010.me {
 	git {
 		key  /root/.ssh/id_rsa
 		path /srv/chai2010.me
-		repo https://github.com/chai2010/chai2010.me.git
+		repo git@github.com:chai2010/chai2010.me.git
 		then hugo --destination=/srv/chai2010.me/public
 		interval 1800
 	}
