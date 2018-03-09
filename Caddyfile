@@ -2,24 +2,28 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-localhost:8080, localhost:8443, https://chai2010.me {
+https://chai2010.me {
 	tls chaishushan@gmail.com
 	browse
 
 	log stdout
 	errors stdout
 	gzip
-	root /srv/chai2010.github.io/public
-	hugo /srv/chai2010.github.io
+
+	root /srv/chai2010.me/public
+	hugo /srv/chai2010.me
+
+	gopkg /logger https://github.com/chai2010/logger
 
 	git {
-		path /srv/chai2010.github.io
-		repo https://github.com/chai2010/chai2010.github.io.git
-		then hugo --destination=/srv/chai2010.github.io/public
+		key  /root/.ssh/id_rsa
+		path /srv/chai2010.me
+		repo https://github.com/chai2010/chai2010.me.git
+		then hugo --destination=/srv/chai2010.me/public
 		interval 1800
 	}
 }
 
-http://chai2010.me, https://www.chai2010.me, http://www.chai2010.me {
+http://chai2010.me, http://www.chai2010.me, https://www.chai2010.me {
 	redir https://chai2010.me{uri}
 }

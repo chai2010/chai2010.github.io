@@ -1,0 +1,13 @@
+# Copyright 2018 <chaishushan{AT}gmail.com>. All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
+0.0.0.0
+browse
+log stdout
+errors stdout
+
+root /srv/chai2010.me/public
+on startup hugo
+
+gopkg /logger https://github.com/chai2010/logger
