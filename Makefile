@@ -3,7 +3,7 @@
 # license that can be found in the LICENSE file.
 
 default: clean
-	hugo && cd public && go run ../server.go
+	hugo && mv public public-new && cd public-new && go run ../server.go
 
 debug:
 	hugo server --buildDrafts --watch
@@ -32,3 +32,5 @@ dev: clean
 
 clean:
 	-rm -rf public
+	-rm -rf public-new
+
