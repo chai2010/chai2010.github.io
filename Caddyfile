@@ -11,15 +11,12 @@ https://chai2010.me, https://chai2010.cn {
 	gzip
 
 	root /srv/chai2010.me/public
-	hugo /srv/chai2010.me
-
-	gopkg /logger https://github.com/chai2010/logger
 
 	git {
-		key  /root/.ssh/id_rsa
-		path /srv/chai2010.me
-		repo git@github.com:chai2010/chai2010.me.git
-		then hugo --destination=/srv/chai2010.me/public
+		key      /root/.ssh/id_rsa
+		path     /srv/chai2010.me
+		repo     git@github.com:chai2010/chai2010.me.git
+		branch   gh-pages
 		interval 600
 	}
 }
