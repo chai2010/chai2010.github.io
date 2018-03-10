@@ -11,9 +11,24 @@ debug:
 caddy:
 	docker run --name chai2010.me -d -p 80:80 -p 443:443 --restart=always -v /root/.caddy:/root/.caddy -v /root/.ssh:/root/.ssh chai2010/chai2010.me
 
-local:
-	docker build -f Dockerfile.local -t chai2010/chai2010.me.local --no-cache .
-	docker run --rm -p 2015:2015 chai2010/chai2010.me.local
+pub:
+	# copy ./Caddyfile to ssh@/root/Caddyfile
+	# copy ./Makefile to ssh@/root/Makefile
+	docker run -d --restart=always --name chai2010.caddyserver \
+		-v /root/Caddyfile:/etc/Caddyfile \
+		-v /root/.caddy:/root/.caddy \
+		-v /root/.ssh:/root/.ssh \
+		-p 80:80 -p 443:443 \
+		abiosoft/caddy
+
+dev:
+	# run `hugo` command to generate ./public at first
+	docker run --rm --name chai2010.caddyserver.dev \
+		-v `pwd`/Caddyfile.local:/etc/Caddyfile \
+		-v `pwd`/.caddy:/root/.caddy \
+		-v `pwd`:/srv/chai2010.me \
+		-p 2015:2015 \
+		abiosoft/caddy
 
 clean:
 	-rm -rf public

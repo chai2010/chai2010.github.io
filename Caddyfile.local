@@ -4,10 +4,8 @@
 
 0.0.0.0
 browse
+
 log stdout
 errors stdout
 
 root /srv/chai2010.me/public
-on startup hugo
-
-gopkg /logger https://github.com/chai2010/logger
