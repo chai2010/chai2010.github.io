@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-https://chai2010.me {
+https://chai2010.me, https://chai2010.cn {
 	tls chaishushan@gmail.com
 	browse
 
@@ -26,4 +26,8 @@ https://chai2010.me {
 
 http://chai2010.me, http://www.chai2010.me, https://www.chai2010.me {
 	redir https://chai2010.me{uri}
+}
+
+http://chai2010.cn, http://www.chai2010.cn, https://www.chai2010.cn {
+	redir https://chai2010.cn{uri}
 }
