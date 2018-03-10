@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-default:
+default: clean
 	hugo && cd public && go run ../server.go
 
 debug:
@@ -21,7 +21,7 @@ pub:
 		-p 80:80 -p 443:443 \
 		abiosoft/caddy
 
-dev:
+dev: clean
 	# run `hugo` command to generate ./public at first
 	docker run --rm --name chai2010.caddyserver.dev \
 		-v `pwd`/Caddyfile.local:/etc/Caddyfile \

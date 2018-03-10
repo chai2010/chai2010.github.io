@@ -10,4 +10,7 @@ comment: false
 mathjax: false
 ---
 
-关于
+## 启用新站点(2018.03.09)
+
+- https://chai2010.cn
+- https://chai2010.me
