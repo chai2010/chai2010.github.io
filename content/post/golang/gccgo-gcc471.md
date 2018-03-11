@@ -3,8 +3,8 @@ title: "Gccgo in GCC 4.7.1[翻译]"
 date: 2013-04-01
 draft: false
 
-tags: ["gccgo", "golang", "翻译"]
-categories: []
+tags: ["gccgo", "golang"]
+categories: [golang]
 ---
 
 英文原文: [http://blog.golang.org/2012/07/gccgo-in-gcc-471.html](http://blog.golang.org/2012/07/gccgo-in-gcc-471.html)

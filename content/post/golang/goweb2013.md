@@ -4,7 +4,7 @@ date: 2013-04-06
 draft: false
 
 tags: ["golang", "web"]
-categories: []
+categories: [golang]
 ---
 
 <!-- 标题: Go语言编写Web程序 -->

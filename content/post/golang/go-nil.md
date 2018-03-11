@@ -4,7 +4,7 @@ date: 2013-03-27
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 <!-- Go中error类型的nil值和nil -->

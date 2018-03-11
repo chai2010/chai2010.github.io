@@ -2,6 +2,7 @@
 title: "给OpenCV增加新的图像格式支持"
 date: 2009-12-06
 
+tags: [opencv]
 categories: [opencv]
 ---
 

@@ -4,7 +4,7 @@ date: 2013-09-14
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 ## 传参和传引用的问题

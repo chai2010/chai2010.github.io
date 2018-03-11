@@ -4,7 +4,7 @@ date: 2013-04-12
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 <!-- 为什么我不喜欢Go语言式的接口(评) -->

@@ -3,8 +3,8 @@ title: "使用Defer的几个场景"
 date: 2013-06-23
 draft: false
 
-tags: ["golang"]
-categories: []
+tags: [golang, c++]
+categories: [c++]
 ---
 
 <!-- 使用Defer几个场景 -->

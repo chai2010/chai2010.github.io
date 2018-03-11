@@ -2,6 +2,7 @@
 title: "Josephus问题"
 date: 2009-12-05
 
+tags: [算法, Josephus]
 categories: [算法]
 ---
 

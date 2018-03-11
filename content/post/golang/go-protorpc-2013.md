@@ -4,7 +4,7 @@ date: 2013-04-25
 draft: false
 
 tags: ["golang", "protobuf", "rpc"]
-categories: []
+categories: [golang]
 ---
 
 Go语言版本的Protobuf-RPC基本算完成了. 现在简单说下使用方法.

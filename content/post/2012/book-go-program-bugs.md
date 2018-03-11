@@ -2,6 +2,7 @@
 title: "关于《Go语言编程》中的一些问题"
 date: 2012-09-06
 
+tags: [golang]
 categories: [golang]
 ---
 

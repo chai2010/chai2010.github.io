@@ -2,6 +2,7 @@
 title: "二进制的GCD算法"
 date: 2009-12-05
 
+tags: [算法]
 categories: [算法]
 ---
 

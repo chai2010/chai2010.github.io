@@ -4,7 +4,7 @@ date: 2013-09-02
 draft: false
 
 tags: ["tiff"]
-categories: []
+categories: [misc]
 ---
 
 <!-- TIFF格式简介 -->

@@ -3,7 +3,7 @@ title: "Bazel C++ 基础[翻译]"
 date: 2016-06-28
 
 tags: [
-	"bazel", "翻译",
+	"bazel",
 ]
 categories: [
 	"bazel",

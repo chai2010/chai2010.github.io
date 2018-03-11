@@ -4,7 +4,7 @@ date: 2013-04-06
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 英文原文:

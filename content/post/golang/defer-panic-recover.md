@@ -3,8 +3,8 @@ title: "Defer, Panic, and Recover[翻译]"
 date: 2013-04-01
 draft: false
 
-tags: ["golang"]
-categories: []
+tags: [golang]
+categories: [golang]
 ---
 
 - 原文： [http://golang.org/doc/articles/defer_panic_recover.html](http://golang.org/doc/articles/defer_panic_recover.html) (**被墙**)

@@ -4,7 +4,7 @@ date: 2013-04-27
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 如果是命令行程序需要退出, `CTRL+C`是最直接的方法.

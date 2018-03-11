@@ -3,8 +3,8 @@ title: "ASCII码中大小写字母转换"
 date: 2013-05-06
 draft: false
 
-tags: []
-categories: []
+tags: [ascii, misc]
+categories: [misc]
 ---
 
 ASCII中消息字母比大写字母大32, 比如: 'a'对应97, 'A'对应65(97-32=65).

@@ -3,7 +3,7 @@ title: "驳狗屎文 '我为什么放弃Go语言'"
 date: 2015-06-30
 draft: false
 
-tags: ["golang"]
+tags: [golang, rust]
 categories: ["golang"]
 ---
 

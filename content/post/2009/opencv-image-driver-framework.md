@@ -2,6 +2,7 @@
 title: "OpenCV的图像读写框架"
 date: 2009-12-06
 
+tags: [opencv]
 categories: [opencv]
 ---
 

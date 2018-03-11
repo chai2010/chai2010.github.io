@@ -4,7 +4,7 @@ date: 2013-04-04
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 - 原文： [http://golang.org/doc/articles/slices_usage_and_internals.html](http://golang.org/doc/articles/slices_usage_and_internals.html)

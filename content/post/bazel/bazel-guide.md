@@ -3,7 +3,7 @@ title: "Bazel入门[翻译]"
 date: 2016-05-12
 
 tags: [
-	"bazel", "翻译",
+	"bazel",
 ]
 categories: [
 	"bazel",

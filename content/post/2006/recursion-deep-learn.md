@@ -2,7 +2,8 @@
 title: "挑战递归..."
 date: 2006-11-30
 
-categories: [算法, 递归, 逆序]
+tags: [算法, 递归, 逆序]
+categories: [算法]
 ---
 
 发信人: knuth (Knuth), 信区: Program

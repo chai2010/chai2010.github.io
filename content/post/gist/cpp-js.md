@@ -6,7 +6,7 @@ tags: [
 	"c++", "emscripten", "gist",
 ]
 categories: [
-	"c++", "emscripten", "gist",
+	"c++",
 ]
 ---
 

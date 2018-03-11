@@ -2,7 +2,8 @@
 title: "Arduino备忘资料"
 date: 2009-05-12
 
-categories: [硬件, Arduino]
+tags: [硬件, Arduino]
+categories: [硬件]
 ---
 
 ### WiringNano

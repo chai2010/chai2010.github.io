@@ -3,8 +3,8 @@ title: "用ASCII画图"
 date: 2017-11-15
 draft: false
 
-tags: ["graphviz", "plantuml", "monodraw"]
-categories: []
+tags: ["graphviz", "plantuml", "monodraw", misc]
+categories: [misc]
 ---
 
 作为一个严肃的码农，用ASCII画图是一门艺术。

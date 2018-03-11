@@ -2,12 +2,8 @@
 title: "Bazel教程：构建iOS应用[翻译]"
 date: 2016-05-19
 
-tags: [
-	"bazel", "翻译",
-]
-categories: [
-	"bazel",
-]
+tags: [bazel, ios]
+categories: [bazel]
 ---
 
 # Bazel教程：构建iOS应用

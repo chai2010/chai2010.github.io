@@ -4,7 +4,7 @@ date: 2017-07-05
 draft: false
 
 tags: ["js"]
-categories: []
+categories: [js]
 ---
 
 基于ES6的新特性, 构造一个极简的JavaScript模板引擎.

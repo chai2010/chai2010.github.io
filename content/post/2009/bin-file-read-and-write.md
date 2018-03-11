@@ -2,7 +2,8 @@
 title: "关于二进制格式数据读写"
 date: 2009-12-05
 
-categories: [移植]
+tags: []
+categories: []
 ---
 
 在实际工作中经常会需要处理一些格式的数据。

@@ -2,6 +2,7 @@
 title: "Go1.1有哪些改进?"
 date: 2013-03-27
 
+tags: [golang]
 categories: [golang]
 ---
 

@@ -25,6 +25,14 @@ osc 以前都很多文章中都图片已经失效了，期间网址升级还导�
 
 自己git仓库管理, 彻底放心.
 
-### 完成 osc 文章的迁移
+### 完成全部文章的迁移
 
-下一步是恢复osc之前更早的一些文章.
+纪念下曾经的炮灰们:
+
+- http://chaishushan.googlepages.com/
+- http://sites.google.com/site/chaishushan/
+- http://blog.csdn.net/chai2010/
+- http://chaishushan.blog.163.com/
+- http://my.oschina.net/chai2010/
+- http://chai2010.github.io
+

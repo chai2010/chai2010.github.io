@@ -2,6 +2,7 @@
 title: "CvImage中的陷阱和BUG"
 date: 2009-12-06
 
+tags: [opencv]
 categories: [opencv]
 ---
 

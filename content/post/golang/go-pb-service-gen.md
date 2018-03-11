@@ -4,7 +4,7 @@ date: 2013-04-24
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 [Protobuf](http://code.google.com/p/protobuf/) 是Google发布的开源编码规范, 官方支持C++/Java/Python等几种语言.

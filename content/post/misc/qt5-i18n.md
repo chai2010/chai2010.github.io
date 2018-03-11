@@ -3,8 +3,8 @@ title: "VC2010下Qt5的中文乱码问题"
 date: 2013-04-04
 draft: false
 
-tags: ["qt", "i18n"]
-categories: []
+tags: ["qt", "i18n", misc]
+categories: [misc]
 ---
 
 要搞清楚这个问题，先要弄明白编码。但是编码问题实在太复杂，这里肯定讲不开。

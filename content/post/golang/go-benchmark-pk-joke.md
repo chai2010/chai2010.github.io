@@ -4,7 +4,7 @@ date: 2013-08-06
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 喜欢和不喜欢Go语言的都喜欢拿性能PK说事.

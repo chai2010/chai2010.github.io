@@ -4,7 +4,7 @@ date: 2013-05-14
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 <!-- Go1.1性能测试报告(和C差距在10%以内) -->

@@ -3,8 +3,8 @@ title: "Go语言变态用法"
 date: 2013-06-27
 draft: false
 
-tags: ["golang"]
-categories: []
+tags: [golang]
+categories: [golang]
 ---
 
 今天为了提交notepad++高亮的BUG, 写了一个变态代码.

@@ -4,7 +4,7 @@ date: 2013-09-15
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 类型转换和类型断言是Go语言中比较绕的地方.

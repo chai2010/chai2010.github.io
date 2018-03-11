@@ -3,7 +3,7 @@ title: "Go和C如何共享内存资源"
 date: 2013-10-13
 draft: false
 
-tags: ["golang"]
+tags: [golang, cgo]
 categories: ["golang"]
 ---
 

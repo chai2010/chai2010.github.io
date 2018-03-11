@@ -4,7 +4,7 @@ date: 2017-07-06
 draft: false
 
 tags: ["js", "electron"]
-categories: []
+categories: [js]
 ---
 
 Angular2本身提供了cli命令行工具, 可以生成完整的工程.

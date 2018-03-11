@@ -4,7 +4,7 @@ date: 2017-12-19
 draft: false
 
 tags: ["lua", "qingcloud"]
-categories: []
+categories: [qingcloud]
 ---
 
 演示了如何通过lua来访问控制青云QingCloud的主机.

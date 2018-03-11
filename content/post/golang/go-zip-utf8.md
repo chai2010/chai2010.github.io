@@ -3,7 +3,7 @@ title: "Go如何处理zip中的中文文件名"
 date: 2013-12-20
 draft: false
 
-tags: ["golang"]
+tags: [golang, utf8, 中文乱码]
 categories: ["golang"]
 ---
 

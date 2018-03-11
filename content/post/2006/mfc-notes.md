@@ -1,7 +1,9 @@
 ---
 title: "《深入浅出MFC》学习笔记"
-date: 2006-03-20 13:38:55 +0800
-comments: true
+date: 2006-03-20
+
+
+tags: [mfc, windows]
 categories: [mfc]
 ---
 

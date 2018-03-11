@@ -2,6 +2,7 @@
 title: "PyQt&OpenCV实现边缘检测"
 date: 2009-12-06
 
+tags: [opencv, pyqt, python, qt]
 categories: [opencv]
 ---
 

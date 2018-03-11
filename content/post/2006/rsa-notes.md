@@ -2,7 +2,8 @@
 title: "RSA学习笔记"
 date: 2006-12-27
 
-categories: [算法, 加密, RSA]
+tags: [算法, 加密, RSA]
+categories: [算法]
 ---
 
 先贴学习RSA时的练习代码(uint32范围):

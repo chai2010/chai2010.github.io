@@ -4,7 +4,7 @@ date: 2013-03-29
 draft: false
 
 tags: ["golang"]
-categories: []
+categories: [golang]
 ---
 
 UNIX/Go语言之父 [Ken Thompson][1] 在1983年的图灵奖演讲 [Reflections on Trusting Trust][2] 就给出了一个C语言的自重写程序.

@@ -3,8 +3,8 @@ title: "PwdGen - 用Go语言实现的密码生成工具"
 date: 2013-03-27
 draft: false
 
-tags: ["password"]
-categories: []
+tags: ["password", misc]
+categories: [misc]
 ---
 
 针对CSDN等各大网站私自保存密码的问题, 尝试用Go语言 写了个密码生成工具.

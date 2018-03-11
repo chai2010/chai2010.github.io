@@ -3,7 +3,7 @@ title: "Go语言的三元表达式"
 date: 2014-02-25
 draft: false
 
-tags: ["golang"]
+tags: [golang, tenary]
 categories: ["golang"]
 ---
 

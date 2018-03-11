@@ -2,6 +2,7 @@
 title: "OpenCV中的内存泄漏检测"
 date: 2009-12-06
 
+tags: [opencv]
 categories: [opencv]
 ---
 

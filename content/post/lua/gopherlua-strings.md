@@ -4,7 +4,7 @@ date: 2017-12-22
 draft: false
 
 tags: ["lua"]
-categories: []
+categories: [lua]
 ---
 
 lua内置的库非常小，我们可以将Go语言的strings包引入到Lua环境。

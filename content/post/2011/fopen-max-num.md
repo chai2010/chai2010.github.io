@@ -2,7 +2,7 @@
 title: "fopen打开的最大文件数目"
 date: 2011-07-28
 
-categories: [fopen]
+tags: [fopen]
 ---
 
 ### Windows环境
