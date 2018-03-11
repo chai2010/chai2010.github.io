@@ -3,7 +3,7 @@
 # license that can be found in the LICENSE file.
 
 title = "chai2010 的博客"
-baseURL = "https://chai2010.me/"
+baseURL = "https://chai2010.cn/"
 enableRobotsTXT = true
 enableEmoji = true
 theme = "jane"
