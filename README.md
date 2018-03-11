@@ -15,4 +15,4 @@
 1. 获取 Caddy 容器镜像: `docker pull abiosoft/caddy`
 1. 将 Makefile 和 Caddyfile 复制到云主机 `/root` 目录
 1. 运行 `make pub`, 启动服务
-1. 打开 https://localhost
+1. 打开 https://chai2010.cn
