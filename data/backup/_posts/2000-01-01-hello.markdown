@@ -1,0 +1,21 @@
+---
+layout: post
+title: "Hello, GitHub!"
+date: 2000-01-01 01:01:01 +0800
+comments: true
+categories: [杂项]
+---
+
+博客开始向GitHub迁移 (2014-08-01)!
+
+<!--
+
+曾经的炮灰们:
+
+- http://chaishushan.googlepages.com/
+- http://sites.google.com/site/chaishushan/
+- http://blog.csdn.net/chai2010/
+- http://chaishushan.blog.163.com/
+- http://my.oschina.net/chai2010/
+
+-->

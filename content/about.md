@@ -19,3 +19,12 @@ Gopher
 #### 启用新站点(2018.03.09)
 
 - https://chai2010.cn
+
+曾经的炮灰们:
+
+- http://chaishushan.googlepages.com/
+- http://sites.google.com/site/chaishushan/
+- http://blog.csdn.net/chai2010/
+- http://chaishushan.blog.163.com/
+- http://my.oschina.net/chai2010/
+- http://chai2010.github.io
