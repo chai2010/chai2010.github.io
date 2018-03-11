@@ -1,15 +1,15 @@
 ---
 title: "如何用 Lua 查询青云的主机"
-date: 2020-01-01
-draft: true
+date: 2017-12-19
+draft: false
 
-tags: [
-	"draft",
-]
-categories: [
-	"draft",
-]
+tags: ["lua", "qingcloud"]
+categories: []
 ---
+
+演示了如何通过lua来访问控制青云QingCloud的主机.
+
+<!--more-->
 
 首先安装内置青云SDK的 qlua 命令: `go get github.com/chai2010/qingcloud-go/cmd/qlua`
 

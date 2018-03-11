@@ -1,17 +1,15 @@
 ---
 title: "lua中也能用上Go语言的strings包"
-date: 2020-01-01
-draft: true
+date: 2017-12-22
+draft: false
 
-tags: [
-	"draft",
-]
-categories: [
-	"draft",
-]
+tags: ["lua"]
+categories: []
 ---
 
 lua内置的库非常小，我们可以将Go语言的strings包引入到Lua环境。
+
+<!--more-->
 
 下面是具体的例子。
 
