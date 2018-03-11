@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "潜伏17集中与四角号码有关的穿帮情节分析 "
-date: 2013-01-04 22:52:53 +0800
-comments: true
+date: 2013-01-04
+
 categories: [潜伏, 四角号码]
 ---
 
@@ -10,30 +9,30 @@ categories: [潜伏, 四角号码]
 
 **1. 民国20年的四角号码似乎为民国22年**
 
-{% img /images/blog/qianfu-bugs/qianfu-bugs-01.jpg %}
+![](/images/qianfu-bugs/qianfu-bugs-01.jpg)
 
-参考wiki的四角号码词条: http://zh.wikipedia.org/wiki/%E5%9B%9B%E8%A7%92%E5%8F%B7%E7%A0%81
+参考wiki的四角号码词条: [https://zh.wikipedia.org/wiki/四角号码](http://zh.wikipedia.org/wiki/%E5%9B%9B%E8%A7%92%E5%8F%B7%E7%A0%81)
 
 王云五发明的四角号码。
-商务印书馆1925年5月出版《号码检字法》，1926年9月出版的是《四角号码检字法》，1933年12月出版《四角号码检字法?附检字表》。
+商务印书馆1925年5月出版《号码检字法》，1926年9月出版的是《四角号码检字法》，1933年12月出版《四角号码检字法·附检字表》。
 
-{% img /images/blog/qianfu-bugs/qianfu-bugs-02.jpg %}
+![](/images/qianfu-bugs/qianfu-bugs-02.jpg)
 
 而根据潜伏17集视频截图，应该是1933年的《四角号码检字法?附检字表》，对应民国22年，不是民国20年。
 
 **2. 电文中只有"方"字的四角号码00227是对的, 其他都不对**
 
-{% img /images/blog/qianfu-bugs/qianfu-bugs-03.jpg %}
+![](/images/qianfu-bugs/qianfu-bugs-03.jpg)
 
-{% img /images/blog/qianfu-bugs/qianfu-bugs-04.jpg %}
+![](/images/qianfu-bugs/qianfu-bugs-04.jpg)
 
 **3. 视频中电文前后不一样**
 
-{% img /images/blog/qianfu-bugs/qianfu-bugs-05.jpg %}
+![](/images/qianfu-bugs/qianfu-bugs-05.jpg)
 
 "方"的左边为"?2033"，右边是"5????"。但是，
 
-{% img /images/blog/qianfu-bugs/qianfu-bugs-06.jpg %}
+![](/images/qianfu-bugs/qianfu-bugs-06.jpg)
 
 在译完之后，左右的电码全都变了，只有"方"字的电码还是"00227"。
 
@@ -45,7 +44,7 @@ categories: [潜伏, 四角号码]
 
 我根据现在的四角号码规则把电文对应的电文反译了一遍(有些繁体字和现在的取号方式可能有差异)：
 
-{% img /images/blog/qianfu-bugs/qianfu-bugs-07.jpg %}
+![](/images/qianfu-bugs/qianfu-bugs-07.jpg)
 
 長(71732)首(80602)號(61217)一(10000)方(00227)北(12110)海(38157)深(37194)
 晤(61061)會(80606)你(27292)與(77801)時(64041)八(80000)於(08233)将(37142)

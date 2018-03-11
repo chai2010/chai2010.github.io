@@ -1,9 +1,8 @@
 ---
-layout: post
 title: "Go1.1有哪些改进?"
-date: 2013-03-27 13:19:09 +0800
-comments: true
-categories: [Go]
+date: 2013-03-27
+
+categories: [golang]
 ---
 
 前几天GCC4.8发布, 已经部分包含Go1.1特性, 详细介绍:
@@ -165,7 +164,7 @@ GoSpec中给出了很多例子:
 比如:
 
 	import "fmt"
-	
+
 	func main() {
 		fmt.Printf("%+q\n", string(0xD800))
 	}
@@ -191,7 +190,7 @@ Go 1.0输出为 "\ud800", Go 1.1 输出为 "\ufffd".
 			fmt.Println(k, v)
 		}
 	}
-	
+
 可以这样测试:
 
 	$ go run -race mysrc.go  // to run the source file

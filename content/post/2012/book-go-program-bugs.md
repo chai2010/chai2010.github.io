@@ -1,9 +1,8 @@
 ---
-layout: post
 title: "关于《Go语言编程》中的一些问题"
-date: 2012-09-06 20:30:01 +0800
-comments: true
-categories: [Go]
+date: 2012-09-06
+
+categories: [golang]
 ---
 
 最近基本看完了《Go语言编程》, 总得感觉还不错, 比较适合Go语言初学者.
