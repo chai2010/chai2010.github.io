@@ -16,3 +16,9 @@
 1. 将 Makefile 和 Caddyfile 复制到云主机 `/root` 目录
 1. 运行 `make pub`, 启动服务
 1. 打开 https://chai2010.cn
+
+### gh-pages 分支同步流程
+
+1. 再 master 执行 `make`
+1. 切换到 `gh-pages` 分支, 执行 `make`
+1. 提交 public 目录的变更
