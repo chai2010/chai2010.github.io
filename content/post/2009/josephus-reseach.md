@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "Josephus问题"
-date: 2009-12-05 16:40:49 +0800
-comments: true
+date: 2009-12-05
+
 categories: [算法]
 ---
 

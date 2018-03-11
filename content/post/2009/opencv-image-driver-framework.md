@@ -1,9 +1,8 @@
 ---
-layout: post
 title: "OpenCV的图像读写框架"
-date: 2009-12-06 09:05:20 +0800
-comments: true
-categories: [opencv, 图像]
+date: 2009-12-06
+
+categories: [opencv]
 ---
 
 `cvSaveImage`/`cvLoadImage`函数用于保存和读取图像，两者的结构基本相似。
@@ -27,36 +26,36 @@ categories: [opencv, 图像]
 	icvLoadImage( const char* filename, int flags, bool )
 	{
 		// 查找图像的读驱动
-	
+
 		GrFmtReader* reader = g_Filters.FindReader( filename );
-	
+
 		// 利用图像读驱动读出图像头信息（高宽等属性）
-	
+
 		reader->ReadHeader();
-	
+
 		// 高度/宽度
-	
+
 		size.width = reader->GetWidth();
 		size.height = reader->GetHeight();
-	
+
 		// 是否彩色
-	
+
 		int iscolor = reader->IsColor();
-	
+
 		// 彩色通道数为3，灰度为1
-	
+
 		int cn = iscolor ? 3 : 1;
-	
+
 		// 创建影像
-	
+
 		IplImage* image = cvCreateImage( size, type, cn );
-	
+
 		// 利用读驱动读图像的所有像素
 		// image->data.ptr对应数据的开始地址
 		// image->step表示每行像素所在内存的大小
-	
+
 		reader->ReadData( image->data.ptr, image->step, iscolor );
-	
+
 		return image;
 	}
 
@@ -72,13 +71,13 @@ CvImageFilters在构造的时候，将已知的图像读写驱动保存到一个
 	CvImageFilters::CvImageFilters()
 	{
 		m_factories = new GrFmtFactoriesList;
-	
+
 		m_factories->AddFactory( new GrFmtBmp() );
 		m_factories->AddFactory( new GrFmtJpeg() );
 		m_factories->AddFactory( new GrFmtSunRaster() );
 		m_factories->AddFactory( new GrFmtPxM() );
 		m_factories->AddFactory( new GrFmtTiff() );
-	
+
 		...
 	}
 
@@ -89,17 +88,17 @@ CvImageFilters在构造的时候，将已知的图像读写驱动保存到一个
 	class   GrFmtFilterFactory
 	{
 	public:
-	
+
 		GrFmtFilterFactory();
 		virtual ~GrFmtFilterFactory() {};
-	
+
 		const char*  GetDescription() { return m_description; };
 		int     GetSignatureLength()  { return m_sign_len; };
 		virtual bool CheckSignature( const char* signature );
 		virtual bool CheckExtension( const char* filename );
 		virtual GrFmtReader* NewReader( const char* filename ) = 0;
 		virtual GrFmtWriter* NewWriter( const char* filename ) = 0;
-	
+
 	protected:
 		const char* m_description;
 			// graphic format description in form:
@@ -108,7 +107,7 @@ CvImageFilters在构造的时候，将已知的图像读写驱动保存到一个
 			// and may be, some others. It is safe to use letters, digits and spaces only.
 			// e.g. "Targa (*.tga)",
 			// or "Portable Graphic Format (*.pbm;*.pgm;*.ppm)"
-	
+
 		int          m_sign_len;    // length of the signature of the format
 		const char*  m_signature;   // signature of the format
 	};
@@ -130,7 +129,7 @@ CvImageFilters在构造的时候，将已知的图像读写驱动保存到一个
 	class   GrFmtFactoriesList
 	{
 	public:
-	
+
 		GrFmtFactoriesList();
 		virtual ~GrFmtFactoriesList();
 		void  RemoveAll();
@@ -140,9 +139,9 @@ CvImageFilters在构造的时候，将已知的图像读写驱动保存到一个
 		GrFmtFilterFactory*  GetNextFactory( ListPosition& pos );
 		virtual GrFmtReader*  FindReader( const char* filename );
 		virtual GrFmtWriter*  FindWriter( const char* filename );
-	
+
 	protected:
-	
+
 		GrFmtFilterFactory** m_factories;
 		int  m_maxFactories;
 		int  m_curFactories;
@@ -158,23 +157,23 @@ GetNextFactory遍历链表来实现。
 	class   GrFmtReader
 	{
 	public:
-		
+
 		GrFmtReader( const char* filename );
 		virtual ~GrFmtReader();
-	
+
 		int   GetWidth()  { return m_width; };
 		int   GetHeight() { return m_height; };
 		bool  IsColor()   { return m_iscolor; };
 		int   GetDepth()  { return m_bit_depth; };
 		void  UseNativeDepth( bool yes ) { m_native_depth = yes; };
 		bool  IsFloat()   { return m_isfloat; };
-	
+
 		virtual bool  ReadHeader() = 0;
 		virtual bool  ReadData( uchar* data, int step, int color ) = 0;
 		virtual void  Close();
-	
+
 	protected:
-	
+
 		bool    m_iscolor;
 		int     m_width;    // width  of the image ( filled by ReadHeader )
 		int     m_height;   // height of the image ( filled by ReadHeader )

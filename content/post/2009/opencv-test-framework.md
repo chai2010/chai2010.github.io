@@ -1,9 +1,8 @@
 ---
-layout: post
-title: "OpenCV的测试框架 "
-date: 2009-12-06 09:01:19 +0800
-comments: true
-categories: [opencv, 测试]
+title: "OpenCV的测试框架"
+date: 2009-12-06
+
+categories: [opencv]
 ---
 
 OpenCV提供了一套测试, 这里做简要的分析.
@@ -21,26 +20,26 @@ OpenCV提供了一套测试, 这里做简要的分析.
 	{
 	public:
 		enum { NUM_IMG = 4 };
-		
+
 		CV_FindContourTest();
 		~CV_FindContourTest();
 		int write_default_params(CvFileStorage* fs);
 		void clear();
-	
+
 	protected:
 		int read_params( CvFileStorage* fs );
 		int prepare_test_case( int test_case_idx );
 		int validate_test_results( int test_case_idx );
 		void run_func();
-	
+
 		int min_blob_size, max_blob_size;
 		int blob_count, max_log_blob_count;
 		int retr_mode, approx_method;
-	
+
 		int min_log_img_size, max_log_img_size;
 		CvSize img_size;
 		int count, count2;
-	
+
 		IplImage *img[NUM_IMG];
 		CvMemStorage* storage;
 		CvSeq *contours, *contours2, *chain;
@@ -59,7 +58,7 @@ OpenCV提供了一套测试, 这里做简要的分析.
 			first = this;
 		last = this;
 		test_count++;
-	
+
 	...
 	}
 
@@ -83,9 +82,9 @@ OpenCV提供了一套测试, 这里做简要的分析.
 下面就是测试代码的驱动了. 查看 `OpenCV\tests\cv\src\tsysa.cpp` 中的 `main` 函数:
 
 	#include "cvtest.h"
-	
+
 	CvTS test_system;
-	
+
 	int main(int argC,char *argV[])
 	{
 		test_system.run( argC, argV );

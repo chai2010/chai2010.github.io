@@ -1,9 +1,8 @@
 ---
-layout: post
 title: "OpenCV中的内存泄漏检测"
-date: 2009-12-06 08:55:59 +0800
-comments: true
-categories: [opencv, 调试]
+date: 2009-12-06
+
+categories: [opencv]
 ---
 
 内存泄漏时程序开发中经常遇到的问题. 而且出现内存泄漏很难检测,

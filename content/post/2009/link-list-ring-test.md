@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "怎样判断链表有没有环"
-date: 2009-12-05 16:46:49 +0800
-comments: true
+date: 2009-12-05
+
 categories: [链表, 算法]
 ---
 

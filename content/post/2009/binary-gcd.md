@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "二进制的GCD算法"
-date: 2009-12-05 16:38:04 +0800
-comments: true
+date: 2009-12-05
+
 categories: [算法]
 ---
 

@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "单向链表的逆序"
-date: 2009-12-07 14:58:38 +0800
-comments: true
+date: 2009-12-07
+
 categories: [链表, 逆序, 算法]
 ---
 

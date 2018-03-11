@@ -1,9 +1,8 @@
 ---
-layout: post
-title: "CvImage中的陷阱和BUG "
-date: 2009-12-06 08:50:17 +0800
-comments: true
-categories: [opencv, 调试]
+title: "CvImage中的陷阱和BUG"
+date: 2009-12-06
+
+categories: [opencv]
 ---
 
 ### CvImage类的定义

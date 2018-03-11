@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "关于二进制格式数据读写"
-date: 2009-12-05 16:58:46 +0800
-comments: true
+date: 2009-12-05
+
 categories: [移植]
 ---
 
@@ -109,15 +108,15 @@ C语言中`sizeof(*p)`一般可以计算`(*p)`数据类型对应的内存大小�
 	bool readPoint(File *fp, Point *p)
 	{
 		...
-	
+
 		char byte;
 		if(fread(&byte, sizeof(char), 1, fp) != 1) return false;
-	
+
 		p->rerutn_number = byte&7; byte >>= 3;
 		p->number_of_returns = byte&7; byte >>= 3;
 		p->scan_direction_flag = byte&1; byte >>= 1;
 		p->edge_of_flight_line = byte&1;
-	
+
 		return true;
 	}
 

@@ -1,9 +1,8 @@
 ---
-layout: post
 title: "给OpenCV增加新的图像格式支持"
-date: 2009-12-06 09:09:18 +0800
-comments: true
-categories: [opencv, 图像]
+date: 2009-12-06
+
+categories: [opencv]
 ---
 
 在<highgui.h>中提供了cvSaveImage/cvLoadImage两个

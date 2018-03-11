@@ -1,9 +1,8 @@
 ---
-layout: post
-title: "PyQt&OpenCV实现边缘检测  "
-date: 2009-12-06 09:35:11 +0800
-comments: true
-categories: [图像, opencv]
+title: "PyQt&OpenCV实现边缘检测"
+date: 2009-12-06
+
+categories: [opencv]
 ---
 
 首先设计UI界面, 调整自己满意的布局.
@@ -12,7 +11,7 @@ Open按钮用于打开文件, 对象名为openButton.
 在界面编辑器中, 将Close按钮的clicked信号连接到窗口的close槽.
 
 
-{% img /images/blog/pyqt-opencv-edge/pyqt-opencv-edge-01.jpg %}
+![](/images/pyqt-opencv-edge/pyqt-opencv-edge-01.jpg)
 
 
 窗口设计完成后保存到edge.ui, 然后基于edge.ui文件构造程序:
@@ -158,7 +157,7 @@ Open按钮用于打开文件, 对象名为openButton.
 
 运行结果如图:
 
-{% img /images/blog/pyqt-opencv-edge/pyqt-opencv-edge-02.jpg %}
+![](/images/pyqt-opencv-edge/pyqt-opencv-edge-02.jpg)
 
 完整的代码以后补充。
 
