@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "挑战递归..."
-date: 2006-11-30 17:27:37 +0800
-comments: true
+date: 2006-11-30
+
 categories: [算法, 递归, 逆序]
 ---
 

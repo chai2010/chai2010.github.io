@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "浅析求素数算法"
-date: 2006-10-27 15:54:46 +0800
-comments: true
+date: 2006-10-27
+
 categories: [素数, 算法]
 ---
 
@@ -297,15 +296,15 @@ categories: [素数, 算法]
 	// 描述: 判断n是否为素数
 	// 算法: 费马小定理-卡尔麦克数
 	// 时间: 2006-11-04
-	
+
 	#include <assert.h>
 	#include <stdlib.h>
-	
+
 	// 计算数组的元素个数
 	#define NELEMS(x) ((sizeof(x)) / (sizeof((x)[0])))
-	
+
 	// 2^32范围内的所有卡尔麦克数
-	static const unsigned CarmichaeNumbers[] = 
+	static const unsigned CarmichaeNumbers[] =
 	{
 	561,1105,1729,2465,2821,6601,8911,10585,15841,29341,41041,46657,52633,62745,
 	63973,75361,101101,115921,126217,162401,172081,188461,252601,278545,294409,
@@ -454,12 +453,12 @@ categories: [素数, 算法]
 	4169867689,4189909501,4199202001,4199529601,4199932801,4202009461,4210922233,
 	4212413569,4215885697,4216799521,4277982241	// 1119: 4295605861, 溢出
 	};
-	
+
 	// hash表的改进方法, 只需要保存下标
 	// 经测试, 最多有6次冲突, b[i][0]保存数目
 	// 注意buckets的个维大小是人工测试得到!!
 	static short buckets[1021][6+1];
-	
+
 	// 自动初始化hash表
 	static struct init
 	{
@@ -472,18 +471,18 @@ categories: [素数, 算法]
 				// 最多有6次冲突, 不会溢出
 				int key = CarmichaeNumbers[i]%NELEMS(buckets);
 				assert(buckets[key][0] < NELEMS(buckets[0])-1);
-	
+
 				buckets[key][++buckets[key][0]] = i;
 			}
 		}
 	} _init;
-	
+
 	// bsearch的判断函数
 	static int cmp(const void *x, const void *y)
 	{
 		return *((unsigned*)x) - *((unsigned*)y);
 	}
-	
+
 	// 判断是否是卡尔麦克数
 	static bool isCarmichaelNum(unsigned n)
 	{
@@ -491,38 +490,38 @@ categories: [素数, 算法]
 		int i, key = n%NELEMS(buckets);
 		for(i = 1; i <= buckets[key][0]; ++i)
 			if(n == CarmichaeNumbers[buckets[key][i]]) return true;
-	
+
 		return false;
-	
+
 		// 二分法查表CarmichaeNumbers表
 		return NULL !=
 			bsearch(&n, CarmichaeNumbers, NELEMS(CarmichaeNumbers), sizeof(n), cmp);
 	}
-	
+
 	// 判断是否是费马(伪)素数
 	static bool isFermatNum(unsigned p)
 	{
 		unsigned m = p--;
 		unsigned r = 2%m;
 		unsigned k = 1;
-		
+
 		// 蒙格马利快速幂模算法
 		while(p > 1)
 		{
 			if(p&1) k = (k*r) % m;
 			r = (r*r)%m; p >>= 1;
 		}
-	
+
 		return (r*k)%m == 1;
 	}
-	
+
 	// 根据费马小定理测试
 	bool isPrime(unsigned n)
 	{
 		// 处理比较特殊的情况
 		if(n < 2) return false;
 		if(n == 2) return true;
-	
+
 		// 是费马(伪)素数但不是卡尔麦克数则必定为素数
 		return isFermatNum(n) && !isCarmichaelNum(n);
 	}

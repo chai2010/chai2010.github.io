@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "RSA学习笔记"
-date: 2006-12-27 11:32:26 +0800
-comments: true
+date: 2006-12-27
+
 categories: [算法, 加密, RSA]
 ---
 

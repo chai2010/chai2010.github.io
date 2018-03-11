@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "《深入浅出MFC》学习笔记"
 date: 2006-03-20 13:38:55 +0800
 comments: true
@@ -10,7 +9,7 @@ categories: [mfc]
 
 ## 第一章 win32基本程序概念
 
-{% img /images/blog/mfc-notes/mfc_1_2-large.jpg %}
+![](/images/mfc-notes/mfc_1_2-large.jpg)
 
 windows是一个“以消息为基础的事件驱动系统”。当系统内核捕捉到外围设备发生的事件后，将以一种特定的消息传递出去。而用户程序在接收到相应的消息后再做出相应的处理（否则系统以默认函数处理）。处理窗口过程的一般是窗口函数（window procedure）。Windows程序的执行流程如上图。
 
@@ -20,7 +19,7 @@ windows是一个“以消息为基础的事件驱动系统”。当系统内核�
 	void *bsearch(const void *key, const void *base,
 		size_t n, size_t size,
 		int (*cmp)(const void *keyval, const void *datum)
-	); 
+	);
 
 想一想开发`bsearch`函数的人怎么会知道两个元素的是什么，怎么比较大小呢？因此就必须留给用户要自己定义`cmp`函数了！
 
@@ -49,7 +48,7 @@ windows是一个“以消息为基础的事件驱动系统”。当系统内核�
 
 所以C程序员在调用一个函数的时候就根本想不出它会有什么出格的行为！
 
-在C++中就不一样了，特别是虚函数，有时候简直搞不清楚它到底是调用了哪个函数（真是麻烦）！ 
+在C++中就不一样了，特别是虚函数，有时候简直搞不清楚它到底是调用了哪个函数（真是麻烦）！
 
 这种情况是由C++是一个面向对象的语言性质决定的。如果你还是用C++编写C程序，那么它还是一个高级的汇编语言；但是如果你用C++编写（特别是有虚函数的）面向对象程序就不是那么回事了！
 
@@ -59,12 +58,12 @@ windows是一个“以消息为基础的事件驱动系统”。当系统内核�
 	public:
 		virtual void display() { cout << "class A" << endl; }
 	};
-	
+
 	class B: public A {
 	public:
 		virtual void display() { cout << "class B" << endl; }
 	};
-	
+
 	void main() {
 		A *pa = new B;
 		pa->display();
@@ -92,7 +91,7 @@ MFC中所有的类都继承自`CObject`，创建对象时要考虑其父类的�
 
 ### 2 运行时类型识别
 
-{% img /images/blog/mfc-notes/mfc_3_1-large.jpg %}
+![](/images/mfc-notes/mfc_3_1-large.jpg)
 
 我觉得这里的识别有两种级别，打个比方：X是某个人，还是具有某个人的血统？
 
@@ -161,8 +160,8 @@ MFC也定义了2个宏：`DEALARE_DYNCREATE` 和 `IMPLEMENT_DYNCREATE`。
 
 ### 5 消息
 
-{% img /images/blog/mfc-notes/mfc_3_5-large.jpg %}
- 
+![](/images/blog/mfc-notes/mfc_3_5-large.jpg)
+
 消息是windows程序开发的核心概念，程序的行为不再是像以前那样——用户只需要安排好事情的内容，不需要安排什么时候去做事情。在收到系统通知的时候就去做事情，没收到通知的话就先歇着（看来机器就是喜欢偷懒呢）。这很像我们人的行为：如果没有人给我分配任务，我就休息。
 
 消息在MFC中的传播机制很复杂（我自己是没高清楚），一般可以分2种类型：一是只能向父类传播的消息，还有可以横向传播的消息。向父类传播的消息的行为很简单（和动态识别的路线相似），一路向上直到`CCmdTarget`，就完成任务了。可以横向传播的消息有固定的传播路线（我不知道为什么要按这个顺序），在书中有具体的描述，最后也是到`CCmdTarget`，但是中途要走了很多弯路（走弯路是为了让别人拦截）。
@@ -175,13 +174,13 @@ MFC也定义了2个宏：`DEALARE_DYNCREATE` 和 `IMPLEMENT_DYNCREATE`。
 		CWinApp *m_pCurrentWinApp;
 		CWnd * m_pMainWnd;
 	}
-	
+
 	class CFrameWnd : public CWnd
 	{
 	public:
 		CView *m_pViewActive;
 	}
-	
+
 	class CView : public CWnd
 	{
 	public:
@@ -223,14 +222,14 @@ MFC也定义了2个宏：`DEALARE_DYNCREATE` 和 `IMPLEMENT_DYNCREATE`。
 
 这一章只要能把294页的流程图搞清楚了就差不多了（中文简体第2版），当然也要把消息机制融入其中（以及回调函数）。
 
-{% img /images/blog/mfc-notes/mfc_6_x-large.jpg %}
+![](/images/mfc-notes/mfc_6_x-large.jpg)
 
 ## 第七章 简单而完整：MFC骨干程序
 
-{% img /images/blog/mfc-notes/mfc_7_x1-large.jpg %}
+![](/images/mfc-notes/mfc_7_x1-large.jpg)
 
 介绍了一般框架所需要的类(如图):
 
-{% img /images/blog/mfc-notes/mfc_7_x2-large.jpg %}
+![](/images/mfc-notes/mfc_7_x2-large.jpg)
 
 ## 第八章 Document-View深入探讨
