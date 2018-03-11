@@ -1,15 +1,15 @@
 ---
 title: "一个极简的JavaScript模板引擎"
-date: 2020-01-01
-draft: true
+date: 2017-07-05
+draft: false
 
-tags: [
-	"draft",
-]
-categories: [
-	"draft",
-]
+tags: ["js"]
+categories: []
 ---
+
+基于ES6的新特性, 构造一个极简的JavaScript模板引擎.
+
+<!--more-->
 
 ES6提供了可以跨越多行的模板字符串, 为内联的模板提供了很多方便.
 

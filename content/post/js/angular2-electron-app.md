@@ -1,17 +1,11 @@
 ---
-title: "draft"
-date: 2020-01-01
-draft: true
+title: "极简的Angular2示例, Electron环境运行"
+date: 2017-07-06
+draft: false
 
-tags: [
-	"draft",
-]
-categories: [
-	"draft",
-]
+tags: ["js", "electron"]
+categories: []
 ---
-
-![](/images/ng2-electron.png)
 
 Angular2本身提供了cli命令行工具, 可以生成完整的工程.
 
@@ -20,6 +14,10 @@ Angular2本身提供了cli命令行工具, 可以生成完整的工程.
 我们尝试完全脱离cli工具, 只是通过TypeScript提供的tsc命令, 纯手工构造一个极简的Angular2示例.
 
 完整代码: http://git.oschina.net/chai2010/hello-ng2
+
+<!--more-->
+
+![](/images/ng2-electron.png)
 
 ## 配置淘宝的镜像
 
