@@ -10,7 +10,13 @@ comment: false
 mathjax: false
 ---
 
-## 启用新站点(2018.03.09)
+## 关于我
+
+Gopher
+
+## 大事记
+
+#### 启用新站点(2018.03.09)
 
 - https://chai2010.cn
 - https://chai2010.me
