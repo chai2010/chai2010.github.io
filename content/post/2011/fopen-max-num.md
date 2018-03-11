@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "fopen打开的最大文件数目"
-date: 2011-07-28 10:13:25 +0800
-comments: true
+date: 2011-07-28
+
 categories: [fopen]
 ---
 

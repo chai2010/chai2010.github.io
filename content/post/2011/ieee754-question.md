@@ -1,8 +1,7 @@
 ---
-layout: post
 title: "解浮点数方程: X+1=X"
-date: 2011-12-08 09:59:32 +0800
-comments: true
+date: 2011-12-08
+
 categories: [浮点数]
 ---
 
@@ -18,18 +17,18 @@ categories: [浮点数]
 测试程序:
 
 	#include <stdio.h>
-	
+
 	// Little endian
 	union ieee754_float {
 		float f;
-		
+
 		/* This is the IEEE 754 single-precision format.  */
 		struct {
 			unsigned int mantissa:23;
 			unsigned int exponent:8;
 			unsigned int negative:1;
 		} ieee;
-		
+
 		/* This format makes it easier to see if a NaN is a signalling NaN.  */
 		struct {
 			unsigned int mantissa:22;
@@ -38,11 +37,11 @@ categories: [浮点数]
 			unsigned int negative:1;
 		} ieee_nan;
 	};
-	
+
 	int main()
 	{
 		union ieee754_float f = { 0.0f };
-		
+
 		// Find a positive floating point value x, for which x+1.0=x.
 		for(f.ieee.exponent = 127; f.ieee.exponent < 255; f.ieee.exponent++) {
 			if((float)(f.f + 1.f) == f.f) {
@@ -51,7 +50,7 @@ categories: [浮点数]
 		}
 		return 0;
 	}
-	
+
 	// output:
 	// 16777216.000000: exponent = 151
 	// 33554432.000000: exponent = 152
