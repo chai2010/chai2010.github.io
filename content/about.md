@@ -10,9 +10,18 @@ comment: false
 mathjax: false
 ---
 
-## 关于我
+## 关于我 (chai2010)
 
-Gopher
+![](/images/chai2010.jpg)
+
+相关链接:
+
+- https://github.com/chai2010
+
+个人签名:
+
+- 当歌曲和传说都已经哑巴的时候，只有代码还在说话!
+- Less is more!
 
 ## 大事记
 
