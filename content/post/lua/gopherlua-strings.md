@@ -21,7 +21,7 @@ package main
 import (
 	"github.com/yuin/gopher-lua"
 
-	strings "gitee.com/chai2010/glua-strings"
+	strings "github.com/chai2010/glua-strings"
 )
 
 func main() {
@@ -54,4 +54,4 @@ end
 
 项目地址:
 
-https://gitee.com/chai2010/glua-strings
+https://github.com/chai2010/glua-strings
