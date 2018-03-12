@@ -10,12 +10,12 @@ https://localhost, https://chai2010.cn {
 	errors stdout
 	gzip
 
-	root /srv/chai2010.me/public
+	root /srv/chai2010.cn/public
 
 	git {
 		key      /root/.ssh/id_rsa
-		path     /srv/chai2010.me
-		repo     git@github.com:chai2010/chai2010.me.git
+		path     /srv/chai2010.cn
+		repo     git@github.com:chai2010/chai2010.cn.git
 		branch   gh-pages
 		interval 600
 	}

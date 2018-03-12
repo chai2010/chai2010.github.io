@@ -8,4 +8,4 @@ browse
 log stdout
 errors stdout
 
-root /srv/chai2010.me/public
+root /srv/chai2010.cn/public
