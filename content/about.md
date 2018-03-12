@@ -1,7 +1,7 @@
 ---
 title: "关于"
-date: 2017-08-20T21:38:52+08:00
-lastmod: 2017-08-28T21:41:52+08:00
+date: 2018-03-11
+lastmod: 2018-03-11
 menu: "main"
 weight: 50
 
@@ -13,6 +13,8 @@ mathjax: false
 ## 关于我 (chai2010)
 
 ![](/images/chai2010.jpg)
+
+Go语言代码的[贡献者](https://golang.org/CONTRIBUTORS)(Chaishushan), [《Go语言圣经》](/books)翻译者, [《Go语言高级编程》](/books)开源免费图书作者, 目前从事 [OpenPitrix](https://github.com/openpitrix) 开源项目开发工作.
 
 相关链接:
 
