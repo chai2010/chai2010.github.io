@@ -42,3 +42,14 @@ mathjax: false
 ![](/images/talks-4c.jpg)
 
 - [四角号码检字法.pdf](/talks/四角号码检字法.pdf)
+
+----------
+
+
+#### Go集成 C&C++ 代码
+
+![](/images/talks-cgo-sz2011.png)
+
+- [Go集成 C&C++ 代码.pdf](/talks/cgo-sz2011.pdf)
+- [Go集成C&C++代码](https://www.slideshare.net/yashi88/gocc)
+- [珠三角技术沙龙深圳(2011.02.27)](https://www.flickr.com/photos/yashi88/sets/72157626155161952/with/5482309510/)
