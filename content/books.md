@@ -14,14 +14,14 @@ mathjax: false
 
 本书针对Go语言有一定经验，想深入了解Go语言各种高级用法的开发人员。
 
-![](https://raw.githubusercontent.com/chai2010/advanced-go-programming-book/master/cover.png)
+![](/images/book-go-chai.png)
 
 - 作者：柴树杉 (chai2010, chaishushan@gmail.com)
 - 网址：https://github.com/chai2010/advanced-go-programming-book
 
 ## Go语言圣经中文版(翻译)
 
-![](https://raw.githubusercontent.com/gopl-zh/gopl-zh.github.com/master/cover_middle.jpg)
+![](/images/book-gopl-zh.jpg)
 
 - https://github.com/golang-china/gopl-zh
 
