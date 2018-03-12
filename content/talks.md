@@ -10,17 +10,18 @@ comment: false
 mathjax: false
 ---
 
-#### 深入CGO编程 - GopherChina 2018 - 中国·上海 04.14~04.15
+#### 2018 - 深入CGO编程
 
 ![深入CGO编程](/images/gopherchina2018-chai2010-cgo.jpg)
 
 - [Gopher China 2018 讲师专访－柴树杉](/post/gopherchina/gopherchina2018-chai2010/)
+- [GopherChina 2018 - 中国·上海](http://2018.gopherchina.org)
 - 大会前公开
 
 ----------
 
 
-#### NodeJS & Electron 简介
+#### 2017 - NodeJS & Electron 简介
 
 ![](/images/talks-nodejs.jpg)
 
@@ -28,16 +29,7 @@ mathjax: false
 
 ----------
 
-#### IEEE754浮点数
-
-![](/images/talks-ieee754.jpg)
-
-- [IEEE754浮点数.pdf](/talks/IEEE754浮点数.pdf)
-
-----------
-
-
-#### 四角号码检字法
+#### 2014 - 四角号码检字法
 
 ![](/images/talks-4c.jpg)
 
@@ -45,8 +37,15 @@ mathjax: false
 
 ----------
 
+#### 2013 - IEEE754浮点数
 
-#### Go集成 C&C++ 代码
+![](/images/talks-ieee754.jpg)
+
+- [IEEE754浮点数.pdf](/talks/IEEE754浮点数.pdf)
+
+----------
+
+#### 2011 - Go集成 C&C++ 代码
 
 ![](/images/talks-cgo-sz2011.png)
 
