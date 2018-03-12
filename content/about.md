@@ -12,20 +12,23 @@ mathjax: false
 
 ## 关于我 (chai2010)
 
-![](/images/chai2010.jpg)
+<img style="float: right;" src="/images/chai2010.jpg">
 
 Go语言代码的[贡献者](https://golang.org/CONTRIBUTORS)(Chaishushan), [《Go语言圣经》](/books)翻译者, [《Go语言高级编程》](/books)开源免费图书作者, 目前从事 [OpenPitrix](https://github.com/openpitrix) 开源项目开发工作.
-
-相关链接:
-
-- https://github.com/chai2010
 
 个人签名:
 
 - 当歌曲和传说都已经哑巴的时候，只有代码还在说话!
 - Less is more!
 
+相关链接:
+
+- https://github.com/chai2010
+
+
 ## 大事记
+
+<img style="float: right;" src="/images/chai2010.cn.png">
 
 #### 启用新站点(2018.03.09)
 
@@ -39,3 +42,4 @@ Go语言代码的[贡献者](https://golang.org/CONTRIBUTORS)(Chaishushan), [《
 - http://chaishushan.blog.163.com/
 - http://my.oschina.net/chai2010/
 - http://chai2010.github.io
+
