@@ -1,4 +1,5 @@
 <div class="social-links">
+  <!-- changed by chai2010
   {{- range $name, $path := .Site.Params.social }}
     {{- if $path }}
       {{- $realName := slicestr $name 2 }}
@@ -6,9 +7,11 @@
     {{- end }}
   {{- end }}
   <a href="{{ .Site.RSSLink }}" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  -->
 </div>
 
 <div class="copyright">
+  <!-- changed by chai2010
   <span class="power-by">
     Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
   </span>
@@ -16,12 +19,13 @@
   <span class="theme-info">
     Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
   </span>
+  -->
 
   <span class="copyright-year">
     {{- $current := now.Format "2006" }}
-    &copy; 
+    &copy;
     {{ if ne .Site.Params.since $current }}
-      {{ .Site.Params.since }} - 
+      {{ .Site.Params.since }} -
     {{ end }}
     {{- $current }}
     <span class="heart">
