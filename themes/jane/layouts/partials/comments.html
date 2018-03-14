@@ -58,4 +58,23 @@
     </script>
   {{ end }}
 
+  <!-- gitalk -->
+  {{ if (.Site.Params.gitalk) }}
+    <link rel="stylesheet" href="/lib/gitalk/gitalk.css">
+    <script src="/lib/gitalk/gitalk.min.js"></script>
+    <script>
+      var gitalk = new Gitalk({
+        clientID: '{{.Site.Params.gitalk_oauth_client_id}}',
+        client_secret: '{{.Site.Params.gitalk_oauth_client_secret}}',
+        repo: '{{.Site.Params.gitalk_repo}}',
+        owner: '{{.Site.Params.gitalk_github_id}}',
+        admin: ['{{.Site.Params.gitalk_github_id}}'],
+        id: location.pathname,
+        distractionFreeMode: false
+      });
+
+      gitalk.render('gitalk-container');
+    </script>
+  {{ end }}
+
 {{- end }}
