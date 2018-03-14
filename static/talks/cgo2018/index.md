@@ -2760,6 +2760,6 @@ extern void SayHello();
 
 #### [@青云QingCloud](https://www.qingcloud.com/)
 
-#### ![](images/chai2010-gopherchina2018-cgo-talk.png) <!-- .element: style="width:20%;" -->
+#### ![](images/cgo2018-qrcode.png) <!-- .element: style="width:20%;" -->
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  -->
