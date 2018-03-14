@@ -1,5 +1,5 @@
 ---
-title: "Gopher China 2018 讲师专访－柴树杉"
+title: "Gopher China 2018 讲师专访: 柴树杉"
 date: 2018-03-08
 
 tags: [
