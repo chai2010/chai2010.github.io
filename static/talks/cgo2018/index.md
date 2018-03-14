@@ -36,7 +36,7 @@ Reveal.js 可能会需要 AJAX 异步加载 Markdown 文件, 可以在当前目�
 
 <section data-background="images/gopherchina2018-background.jpg">
 
-# 深入CGO编程 <!-- .element: style="color:DarkSlateGray; font-family:'Hiragino Sans GB';" -->
+# 深入CGO编程 <!-- .element: style="color:DarkSlateGray;" -->
 ------------
 
 #### [chai2010 (柴树杉)](https://chai2010.cn) <!-- .element: style="color:DarkSlateGray;" -->
@@ -65,9 +65,9 @@ Reveal.js 可能会需要 AJAX 异步加载 Markdown 文件, 可以在当前目�
 ### 幻灯片 网址
 -------------
 
-#### ![](images/chai2010-gopherchina2018-cgo-talk.png) <!-- .element: style="width:40%;" -->
+#### ![](images/cgo2018-qrcode.png) <!-- .element: style="width:40%;" -->
 
-#### https://chai2010.cn/talks/gopherchina2018-cgo-talk/
+#### https://chai2010.cn/talks/cgo2018/
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  -->
 ***

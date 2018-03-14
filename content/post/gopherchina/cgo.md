@@ -20,7 +20,7 @@ C/C++经过几十年的发展，已经积累了庞大的软件资产，它们很
 ![深入CGO编程](/images/gopherchina2018-chai2010-cgo.jpg)
 
 
-- [https://chai2010.cn/talks/gopherchina2018-cgo-talk/](/talks/gopherchina2018-cgo-talk/)
+- [https://chai2010.cn/talks/cgo2018/](/talks/cgo2018/)
 
 -----
 
