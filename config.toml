@@ -86,14 +86,14 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
   google_verification = ""  # Google_Verification         # 谷歌
 
   # https://github.com/imsun/gitment
-  gitment = false
+  gitment = true
   gitment_github_id = "chai2010"
   gitment_repo = "chai2010.cn.gitment"
   gitment_oauth_client_id = "5bf22aef62556632fc90"
   gitment_oauth_client_secret = "42268725aafb70714dd18d169f75d70e3a9804fc"
 
   # https://github.com/gitalk/gitalk
-  gitalk = true
+  gitalk = false
   gitalk_github_id = "chai2010"
   gitalk_repo = "chai2010.cn.gitment"
   gitalk_oauth_client_id = "5bf22aef62556632fc90"
