@@ -92,13 +92,6 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
   gitment_oauth_client_id = "5bf22aef62556632fc90"
   gitment_oauth_client_secret = "42268725aafb70714dd18d169f75d70e3a9804fc"
 
-  # https://github.com/gitalk/gitalk
-  gitalk = false
-  gitalk_github_id = "chai2010"
-  gitalk_repo = "chai2010.cn.gitment"
-  gitalk_oauth_client_id = "5bf22aef62556632fc90"
-  gitalk_oauth_client_secret = "42268725aafb70714dd18d169f75d70e3a9804fc"
-
   [params.publicCDN]        # load these files from public cdn                          # 启用公共CDN，需自行定义
     enable = false
     jquery = '<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>'
