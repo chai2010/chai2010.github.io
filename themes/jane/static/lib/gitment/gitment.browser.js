@@ -3127,7 +3127,8 @@ function render(state, instance) {
   container.appendChild(instance.renderHeader(state, instance));
   container.appendChild(instance.renderComments(state, instance));
   container.appendChild(instance.renderEditor(state, instance));
-  container.appendChild(instance.renderFooter(state, instance));
+  // changed by chaishushan
+  // container.appendChild(instance.renderFooter(state, instance));
   return container;
 }
 
