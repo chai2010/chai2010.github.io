@@ -653,7 +653,7 @@ import "C"
 import "fmt"
 
 func main() {
-	_, err = C.seterrno(9527)
+	_, err := C.seterrno(9527)
 	fmt.Println(err)
 
 	// Output:
@@ -866,7 +866,7 @@ func GoAdd(a, b C.int) C.int {
 ```go
 package main
 
-//int sum(int a, int b);
+//int sum(int a, int b) { return a+b; }
 import "C"
 
 func main() {
@@ -1515,9 +1515,9 @@ func main() {
 	values := []int32{42, 9, 101, 95}
 
 	// panic: runtime error: cgo result has Go pointer
-	C.print_array_v1(
+	C.go_get_arr_ptr_v1(
 		(*C.int)(unsafe.Pointer(&values[0])),
-		C.int(len(values)),
+		C.int(0),
 	)
 }
 
@@ -1633,8 +1633,8 @@ func (id *ObjectId) Free() interface{} {
 --------------------
 
 ```go
-//export char* NewGoString(char* s);
-//export void FreeGoString(char* s);
+//extern char* NewGoString(char* s);
+//extern void FreeGoString(char* s);
 import "C"
 
 //export NewGoString
