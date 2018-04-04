@@ -12,13 +12,11 @@ mathjax: false
 
 #### 2018 - 深入CGO编程
 
-![深入CGO编程](/images/gopherchina2018-chai2010-cgo.jpg "大会前公开")
+[![深入CGO编程](/images/gopherchina2018-chai2010-cgo.jpg)](/talks/cgo2018/)
 
+- https://chai2010.cn/talks/cgo2018/
 - [Gopher China 2018 讲师专访－柴树杉](/post/gopherchina/gopherchina2018-chai2010/)
 - [GopherChina 2018 - 中国·上海](http://2018.gopherchina.org)
-- 大会前公开
-
-<!-- /talks/cgo2018/ -->
 
 ----------
 
