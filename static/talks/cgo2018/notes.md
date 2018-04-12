@@ -24,7 +24,7 @@
 
 有以下几种组合:
 
-- More is less - CMake
+- More is less - 要你命3000
 - More is more - C++/Python
 - Less is less - Brainfuck/Logo
 - Less is more - C/Go
