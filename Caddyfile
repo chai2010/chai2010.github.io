@@ -15,7 +15,7 @@ https://localhost, https://chai2010.cn {
 	git {
 		key      /root/.ssh/id_rsa
 		path     /srv/chai2010.cn
-		repo     git@github.com:chai2010/chai2010.cn.git
+		repo     git@github.com:chai2010/chai2010.github.io.git
 		branch   gh-pages
 		interval 600
 	}
