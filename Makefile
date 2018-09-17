@@ -6,6 +6,18 @@
 default: clean
 	hugo && mv public public-new && cd public-new && go run ../server.go
 
+.PHONY: get-hugo
+get-hugo:
+	mkdir -p _hugo && cd _hugo
+	wget https://github.com/gohugoio/hugo/releases/download/v0.30.2/hugo_0.30.2_Linux-64bit.tar.gz
+	tar zxvf hugo_0.30.2_Linux-64bit.tar.gz
+	cp ./hugo /usr/local/bin/hugo
+	cd ..
+
+.PHONY: hugo
+hugo:
+	hugo
+
 .PHONY: debug
 debug:
 	hugo server --buildDrafts --watch
