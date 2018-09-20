@@ -37,33 +37,33 @@ Go语言并发的理论基础是来自Hoare于1978年发表的CSP论文（Hoare�
 
 ```
 counter := prog(c:chan of int) {
-	i:=2;
-	for(;;)
-		c <-= i++;
+    i:=2;
+    for(;;)
+        c <-= i++;
 };
 
 filter := prog(prime:int, listen, send:chan of int) {
-	i:int;
-	for(;;)
-		if((i = <-listen)%prime)
-			send <-= i;
+    i:int;
+    for(;;)
+        if((i = <-listen)%prime)
+            send <-= i;
 };
 
 sieve := prog() of chan of int {
-	c := mk(chan of int);
-	begin counter(c);
-	prime := mk(chan of int);
-	begin prog(){
-		p:int;
-		newc:chan of int;
-		for(;;){
-			prime <-= p =<- c;
-			newc = mk();
-			begin filter(p, c, newc);
-			c = newc;
-		}
-	}();
-	become prime;
+    c := mk(chan of int);
+    begin counter(c);
+    prime := mk(chan of int);
+    begin prog(){
+        p:int;
+        newc:chan of int;
+        for(;;){
+            prime <-= p =<- c;
+            newc = mk();
+            begin filter(p, c, newc);
+            c = newc;
+        }
+    }();
+    become prime;
 };
 
 prime:=sieve();
