@@ -103,43 +103,101 @@ Go语言并发编程的学习一般要经过2个阶段：第一阶段是这个�
 每一个严禁的并发编程码农，我们的并发程序不仅仅要可以产生正确的输出，而且要保证不会产生错误的输出！
 
 
-## 并发小问题分析
+## 并发小问题的解决思路
 
-前面代码运行有一定的随机性, 无法保证并发程序的正确运行.
+前面代码运行有一定的随机性，无法保证并发程序的正确运行。导致可能产生错误结果的原因有2个：第一个是go启动Goroutine时无法保证新线程马上运行（它的启动是并发的）；第二个是main函数代表的主Goroutine退出将直接退出进程。
 
-并发的几个原则:
+在了解了原因之后，并发小问题的解决思路也就清晰了：在后台Goroutine完成任务之前，main函数代表的主Goroutine不能退出！
 
-go启动Goroutine时无法保证新线程马上运行
-main退出时程序退出
-解决的思路:
-
-后台Goroutine完成之前main函数不能退出.
-
--------
-
-
-地毯的比喻，小问题一般都是大问题
-
-而大问题很可能是小问题
-
+阻止main函数退出的方式有很多：
 
 ```go
-package main
-
-import "time"
-
 func main() {
     go println("你好, 并发!")
-    time.Sleep(time.Second)
-}
 
-func println(s string) {
-    time.Sleep(time.Second*2)
-    print(s+"\n")
+    for {}
+    select {}
+    <-make(chan bool)
 }
 ```
 
+在这个代码中，for、select或管道，任何一个方式都可以阻止在完成任务前退出（其实main函数根本无法退出），因此这个程序好像是可以完成输出任务的（虽然解决方案不太完美）！
+
+在上述的方案中，for循环阻止main退出是比较特色的一个方案。for其实执行的是一个死循环、忙等待，它会消耗大量的CPU资源。特别是，当只有一个系统线程资源时，main 将独占活跃的 系统线程，其它线程将有被饿死风险！
+
+因此for循环的方案在单核系统中依然是有问题的：
+
+```go
+func main() {
+    runtime.GOMAXPROCS(1)
+    go println("你好, 并发!")
+    for {}
+}
+```
+
+通过`runtime.GOMAXPROCS(1)`将系统线程限制为一个。然后println函数还没有启动前如果进入了for循环的话，后台的println函数将没有机会再次被执行（被饿死）！
+
+其实每个已经获取CPU资源的Goroutine都可以霸占CPU：
+
+```go
+func main() {
+    runtime.GOMAXPROCS(1)
+    go func() { for {} }()
+    time.Sleep(time.Second)
+
+    fmt.Println("the answer to life:", 42)
+}
+```
+
+在这个例子中，Goroutine霸占了CPU，main函数可能被饿死在`time.Sleep`行代码，因此宇宙的秘密也就永远无法揭晓！
+
+既然for循环霸占CPU，那我们换个不占用CPU的方式好了。select和管道都可以：
+
+```go
+func main() {
+    runtime.GOMAXPROCS(1)
+    go println("你好, 并发!")
+    select {}
+}
+```
+
+目前的代码确实更改进了一步，单核心也可以保证输出结果了！不过这个暴力的解决方法依然有点问题，这个程序退出前出现了异常：
+
+```
+你好, 并发!
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [select (no cases)]:
+main.main()
+        /path/to/main.go:8 +0x5c
+exit status 2
+```
+
+我首先要强调的是，这个异常其实不是问题。我们的首要目标是输出字符串，而且这个目标我们已经顺利完成了。出现异常的原因只是程序退出的善后工作处理不太完美（和C语言程序退出前并不需要释放全部的内存资源类似）。
+
+异常的提示是，系统中没有其它可运行的goroutine，这就是一种死锁状态。其实如果换会for死循环的话是不会提示死锁的（因为runtime会将for循环当作一个正常执行的goroutine看待）。
+
+理解的解决方案是：main函数在println完成输出任务前不退出，但是在println完成任务后可以正确退出。改进代码如下：
+
+```go
+func main() {
+    done := make(chan bool)
+    go func() {
+        println("你好, 并发!")
+        done <- true
+    }()
+
+    <-done
+}
+```
+
+main函数在退出前需要从done管道取一个消息，后台任务在将消息放入done管道前必须先完成自己的输出任务。因此，main函数成功取到消息时，后台的输出任务确定已经完成了，main函数也就可以放心退出了。
+
 ## 其它内容待续
+
+猫友会：Go语言并发编程01 - 并发的演化历史
+
+https://mp.weixin.qq.com/s/UaY9gJU85dq-dXlOhLYY1Q
 
 在线浏览幻灯片：
 
