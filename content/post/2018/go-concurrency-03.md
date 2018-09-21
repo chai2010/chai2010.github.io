@@ -1,5 +1,5 @@
 ---
-title: "Go语言并发编程03 - 并发的常见模式"
+title: "Go语言并发编程03 - 并发的内存模型"
 date: 2018-09-20
 draft: false
 
@@ -13,37 +13,9 @@ categories: ["golang"]
 
 <!--more-->
 
-## 并发的模式
+## 并发的内存模型
 
-```go
-func main() {
-    go println("你好, 并发!") // 干活的
-
-    go func() { <-make(chan int) } () // 滥竽充数的, Goroutine 泄露
-    go func() { for{} } () // 浪费资源的, 但不是 Goroutine 泄露
-    go func() {} () // 滥竽充数的, 但不是 Goroutine 泄露
-
-    time.Sleep(time.Second)
-    println("Done")
-}
-```
-
-```go
-    const N = 10
-    done := make(chan bool, N)
-
-    for i := 0; i < N; i++ {
-        go func(i int) {
-            println(i, "你好, 并发!")
-            done <- true
-        }(i)
-    }
-
-    for i := 0; i < N; i++ {
-        <-done
-    }
-}
-```
+TODO
 
 ## 其它内容待续
 
