@@ -1,9 +1,9 @@
 ---
 title: "Go语言并发编程03 - 并发的内存模型"
-date: 2018-09-20
+date: 2018-09-24
 draft: false
 
-tags: ["golang"]
+tags: ["golang", "并发"]
 categories: ["golang"]
 ---
 

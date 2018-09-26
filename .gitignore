@@ -4,3 +4,7 @@
 
 *.a
 a.out
+
+# go
+go.mod
+go.sum

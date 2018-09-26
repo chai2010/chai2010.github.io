@@ -1,9 +1,9 @@
 ---
 title: "Go语言并发编程02 - 你好，并发"
 date: 2018-09-21
-draft: true
+draft: false
 
-tags: ["golang"]
+tags: ["golang", "并发"]
 categories: ["golang"]
 ---
 

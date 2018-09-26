@@ -3,7 +3,7 @@ title: "Go语言并发编程01 - 并发的演化历史"
 date: 2018-09-20
 draft: false
 
-tags: ["golang"]
+tags: ["golang", "并发"]
 categories: ["golang"]
 ---
 

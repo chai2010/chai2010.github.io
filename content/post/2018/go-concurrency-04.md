@@ -1,9 +1,9 @@
 ---
 title: "Go语言并发编程04 - 并发的常见模式"
-date: 2018-09-20
-draft: false
+date: 2018-09-30
+draft: true
 
-tags: ["golang"]
+tags: ["golang", "并发"]
 categories: ["golang"]
 ---
 

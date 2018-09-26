@@ -6,6 +6,20 @@
 default: clean
 	hugo && mv public public-new && cd public-new && go run ../server.go
 
+
+# https://chai2010.cn
+deploy:
+	-rm -rf public
+	hugo
+
+	cd public && \
+		git init && \
+		git add . && \
+		git commit -m "Update github pages" && \
+		git push --force --quiet "https://github.com/chai2010/chai2010.github.io.git" master:gh-pages
+
+	@echo deploy done
+
 .PHONY: get-hugo
 get-hugo:
 	mkdir -p _hugo && cd _hugo
