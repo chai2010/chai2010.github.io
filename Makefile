@@ -6,6 +6,11 @@
 default: clean
 	hugo && mv public public-new && cd public-new && go run ../server.go
 
+push:
+	git add .
+	git commit -m "saved"
+	git push
+
 
 # https://chai2010.cn
 deploy:
@@ -13,6 +18,7 @@ deploy:
 	hugo
 
 	cd public && \
+		touch .nojekyll && \
 		git init && \
 		git add . && \
 		git commit -m "Update github pages" && \
