@@ -9,7 +9,7 @@ default: clean
 push:
 	git add .
 	git commit -m "saved"
-	git push
+	git push origin master
 
 
 # https://chai2010.cn
