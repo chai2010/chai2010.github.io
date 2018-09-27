@@ -22,7 +22,7 @@ deploy:
 		git init && \
 		git add . && \
 		git commit -m "Update github pages" && \
-		git push --force --quiet "https://github.com/chai2010/chai2010.github.io.git" master:gh-pages
+		git push --force --quiet "https://github.com/chai2010/chai2010.github.io.git" master:master
 
 	@echo deploy done
 

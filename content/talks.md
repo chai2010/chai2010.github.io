@@ -10,11 +10,19 @@ comment: true
 mathjax: false
 ---
 
+#### 2018 - Go语言并发编程
+
+[![Go语言并发编程](/images/chai2010-golang-concurrency.png)](https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide)
+
+- https://github.com/chai2010/awesome-go-zh/tree/master/chai2010
+
+----------
+
 #### 2018 - 深入CGO编程
 
-[![深入CGO编程](/images/gopherchina2018-chai2010-cgo.jpg)](/talks/cgo2018/)
+[![深入CGO编程](/images/gopherchina2018-chai2010-cgo.jpg)](https://chai2010.github.io/gopherchina2018-cgo-talk/)
 
-- https://chai2010.cn/talks/cgo2018/
+- https://github.com/chai2010/gopherchina2018-cgo-talk
 - [Gopher China 2018 讲师专访－柴树杉](/post/gopherchina/gopherchina2018-chai2010/)
 - [GopherChina 2018 - 中国·上海](http://2018.gopherchina.org)
 
@@ -47,8 +55,8 @@ mathjax: false
 
 #### 2011 - Go集成 C&C++ 代码
 
-[![](/images/talks-cgo-sz2011.png)](/talks/cgo-sz2011.pdf)
+[![](/images/talks-cgo-sz2011.png)](https://github.com/chai2010/gopherchina2018-cgo-talk/blob/master/chai2010-cgo-talk-sz-20110207.pdf)
 
-- [Go集成 C&C++ 代码.pdf](/talks/cgo-sz2011.pdf)
+- [Go集成 C&C++ 代码.pdf](https://github.com/chai2010/gopherchina2018-cgo-talk/blob/master/chai2010-cgo-talk-sz-20110207.pdf)
 - [Go集成C&C++代码(slideshare)](https://www.slideshare.net/yashi88/gocc)
 - [珠三角技术沙龙深圳(2011.02.27)](https://www.flickr.com/photos/yashi88/sets/72157626155161952/with/5482309510/)
