@@ -8,8 +8,6 @@ tags: ["wasm"]
 categories: ["wasm"]
 ---
 
-[https://chai2010.cn](https://chai2010.cn) 只是目前的入口. 网址名称并不重要, 关键是内容需要永生.
-
 目前支持WebAssembly的各种高级语言中，与WebAssembly匹配度最高的无疑是C/C++，为此，我们将开源编写《C++面向wasm编程》一书。本书将围绕“如何开发对WebAssembly友好的C/C++程序”这一中心，从Emscripten工具链的使用、C/C++与JavaScript互操作、一般性的设计原则等多方面介绍相关知识，并分享作者在实际工程应用中总结出的诸多经验。
 
 <!--more-->
