@@ -19,6 +19,7 @@ deploy:
 
 	cd public && \
 		touch .nojekyll && \
+		echo "chai2010.cn" > CNAME && \
 		git init && \
 		git add . && \
 		git commit -m "Update github pages" && \
