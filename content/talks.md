@@ -14,6 +14,7 @@ mathjax: false
 
 [![Go语言并发编程](/images/chai2010-golang-concurrency.png)](https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide)
 
+- 武汉·光谷猫友会 2018/09/16
 - https://github.com/chai2010/awesome-go-zh/tree/master/chai2010
 
 ----------
@@ -22,6 +23,7 @@ mathjax: false
 
 [![深入CGO编程](/images/gopherchina2018-chai2010-cgo.jpg)](https://chai2010.github.io/gopherchina2018-cgo-talk/)
 
+- GopherChina2018·上海 2018/04/15
 - https://github.com/chai2010/gopherchina2018-cgo-talk
 - [Gopher China 2018 讲师专访－柴树杉](/post/gopherchina/gopherchina2018-chai2010/)
 - [GopherChina 2018 - 中国·上海](http://2018.gopherchina.org)
