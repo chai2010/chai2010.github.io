@@ -27,6 +27,16 @@ Go语言代码的[贡献者](https://golang.org/CONTRIBUTORS)(Chaishushan), [《
 - https://twitter.com/chaishushan
 - https://chai2010.cn
 
+
+### 著作/翻译/论文:
+
+
+- [基于OpenCV的汉字绘制研究](/static/docs/opencv-hanzi.pdf)
+- [CASL汇编器的设计与实现](/static/docs/casl-assembler.pdf)
+- [COMET虚拟机的设计与实现](/static/docs/comet-vm.pdf)
+
+----
+
 ## 开发者头条号
 
 https://toutiao.io/subjects/318517
