@@ -52,3 +52,8 @@ WebAssembly是新一代的Web虚拟机标准，C/C++程序可以通过Emscripten
 
 - https://github.com/golang-china/gopl-zh
 
+## 论文
+
+- [基于OpenCV的汉字绘制研究(PDF)](/static/docs/opencv-hanzi.pdf) - 计算机工程与设计, 2008
+- [CASL汇编器的设计与实现(PDF)](/static/docs/casl-assembler.pdf) - 2005
+- [COMET虚拟机的设计与实现(PDF)](/static/docs/comet-vm.pdf) - 2005
