@@ -1,7 +1,7 @@
 ---
 title: "Go语言和Windows服务"
 date: 2018-10-21
-draft: true
+draft: false
 
 tags: ["golang", "windows"]
 categories: ["golang", "windows"]
