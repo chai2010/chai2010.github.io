@@ -10,6 +10,18 @@ comment: true
 mathjax: false
 ---
 
+
+#### 2018 - GIAC2018: Go 语言将要走向何方？
+
+[![](/images/talks-giac2018.png)](http://chai2010.cn/static-public/talks/giac2018-go-talk.pdf)
+
+- 上海·GIAC全球互联网架构大会 2018/11/23
+- http://2018.thegiac.com/detail.php?id=13467
+- https://github.com/chai2010/awesome-go-zh/tree/master/chai2010/giac2018
+
+
+----------
+
 #### 2018 - Go语言并发编程
 
 [![Go语言并发编程](/images/chai2010-golang-concurrency.png)](https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide)
