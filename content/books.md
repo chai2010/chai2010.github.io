@@ -24,7 +24,7 @@ WebAssembly是新一代的Web虚拟机标准，C/C++程序可以通过Emscripten
 
 -->
 
-## WebAssembly标准入门 - 完稿，待出版
+## WebAssembly标准入门
 
 本书讲解了WebAssembly的基础知识，其内容涵盖了WASM的历史背景、WASM中汇编语言和虚拟机指令、浏览器对WASM的支持、其它高级语言对WASM的支持等。本书适合想要掌握WebAssembly技术的用户学习。
 
@@ -52,8 +52,12 @@ WebAssembly是新一代的Web虚拟机标准，C/C++程序可以通过Emscripten
 
 - https://github.com/golang-china/gopl-zh
 
+<!--
+
 ## 论文
 
 - [基于OpenCV的汉字绘制研究(PDF)](/static/docs/opencv-hanzi.pdf) - 计算机工程与设计, 2008
 - [CASL汇编器的设计与实现(PDF)](/static/docs/casl-assembler.pdf) - 2005
 - [COMET虚拟机的设计与实现(PDF)](/static/docs/comet-vm.pdf) - 2005
+
+-->
