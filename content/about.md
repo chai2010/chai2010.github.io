@@ -14,7 +14,7 @@ mathjax: false
 
 <img style="float: right;" src="/images/chai2010.jpg">
 
-Go语言代码的[贡献者](https://golang.org/CONTRIBUTORS)(Chaishushan), [《Go语言圣经》](https://github.com/golang-china/gopl-zh)翻译者, [《Go语言高级编程》](https://github.com/chai2010/advanced-go-programming-book)开源免费图书作者, [《WebAssembly标准入门》](https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md)图书作者， 目前在 [青云QingCloud](https://qingcloud.com/) 从事 [OpenPitrix](https://github.com/openpitrix) 开源项目开发工作.
+Go语言代码的[贡献者](https://golang.org/CONTRIBUTORS)(Chaishushan), [《Go语言圣经》](https://github.com/golang-china/gopl-zh)翻译者, [《Go语言高级编程》](https://github.com/chai2010/advanced-go-programming-book)开源免费图书作者, [《WebAssembly标准入门》](https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md)图书作者.
 
 个人签名:
 
