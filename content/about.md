@@ -28,6 +28,13 @@ Go语言代码的[贡献者](https://golang.org/CONTRIBUTORS)(Chaishushan), [《
 - https://chai2010.cn
 
 
+## 捐助支持
+
+| 支付宝 | 微信 |
+|:-----:|:-----:|
+|![alipay](/images/donate-alipay-github-chai2010-20yuan.jpg)|![weixin](/images/donate-weixin-github-chai2010-20yuan.jpg)|
+
+<!--
 ## 开发者头条号
 
 https://toutiao.io/subjects/318517
@@ -54,4 +61,4 @@ https://toutiao.io/subjects/318517
 - http://chaishushan.blog.163.com/
 - http://my.oschina.net/chai2010/
 - http://chai2010.github.io
-
+-->
