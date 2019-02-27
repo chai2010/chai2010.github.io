@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tiff on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/tiff/</link>
+    <description>Recent content in Tiff on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 20 Sep 2013 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/tiff/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>go.image/tiff 的一些问题</title>
+      <link>https://chai2010.cn/post/golang/go-image-tiff/</link>
+      <pubDate>Fri, 20 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-image-tiff/</guid>
+      
+        <description>&lt;p&gt;最近给 &lt;a href=&#34;https://code.google.com/p/go/source/list?repo=image&#34;&gt;go.image/tiff&lt;/a&gt;
+增加了 Tile/Gray/Gray16/RGB16bit 等格式的支持.
+还有一些特性以后会陆续完善.&lt;/p&gt;
+
+&lt;p&gt;Go语言图像库的基本思路是能尽量提供完善的解码功能(当然只支持文件的第一个图像).
+而编码功能则比较有限, 主要是支持基本的不同颜色模型, TIFF特有的特性应该不会完整支持.&lt;/p&gt;
+
+&lt;p&gt;最近有用户反馈生成的tiff在Mac系统不能正常浏览(&lt;a href=&#34;https://code.google.com/p/go/issues/detail?id=6421&#34;&gt;Issue6421&lt;/a&gt;).
+而我自己的Win7/64可以正常打开有问题的图像. 用 &lt;code&gt;tiffinfo&lt;/code&gt; 也没有看到什么异常的Tag(有问题的已经修改之后).&lt;/p&gt;
+
+&lt;p&gt;之后无意中用GIMP也不能打开Mac有问题的tiff影像.
+既然问题已经重现, 查找原因就容易多了.&lt;/p&gt;
+
+&lt;p&gt;初步分析之后, 发现问题主要是针对非RGB的图像(灰度和调色板).
+然后发现, go.image/tiff的Encode函数对非RGB的影像都写了ExtraSamples标签,
+而这个函数只有对波段数大于RGB的3的时候才会起作用(具体看TIFF Spec的介绍).&lt;/p&gt;
+
+&lt;p&gt;当然, 有些容错性较好的程序可以忽略无效的ExtraSamples标签(比如Windows下的很多程序).
+但是, 如果严格按照TIFF规范的话, 包含ExtraSamples标签的灰度和调色板格式确实是有问题的.
+修复这个问题之后(&lt;a href=&#34;https://codereview.appspot.com/13779043/&#34;&gt;CL13779043&lt;/a&gt;), GIMP就可以正常工作了(Mac部分还在等待用户反馈).&lt;/p&gt;
+
+&lt;p&gt;经过这个BUG发现, 还是要非常了解TIFF格式规范, 不然实现中很容易带入一些错误的理解.
+当然, &lt;code&gt;go.image/tiff&lt;/code&gt; 的测试也需要继续完善.&lt;/p&gt;
+
+&lt;p&gt;关于TIFF的介绍请参考: &lt;a href=&#34;http://my.oschina.net/chai2010/blog/158550&#34;&gt;TIFF6.0格式简介&lt;/a&gt;&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>TIFF6.0格式简介</title>
+      <link>https://chai2010.cn/post/misc/tiff-spec/</link>
+      <pubDate>Mon, 02 Sep 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/misc/tiff-spec/</guid>
+      
+        <description>
+
+&lt;!-- TIFF格式简介 --&gt;
+
+&lt;!-- 作者: chai2010 chaishushan{AT}gmail.com (整理) --&gt;
+
+&lt;p&gt;&lt;em&gt;作者: chai2010 (chaishushan{AT}gmail.com) (整理)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;标签图像文件格式(Tagged Image File Format, 简写为TIFF)是一种主要用来存储包括照片和艺术图在内的图像的文件格式. 它最初由Aldus公司与微软公司一起为PostScript打印开发.&lt;/p&gt;
+
+&lt;p&gt;TIFF最初的设计目的是为了1980年代中期桌面扫描仪厂商达成一个公用的扫描图像文件格式, 而不是每个厂商使用自己专有的格式. 在刚开始的时候, TIFF只是一个二值图像格式, 因为当时的桌面扫描仪只能处理这种格式. 随着扫描仪的功能愈来愈强大, 并且桌面计算机的磁盘空间越来越大, TIFF逐渐支持灰阶图像和彩色图像.&lt;/p&gt;
+
+&lt;p&gt;目前最新的 &lt;a href=&#34;http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf&#34;&gt;TIFF6.0规范&lt;/a&gt; 在1992年公布.&lt;/p&gt;
+
+&lt;h2 id=&#34;结构概述&#34;&gt;结构概述&lt;/h2&gt;
+
+&lt;p&gt;TIFF文件以&lt;code&gt;.tif&lt;/code&gt;或&lt;code&gt;.tiff&lt;/code&gt;为扩展名. 其数据格式是一种3级体系结构, 从高到低依次为: 文件头IFH(Image File Header), 一个或多个称为IFD(Image File Directory)的包含标记指针的目录和数据. 一个文件中可以包含多个IFD, 每个IFD对应一个图像.&lt;/p&gt;
+
+&lt;p&gt;图像头(IFH)/图像目录(IFD)/标签入口(IFDEntry)的逻辑结构如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;+------------------------------------------------------------------------------+
+|                           TIFF Structure                                     |
+|  IFH                                                                         |
+| +------------------+                                                         |
+| | II/MM            |                                                         |
+| +------------------+                                                         |
+| | 42               |      IFD                                                |
+| +------------------+    +------------------+                                 |
+| | Next IFD Address |---&amp;gt;| IFD Entry Num    |                                 |
+| +------------------+    +------------------+                                 |
+|                         | IFD Entry 1      |                                 |
+|                         +------------------+                                 |
+|                         | IFD Entry 2      |                                 |
+|                         +------------------+                                 |
+|                         |                  |      IFD                        |
+|                         +------------------+    +------------------+         |
+|     IFD Entry           | Next IFD Address |---&amp;gt;| IFD Entry Num    |         |
+|    +---------+           +------------------+   +------------------+         |
+|    | Tag     |                                  | IFD Entry 1      |         |
+|    +---------+                                  +------------------+         |
+|    | Type    |                                  | IFD Entry 2      |         |
+|    +---------+                                  +------------------+         |
+|    | Count   |                                  |                  |         |
+|    +---------+                                  +------------------+         |
+|    | Offset  |---&amp;gt;Value                         | Next IFD Address |---&amp;gt;NULL |
+|    +---------+                                  +------------------+         |
+|                                                                              |
++------------------------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中, TIFF中的版本号为42, 包含生命宇宙以及任何事情的终极答案(这也说明了TIFF格式为何这么强大).
+文件中的数据指针(offset)最大对应4个字节, 因此一个文件不能超过4GB.
+如果需要大于4GB的图像支持, 可以参考基于TIFF的变种格式 &lt;a href=&#34;http://www.awaresystems.be/imaging/tiff/bigtiff.html&#34;&gt;BigTiff&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;图像基本信息&#34;&gt;图像基本信息&lt;/h2&gt;
+
+&lt;p&gt;基本信息为图像的大小, 图像的颜色模型(黑白图像/灰度图像/调色板图像/真彩色 等),
+每个像素的大小和单位等信息.&lt;/p&gt;
+
+&lt;p&gt;每个图像必须包含的标签有(含压缩类型):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ImageWidth 256 SHORT or LONG
+ImageLength 257 SHORT or LONG
+XResolution 282 RATIONAL
+YResolution 283 RATIONAL
+ResolutionUnit 128 SHORT 1, 2 or 3
+Compression 259 SHORT 1, 2 or 32773
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中颜色模型由几个标签组合判断:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PhotometricInterpretation 262 106 SHORT 0/1/2/3
+BitsPerSample 258 SHORT 4 or 8
+SamplesPerPixel 277 SHORT default(1)
+ColorMap 320 SHORT 3 * (2**BitsPerSample)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;色彩模型&#34;&gt;色彩模型&lt;/h2&gt;
+
+&lt;p&gt;TIFF基础部分定义了4种色彩模型(这里不讨论掩码图像和扩展色彩模型),
+主要有: 二值图像, 灰度图像, 调色板图像, 真彩色图像.&lt;/p&gt;
+
+&lt;h3 id=&#34;二值图像&#34;&gt;二值图像&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;如果没有 BitsPerSample 则为二值图&lt;/li&gt;
+&lt;li&gt;颜色模型 PhotometricInterpretation 必须为 0(0为白色) 或 1(1为白色)&lt;/li&gt;
+&lt;li&gt;压缩类型 Compression 1, 2 or 32773, 支持 Huffman 编码&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;灰度图像&#34;&gt;灰度图像&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;有 BitsPerSample, 且 PhotometricInterpretation 为 0 或 1&lt;/li&gt;
+&lt;li&gt;压缩类型 Compression 1 or 32773, 不支持 Huffman 编码&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;调色板图像&#34;&gt;调色板图像&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;PhotometricInterpretation 为 3&lt;/li&gt;
+&lt;li&gt;必需包含 ColorMap&lt;/li&gt;
+&lt;li&gt;BitsPerSample 为 4 或 8&lt;/li&gt;
+&lt;li&gt;Compression 为 1 or 32773, 不支持 Huffman 编码&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;真彩色图像&#34;&gt;真彩色图像&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;PhotometricInterpretation 为 2&lt;/li&gt;
+&lt;li&gt;必须含 SamplesPerPixel 波段数信息, 值为 3&lt;/li&gt;
+&lt;li&gt;BitsPerSample 必须为 8,8,8&lt;/li&gt;
+&lt;li&gt;Compression 为 1 or 32773, 不支持 Huffman 编码&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;其他模型&#34;&gt;其他模型&lt;/h3&gt;
+
+&lt;p&gt;TIFF 的扩展特性中还包含 CMYK 和 YCbCr 等其他色彩模型.
+详细信息请参考TIFF6.0规范.&lt;/p&gt;
+
+&lt;h2 id=&#34;条带和分片&#34;&gt;条带和分片&lt;/h2&gt;
+
+&lt;p&gt;其中数据的组织方式有条带和分片两种, 默认为条带方式存储.&lt;/p&gt;
+
+&lt;p&gt;条带图像必要的标签有:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RowsPerStrip 278 SHORT or LONG
+StripOffsets 273 SHORT or LONG
+StripByteCounts 279 SHORT or LONG
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;RowsPerStrip&lt;/code&gt; 缺省值为 &lt;code&gt;2^32-1&lt;/code&gt;, 图像将只有1个条带.
+如果条带数据不足的话, 末尾并不需要数据填充.&lt;/p&gt;
+
+&lt;p&gt;分片图像必要的标签有:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;TileWidth 322 SHORT or LONG
+TileLength 323 SHORT or LONG
+TileOffsets 324 SHORT or LONG
+TileByteCounts 325 SHORT or LONG
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每个片的大小必须是16的倍数, 每个片的长和宽可以不同.
+如果片数据不足的话, 需要填充(填充数据没有要求).&lt;/p&gt;
+
+&lt;h2 id=&#34;位平面&#34;&gt;位平面&lt;/h2&gt;
+
+&lt;p&gt;位平面由 &lt;code&gt;PlanarConfiguration&lt;/code&gt; 标签确定, 缺省时为1表示按像素组织(比如RGBRGB).
+当 &lt;code&gt;PlanarConfiguration&lt;/code&gt; 为2时, 为按通道存储(比如RRGGBB).&lt;/p&gt;
+
+&lt;p&gt;当只有1个通道时(&lt;code&gt;SamplesPerPixel&lt;/code&gt;), 位平面信息可以忽略.&lt;/p&gt;
+
+&lt;h2 id=&#34;压缩方式&#34;&gt;压缩方式&lt;/h2&gt;
+
+&lt;p&gt;压缩方式由 &lt;code&gt;Compression&lt;/code&gt; 标签确定.&lt;/p&gt;
+
+&lt;p&gt;基本算法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1 = No compression
+2 = CCITT modified Huffman RLE
+32773 = PackBits compression, aka Macintosh RLE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;扩展特性:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;3 = CCITT Group 3 fax encoding
+4 = CCITT Group 4 fax encoding
+5 = LZW
+6 = JPEG (&#39;old-style&#39; JPEG, later overriden in Technote2)
+7 = JPEG (&#39;new-style&#39; JPEG)
+8 = Deflate (&#39;Adobe-style&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;常见标签&#34;&gt;常见标签&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;ImageDescription 270 ASCII
+
+CellLength 265 SHORT
+CellWidth 264 SHORT
+
+Software 305 ASCII
+DateTime 306 ASCII
+Artist 315 ASCII
+HostComputer 316 ASCII
+
+Copyright 33432 ASCII
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;空闲空间&#34;&gt;空闲空间&lt;/h2&gt;
+
+&lt;p&gt;当创建或更新TIFF文件时, 文件中会有一些空闲的空间(类似malloc/free导致的内存碎片).
+TIFF规范中有 &lt;code&gt;FreeByteCounts&lt;/code&gt; 和 &lt;code&gt;FreeOffsets&lt;/code&gt; 两个标签用于记录文件中的空闲空间.&lt;/p&gt;
+
+&lt;p&gt;但是由于不同标签之间的弱引用关系, &lt;code&gt;FreeByteCounts&lt;/code&gt; 和 &lt;code&gt;FreeOffsets&lt;/code&gt; 记录的信息
+可能并不可靠. 因此, 并不能完全依赖这个信息.&lt;/p&gt;
+
+&lt;h2 id=&#34;忽略特性&#34;&gt;忽略特性&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;文件中含多个图像(多IFD)&lt;/li&gt;
+&lt;li&gt;扩展的压缩算法&lt;/li&gt;
+&lt;li&gt;扩展的色彩模型&lt;/li&gt;
+&lt;li&gt;多通道数大于4&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;文件实例&#34;&gt;文件实例&lt;/h2&gt;
+
+&lt;p&gt;这是一个二值图像的片段(来自TIFF6.0规范文档):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Header:
+0000 Byte Order                  4D4D
+0002 42                          002A
+0004 1st IFD offset              00000014
+
+IFD:
+0014 Number of Directory Entries 000C
+0016 NewSubfileType              00FE 0004 00000001 00000000
+0022 ImageWidth                  0100 0004 00000001 000007D0
+002E ImageLength                 0101 0004 00000001 00000BB8
+003A Compression                 0103 0003 00000001 8005 0000
+0046 PhotometricInterpretation   0106 0003 00000001 0001 0000
+0052 StripOffsets                0111 0004 000000BC 000000B6
+005E RowsPerStrip                0116 0004 00000001 00000010
+006A StripByteCounts             0117 0003 000000BC 000003A6
+0076 XResolution                 011A 0005 00000001 00000696
+0082 YResolution                 011B 0005 00000001 0000069E
+008E Software                    0131 0002 0000000E 000006A6
+009A DateTime                    0132 0002 00000014 000006B6
+00A6 Next IFD offset             00000000
+
+Values longer than 4 bytes:
+00B6 StripOffsets                Offset0, Offset1, ... Offset187
+03A6 StripByteCounts             Count0, Count1, ... Count187
+0696 XResolution                 0000012C 00000001
+069E YResolution                 0000012C 00000001
+06A6 Software                    “PageMaker 4.0”
+06B6 DateTime                    “1988:02:18 13:59:59”
+
+Image Data:
+00000700                         Compressed data for strip 10
+xxxxxxxx                         Compressed data for strip 179
+xxxxxxxx                         Compressed data for strip 53
+xxxxxxxx                         Compressed data for strip 160
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考信息&#34;&gt;参考信息&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf&#34;&gt;http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.awaresystems.be/imaging/tiff.html&#34;&gt;http://www.awaresystems.be/imaging/tiff.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.libtiff.org/tools.html&#34;&gt;http://www.libtiff.org/tools.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>浮点数 on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/</link>
+    <description>Recent content in 浮点数 on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 08 Dec 2011 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>解浮点数方程: X&#43;1=X</title>
+      <link>https://chai2010.cn/post/2011/ieee754-question/</link>
+      <pubDate>Thu, 08 Dec 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2011/ieee754-question/</guid>
+      
+        <description>&lt;p&gt;不是纯数学意义上的方程, 对应计算机的一个浮点数问题:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if((float)(x+1.0) == (float)(x)) { x = ? }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;简单分析, ieee754中float采用23bit表示有效位, 再加省略的1, 共有24bit.
+当结果超出24bit时, 小数部分被被丢失.&lt;/p&gt;
+
+&lt;p&gt;大于 &lt;code&gt;2^24 = 16777216&lt;/code&gt; 的x, 满足 &lt;code&gt;x+1.0==x&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;测试程序:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+
+// Little endian
+union ieee754_float {
+    float f;
+
+    /* This is the IEEE 754 single-precision format.  */
+    struct {
+        unsigned int mantissa:23;
+        unsigned int exponent:8;
+        unsigned int negative:1;
+    } ieee;
+
+    /* This format makes it easier to see if a NaN is a signalling NaN.  */
+    struct {
+        unsigned int mantissa:22;
+        unsigned int quiet_nan:1;
+        unsigned int exponent:8;
+        unsigned int negative:1;
+    } ieee_nan;
+};
+
+int main()
+{
+    union ieee754_float f = { 0.0f };
+
+    // Find a positive floating point value x, for which x+1.0=x.
+    for(f.ieee.exponent = 127; f.ieee.exponent &amp;lt; 255; f.ieee.exponent++) {
+        if((float)(f.f + 1.f) == f.f) {
+            printf(&amp;quot;%f: exponent = %d\n&amp;quot;, f.f, f.ieee.exponent);
+        }
+    }
+    return 0;
+}
+
+// output:
+// 16777216.000000: exponent = 151
+// 33554432.000000: exponent = 152
+// 67108864.000000: exponent = 153
+// 134217728.000000: exponent = 154
+//
+// ... ...
+//
+// 21267647932558654000000000000000000000.000000: exponent = 251
+// 42535295865117308000000000000000000000.000000: exponent = 252
+// 85070591730234616000000000000000000000.000000: exponent = 253
+// 170141183460469230000000000000000000000.000000: exponent = 254
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;IEEE754相关资源:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/IEEE_754-2008&#34;&gt;http://en.wikipedia.org/wiki/IEEE_754-2008&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/Single_precision&#34;&gt;http://en.wikipedia.org/wiki/Single_precision&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.h-schmidt.net/FloatApplet/IEEE754.html&#34;&gt;http://www.h-schmidt.net/FloatApplet/IEEE754.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://babbage.cs.qc.edu/IEEE-754/&#34;&gt;http://babbage.cs.qc.edu/IEEE-754/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.scs.stanford.edu/histar/src/pkg/uclibc/include/ieee754.h&#34;&gt;http://www.scs.stanford.edu/histar/src/pkg/uclibc/include/ieee754.h&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

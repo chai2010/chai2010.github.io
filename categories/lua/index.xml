@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lua on chai2010 的博客</title>
+    <link>https://chai2010.cn/categories/lua/</link>
+    <description>Recent content in Lua on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 22 Dec 2017 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/categories/lua/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>lua中也能用上Go语言的strings包</title>
+      <link>https://chai2010.cn/post/lua/gopherlua-strings/</link>
+      <pubDate>Fri, 22 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/lua/gopherlua-strings/</guid>
+      
+        <description>&lt;p&gt;lua内置的库非常小，我们可以将Go语言的strings包引入到Lua环境。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;下面是具体的例子。&lt;/p&gt;
+
+&lt;p&gt;hello.go:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;github.com/yuin/gopher-lua&amp;quot;
+
+	strings &amp;quot;github.com/chai2010/glua-strings&amp;quot;
+)
+
+func main() {
+	L := lua.NewState()
+	defer L.Close()
+
+	strings.Preload(L)
+
+	if err := L.DoFile(&amp;quot;hello.lua&amp;quot;); err != nil {
+		panic(err)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;hello.lua:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lua&#34;&gt;local strings = require(&amp;quot;strings&amp;quot;)
+
+print(strings.ToUpper(&amp;quot;abc&amp;quot;))
+
+for i, s in ipairs(strings.Split(&amp;quot;aa,b,,c&amp;quot;, &amp;quot;,&amp;quot;)) do
+	print(i, s)
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run hello.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;项目地址:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/glua-strings&#34;&gt;https://github.com/chai2010/glua-strings&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

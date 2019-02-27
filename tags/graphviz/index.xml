@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Graphviz on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/graphviz/</link>
+    <description>Recent content in Graphviz on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 15 Nov 2017 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/graphviz/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>用ASCII画图</title>
+      <link>https://chai2010.cn/post/misc/ascii-draw/</link>
+      <pubDate>Wed, 15 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/misc/ascii-draw/</guid>
+      
+        <description>
+
+&lt;p&gt;作为一个严肃的码农，用ASCII画图是一门艺术。&lt;/p&gt;
+
+&lt;h2 id=&#34;monodraw-https-monodraw-helftone-com-ascii-画图界的ps&#34;&gt;&lt;a href=&#34;https://monodraw.helftone.com/&#34;&gt;MonoDraw&lt;/a&gt; - ASCII 画图界的PS&lt;/h2&gt;
+
+&lt;p&gt;当然，我们并不是要像用小刀刻硬盘那样一个一个字符来画图，在ASCII画图领用也有类似PhotoShop那样的软件，那就是大名鼎鼎的 MonoDraw ！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ascii-draw-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;要注意的是这个软件只有 macOS 版本，而且是收费软件(100+RMB)。&lt;/p&gt;
+
+&lt;p&gt;比如我们用 &lt;a href=&#34;https://monodraw.helftone.com/&#34;&gt;MonoDraw&lt;/a&gt;  画一个 iPhone, 然后在窗口显示一个文本:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ascii-draw-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ditaa-http-ditaa-sourceforge-net-ascii-图像打印机&#34;&gt;&lt;a href=&#34;http://ditaa.sourceforge.net/&#34;&gt;Ditaa&lt;/a&gt; - ASCII 图像打印机&lt;/h2&gt;
+
+&lt;p&gt;Ditaa 是 Java 写的一个开源小工具，它可以将ASCII码图打印为漂亮的png格式图片。&lt;/p&gt;
+
+&lt;p&gt;比如有以下样式的ASCII码图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ascii-draw-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;渲染后的效果是这样的:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ascii-draw-04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这里是打包好的 Docker 镜像(也有很多例子)： &lt;a href=&#34;https://github.com/chai2010/ditaa-docker&#34;&gt;https://github.com/chai2010/ditaa-docker&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;其它工具&#34;&gt;其它工具&lt;/h2&gt;
+
+&lt;p&gt;还有很多其它知名度很高小工具，这里只是简单列举几个：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.graphviz.org/&#34;&gt;Graphviz&lt;/a&gt;: 通过自定义的DOT语言脚本描述图形，然后渲染为图像文件&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://plantuml.com/&#34;&gt;PlantUML&lt;/a&gt;: 通过自定义的脚本语言描述UML图，然后渲染为图像文件&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.gnuplot.info/&#34;&gt;Gnuplot&lt;/a&gt;: 一个生成图标的小工具(它和GNU项目没关系)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

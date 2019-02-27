@@ -1,0 +1,2645 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on chai2010 的博客</title>
+    <link>https://chai2010.cn/post/</link>
+    <description>Recent content in Posts on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 07 Dec 2018 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>《WebAssembly 标准入门》开始预售了，欢迎关注!</title>
+      <link>https://chai2010.cn/post/wasm/wasm-book/</link>
+      <pubDate>Fri, 07 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/wasm/wasm-book/</guid>
+      
+        <description>&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。本书详尽介绍了 WebAssembly 程序在 JavaScript 环境下的使用方法、WebAssembly 汇编语言和二进制格式，给出了大量简单易懂的示例，同时以 C/C++和 Go 语言开发环境为例，介绍了如何使用其他高级语言开发 WebAssembly 模块。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://erpimg.epubit.com:8081/upload/img/erp/A20181946.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;序&#34;&gt;序&lt;/h2&gt;
+
+&lt;p&gt;某一天，有朋友向我推荐了一项新技术——WebAssembly。我认为这是一项值得关注的技术。&lt;/p&gt;
+
+&lt;p&gt;说WebAssembly是一门编程语言，但它更像一个编译器。实际上它是一个虚拟机，包含了一门低级汇编语言和对应的虚拟机体系结构，而WebAssembly这个名字从字面理解就说明了一切——Web的汇编语言。它的优点是文件小、加载快、执行效率非常高，可以实现更复杂的逻辑。&lt;/p&gt;
+
+&lt;p&gt;其实，我觉得出现这样的技术并不令人意外，而只是顺应了潮流，App的封闭系统必然会被新一代Web OS取代。但现有的Web开发技术，如JavaScript，前端执行效率和解决各种复杂问题的能力还不足，而WebAssembly的编译执行功能恰恰能弥补这些不足。WebAssembly标准是在谋智（Mozilla）、谷歌（Google）、微软（Microsoft）、苹果（Apple）等各大厂商的大力推进下诞生的，目前包括Chrome、Firefox、Safari、Opera、Edge在内的大部分主流浏览器均已支持WebAssembly。这使得WebAssembly前景非常好。&lt;/p&gt;
+
+&lt;p&gt;WebAssembly是Web前端技术，具有很强的可移植性，技术的潜在受益者不局限于传统的前端开发人员，随着技术的推进，越来越多的其他语言的开发者也将从中受益。如果开发者愿意，他们可以使用C/C++、Go、Rust、Kotlin、C#等开发语言来写代码，然后编译为WebAssembly，并在Web上执行，这是不是很酷？它能让我们很容易将用其他编程语言编写的程序移植到Web上，对于企业级应用和工业级应用都是巨大利好。&lt;/p&gt;
+
+&lt;p&gt;WebAssembly的应用场景也相当丰富，如Google Earth，2017年10月Google Earth开始在Firefox上运行，其中的关键就是使用了WebAssembly；再如网页游戏，WebAssembly能让HTML5游戏引擎速度大幅提高，国内一家公司使用WebAssembly后引擎效率提高了300%。&lt;/p&gt;
+
+&lt;p&gt;WebAssembly作为一种新兴的技术，为开发者提供了一种崭新的思路和工作方式，未来是很有可能大放光彩的，不过目前其相关的资料和社区还不够丰富，尽管已经有一些社区开始出现了相关技术文章，CSDN上也有较多的文章，但像本书这样全面系统地介绍WebAssembly技术的还不多，甚至没有。本书的两位作者都是有10多年经验的一线开发者，他们从WebAssembly概念诞生之初就开始密切关注该技术的发展，其中柴树杉是Emscripten（WebAssembly的技术前身之一）的首批实践者，丁尔男是国内首批工程化使用WebAssembly的开发者。&lt;/p&gt;
+
+&lt;p&gt;2018年7月，WebAssembly社区工作组发布了WebAssembly 1.0标准。现在，我在第一时间就向国内开发者介绍和推荐本书，是希望开发者能迅速地了解和学习新技术，探索新技术的价值。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;——蒋涛 CSDN创始人、总裁，极客帮创始合伙人&lt;/em&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言实现WebDAV文件系统</title>
+      <link>https://chai2010.cn/post/2018/webdav/</link>
+      <pubDate>Wed, 24 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/webdav/</guid>
+      
+        <description>&lt;p&gt;WebDAV （Web-based Distributed Authoring and Versioning） 是一种基于 HTTP 1.1协议的通信协议。它扩展了HTTP 1.1，在GET、POST、HEAD等几个HTTP标准方法以外添加了一些新的方法，使应用程序可对Web Server直接读写，并支持写文件锁定(Locking)及解锁(Unlock)，还可以支持文件的版本控制。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;使用WebDAV可以完成的工作包括：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;特性（元数据）处理。可以使用WebDAV中的PROPFIND和PROPPATCH方法可创建、删除和查询有关文件的信息，例如作者和创建日期。&lt;/li&gt;
+&lt;li&gt;集合和资源的管理。可以使用GET、PUT、DELETE和MKCOL方法创建文档集合并检索分层结构成员列表（类似于文件系统中的目录）。&lt;/li&gt;
+&lt;li&gt;锁定。可以禁止多人同时对一个文档进行操作。这将有助于防止出现“丢失更新”（更改被覆盖）的问题。&lt;/li&gt;
+&lt;li&gt;名称空间操作。您可以使用COPY和MOVE方法让服务器复制和删除相关资源。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;目前常见的NAS都提供WebDAV服务功能，很多手机应用也是通过WebDAV协议来实现应用间的文件共享。要提供自己的WebDAV服务首先要安装相应的软件。macOS下可以从App Store中安装免费的WebDAVNav Server软件。WebDAVNav Server服务启动界面如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/webdav/webdavnav-server.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;本节我们尝试用Go语言实现自己的WebDAV服务。&lt;/p&gt;
+
+&lt;h2 id=&#34;webdav对http的扩展&#34;&gt;WebDAV对HTTP的扩展&lt;/h2&gt;
+
+&lt;p&gt;WebDAV扩展了HTTP/1.1协议。它定义了新的HTTP标头，客户机可以通过这些新标头传递WebDAV特有的资源请求。这些标头为：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Destination:&lt;/li&gt;
+&lt;li&gt;Lock-Token:&lt;/li&gt;
+&lt;li&gt;Timeout:&lt;/li&gt;
+&lt;li&gt;DAV:&lt;/li&gt;
+&lt;li&gt;If:&lt;/li&gt;
+&lt;li&gt;Depth:&lt;/li&gt;
+&lt;li&gt;Overwrite:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;同时，WebDAV标准还引入了若干新HTTP方法，用于告知启用了WebDAV的服务器如何处理请求。这些方法是对现有方法（例如 GET、PUT和DELETE）的补充，可用来执行WebDAV事务。下面是这些新HTTP方法的介绍：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;LOCK。锁定资源，使用 Lock-Token: 标头。&lt;/li&gt;
+&lt;li&gt;UNLOCK。解除锁定，使用 Lock-Token: 标头。&lt;/li&gt;
+&lt;li&gt;PROPPATCH。设置、更改或删除单个资源的特性。&lt;/li&gt;
+&lt;li&gt;PROPFIND。用于获取一个或多个资源的一个或多个特性信息。该请求可能会包含一个值为 0、1或infinity的Depth: 标头。其中，0表示指定将获取指定URI处的集合的特性（也就是该文件或目录）；1表示指定将获取该集合以及位于该指定URI之下与其紧邻的资源的特性（非嵌套的子目录或子文件）；infinity表示指定将获取全部子目录或子文件（深度过大会加重对服务器的负担）。&lt;/li&gt;
+&lt;li&gt;COPY。复制资源，可以使用 Depth: 标头移动资源，使用 Destination: 标头指定目标。如果需要，COPY 方法也使用 Overwrite: 标头。&lt;/li&gt;
+&lt;li&gt;MOVE。移动资源，可以使用 Depth: 标头移动资源，使用 Destination: 标头指定目标。如果需要，MOVE 方法也使用 Overwrite: 标头。&lt;/li&gt;
+&lt;li&gt;MKCOL。用于创建新集合（对应目录）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;最简的webdav服务&#34;&gt;最简的WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;Go语言扩展包 &lt;code&gt;golang.org/x/net/webdav&lt;/code&gt; 提供了WebDAV服务的支持。其中webdav.Handler实现了http.Handle接口，用处理WebDAV特有的http请求。要构造webdav.Handler对象的话，我们至少需要指定一个文件系统和锁服务。其中webdav.Dir将本地的文件系统映射为WebDAV的文件系统，webdav.NewMemLS则是基于本机内存构造一个锁服务。&lt;/p&gt;
+
+&lt;p&gt;下面是最简单的WebDAV服务实现：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;net/http&amp;quot;
+
+	&amp;quot;golang.org/x/net/webdav&amp;quot;
+)
+
+func main() {
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	})
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行之后，当前目录就可以通过WebDAV方式访问了。&lt;/p&gt;
+
+&lt;h2 id=&#34;只读的webdav服务&#34;&gt;只读的WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;前面实现的WebDAV服务默认不需要任何密码就可以访问文件系统，任何匿名的用户可以添加、修改、删除文件，这对于网络服务来说太不安全了。&lt;/p&gt;
+
+&lt;p&gt;为了防止被用户无意或恶意修改，我们可以关闭WebDAV的修改功能。参考WebDAV协议规范可知，修改相关的操作主要涉及PUT/DELETE/PROPPATCH/MKCOL/COPY/MOVE等几个方法。我们只要将这几个方法屏蔽了就可以实现一个只读的WebDAV服务。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		switch req.Method {
+		case &amp;quot;PUT&amp;quot;, &amp;quot;DELETE&amp;quot;, &amp;quot;PROPPATCH&amp;quot;, &amp;quot;MKCOL&amp;quot;, &amp;quot;COPY&amp;quot;, &amp;quot;MOVE&amp;quot;:
+			http.Error(w, &amp;quot;WebDAV: Read Only!!!&amp;quot;, http.StatusForbidden)
+			return
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们通过http.HandleFunc重新包装了fs.ServeHTTP方法，然后将和更新相关的操作屏蔽掉。这样我们就实现了一个只读的WebDAV服务。&lt;/p&gt;
+
+&lt;h2 id=&#34;密码认证webdav服务&#34;&gt;密码认证WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;WebDAV是基于HTTP协议扩展的标准，我们可以通过HTTP的基本认证机制设置用户名和密码。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		// 获取用户名/密码
+		username, password, ok := req.BasicAuth()
+		if !ok {
+			w.Header().Set(&amp;quot;WWW-Authenticate&amp;quot;, `Basic realm=&amp;quot;Restricted&amp;quot;`)
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		// 验证用户名/密码
+		if username != &amp;quot;user&amp;quot; || password != &amp;quot;123456&amp;quot; {
+			http.Error(w, &amp;quot;WebDAV: need authorized!&amp;quot;, http.StatusUnauthorized)
+			return
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们通过req.BasicAuth来获取用户名和密码，然后进行验证。如果没有设置用户名和密码，则返回一个http.StatusUnauthorized状态，HTTP客户端会弹出让用户输入密码的窗口。&lt;/p&gt;
+
+&lt;p&gt;由于HTTP协议并没有加密，因此用户名和密码也是明文传输。为了更安全，我们可以选择用HTTPS协议提供WebDAV服务。为此，我们需要准备一个证书文件（crypto/tls包中的generate_cert.go程序可以生成证书），然后用http.ListenAndServeTLS来启动https服务。&lt;/p&gt;
+
+&lt;p&gt;同时需要注意的是，从Windows Vista起，微软就禁用了http形式的基本WebDAV验证形式(KB841215)，默认必须使用https连接。可以在Windows Vista/7/8中，改注册表:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;HKEY_LOCAL_MACHINE&amp;gt;&amp;gt;SYSTEM&amp;gt;&amp;gt;CurrentControlSet&amp;gt;&amp;gt;Services&amp;gt;&amp;gt;WebClient&amp;gt;&amp;gt;Parameters&amp;gt;&amp;gt;BasicAuthLevel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;把这个值从1改为2，然后进控制面板/服务，把WebClient服务重启。&lt;/p&gt;
+
+&lt;h2 id=&#34;浏览器视图&#34;&gt;浏览器视图&lt;/h2&gt;
+
+&lt;p&gt;WebDAV是基于HTTP协议，理论上从浏览器访问WebDAV服务器会更简单。但是，当我们在浏览器中访问WebDAV服务的根目录之后，收到了“Method Not Allowed”错误信息。&lt;/p&gt;
+
+&lt;p&gt;这是因为，根据WebDAV协议规范，http的GET方法只能用于获取文件。在Go语言实现的webdav库中，如果用GET访问一个目录，会返回一个http.StatusMethodNotAllowed状态码，对应“Method Not Allowed”错误信息。&lt;/p&gt;
+
+&lt;p&gt;为了支持浏览器删除目录列表，我们对针对目录的GET操作单独生成html页面：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		if req.Method == &amp;quot;GET&amp;quot; &amp;amp;&amp;amp; handleDirList(fs.FileSystem, w, req) {
+			return
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，handleDirList函数用于处理目录列表，然后返回ture。handleDirList的实现如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func handleDirList(fs webdav.FileSystem, w http.ResponseWriter, req *http.Request) bool {
+	ctx := context.Background()
+
+	f, err := fs.OpenFile(ctx, req.URL.Path, os.O_RDONLY, 0)
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+
+	if fi, _ := f.Stat(); fi != nil &amp;amp;&amp;amp; !fi.IsDir() {
+		return false
+	}
+
+	dirs, err := f.Readdir(-1)
+	if err != nil {
+		log.Print(w, &amp;quot;Error reading directory&amp;quot;, http.StatusInternalServerError)
+		return false
+	}
+
+	w.Header().Set(&amp;quot;Content-Type&amp;quot;, &amp;quot;text/html; charset=utf-8&amp;quot;)
+	fmt.Fprintf(w, &amp;quot;&amp;lt;pre&amp;gt;\n&amp;quot;)
+	for _, d := range dirs {
+		name := d.Name()
+		if d.IsDir() {
+			name += &amp;quot;/&amp;quot;
+		}
+		fmt.Fprintf(w, &amp;quot;&amp;lt;a href=\&amp;quot;%s\&amp;quot;&amp;gt;%s&amp;lt;/a&amp;gt;\n&amp;quot;, name, name)
+	}
+	fmt.Fprintf(w, &amp;quot;&amp;lt;/pre&amp;gt;\n&amp;quot;)
+	return true
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在可以通过浏览器来访问WebDAV目录列表了。&lt;/p&gt;
+
+&lt;h2 id=&#34;实用的webdav服务&#34;&gt;实用的WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;为了构造实用的WebDAV服务，我们通过命令行参数设置相关信息，同时将前面的功能整合起来。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;flag&amp;quot;
+	&amp;quot;fmt&amp;quot;
+	&amp;quot;log&amp;quot;
+	&amp;quot;net/http&amp;quot;
+	&amp;quot;os&amp;quot;
+
+	&amp;quot;golang.org/x/net/context&amp;quot;
+	&amp;quot;golang.org/x/net/webdav&amp;quot;
+)
+
+var (
+	flagRootDir   = flag.String(&amp;quot;dir&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;webdav root dir&amp;quot;)
+	flagHttpAddr  = flag.String(&amp;quot;http&amp;quot;, &amp;quot;:80&amp;quot;, &amp;quot;http or https address&amp;quot;)
+	flagHttpsMode = flag.Bool(&amp;quot;https-mode&amp;quot;, false, &amp;quot;use https mode&amp;quot;)
+	flagCertFile  = flag.String(&amp;quot;https-cert-file&amp;quot;, &amp;quot;cert.pem&amp;quot;, &amp;quot;https cert file&amp;quot;)
+	flagKeyFile   = flag.String(&amp;quot;https-key-file&amp;quot;, &amp;quot;key.pem&amp;quot;, &amp;quot;https key file&amp;quot;)
+	flagUserName  = flag.String(&amp;quot;user&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;user name&amp;quot;)
+	flagPassword  = flag.String(&amp;quot;password&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;user password&amp;quot;)
+	flagReadonly  = flag.Bool(&amp;quot;read-only&amp;quot;, false, &amp;quot;read only&amp;quot;)
+)
+
+func init() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, &amp;quot;Usage of WebDAV Server\n&amp;quot;)
+		flag.PrintDefaults()
+		fmt.Fprintf(os.Stderr, &amp;quot;\nReport bugs to &amp;lt;chaishushan{AT}gmail.com&amp;gt;.\n&amp;quot;)
+	}
+}
+
+func main() {
+	flag.Parse()
+
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(*flagRootDir),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		if *flagUserName != &amp;quot;&amp;quot; &amp;amp;&amp;amp; *flagPassword != &amp;quot;&amp;quot; {
+			username, password, ok := req.BasicAuth()
+			if !ok {
+				w.Header().Set(&amp;quot;WWW-Authenticate&amp;quot;, `Basic realm=&amp;quot;Restricted&amp;quot;`)
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			if username != *flagUserName || password != *flagPassword {
+				http.Error(w, &amp;quot;WebDAV: need authorized!&amp;quot;, http.StatusUnauthorized)
+				return
+			}
+		}
+
+		if req.Method == &amp;quot;GET&amp;quot; &amp;amp;&amp;amp; handleDirList(fs.FileSystem, w, req) {
+			return
+		}
+
+		if *flagReadonly {
+			switch req.Method {
+			case &amp;quot;PUT&amp;quot;, &amp;quot;DELETE&amp;quot;, &amp;quot;PROPPATCH&amp;quot;, &amp;quot;MKCOL&amp;quot;, &amp;quot;COPY&amp;quot;, &amp;quot;MOVE&amp;quot;:
+				http.Error(w, &amp;quot;WebDAV: Read Only!!!&amp;quot;, http.StatusForbidden)
+				return
+			}
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	if *flagHttpsMode {
+		http.ListenAndServeTLS(*flagHttpAddr, *flagCertFile, *flagKeyFile, nil)
+	} else {
+		http.ListenAndServe(*flagHttpAddr, nil)
+	}
+}
+
+func handleDirList(fs webdav.FileSystem, w http.ResponseWriter, req *http.Request) bool {
+	// 参考前面的代码
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;显示帮助信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go run main.go -h
+Usage of WebDAV Server
+  -dir string
+    	webdav root dir
+  -http string
+    	http or https address (default &amp;quot;:80&amp;quot;)
+  -https-cert-file string
+    	https cert file (default &amp;quot;cert.pem&amp;quot;)
+  -https-key-file string
+    	https key file (default &amp;quot;key.pem&amp;quot;)
+  -https-mode
+    	use https mode
+  -password string
+    	user password
+  -read-only
+    	read only
+  -user string
+    	user name
+
+Report bugs to &amp;lt;chaishushan{AT}gmail.com&amp;gt;.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下命令以Https启动一个WebDAV服务，对应本机的Go语言安装目录，同时设置用户名和密码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go run main.go -https-mode -user=user -password=123456 -dir=/usr/local/go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面是在iPod上通过WebDANNav+应用通过WebDAV协议访问/usr/local/go的预览图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/webdav/ios-webdav-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言和Windows服务</title>
+      <link>https://chai2010.cn/post/2018/window-service/</link>
+      <pubDate>Sun, 21 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/window-service/</guid>
+      
+        <description>&lt;p&gt;Windows服务使您能够创建在后台Windows会话中可长时间运行的可执行应用程序。Windows服务可以在计算机启动时自动启动，管理员也可以临时暂停和重新启动服务。Windows服务非常适合运行一些需要长时间在后台运行的服务器程序，例如Web服务器等应用。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Go语言的官方扩展包&lt;code&gt;&amp;quot;golang.org/x/sys/windows&amp;quot;&lt;/code&gt;以及其子包对Windows服务提供了必要的支持。不过这个扩展包比较偏向底层使用比较繁琐，为了简化Windows服务的开发作者在此基础上封装了一个简化的&lt;code&gt;&amp;quot;github.com/chai2010/winsvc&amp;quot;&lt;/code&gt;包。通过封装的&lt;code&gt;winsvc&lt;/code&gt;包我们可以很容易构造一个windows服务。&lt;/p&gt;
+
+&lt;h2 id=&#34;简单的web服务&#34;&gt;简单的web服务&lt;/h2&gt;
+
+&lt;p&gt;因为Windows服务一般是在后台长时间运行的程序，为了便于演示我们先构造一个简单的现实当前服务器时间的http服务程序。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;context&amp;quot;
+	&amp;quot;net&amp;quot;
+	&amp;quot;net/http&amp;quot;
+	&amp;quot;time&amp;quot;
+)
+
+var (
+	server *http.Server
+)
+
+func main() {
+	StartServer()
+}
+
+func StartServer() {
+	log.Println(&amp;quot;StartServer, port = 8080&amp;quot;)
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, &amp;quot;winsrv server&amp;quot;, time.Now())
+	})
+
+	server = &amp;amp;http.Server{Addr: &amp;quot;:8080&amp;quot;}
+	server.ListenAndServe()
+}
+
+func StopServer() {
+	if server != nil {
+		server.Shutdown(context.Background()) // Go 1.8+
+	}
+	log.Println(&amp;quot;StopServer&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，&lt;code&gt;StartServer&lt;/code&gt;和&lt;code&gt;StopServer&lt;/code&gt;函数分别对应服务的启动和停止操作。在这个程序中，&lt;code&gt;StopServer&lt;/code&gt;函数并没有用到，我们只需要通过&lt;code&gt;CTRL+C&lt;/code&gt;强制停止服务就可以了。但是对于Windows服务程序，我们不能用暴力的方式强制终止程序，因此需要封装一个程序可以主动停止的函数。&lt;/p&gt;
+
+&lt;h2 id=&#34;windows服务的运行环境&#34;&gt;Windows服务的运行环境&lt;/h2&gt;
+
+&lt;p&gt;因为普通的程序无法处理Windows服务特有的消息，普通的Go程序也无法在服务模式运行。我们通过&lt;code&gt;&amp;quot;github.com/chai2010/winsvc&amp;quot;&lt;/code&gt;包启动的服务可以吹Windows服务特有的消息，因此也就可以支持服务模式运行。同时Windows服务程序需要在后台长时间运行不能随意退出，普通的小程序是不能作为Windows服务来运行的。&lt;/p&gt;
+
+&lt;p&gt;如果要提供Windows服务模式的支持, main需要做适当调整:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;import (
+	&amp;quot;github.com/chai2010/winsvc&amp;quot;
+)
+
+func main() {
+	// run as service
+	if !winsvc.IsAnInteractiveSession() {
+		log.Println(&amp;quot;main:&amp;quot;, &amp;quot;runService&amp;quot;)
+		if err := winsvc.RunAsService(&amp;quot;myserver&amp;quot;, StartServer, StopServer, false); err != nil {
+			log.Fatalf(&amp;quot;svc.Run: %v\n&amp;quot;, err)
+		}
+		return
+	}
+
+	// run as normal
+	StartServer()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;程序中通过&lt;code&gt;winsvc.IsAnInteractiveSession&lt;/code&gt;来判断是否运行在交互模式，普通程序运行一般都是交互模式，windows服务则是运行在非交互模式。当程序处在非交互模式时，我们通过&lt;code&gt;winsvc.RunAsService&lt;/code&gt;来运行服务，也就是以Windows服务的模式运行。同时该程序依然可以在普通模式下运行。&lt;/p&gt;
+
+&lt;p&gt;当程序运行在名为&lt;code&gt;myserver&lt;/code&gt;服务模式时，提供对Windows服务相关消息的处理支持。可以通过管理员手工注册Windows服务，这时需要指定服务名称和服务程序的绝对路径。下面四个命令分别是注册服务、启动服务、停止服务、删除服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sc  create myserver binPath= &amp;quot;C:\path\to\myserver.exe -data-dir=C:\path\myserver.data&amp;quot;
+net start  myserver
+net stop   myserver
+sc  delete myserver
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为Windows服务启动时并不需要登录用户帐号，因此程序不能引用普通帐号的环境变量，同时要尽量避免通过相对路径依赖当前目录。&lt;/p&gt;
+
+&lt;h2 id=&#34;自动注册服务&#34;&gt;自动注册服务&lt;/h2&gt;
+
+&lt;p&gt;手工注释Windows服务比较繁琐，我们可以在程序的命令行参赛中增加自动注册服务的支持。&lt;/p&gt;
+
+&lt;p&gt;要在程序中将程序本身注册为服务，首先需要获取当前程序的绝对路径。我们可以通过&lt;code&gt;winsvc.GetAppPath()&lt;/code&gt;来获取当前程序的绝对路径。同时，为了让服务程序在运行时有一个固定的当前目录，我们一般可以在启动的时候将当前目录切换到进程所在目录，这些工作可以在&lt;code&gt;init&lt;/code&gt;函数中完成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var (
+	appPath string // 程序的绝对路径
+)
+
+func init() {
+	var err error
+	if appPath, err = winsvc.GetAppPath(); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Chdir(filepath.Dir(appPath)); err != nil {
+		log.Fatal(err)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注册服务可以通过&lt;code&gt;winsvc.InstallService&lt;/code&gt;实现，注册服务是需要指定服务程序的路径和唯一服务的名称：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.InstallService(appPath, &amp;quot;myserver&amp;quot;, &amp;quot;myserver service&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;和注册服务相对应的是取消注册服务，取消注册服务可以通过&lt;code&gt;winsvc.RemoveService&lt;/code&gt;实现，直接通过服务的名称就可以删除服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.RemoveService(&amp;quot;myserver&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Windows服务在成功注册之后就可以以服务模式运行了，可以通过&lt;code&gt;winsvc.StartService&lt;/code&gt;向服务发送启动消息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.StartService(&amp;quot;myserver&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对于已经在运行的Windows服务，可以通过&lt;code&gt;winsvc.StopService&lt;/code&gt;向服务发送停止运行的命令。Windows服务在收到停止运行的命令后，会在程序退出之前调用&lt;code&gt;StopServer&lt;/code&gt;函数，&lt;code&gt;StopServer&lt;/code&gt;函数是在启动Windows服务时由&lt;code&gt;winsvc.RunAsService&lt;/code&gt;函数参数指定。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.StopService(&amp;quot;myserver&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在我们可以将这些功能整合在一起，然后通过命令行参数来选择具体的命令。下面是完整的例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var (
+	appPath string
+
+	flagServiceName = flag.String(&amp;quot;service-name&amp;quot;, &amp;quot;myserver&amp;quot;, &amp;quot;Set service name&amp;quot;)
+	flagServiceDesc = flag.String(&amp;quot;service-desc&amp;quot;, &amp;quot;myserver service&amp;quot;, &amp;quot;Set service description&amp;quot;)
+
+	flagServiceInstall   = flag.Bool(&amp;quot;service-install&amp;quot;, false, &amp;quot;Install service&amp;quot;)
+	flagServiceUninstall = flag.Bool(&amp;quot;service-remove&amp;quot;, false, &amp;quot;Remove service&amp;quot;)
+	flagServiceStart     = flag.Bool(&amp;quot;service-start&amp;quot;, false, &amp;quot;Start service&amp;quot;)
+	flagServiceStop      = flag.Bool(&amp;quot;service-stop&amp;quot;, false, &amp;quot;Stop service&amp;quot;)
+)
+
+func init() {
+	// change to current dir
+	var err error
+	if appPath, err = winsvc.GetAppPath(); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Chdir(filepath.Dir(appPath)); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func main() {
+	flag.Parse()
+
+	// install service
+	if *flagServiceInstall {
+		if err := winsvc.InstallService(appPath, *flagServiceName, *flagServiceDesc); err != nil {
+			log.Fatalf(&amp;quot;installService(%s, %s): %v\n&amp;quot;, *flagServiceName, *flagServiceDesc, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// remove service
+	if *flagServiceUninstall {
+		if err := winsvc.RemoveService(*flagServiceName); err != nil {
+			log.Fatalln(&amp;quot;removeService:&amp;quot;, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// start service
+	if *flagServiceStart {
+		if err := winsvc.StartService(*flagServiceName); err != nil {
+			log.Fatalln(&amp;quot;startService:&amp;quot;, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// stop service
+	if *flagServiceStop {
+		if err := winsvc.StopService(*flagServiceName); err != nil {
+			log.Fatalln(&amp;quot;stopService:&amp;quot;, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// run as service
+	if !winsvc.InServiceMode() {
+		log.Println(&amp;quot;main:&amp;quot;, &amp;quot;runService&amp;quot;)
+		if err := winsvc.RunAsService(*flagServiceName, StartServer, StopServer, false); err != nil {
+			log.Fatalf(&amp;quot;svc.Run: %v\n&amp;quot;, err)
+		}
+		return
+	}
+
+	// run as normal
+	StartServer()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;假设程序构成的目标文件为&lt;code&gt;myserver.exe&lt;/code&gt;，那么我们现在可以通过以下命令来分别注册服务、启动和停止服务、删除服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 普通模式运行
+$ go build -o myserver.exe myserver.go
+$ myserver.exe
+
+# 注册为Windows服务
+$ myserver.exe -service-install
+
+# 启动和停止Windows服务
+$ myserver.exe -service-start
+$ myserver.exe -service-stop
+
+# 删除服务
+# 删除之前需要先停止服务
+$ myserver.exe -service-remove
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在前面的章节中，我们演示过一个WebDAV的服务。读者可以尝试实现一个支持Windows后台服务模式运行的WebDAV的服务器。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go中的wasm汇编语言</title>
+      <link>https://chai2010.cn/post/2018/go-wasm-asm/</link>
+      <pubDate>Wed, 03 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-wasm-asm/</guid>
+      
+        <description>&lt;p&gt;Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;runtime-memclrnoheappointers-函数&#34;&gt;runtime·memclrNoHeapPointers 函数&lt;/h2&gt;
+
+&lt;p&gt;改函数源文件在：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s&#34;&gt;https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;函数的实现如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;// func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+TEXT runtime·memclrNoHeapPointers(SB), NOSPLIT, $0-16
+	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;函数签名&#34;&gt;函数签名&lt;/h2&gt;
+
+&lt;p&gt;函数的签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对应C语言的签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;void memclrNoHeapPointers(int32_t ptr, int32_t n);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对应WebAssembly的函数签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	...
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;读取函数参数&#34;&gt;读取函数参数&lt;/h2&gt;
+
+&lt;p&gt;因为Go语言是动态栈，和WebAssembly的内存模型并不一样。我们先忽略这些问题的细节，看看如何读取参数的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;熟悉Go汇编语言的同学肯定很容易理解上述代码。其中第一行指令是将Go函数的第一个参数加载到R0寄存器，第二行指令是将第二个参数加载到R1寄存器。FP是伪寄存器，表示当前函数调用的帧寄存器，每个参数分别使用参数名作为前缀+参数相对于FP的地址偏移量确定。&lt;/p&gt;
+
+&lt;p&gt;不过WebAssembly是基于栈式的虚拟机结构，并不存在寄存器的概念。不过我们可以将R0和R1看作是函数的局部变量。因此在memclrNoHeapPointers函数的定义中再增加2个局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+	...
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;webassembly汇编语言&#34;&gt;WebAssembly汇编语言&lt;/h2&gt;
+
+&lt;p&gt;现在将函数的主体指令改为WebAssembly汇编语言，大概是如下的写法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;具体的算法类似以下的Go语言代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func memclrNoHeapPointers(ptr, n int32) {
+	R0 := ptr
+	R1 := n
+
+	loop: for {
+		if R1 == 0 {
+			return
+		}
+
+		Memort[R0] = 0
+		R0++
+		R1--
+
+		continue loop
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在循环中，第一组指令是R1表示的未清0的元素个数是否未0，如果未0则返回。对应代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R1
+		I64Eqz
+		If
+			RET
+		End
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中Get对应WebAssembly的get_local指令，用于根据局部变量的索引标号获取一个值，放到栈中。I64Eqz对应i64.eqz指令，从栈中取出一个值，判断是否为0，并将结果从新放入栈中。而If则对应br_if控制流指令，首先从栈取出一个值，如果非0则执行分支内的指令。RET返回函数，和WebAssembly的return指令不一定完全等价。&lt;/p&gt;
+
+&lt;p&gt;第二组指令是强R0表示的内存地址对应的空间清0：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Get对应get_local指令，取出一个i64类型的值。I32WrapI64对应i32.wrap/i64指令，将i64类型强制转型为i32类型，重新入栈。I64Const则是生成一个常数0，入栈。I64Store8对应i32.store8指令，从栈取出内存地址，第二个参数是0表示地址采用默认的对其方式。简而言之就是将R0对应的地址设置为0。&lt;/p&gt;
+
+&lt;p&gt;第三组是将R0加一后存回R0局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;第四组是将R1减一后存回R1局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;循环内的最后一个&lt;code&gt;Br loop&lt;/code&gt;指令是继续从loop标号开始的循环。&lt;/p&gt;
+
+&lt;p&gt;函数最后的UNDEF并不是WebAssembly汇编指令。&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;因为Go语言序言支持栈的分裂，Go语言对WebAssembly的汇编语言是一个变异的版本。Go语言使用局部或者是全局变量来模拟寄存器，在函数的内部在依然基于WebAssembly栈虚拟机的方式工作。&lt;/p&gt;
+
+&lt;p&gt;因为WebAssembly也是刚刚支持的平台，很多技术细节还需要进一步确认。想深入了解WebAssembly汇编语言的同学，本人写的 &lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md&#34;&gt;《WebAssembly标准入门
+》&lt;/a&gt; 中的汇编语言章节部分的内容。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>《C&#43;&#43;面向wasm编程》开源！[转]</title>
+      <link>https://chai2010.cn/post/2018/cppwasm-book/</link>
+      <pubDate>Tue, 25 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/cppwasm-book/</guid>
+      
+        <description>&lt;p&gt;目前支持WebAssembly的各种高级语言中，与WebAssembly匹配度最高的无疑是C/C++，为此，我们将开源编写《C++面向wasm编程》一书。本书将围绕“如何开发对WebAssembly友好的C/C++程序”这一中心，从Emscripten工具链的使用、C/C++与JavaScript互操作、一般性的设计原则等多方面介绍相关知识，并分享作者在实际工程应用中总结出的诸多经验。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/3dgen/cppwasm-book/master/cover.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;原文：&lt;a href=&#34;https://mp.weixin.qq.com/s/o4NIuc67eV3U_FGODT0ufA&#34;&gt;https://mp.weixin.qq.com/s/o4NIuc67eV3U_FGODT0ufA&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;目录&#34;&gt;目录&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第0章 WebAssembly简介&lt;/li&gt;
+&lt;li&gt;第1章 Emscripten快速入门
+
+&lt;ul&gt;
+&lt;li&gt;1.1 安装Emscripten&lt;/li&gt;
+&lt;li&gt;1.2 你好，世界！&lt;/li&gt;
+&lt;li&gt;1.3 胶水代码初探&lt;/li&gt;
+&lt;li&gt;1.4 编译目标及编译流程&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第2章 C与JavaScript互操作
+
+&lt;ul&gt;
+&lt;li&gt;2.1 JavaScript调用C函数&lt;/li&gt;
+&lt;li&gt;2.2 JavaScript函数注入C&lt;/li&gt;
+&lt;li&gt;2.3 单向透明的内存模型&lt;/li&gt;
+&lt;li&gt;2.4 JavaScript与C交换数据&lt;/li&gt;
+&lt;li&gt;2.5 EM_ASM宏&lt;/li&gt;
+&lt;li&gt;2.6 emscripten_run_script函数&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第3章 Emscripten运行时
+
+&lt;ul&gt;
+&lt;li&gt;3.1 main函数与生命周期&lt;/li&gt;
+&lt;li&gt;3.2 消息循环&lt;/li&gt;
+&lt;li&gt;3.3 文件系统&lt;/li&gt;
+&lt;li&gt;3.4 内存管理&lt;/li&gt;
+&lt;li&gt;3.5 Module定制&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第4章 WebAssembly友好的一般性方法
+
+&lt;ul&gt;
+&lt;li&gt;4.1 消息循环分离&lt;/li&gt;
+&lt;li&gt;4.2 数据对齐&lt;/li&gt;
+&lt;li&gt;4.3 使用C接口导出C++对象&lt;/li&gt;
+&lt;li&gt;4.4 C++对象生命周期控制&lt;/li&gt;
+&lt;li&gt;4.5 使用C接口注入JavaScript对象&lt;/li&gt;
+&lt;li&gt;4.6 小心int64&lt;/li&gt;
+&lt;li&gt;4.7 忘掉文件系统&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第5章 网络IO
+
+&lt;ul&gt;
+&lt;li&gt;5.1 websocket&lt;/li&gt;
+&lt;li&gt;5.2 ajax&lt;/li&gt;
+&lt;li&gt;5.3 fetch&lt;/li&gt;
+&lt;li&gt;5.4 一个通用的网络IO小框架&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第6章 多线程
+
+&lt;ul&gt;
+&lt;li&gt;6.1 JavaScript中的多线模型&lt;/li&gt;
+&lt;li&gt;6.2 一个例子&lt;/li&gt;
+&lt;li&gt;6.3 一个通用的多线程小框架&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第7章 GUI及交互
+
+&lt;ul&gt;
+&lt;li&gt;7.1 canvas&lt;/li&gt;
+&lt;li&gt;7.2 鼠标事件&lt;/li&gt;
+&lt;li&gt;7.3 键盘事件&lt;/li&gt;
+&lt;li&gt;7.4 触屏事件&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第8章 工程管理
+
+&lt;ul&gt;
+&lt;li&gt;8.1 使用Makefile&lt;/li&gt;
+&lt;li&gt;8.2 静态库&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;项目地址：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/3dgen/cppwasm-book&#34;&gt;https://github.com/3dgen/cppwasm-book&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;欢迎围观。加星可以鼓励作者尽快更新哦！&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言并发编程03 - 并发的内存模型</title>
+      <link>https://chai2010.cn/post/2018/go-concurrency-03/</link>
+      <pubDate>Mon, 24 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-concurrency-03/</guid>
+      
+        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
+
+&lt;p&gt;本次整理并发的内存模型部分的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;原子操作&#34;&gt;原子操作&lt;/h2&gt;
+
+&lt;p&gt;在早期，CPU都是以单核的形式顺序执行机器指令。在单核CPU时代只有一个核在读或写数据，因此数据读写不需要额外的保护。但是进入多核时代之后，同一个数据可能被运行在不同CPU上的多个线程同时读写，因此需要额外的手段保证数据的完整性。原子操作则可以保证数据在被原子读或写的操作时不会被其它线程打断，因此可以保证读写数据状态的完整性。&lt;/p&gt;
+
+&lt;p&gt;Go语言的&lt;code&gt;sync/atomic&lt;/code&gt;包提供了对原子操作的支持。&lt;code&gt;sync/atomic&lt;/code&gt;包主要针对四字节或八字节大小并且地址对齐的内存进行原子读写，可以用于整型数或指针等基础数据类型。还有针对更复杂的&lt;code&gt;atomic.Value&lt;/code&gt;类型，可以用于存储结构体对象。&lt;/p&gt;
+
+&lt;p&gt;在Go语言中，其实不使用&lt;code&gt;sync/atomic&lt;/code&gt;包也可以编程。但是&lt;code&gt;sync/atomic&lt;/code&gt;包在某些底层的代码中，可以为性能优化提供更多的灵活性。比如标准库中的sync.Once对象的Do函数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Once struct {
+    m    Mutex
+    done uint32
+}
+
+func (o *Once) Do(f func()) {
+    if atomic.LoadUint32(&amp;amp;o.done) == 1 {
+        return
+    }
+    // Slow-path.
+    o.m.Lock()
+    defer o.m.Unlock()
+    if o.done == 0 {
+        defer atomic.StoreUint32(&amp;amp;o.done, 1)
+        f()
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中&lt;code&gt;atomic.LoadUint32(&amp;amp;o.done)&lt;/code&gt;在开始先以极小的运算代价（院子操作是sync.Mutex等高级元语的代价更低）判断Once对象是否已经运行过了，如果没有则通过sync.Muyex.Lock进行加锁后在运行once对象。如果是第一次运行，则在退出前通过&lt;code&gt;defer atomic.StoreUint32(&amp;amp;o.done, 1)&lt;/code&gt;设置已经运行过的状态标志。&lt;/p&gt;
+
+&lt;p&gt;基于原子包提供的函数可以构造更高级的sync.Mutex等并发编程的工具。不过Go语言的并发哲学是：不要通过共享内存来通信，而是通过通信来共享内存！因此我们需要尽量避免直接使用sync/atomic包提供的原子操作来进行并发编程。&lt;/p&gt;
+
+&lt;h2 id=&#34;同一个goroutine内-满足顺序一致性内存模型&#34;&gt;同一个Goroutine内: 满足顺序一致性内存模型&lt;/h2&gt;
+
+&lt;p&gt;所谓的内存一致性内存模型就是代码的书写的顺序和执行的顺序是否是一致的。对于单线程的程序来说，代码一般是以书写的顺序执行的。更准确地说，顺序一致性内存模型一般是针对代码块中的语句。&lt;/p&gt;
+
+&lt;p&gt;比如以下的代码就是满足顺序一致性内存模型的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done bool = false
+
+func main() {
+    msg = &amp;quot;hello, world&amp;quot;
+    done = true
+
+    for {
+        if done {
+            println(msg)
+            break
+        }
+        println(&amp;quot;retry...&amp;quot;)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中先初始化msg字符串变量，然后将done设置为true表示字符串初始化工作已经完成。因此我们可以通过判断done的状态来间接地推导msg字符串是否已经完成初始化。在Go语言中，同一个Goroutine内满足顺序一致性内存模型。因此上述代码可以正确工作。&lt;/p&gt;
+
+&lt;h2 id=&#34;不同goroutine之间-不满足顺序一致性&#34;&gt;不同Goroutine之间: 不满足顺序一致性!&lt;/h2&gt;
+
+&lt;p&gt;如果我们将初始化msg和done的代码放到另一个Goroutine中，情况就完成不一样了！下面的并发代码将是错误的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done bool = false
+
+func main() {
+    go func() {
+        msg = &amp;quot;hello, world&amp;quot;
+        done = true
+    }()
+
+    for {
+        if done {
+            println(msg); break
+        }
+        println(&amp;quot;retry...&amp;quot;)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行时，大概有几种错误类型：一是main函数无法看到被修改后的done，因此main的for循环无法正常结束；二是main函数虽然看到了done被修改为true，但是msg依然没有初始化，这将导致错误的输出。&lt;/p&gt;
+
+&lt;p&gt;出现上述错误的原因是因为，Go语言的内存模型明确说明不同Goroutine之间不满足顺序一致性！同时编译器为了优化代码，进行初始化的Goroutine可能调整msg和done的执行顺序。main函数并不能从done状态的变化推导msg的初始化状态。&lt;/p&gt;
+
+&lt;h2 id=&#34;通过channel对齐时间参考系&#34;&gt;通过Channel对齐时间参考系&lt;/h2&gt;
+
+&lt;p&gt;每个Goroutine类似一个个独立的宇宙，有着自己的时间系统。当一个Goroutine中的某些操作不可被观察的时候，那么他们的执行状态和执行顺序是未知的。只有当一个Goroutine的某些事件被另一个Goroutine观察的时候，这些事件的状态才会变得确定。观察的手段有很多，通过Channel对齐不同Goroutine的时间参考系是常用的方式。&lt;/p&gt;
+
+&lt;p&gt;下面的代码中，通过将done改为管道类型修复前面的错误：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done = make(chan struct{})
+
+func main() {
+    go func() {
+        msg = &amp;quot;hello, world&amp;quot;
+        done &amp;lt;- struct{}{}
+    }()
+
+    &amp;lt;-done
+    println(msg)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;done管道的发送和接收会强制进行一次同步main函数的主Gorotuine和后台进行初始化工作的Goroutine。在main函数执行&lt;code&gt;&amp;lt;-done&lt;/code&gt;语句完成时，那么后台Goroutine比如也已经执行到了&lt;code&gt;done &amp;lt;- struct{}{}&lt;/code&gt;语句，此时后台Goroutine的msg初始化工作必然已经完成了。因为后台Goroutine的msg初始化工作被main函数通过done管道观察了，因此编译器必须要保证msg在这个时刻完成初始化。因此最后main函数可以正常打印msg字符串。&lt;/p&gt;
+
+&lt;h2 id=&#34;通过sync-mutex对齐时间参考系&#34;&gt;通过sync.Mutex对齐时间参考系&lt;/h2&gt;
+
+&lt;p&gt;对齐时间参考系的方式很多，除了通过管道来同步，还可以通过sync包的Mutex来实现同步：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done sync.Mutex
+
+func main() {
+    done.Lock()
+    go func() {
+        msg = &amp;quot;hello, world&amp;quot;
+        done.Unlock()
+    }()
+
+    done.Lock()
+    println(msg)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;代码中，sync.Mutex必须先Lock然后再Unlock，因为直接Unlock一个Mutex对象会导致panic。代码中，done.Unlock()和第二个done.Lock()分别在不同的Goroutine，它们会强制做一次时间同步。因此最后main函数也可以正常打印msg字符串。&lt;/p&gt;
+
+&lt;h2 id=&#34;带缓存的管道&#34;&gt;带缓存的管道&lt;/h2&gt;
+
+&lt;p&gt;管道是Go语言内置的并发原语。在刚学习Go语言，一般使用的是没有缓存的管道，它是缓存长度为0的管道。对于带缓冲的Channel，对于Channel的第K个接收完成操作发生在第K+C个发送操作完成之前，其中C是Channel的缓存大小。 如果将C设置为0自然就对应无缓存的Channel，也即使第K个接收完成在第K个发送完成之前。因为无缓存的Channel只能同步发1个，也就简化为前面无缓存Channel的规则：对于从无缓冲Channel进行的接收，发生在对该Channel进行的发送完成之前。&lt;/p&gt;
+
+&lt;p&gt;基于带缓存的管道可以实现对并发数量的控制：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    var wg sync.WaitGroup
+    var limit = make(chan struct{}, 3)
+    for i := 0; i &amp;lt; 10; i++ {
+        wg.Add(1)
+        go func(id int) {
+            defer wg.Done()
+
+            limit &amp;lt;- struct{}{}       // len(limit) 小于 cap(limit) 才能进入
+            defer func(){ &amp;lt;-limit }() // 退出时 len(limit) 减 1
+
+            println(id)
+        }(i)
+    }
+    wg.Wait()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为limit管道的长度为3个，因此for循环内部创建的Goroutine在执行println语句时，在同一个时刻最多只能有3个Goroutine在并发执行。&lt;/p&gt;
+
+&lt;h2 id=&#34;初始化顺序&#34;&gt;初始化顺序&lt;/h2&gt;
+
+&lt;p&gt;Go语言中每个包被导入时都会执行包的初始化操作，包括全局包变量的初始化和init初始化函数的执行。如果在包的初始化解决启动了新的Goroutine，那么这些新启动的Goroutine将不能马上被执行，它们只有在所有的包初始化都完成之后才能被创建。在初始化阶段创建的新Goroutine将和main函数是并发执行状态。&lt;/p&gt;
+
+&lt;p&gt;包的初始化示意图如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/init.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;初始化是由runtime.main启动，伪代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func runtime.main() {
+    for pkg := range impported_pkg_list {
+        pkg.init()
+    }
+    go goroutines_from_init()
+    main()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;首先顺序执行导入包的初始化工作，然后并发启动包初始化阶段启动的新Goroutine，同时并发启动main函数。&lt;/p&gt;
+
+&lt;h2 id=&#34;goroutine特点&#34;&gt;Goroutine特点&lt;/h2&gt;
+
+&lt;p&gt;Goroutine是每个并发执行代码的容器，和传统操作系统中线程和进程有点类似。但是Go语言的Goroutine也有自己的特点，理解这些特色是写好并发程序的前提。&lt;/p&gt;
+
+&lt;p&gt;Goroutine特点：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;由go关键字启动, 是一种轻量级的线程&lt;/li&gt;
+&lt;li&gt;以一个很小的栈启动(可能是2KB/4KB), 可以启动很多&lt;/li&gt;
+&lt;li&gt;Goroutine栈的大小会根据需要动态地伸缩, 不用担心栈溢出&lt;/li&gt;
+&lt;li&gt;m个goroutine运行在n个操作系统线程上, n默认对应CPU核数&lt;/li&gt;
+&lt;li&gt;runtime.GOMAXPROCS用于控制当前运行运行正常非阻塞Goroutine的系统线程数目&lt;/li&gt;
+&lt;li&gt;发生在用户态, 切换的代价要比系统线程低(切换时只需要保存必要的寄存器)&lt;/li&gt;
+&lt;li&gt;Goroutine采用的是半抢占式的协作调度(在函数入口处插入协作代码)&lt;/li&gt;
+&lt;li&gt;IO/sleep/runtime.Gosched 均会导致调度&lt;/li&gt;
+&lt;li&gt;Goroutine故意设计为没有ID&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;注意：Goroutine是一种资源，也有泄露的风险！&lt;/p&gt;
+
+&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
+
+&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;幻灯片源文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言并发编程02 - 你好，并发</title>
+      <link>https://chai2010.cn/post/2018/go-concurrency-02/</link>
+      <pubDate>Fri, 21 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-concurrency-02/</guid>
+      
+        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
+
+&lt;p&gt;本次整理“你好，并发”部分的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;并发很简单也很强大&#34;&gt;并发很简单也很强大&lt;/h2&gt;
+
+&lt;p&gt;Go语言通过&lt;code&gt;go&lt;/code&gt;关键字可以将调用的函数直接在新的Goroutine上启动：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// 普通版本
+func main() {
+    println(&amp;quot;你好, 并发!&amp;quot;)
+}
+
+// 并发版本
+func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;相比于传统的通过库的方式启动进程、线程等，&lt;code&gt;go&lt;/code&gt;关键字丢弃了很多心智包袱，降低了并发入门等门槛。当一个新技术随手可得，随便一个按钮开关或一个指令就可以尝试使用等时候，用户总会在下意识中就掌握了改技术。&lt;/p&gt;
+
+&lt;p&gt;Go的并发不仅仅启动简单，而且功能确实很强大。首先是每个 Goroutine 栈很小，切换代价很低，很容易就可以实现海量并发。其次，每个 Goroutine 栈又可以动态扩展到很大，基本可以近似做到无限递归了。Go语言的并发从横向和纵向都可以无限扩展，用户在编写并发程序时不在需要时刻关心栈够不够用、并发数量是否太多等非核心逻辑等问题，极大地释放了并发编程等自由度：&lt;/p&gt;
+
+&lt;p&gt;我们看看如何编写一个海量并发，并且深度递归等程序：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    for i := 0; i &amp;lt; 10000*100; i++ {
+        go printsum(i)
+    }
+}
+
+func printsum(n int) {
+    fmt.Println(&amp;quot;sum(%[1]d): %[1]d\n&amp;quot;, n)
+}
+
+func sum(n int) int {
+    return sum(n-1) + n
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述代码中，printsum函数通过递归计算1到n的和，基本不用太考虑爆栈的问题。同时在main函数中，在for循环内部通过go关键字启动了海量的并发来打印sum的结果。&lt;/p&gt;
+
+&lt;h2 id=&#34;并发中的小问题&#34;&gt;并发中的小问题&lt;/h2&gt;
+
+&lt;p&gt;GO语言并发很简单其实是一个表象，是为了忽悠不懂并发的新手的口号。随便运行下程序就可以戳穿这个纸做的口号：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面等程序需要有中彩票特大奖的运气才能有机会执行成功。大部分普通用户将无法看到输出信息！&lt;/p&gt;
+
+&lt;p&gt;针对这个代码，网上有很多不负责任的Go语言教程教你如何通过调用&lt;code&gt;time.Sleep&lt;/code&gt;或&lt;code&gt;runtime.Gosched&lt;/code&gt;假装解决这个问题：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    time.Sleep(time.Second) // or runtime.Gosched()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每一个严肃的码农在看到这种解决方案的时候，首先需要弄明白time.Sleep为何只休眠了1秒钟？如果换一种极限的思维来问这个问题就是，休眠1万年、1微妙、1纳秒、0纳秒可以吗？&lt;/p&gt;
+
+&lt;p&gt;没有人能够回答为何刚好需要休眠1秒钟就看似能工作了，其实这只是他们常识测试的一个经验值。我们把这种尝试通过调整某些随机的经验值来写代码的方式叫 &lt;strong&gt;“撞大运编程模式”&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;打败这个“撞大运编程模式”写的并发程序很简单，只需要一个或一次反例即可：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    time.Sleep(time.Second)
+}
+
+func println(s string) {
+    time.Sleep(time.Second*2)
+    print(s+&amp;quot;\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的反例中，我们在不改变println函数输出的前提下，休眠了2秒钟（一定要大于前面的1秒钟）。另一种反面的证明是假设，输出的字符串足够大，输出的设备足够慢。因此println很可能需要1万年才能完成工作。因为main函数作为println的使用者，不能也无法要求println函数在几个时钟周期内完成任务（毕竟Go语言无法做到实时编程），因此当println函数执行的时间稍微出现波动时就将影响上述代码的正确性！&lt;/p&gt;
+
+&lt;p&gt;Go语言并发编程的学习一般要经过2个阶段：第一阶段是这个并发程序终于可以产生正确的输出了；第二个阶段是这个并发程序不会产生错误的输出！通过撞大运编程模式编写的代码一般至少处于第一个阶段。&lt;/p&gt;
+
+&lt;p&gt;每一个严禁的并发编程码农，我们的并发程序不仅仅要可以产生正确的输出，而且要保证不会产生错误的输出！&lt;/p&gt;
+
+&lt;h2 id=&#34;并发小问题的解决思路&#34;&gt;并发小问题的解决思路&lt;/h2&gt;
+
+&lt;p&gt;前面代码运行有一定的随机性，无法保证并发程序的正确运行。导致可能产生错误结果的原因有2个：第一个是go启动Goroutine时无法保证新线程马上运行（它的启动是并发的）；第二个是main函数代表的主Goroutine退出将直接退出进程。&lt;/p&gt;
+
+&lt;p&gt;在了解了原因之后，并发小问题的解决思路也就清晰了：在后台Goroutine完成任务之前，main函数代表的主Goroutine不能退出！&lt;/p&gt;
+
+&lt;p&gt;阻止main函数退出的方式有很多：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+
+    for {}
+    select {}
+    &amp;lt;-make(chan bool)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在这个代码中，for、select或管道，任何一个方式都可以阻止在完成任务前退出（其实main函数根本无法退出），因此这个程序好像是可以完成输出任务的（虽然解决方案不太完美）！&lt;/p&gt;
+
+&lt;p&gt;在上述的方案中，for循环阻止main退出是比较特色的一个方案。for其实执行的是一个死循环、忙等待，它会消耗大量的CPU资源。特别是，当只有一个系统线程资源时，main 将独占活跃的 系统线程，其它线程将有被饿死风险！&lt;/p&gt;
+
+&lt;p&gt;因此for循环的方案在单核系统中依然是有问题的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    runtime.GOMAXPROCS(1)
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    for {}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过&lt;code&gt;runtime.GOMAXPROCS(1)&lt;/code&gt;将系统线程限制为一个。然后println函数还没有启动前如果进入了for循环的话，后台的println函数将没有机会再次被执行（被饿死）！&lt;/p&gt;
+
+&lt;p&gt;其实每个已经获取CPU资源的Goroutine都可以霸占CPU：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    runtime.GOMAXPROCS(1)
+    go func() { for {} }()
+    time.Sleep(time.Second)
+
+    fmt.Println(&amp;quot;the answer to life:&amp;quot;, 42)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在这个例子中，Goroutine霸占了CPU，main函数可能被饿死在&lt;code&gt;time.Sleep&lt;/code&gt;行代码，因此宇宙的秘密也就永远无法揭晓！&lt;/p&gt;
+
+&lt;p&gt;既然for循环霸占CPU，那我们换个不占用CPU的方式好了。select和管道都可以：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    runtime.GOMAXPROCS(1)
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    select {}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;目前的代码确实更改进了一步，单核心也可以保证输出结果了！不过这个暴力的解决方法依然有点问题，这个程序退出前出现了异常：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;你好, 并发!
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [select (no cases)]:
+main.main()
+        /path/to/main.go:8 +0x5c
+exit status 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我首先要强调的是，这个异常其实不是问题。我们的首要目标是输出字符串，而且这个目标我们已经顺利完成了。出现异常的原因只是程序退出的善后工作处理不太完美（和C语言程序退出前并不需要释放全部的内存资源类似）。&lt;/p&gt;
+
+&lt;p&gt;异常的提示是，系统中没有其它可运行的goroutine，这就是一种死锁状态。其实如果换会for死循环的话是不会提示死锁的（因为runtime会将for循环当作一个正常执行的goroutine看待）。&lt;/p&gt;
+
+&lt;p&gt;理解的解决方案是：main函数在println完成输出任务前不退出，但是在println完成任务后可以正确退出。改进代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    done := make(chan bool)
+    go func() {
+        println(&amp;quot;你好, 并发!&amp;quot;)
+        done &amp;lt;- true
+    }()
+
+    &amp;lt;-done
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;main函数在退出前需要从done管道取一个消息，后台任务在将消息放入done管道前必须先完成自己的输出任务。因此，main函数成功取到消息时，后台的输出任务确定已经完成了，main函数也就可以放心退出了。&lt;/p&gt;
+
+&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
+
+&lt;p&gt;猫友会：Go语言并发编程01 - 并发的演化历史&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://mp.weixin.qq.com/s/UaY9gJU85dq-dXlOhLYY1Q&#34;&gt;https://mp.weixin.qq.com/s/UaY9gJU85dq-dXlOhLYY1Q&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;幻灯片源文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言并发编程01 - 并发的演化历史</title>
+      <link>https://chai2010.cn/post/2018/go-concurrency-01/</link>
+      <pubDate>Thu, 20 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-concurrency-01/</guid>
+      
+        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
+
+&lt;p&gt;本次整理并发的演化历史部分的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;go语言并发哲学&#34;&gt;Go语言并发哲学&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Do not communicate by sharing memory, instead, share memory by communicating!&lt;/p&gt;
+
+&lt;p&gt;不要通过共享内存来通信, 而是通过通信来共享内存!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;不要逆行!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;并发的演化历史&#34;&gt;并发的演化历史&lt;/h2&gt;
+
+&lt;p&gt;Go语言最早从UNIX系统的B语言和C语言演化而来，其中的并发特性是从Newsqueak、Alef和Limbo等语言演化而来。其中Newsqueak是Go之父Rob Pike于989年设计的语言，Alef则是Phil Winterbottom于1993年对C语言扩展了并发特性的语言，Limbo也是Rob Pike参与设计的支持并发的语言。由此可见，Rob Pike在并发编程语言领域已经积累了几十年的设计经验，Go语言正是站在这些前辈的基础上涅槃重生的。&lt;/p&gt;
+
+&lt;p&gt;Go语言并发的理论基础是来自Hoare于1978年发表的CSP论文（Hoare就是发明快速排序的大牛）。更通俗的类比，CSP对应的编程模型和UNIX中的管道非常相似，而管道更是在1964年就已经发明了。因此，从理论上看，Go语言的并发并非什么新发明的特性，它只不过是将CSP代表的通过消息同步的编程模型带入了工业开发领域。&lt;/p&gt;
+
+&lt;h3 id=&#34;newsqueak素数筛-rob-pike-1989&#34;&gt;Newsqueak素数筛 - Rob Pike, 1989&lt;/h3&gt;
+
+&lt;p&gt;先看看素数筛的原理图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/prime-sieve.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后是Newsqueak素数筛代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;counter := prog(c:chan of int) {
+    i:=2;
+    for(;;)
+        c &amp;lt;-= i++;
+};
+
+filter := prog(prime:int, listen, send:chan of int) {
+    i:int;
+    for(;;)
+        if((i = &amp;lt;-listen)%prime)
+            send &amp;lt;-= i;
+};
+
+sieve := prog() of chan of int {
+    c := mk(chan of int);
+    begin counter(c);
+    prime := mk(chan of int);
+    begin prog(){
+        p:int;
+        newc:chan of int;
+        for(;;){
+            prime &amp;lt;-= p =&amp;lt;- c;
+            newc = mk();
+            begin filter(p, c, newc);
+            c = newc;
+        }
+    }();
+    become prime;
+};
+
+prime:=sieve();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中begin关键字启动一个并发，类似Go语言的go关键字。而become关键字表示返回值，类似return语句。因此说Newsqueak和Go语言的并发有很多相似之处。&lt;/p&gt;
+
+&lt;h3 id=&#34;alef-phil-winterbottom-1993&#34;&gt;Alef - Phil Winterbottom, 1993&lt;/h3&gt;
+
+&lt;p&gt;然后是Alef语言。据说这个语言是C语言之父Ritchie所钟爱的语言。不过Alef只是短暂地出现在Plan9系统中。目前传世的官方文档只有入门指南和参考手册。&lt;/p&gt;
+
+&lt;p&gt;下面的代码是Alef文档中摘取的片段：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;alef.h&amp;gt;
+
+void receive(chan(byte*) c) {
+    byte *s;
+    s = &amp;lt;- c;
+    print(&amp;quot;%s\n&amp;quot;, s);
+    terminate(nil);
+}
+
+void main(void) {
+    chan(byte*) c;
+    alloc c;
+    proc receive(c);
+    task receive(c);
+    c &amp;lt;- = &amp;quot;hello proc or task&amp;quot;;
+    c &amp;lt;- = &amp;quot;hello proc or task&amp;quot;;
+    print(&amp;quot;done\n&amp;quot;);
+    terminate(nil);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以将Alef看作是类似C++的语言，基础的语法完善和C语言保存一致，但是在并发编程方向做了扩展。其中proc是启动一个进程，task是启动一个线程。&lt;/p&gt;
+
+&lt;p&gt;因为C语言没有GC特性，因此Alef并发所创建或分享的资源管理将会是一个极大的调整。并发的语法虽然看着很美，但是进行真正的并发编程可能没有那么容易。&lt;/p&gt;
+
+&lt;p&gt;Alef产生的并发体可能异常复杂，下图是Alef文档中摘取的图片：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/alef.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;总共有6个线程分布在3个进程中，现场并发体相互之间通过管道进行通信。因为Alef同时支持进程和线程，可以说它其实是伪装成编程语言的操作系统!&lt;/p&gt;
+
+&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
+
+&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;幻灯片源文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Ending定律即将生效!</title>
+      <link>https://chai2010.cn/post/wasm/wasm-v1.0/</link>
+      <pubDate>Sun, 16 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/wasm/wasm-v1.0/</guid>
+      
+        <description>&lt;p&gt;WebAssembly草案1.0终于在2018年7月正式诞生，Ending定律即将生效！&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Ending&amp;rsquo;s law: &amp;ldquo;Any application that can be compiled to WebAssembly, will be compiled to WebAssembly eventually.&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/wasm/wasm-book-header.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Ending定律也称为终结者定律，它是Ending在2016年Emscripten技术交流会上给出的断言：所有可以用WebAssembly实现的终将会用WebAssembly实现。&lt;/p&gt;
+
+&lt;p&gt;在2018年7月，WebAssembly的第一份标准草案终于诞生，一切准备就绪。终于到了Ending定律生效的时刻了！&lt;/p&gt;
+
+&lt;p&gt;WebAssembly也叫wasm，是最新的Web汇编语言标准，同时涵盖了一个虚拟机标准，可以用于浏览器或者其它嵌入式环境。WebAssembly被刻意设计为便携式的抽象语法树结构，用于提供比JavaScript更快速的编译和运行。2018年，Firefox、Chrome、Microsoft Edge、Safari等主流的浏览器已经充分支持WebAssembly特性。&lt;/p&gt;
+
+&lt;p&gt;我们知道在JavaScript领域有个木头定律，但是木头定律不适用于WebAssembly！因为WebAssembly是为了性能而诞生，再用JavaScript模拟的WebAssembly性能将是一坨屎，没有任何价值！但是WebAssembly之上却很有可能再跑一个v8引擎。&lt;/p&gt;
+
+&lt;p&gt;Ending定律的威力不仅仅在语言层面。WebAssembly是第一个虚拟机世界标准，以后将人手至少一个wasm虚拟机。曾被大家鄙视的JavaScript语言大举入侵各个领域的情况将再次重演，Lua、Java、Python等语言首当其冲，它们的虚拟机统统将面临被WebAssembly蚕食的境况！&lt;/p&gt;
+
+&lt;p&gt;星辰大海的入口已经打开，let’s dive!&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go1.11和WebAssembly</title>
+      <link>https://chai2010.cn/post/2018/go1.11-and-wasm/</link>
+      <pubDate>Sat, 25 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go1.11-and-wasm/</guid>
+      
+        <description>&lt;p&gt;Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/win2k-on-wasm.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在上一周，qemu的作者bellard大神将Windows 2000搬到浏览器到新闻彻底引爆了WebAssembly技术，这也证明了WebAssembly的强大的性能优势。&lt;/p&gt;
+
+&lt;p&gt;感兴趣的同学可以查看bellard大神到网站，网站提供了在浏览器Linux和Windows等多种系统等运行链接：&lt;a href=&#34;https://bellard.org/jslinux/&#34;&gt;https://bellard.org/jslinux/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;不过本文我们将重点和大家分享如何在Go语言中使用WebAssembly。先安装好Go1.11+版本的Go语言环境。然后创建hello.go文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import &amp;quot;fmt&amp;quot;
+
+func main() {
+	fmt.Println(&amp;quot;你好，WebAssembly！&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;为了不了解Go语言的同学便于理解，让我们简单介绍一下程序。第一句表示当前的包名字为main，同时包中有一个main函数，而main包的main函数就是Go语言程序的入口。在main函数中通过导入的fmt包内的Println方法输出了一个字符串。然后在命令行中直接输入go run hello.go来运行程序。如果一切正常的话。应该可以在命令行看到输出&amp;rdquo;你好，WebAssembly！&amp;rdquo;的结果。&lt;/p&gt;
+
+&lt;p&gt;Go1.11开始支持WebAssembly，对应的操作系统名为js，对应的CPU类型为wasm。目前还无法通过go run的方式直接运行输出的wasm文件，因此我们需要通过go build的方式生成wasm目标文件，然后通过Node环境执行。需要注意的是更新的Node版本对wasm的支持会更好，作者推进使用v10以上的版本。&lt;/p&gt;
+
+&lt;p&gt;通过以下命令将hello.go编译为a.out.wasm：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ GOARCH=wasm GOOS=js go build -o a.out.wasm hello.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成的a.out.wasm文件体积可能超过2MB大小。而且生成等a.out.wasm还无法直接运行，需要初始化Go语言必须的运行时环境。&lt;/p&gt;
+
+&lt;p&gt;对运行时初始化是一个相对复杂的工作，因此Go语言提供了一个$(GOROOT)/misc/wasm/wasm_exec.js文件用于初始化和运行的工作。同时提供了一个基于node包装的$(GOROOT)/misc/wasm/go_js_wasm_exec脚本文件，用于执行Go语言生成的wasm文件。&lt;/p&gt;
+
+&lt;p&gt;参考go_js_wasm_exec脚本的实现，我们可以直接使用wasm_exec.js来运行wasm模块。我们可以先将wasm_exec.js文件复制到当前目录，然后通过以下命令运行wasm模块：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ node wasm_exec.js a.out.wasm
+你好，WebAssembly
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在终于可以正常运行Go语言生成wasm程序了。因此以后可以使用Go语言来开发Web应用了。&lt;/p&gt;
+
+&lt;p&gt;如果对WebAssembly技术感兴趣，可以关注Github上的WebAssembly(wasm)资源精选项目：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh&#34;&gt;https://github.com/chai2010/awesome-wasm-zh&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>《Go高级编程》初稿完成</title>
+      <link>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</link>
+      <pubDate>Wed, 08 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</guid>
+      
+        <description>&lt;p&gt;《Go高级编程》从2016年就开始计划写作。2016年底因为开始学习《Go语言圣经》临时搁置了《Go高级编程》的写作。到了2018年决定重启项目，为了回馈Go语言中国社区，我们尝试以开源的模式进行创作。项目开源后，在不到半年的时间内就已经获得近3k个star，有几十个贡献者帮忙改进内容和代码。感谢中国广大的Go语言爱好者，感谢开源的创作模式，让我们在半年多的时间内成功完成了写作任务。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/advanced-go-programming-book/master/cover.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;《Go高级编程》一书涵盖了CGO、Go汇编语言、RPC实现、Web框架实现、分布式系统等高阶主题，主要针对Go语言有一定经验想深入了解Go语言各种高级用法的开发人员。&lt;/p&gt;
+
+&lt;p&gt;为了便于和大家交流和分享，我们新创建了“Go高级编程”公众号。公众号的ID为golang-china，保持和Go语言中国社区名字一致。公众号重点和大家分享《Go高级编程》、《Go语言圣经》以及Go语言中诸多高级编程问题。大家有任何Go语言相关的问题都可以给我们留言。&lt;/p&gt;
+
+&lt;p&gt;项目地址：&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;https://github.com/chai2010/advanced-go-programming-book&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最后感谢各位同学的鼓励和支持，谢谢大家🙏&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>已启用 https://chai2010.cn, 欢迎访问!</title>
+      <link>https://chai2010.cn/post/2018/chai2010-cn/</link>
+      <pubDate>Sun, 11 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/chai2010-cn/</guid>
+      
+        <description>&lt;p&gt;&lt;a href=&#34;https://chai2010.cn&#34;&gt;https://chai2010.cn&lt;/a&gt; 只是目前的入口. 网址名称并不重要, 关键是内容需要永生.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;为何要启用新站点&#34;&gt;为何要启用新站点？&lt;/h3&gt;
+
+&lt;p&gt;10+年前的很多网址和内容已经彻底死掉并且被遗忘了（校友录/bbs/Go中国 等）。&lt;/p&gt;
+
+&lt;p&gt;谁能保证 10 年后 osc/微信/微博 公众号 等文章都还活着，并且自己还是更新的权限？&lt;/p&gt;
+
+&lt;p&gt;osc 以前都很多文章中的图片已经失效了，期间网址升级还导致了一些md的格式问题。&lt;/p&gt;
+
+&lt;p&gt;关键是之前个人空间保存的一些友情链接也被 osc 彻底隐藏了(每个托管都网址都差不多, 都会逐步插入光谷)。&lt;/p&gt;
+
+&lt;p&gt;新站点只是一个壳子，只是用来发布hugo生成的静态内容, 即使这个域名死了, 内容依然存在。&lt;/p&gt;
+
+&lt;p&gt;用git仓库管理内容, 希望它能比我活的更久.&lt;/p&gt;
+
+&lt;h3 id=&#34;纪念下曾经的炮灰们&#34;&gt;纪念下曾经的炮灰们:&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://chaishushan.googlepages.com/&#34;&gt;http://chaishushan.googlepages.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://sites.google.com/site/chaishushan/&#34;&gt;http://sites.google.com/site/chaishushan/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.csdn.net/chai2010/&#34;&gt;http://blog.csdn.net/chai2010/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://chaishushan.blog.163.com/&#34;&gt;http://chaishushan.blog.163.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://my.oschina.net/chai2010/&#34;&gt;http://my.oschina.net/chai2010/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://chai2010.github.io&#34;&gt;http://chai2010.github.io&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Gopher China 2018 讲师专访: 柴树杉</title>
+      <link>https://chai2010.cn/post/gopherchina/gopherchina2018-chai2010/</link>
+      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/gopherchina/gopherchina2018-chai2010/</guid>
+      
+        <description>&lt;h2 id=&#34;自我介绍&#34;&gt;自我介绍&lt;/h2&gt;
+
+&lt;p&gt;Go 语言代码的贡献者，《Go 语言圣经》翻译者，《Go 语言高级编程》开源免费图书作者，非主流Go语言码农。2010年入坑 Go 语言，因此我的网络 ID 是 chai2010（其实是王小波的一个的小说的名字）。其实我想说的是，即使当歌曲和传说都已经哑巴的时候，Go 语言代码也不会消失。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/gopherchina2018-chai2010.jpg&#34; alt=&#34;Gopher China 2018 讲师专访－柴树杉&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;什么原因-什么时候与-go-结缘&#34;&gt;什么原因，什么时候与 Go 结缘？&lt;/h2&gt;
+
+&lt;p&gt;绝大部分人第一次听说 Go 语言都是因为它是 Google 发明的语言。但是我更感兴趣的是 Go 语言背后的故事：汤普森、派克、Plan9、UTF8、Alef 等等。2010年在深圳参与了一个可能是国内第一个 Go 语言交流会，聆听了韦京光大牛的分享（独立实现 cgo 对 windows 平台的支持）。2010年网上看到边疆同学号召翻译 Go 语言文档正式入坑。现在还记得叫《胡文 Go.ogle》的 Go 语言小说，感谢 fango。&lt;/p&gt;
+
+&lt;h2 id=&#34;在工作中遇到哪些挑战&#34;&gt;在工作中遇到哪些挑战？&lt;/h2&gt;
+
+&lt;p&gt;Go 还是比较新的语言，深度使用时会发现轮子严重不足。比如，如何解码一个视频，如何最大压缩比保持一个TIFF格式的图像？用 Go 语言实现重新全部显然是不切实际的，而通过 CGO 技术就可以轻松利用 C/C++ 已有的解决方案。因此，CGO 虽然不能解决全部问题，但是绝对是一个值得拥有的后备技术。&lt;/p&gt;
+
+&lt;h2 id=&#34;有什么想对-gopher-说的话和建议&#34;&gt;有什么想对 Gopher 说的话和建议？&lt;/h2&gt;
+
+&lt;p&gt;Go 语言是一门短小精悍的语言，它只有25个关键字，整个语言规范也就50来页，我们完全可以像 C/Lua 语言那样完整掌握它的一切，甚至包括 CGO 和 Go 汇编语言等非主流的特性。作为一件工业级的软件艺术品，你值得拥有。&lt;/p&gt;
+
+&lt;h2 id=&#34;有什么学习-go-的方法和书籍推荐&#34;&gt;有什么学习 Go 的方法和书籍推荐？&lt;/h2&gt;
+
+&lt;p&gt;先走马观花快速浏览一遍《Go 语言圣经》，这是为了快速简历对 Go 语言的总体框架，不需要背诵，以后遇到问题有影响慢慢回头查阅。然后是深入挖掘Go语言的相关八卦（比如 issue9 到底是什么，creat 怎么改的名字，是谁什么时候提交了第一次提交代码），这是为了培养对技术持续的热情感受 Go 语言的文化。同时尝试使用 Go 语言解决一切问题，这不仅仅是为了实践语言本身，也是为了探索 Go 语言的边界和不足。多参与 Gopher China 大会，营造全方位的 Go 语言环境，这样不知不觉中你就已经是一个 Gopher 了。&lt;/p&gt;
+
+&lt;h2 id=&#34;如何看待-go-在中国的发展-预计未来是什么样&#34;&gt;如何看待 Go 在中国的发展，预计未来是什么样？&lt;/h2&gt;
+
+&lt;p&gt;中国有着世界上最大的 Go 语言社区，同时也为 Go 语言的发展作出了巨大贡献（cgo/ios/beego 等），因此 Go 在中国的发展也完全可以代表在世界的发展趋势。目前是21世纪云计算百家争鸣的时期，而 Go 语言正是21世纪的互联网时代的 C 语言，其中 Go 语言实现的 Docker 和 K8s 平台均已成员云计算时代事实上的标准。虽然如某些网红所言，Docker 完全也可以用 shell 等任何语言实现，但是为何就选择了 Go 语言呢？大家都不是傻瓜，群众的眼睛是雪亮的，目前云计算时代新出现的很多基础系统软件都已首选 Go 语言实现。Go 语言不是银弹，但是它已经是互联网时代的 C 语言，这就足够了。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/gopherchina2018-chai2010-cgo.jpg&#34; alt=&#34;深入CGO编程&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;提示：报告内容将会在大会前一天公开，敬请关注！&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;第四届 Gopher China 大会4月将在上海举办，今年也是第一次增加了会前的 培训 。本届的大会无论从规模，内容都将有更多值得大家期待的！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://2018.gopherchina.org/&#34;&gt;http://2018.gopherchina.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mp.weixin.qq.com/s?__biz=MjM5OTcxMzE0MQ==&amp;amp;mid=2653370698&amp;amp;idx=1&amp;amp;sn=478c53ece8a715d96aeb0027e7ad772f&amp;amp;chksm=bce4d9508b935046d25532c0ce65d2ebcfa9158ddd6ad5a04a49c2a8f29a7c8662e6842f6d16&amp;amp;scene=38#wechat_redirect&#34;&gt;原文在这里&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>lua中也能用上Go语言的strings包</title>
+      <link>https://chai2010.cn/post/lua/gopherlua-strings/</link>
+      <pubDate>Fri, 22 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/lua/gopherlua-strings/</guid>
+      
+        <description>&lt;p&gt;lua内置的库非常小，我们可以将Go语言的strings包引入到Lua环境。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;下面是具体的例子。&lt;/p&gt;
+
+&lt;p&gt;hello.go:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;github.com/yuin/gopher-lua&amp;quot;
+
+	strings &amp;quot;github.com/chai2010/glua-strings&amp;quot;
+)
+
+func main() {
+	L := lua.NewState()
+	defer L.Close()
+
+	strings.Preload(L)
+
+	if err := L.DoFile(&amp;quot;hello.lua&amp;quot;); err != nil {
+		panic(err)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;hello.lua:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lua&#34;&gt;local strings = require(&amp;quot;strings&amp;quot;)
+
+print(strings.ToUpper(&amp;quot;abc&amp;quot;))
+
+for i, s in ipairs(strings.Split(&amp;quot;aa,b,,c&amp;quot;, &amp;quot;,&amp;quot;)) do
+	print(i, s)
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run hello.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;项目地址:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/glua-strings&#34;&gt;https://github.com/chai2010/glua-strings&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>用ASCII画图</title>
+      <link>https://chai2010.cn/post/misc/ascii-draw/</link>
+      <pubDate>Wed, 15 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/misc/ascii-draw/</guid>
+      
+        <description>
+
+&lt;p&gt;作为一个严肃的码农，用ASCII画图是一门艺术。&lt;/p&gt;
+
+&lt;h2 id=&#34;monodraw-https-monodraw-helftone-com-ascii-画图界的ps&#34;&gt;&lt;a href=&#34;https://monodraw.helftone.com/&#34;&gt;MonoDraw&lt;/a&gt; - ASCII 画图界的PS&lt;/h2&gt;
+
+&lt;p&gt;当然，我们并不是要像用小刀刻硬盘那样一个一个字符来画图，在ASCII画图领用也有类似PhotoShop那样的软件，那就是大名鼎鼎的 MonoDraw ！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ascii-draw-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;要注意的是这个软件只有 macOS 版本，而且是收费软件(100+RMB)。&lt;/p&gt;
+
+&lt;p&gt;比如我们用 &lt;a href=&#34;https://monodraw.helftone.com/&#34;&gt;MonoDraw&lt;/a&gt;  画一个 iPhone, 然后在窗口显示一个文本:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ascii-draw-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ditaa-http-ditaa-sourceforge-net-ascii-图像打印机&#34;&gt;&lt;a href=&#34;http://ditaa.sourceforge.net/&#34;&gt;Ditaa&lt;/a&gt; - ASCII 图像打印机&lt;/h2&gt;
+
+&lt;p&gt;Ditaa 是 Java 写的一个开源小工具，它可以将ASCII码图打印为漂亮的png格式图片。&lt;/p&gt;
+
+&lt;p&gt;比如有以下样式的ASCII码图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ascii-draw-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;渲染后的效果是这样的:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ascii-draw-04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这里是打包好的 Docker 镜像(也有很多例子)： &lt;a href=&#34;https://github.com/chai2010/ditaa-docker&#34;&gt;https://github.com/chai2010/ditaa-docker&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;其它工具&#34;&gt;其它工具&lt;/h2&gt;
+
+&lt;p&gt;还有很多其它知名度很高小工具，这里只是简单列举几个：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.graphviz.org/&#34;&gt;Graphviz&lt;/a&gt;: 通过自定义的DOT语言脚本描述图形，然后渲染为图像文件&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://plantuml.com/&#34;&gt;PlantUML&lt;/a&gt;: 通过自定义的脚本语言描述UML图，然后渲染为图像文件&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.gnuplot.info/&#34;&gt;Gnuplot&lt;/a&gt;: 一个生成图标的小工具(它和GNU项目没关系)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>极简的Angular2示例, Electron环境运行</title>
+      <link>https://chai2010.cn/post/js/angular2-electron-app/</link>
+      <pubDate>Thu, 06 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/js/angular2-electron-app/</guid>
+      
+        <description>&lt;p&gt;Angular2本身提供了cli命令行工具, 可以生成完整的工程.&lt;/p&gt;
+
+&lt;p&gt;但是命令行生成的工程太过复杂, 对于新学习Angular的用户会有太多的干扰.&lt;/p&gt;
+
+&lt;p&gt;我们尝试完全脱离cli工具, 只是通过TypeScript提供的tsc命令, 纯手工构造一个极简的Angular2示例.&lt;/p&gt;
+
+&lt;p&gt;完整代码: &lt;a href=&#34;http://git.oschina.net/chai2010/hello-ng2&#34;&gt;http://git.oschina.net/chai2010/hello-ng2&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ng2-electron.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;配置淘宝的镜像&#34;&gt;配置淘宝的镜像&lt;/h2&gt;
+
+&lt;p&gt;通过以下命令安装:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g cnpm --registry=https://registry.npm.taobao.org
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;完成后用 &lt;code&gt;cnpm&lt;/code&gt; 代替 &lt;code&gt;npm&lt;/code&gt; 命令.&lt;/p&gt;
+
+&lt;h2 id=&#34;html启动页面&#34;&gt;HTML启动页面&lt;/h2&gt;
+
+&lt;p&gt;首先构造一个 hello-ng2 目录, 用于存放工程文件.&lt;/p&gt;
+
+&lt;p&gt;在目录下创建 demo.html 页面, 内容如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;
+
+&amp;lt;head&amp;gt;
+	&amp;lt;title&amp;gt;Angular2应用&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+
+&amp;lt;body&amp;gt;
+	&amp;lt;my-app&amp;gt;加载UI组件&amp;lt;/my-app&amp;gt;
+	&amp;lt;script&amp;gt;require(&#39;./demo&#39;).main()&amp;lt;/script&amp;gt;
+&amp;lt;/body&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们采用的是HTML5语法, 完全省略了最外层没有任何意义的&lt;code&gt;&amp;lt;html&amp;gt;&amp;lt;/html&amp;gt;&lt;/code&gt;标签.&lt;/p&gt;
+
+&lt;p&gt;其中包含了一个我们自定义的&lt;code&gt;&amp;lt;my-app&amp;gt;&lt;/code&gt;标签, 对应我们要创建的 Angular 窗口组件.&lt;/p&gt;
+
+&lt;p&gt;然后通过&lt;code&gt;require&lt;/code&gt;加载当前目录下的&lt;code&gt;demo&lt;/code&gt;模块(对应demo.js文件), 然后运行其中的&lt;code&gt;main&lt;/code&gt;函数启动Angular程序.&lt;/p&gt;
+
+&lt;h2 id=&#34;angular组件&#34;&gt;Angular组件&lt;/h2&gt;
+
+&lt;p&gt;Angular严重依赖ES7中的注解语法, 如果要在JS中使用该特性, 将需要一个转码工具将ES7注解语法转为ES2015或更早的格式,
+因为只有这样才能在浏览器中正常运行.&lt;/p&gt;
+
+&lt;p&gt;虽然JS社区中已经存在了很多类似的转码工具(我本人将这个看作是一个编译过程, 和将C/C++代码转为exe类似), 但是依赖太多.&lt;/p&gt;
+
+&lt;p&gt;既然必需要引入一个转码工具, 强烈推荐使用TypeScript语言提供的tsc工具. 因为TypeScript语言本身是Angular官方采用的语言,
+同时也提供了注解等特性, 而且其提供的tsc工具没有任何外部依赖(失控的依赖绝对是一个灾难).&lt;/p&gt;
+
+&lt;p&gt;创建 demo.ts 文件, 并针对&lt;code&gt;&amp;lt;my-app&amp;gt;&lt;/code&gt;标签创建一个 Angular 窗口组件:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;import * as ngCore from &#39;@angular/core&#39;
+
+@ngCore.Component({
+	selector: &#39;my-app&#39;,
+	template: `
+		&amp;lt;h1&amp;gt;你好, {{name}}! - V1&amp;lt;/h1&amp;gt;
+	`,
+	styles: [
+		`h1 {
+			color: #369;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 250%;
+		}`,
+	],
+})
+export class MainComponent {
+	name = &#39;世界&#39;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;angular模块&#34;&gt;Angular模块&lt;/h2&gt;
+
+&lt;p&gt;为了使用该窗口部件, 我们需要将其组织到一个 Angular 模块中:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import * as ngPlatformBrowser from &#39;@angular/platform-browser&#39;
+
+@ngCore.NgModule({
+	imports: [ ngPlatformBrowser.BrowserModule ],
+	declarations: [ MainComponent ],
+	bootstrap: [ MainComponent ],
+})
+export class MainModule {
+	//
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同样, 我们通过 &lt;code&gt;@ngCore.NgModule&lt;/code&gt; 注解将 Angular 的运行时模块和 MainModule 类进行了关联.&lt;/p&gt;
+
+&lt;p&gt;在模块中, 我们导入了 &lt;code&gt;ngPlatformBrowser.BrowserModule&lt;/code&gt; 浏览器模块.&lt;/p&gt;
+
+&lt;p&gt;同时, &lt;code&gt;declarations&lt;/code&gt; 部分声明了我们自己创建的Angular组件.&lt;/p&gt;
+
+&lt;p&gt;最后, &lt;code&gt;bootstrap&lt;/code&gt; 部分将 MainComponent 指定为该模块的引导组件.&lt;/p&gt;
+
+&lt;p&gt;需要说明的是, NgModule 修饰的模块是一种运行时模块, 同时用于其中各种组件名字空间的管理.&lt;/p&gt;
+
+&lt;h2 id=&#34;启动angular模块&#34;&gt;启动Angular模块&lt;/h2&gt;
+
+&lt;p&gt;一个应用中可以有多个Angular 模块, 同样要指定一个引导模块, 通过以下代码完成:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;import * as ngPlatformBrowserDynamic from &#39;@angular/platform-browser-dynamic&#39;
+
+export function main() {
+	ngPlatformBrowserDynamic.platformBrowserDynamic().bootstrapModule(MainModule)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;到此, 一个极简的Angular2示例已经完成了. 但是还不能运行!&lt;/p&gt;
+
+&lt;p&gt;不能运行的原因主要有2个:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;浏览器环境不支持模块方式启动页面, 同样需要通过外部js库辅助.&lt;/li&gt;
+&lt;li&gt;Angular 依赖一些高级的特性, 很多浏览器环境并不支持, 需要通过外部js库模拟.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;为了简化, 我们采用了Electron环境运行应用, 因为在Electron环境我们可以直接使用NodeJS中的模块.
+对于第二点, 我们可以通过以下外部js库模拟缺少的特性:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;import &#39;core-js/es6/reflect&#39;
+import &#39;core-js/es7/reflect&#39;
+import &#39;zone.js/dist/zone&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;electron环境&#34;&gt;Electron环境&lt;/h2&gt;
+
+&lt;p&gt;现在 Angular2 部分的代码已经完整. 我们还需要给 Electron 创建一个启动脚本.&lt;/p&gt;
+
+&lt;p&gt;新建一个 index.ts 文件, 用于启动Angular2程序:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;import * as fs from &#39;fs&#39;
+import * as electron from &#39;electron&#39;
+
+let win: Electron.BrowserWindow = null
+
+function createWindow() {
+	win = new electron.BrowserWindow({width: 800, height: 600})
+	win.loadURL(`file://${__dirname}/demo.html`)
+	win.webContents.openDevTools()
+
+	win.on(&#39;closed&#39;, () =&amp;gt; { win = null })
+}
+
+function main() {
+	electron.app.on(&#39;ready&#39;, () =&amp;gt; {
+		createWindow()
+	})
+	electron.app.on(&#39;activate&#39;, () =&amp;gt; {
+		createWindow()
+	})
+	electron.app.on(&#39;window-all-closed&#39;, () =&amp;gt; {
+		if(process.platform !== &#39;darwin&#39;) {
+			electron.app.quit()
+		}
+	})
+}
+
+if(require.main === module) {
+	main()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;BrowserWindow&lt;/code&gt; 对应一个 Electron 窗口, 创建窗口后通过 &lt;code&gt;win.loadURL&lt;/code&gt; 加载了 &lt;code&gt;demo.html&lt;/code&gt; 页面.&lt;/p&gt;
+
+&lt;h2 id=&#34;其他配置文件&#34;&gt;其他配置文件&lt;/h2&gt;
+
+&lt;p&gt;为了运行应用, 我们还需要package.json和tsconfig.json文件, 分别对应NodeJS包和TypeScript的配置信息.&lt;/p&gt;
+
+&lt;p&gt;其中 package.json 文件千篇一律, 并没有什么特别之处. tsconfig.json文件则有一些需要定制的特性.&lt;/p&gt;
+
+&lt;p&gt;tsconfig.json 内容如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+	&amp;quot;include&amp;quot;: [
+		&amp;quot;./**/*&amp;quot;
+	],
+	&amp;quot;exclude&amp;quot;: [
+		&amp;quot;node_modules&amp;quot;,
+		&amp;quot;**/*.spec.ts&amp;quot;
+	],
+
+	&amp;quot;compilerOptions&amp;quot;: {
+		&amp;quot;module&amp;quot;: &amp;quot;commonjs&amp;quot;,
+		&amp;quot;moduleResolution&amp;quot;: &amp;quot;node&amp;quot;,
+		&amp;quot;lib&amp;quot;: [&amp;quot;dom&amp;quot;, &amp;quot;es2016&amp;quot;],
+		&amp;quot;emitDecoratorMetadata&amp;quot;: true,
+		&amp;quot;experimentalDecorators&amp;quot;: true,
+		&amp;quot;suppressImplicitAnyIndexErrors&amp;quot;:true,
+		&amp;quot;noStrictGenericChecks&amp;quot;: true,
+		&amp;quot;noImplicitAny&amp;quot;: false,
+		&amp;quot;target&amp;quot;: &amp;quot;es5&amp;quot;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;include&lt;/code&gt; 表示用通配符选择文件, &lt;code&gt;exclude&lt;/code&gt; 表示排除的文件, &lt;code&gt;compilerOptions&lt;/code&gt; 对应编译选项.&lt;/p&gt;
+
+&lt;p&gt;在编译选项中, 我们需要指定依赖的dom和es2016库, experimentalDecorators表示注解功能也必须打开,
+emitDecoratorMetadata表示生成元信息也必须打开(元信息是反射特性所需要的).&lt;/p&gt;
+
+&lt;p&gt;其它的编译参数用于可以根据需要自行调整.&lt;/p&gt;
+
+&lt;h2 id=&#34;运行&#34;&gt;运行&lt;/h2&gt;
+
+&lt;p&gt;克隆完整代码, 进入到对应目录的命令行, 然后安装依赖并运行:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cnpm install
+node_modules\.bin\tsc
+node_modules\.bin\electron .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行效果图:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ng2-electron-demo.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;OK!&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>一个极简的JavaScript模板引擎</title>
+      <link>https://chai2010.cn/post/js/js-tmpl-engine/</link>
+      <pubDate>Wed, 05 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/js/js-tmpl-engine/</guid>
+      
+        <description>&lt;p&gt;基于ES6的新特性, 构造一个极简的JavaScript模板引擎.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;ES6提供了可以跨越多行的模板字符串, 为内联的模板提供了很多方便.&lt;/p&gt;
+
+&lt;p&gt;使用起来很简单:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;let world = &#39;世界&#39;
+console.log(`hello, ${world}`)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在执行时, JS引擎会对模板字符串中&lt;code&gt;${...}&lt;/code&gt;部分的表达式进行求值, 最后转换为字符串显示.&lt;/p&gt;
+
+&lt;p&gt;模板字符串可以跨越多行, 中间如果需要包含 ` $ 等字符串时需要用 \ 进行转义.&lt;/p&gt;
+
+&lt;p&gt;我们可以将ES6的模板字符串看作是一种编译时的模板引擎.&lt;/p&gt;
+
+&lt;p&gt;很多时候我们也需要运行时的模板引擎. 用户根据需要选择传入模板变量.&lt;/p&gt;
+
+&lt;p&gt;我们可以基于ES6的模板引擎打造一个运行时的模板引擎, 代码如下(TypeScript实现):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;export function RenderTemplate(tmpl: string, params: object): string {
+	let keys = Object.keys(params)
+	let vals = keys.map(key =&amp;gt; params[key])
+	return new Function(...keys, `return \`${tmpl}\`;`)(...vals)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用方式如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;let s = RenderTemplate(&#39;${msg}&#39;, {msg:&#39;abc&#39;})
+let s = RenderTemplate(&#39;${fn(msg)}&#39;, {fn: s =&amp;gt; s.toUpperCase(), msg:&#39;abc&#39;})
+let s = RenderTemplate(&#39;${Math.sqrt(pt.x*pt.x+pt.y*pt.y)}&#39;, {Math:Math, pt:{x:1, y:2}})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要注意的是传入的模板字符串不能用反斜杠`包含以避免被JS引擎展开.&lt;/p&gt;
+
+&lt;p&gt;工作原理是构造一个函数, 函数体是将传入的运行时模板转为ES6的模板字符串,
+同时传入的对象成员转为新构造函数的参数变量, 这样JS引擎会根据传入的参数变量值展开模板字符串了.&lt;/p&gt;
+
+&lt;p&gt;实现虽然简单, 但是得意于ES6模板字符串的强大特性, 我们也可以传入函数等复杂对象.&lt;/p&gt;
+
+&lt;p&gt;如果哪位同学有更简单的实现, 请告知作者, 感谢.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>非主流C/C&#43;&#43;编程</title>
+      <link>https://chai2010.cn/post/gist/cpp-js/</link>
+      <pubDate>Fri, 27 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/gist/cpp-js/</guid>
+      
+        <description>&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;enum class NewStyle {
+	ONE = 200,
+	TWO,
+};
+static auto init_enum_NewStyle = my_run_script_int(R&amp;quot;==(
+	const varargs = [
+		Module.getValue(arguments[1]+4*0, &#39;i32&#39;),
+		Module.getValue(arguments[1]+4*1, &#39;i32&#39;),
+	];
+	Module.NewStyle = class {
+		static get ONE(){ return varargs[0] }
+		static get TWO(){ return varargs[1] }
+	};
+)==&amp;quot;,
+	NewStyle::ONE,
+	NewStyle::TWO
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Bazel C&#43;&#43; 基础[翻译]</title>
+      <link>https://chai2010.cn/post/bazel/bazel-cpp/</link>
+      <pubDate>Tue, 28 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/bazel/bazel-cpp/</guid>
+      
+        <description>&lt;ul&gt;
+&lt;li&gt;原文：&lt;a href=&#34;http://www.bazel.io/docs/cpp.html&#34;&gt;http://www.bazel.io/docs/cpp.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;译者：&lt;a href=&#34;http://github.com/chai2010&#34;&gt;chai2010&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;使用绝对路径&#34;&gt;使用绝对路径&lt;/h2&gt;
+
+&lt;p&gt;包含的路径是相对于工作区的根路径。假设有以下的目录结构：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[workspace]/
+    WORKSPACE
+    a/
+        BUILD
+        a.h
+        a.cc
+    b/
+        BUILD
+        b.h
+        b.cc
+        main.cc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果&lt;code&gt;b/main.cc&lt;/code&gt;需要包含&lt;code&gt;b.h&lt;/code&gt;头文件，我们需要创建以下的&lt;code&gt;b/BUILD&lt;/code&gt;文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;b&amp;quot;,
+    srcs = [&amp;quot;b.cc&amp;quot;],
+    hdrs = [&amp;quot;b.h&amp;quot;],
+)
+
+cc_binary(
+    name = &amp;quot;main&amp;quot;,
+    srcs = [&amp;quot;main.cc&amp;quot;],
+    deps = [&amp;quot;:b&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;b/main.cc&lt;/code&gt;可以这样包含&lt;code&gt;b.h&lt;/code&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;quot;b/b.h&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的头文件包含路径是相对于工作区根目录的相对路径。如果&lt;code&gt;b/main.cc&lt;/code&gt;还要依赖&lt;code&gt;a/a.h&lt;/code&gt;头文件的话，我们还需要添加&lt;code&gt;a/BUILD&lt;/code&gt;文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;a&amp;quot;,
+    srcs = [&amp;quot;a.cc&amp;quot;],
+    hdrs = [&amp;quot;a.h&amp;quot;],
+    visibility = [&amp;quot;//b:__pkg__&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后我们在&lt;code&gt;b/BUILD&lt;/code&gt;添加依赖关系：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_binary(
+    name = &amp;quot;main&amp;quot;,
+    srcs = [&amp;quot;main.cc&amp;quot;],
+    deps = [
+        &amp;quot;:b&amp;quot;,
+        &amp;quot;//a&amp;quot;,
+    ],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;b/main.cc&lt;/code&gt;代码中也包含了&lt;code&gt;a/a.h&lt;/code&gt;头文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;quot;a/a.h&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;b/main.cc&lt;/code&gt;就可以正常使用&lt;code&gt;a/a.h&lt;/code&gt;或&lt;code&gt;b/b.h&lt;/code&gt;中导出的符号了。&lt;/p&gt;
+
+&lt;h2 id=&#34;依赖传递&#34;&gt;依赖传递&lt;/h2&gt;
+
+&lt;p&gt;如果包含了一个头文件，那么需要将头文件对应的库添加到依赖中。不过，只需有添加直接依赖的库。假设三明治对应的&lt;code&gt;sandwich.h&lt;/code&gt;文件包含了面包对应的&lt;code&gt;bread.h&lt;/code&gt;文件，同时&lt;code&gt;bread.h&lt;/code&gt;又包含了面粉对应的&lt;code&gt;flour.h&lt;/code&gt;文件。但是，三明治&lt;code&gt;sandwich.h&lt;/code&gt;文件并没有直接包含面粉&lt;code&gt;flour.h&lt;/code&gt;文件（三明治用户当然不关心面粉的事情），因此BUILD文件可以这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;sandwich&amp;quot;,
+    srcs = [&amp;quot;sandwich.cc&amp;quot;],
+    hdrs = [&amp;quot;sandwich.h&amp;quot;],
+    deps = [&amp;quot;:bread&amp;quot;],
+)
+
+cc_library(
+    name = &amp;quot;bread&amp;quot;,
+    srcs = [&amp;quot;bread.cc&amp;quot;],
+    hdrs = [&amp;quot;bread.h&amp;quot;],
+    deps = [&amp;quot;:flour&amp;quot;],
+)
+
+cc_library(
+    name = &amp;quot;flour&amp;quot;,
+    srcs = [&amp;quot;flour.cc&amp;quot;],
+    hdrs = [&amp;quot;flour.h&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面表示了&lt;code&gt;sandwich&lt;/code&gt;三明治库依赖&lt;code&gt;bread&lt;/code&gt;面包库，&lt;code&gt;bread&lt;/code&gt;又依赖&lt;code&gt;flour&lt;/code&gt;对应的面粉库。&lt;/p&gt;
+
+&lt;h2 id=&#34;添加头文件包含路径&#34;&gt;添加头文件包含路径&lt;/h2&gt;
+
+&lt;p&gt;很多时候你可能并不希望基于工作区根路径的相对路径来包含每个头文件。因为很多已经存在的第三方库的头文件包含方式并不是基于工作区的根路径。假设有以下目录结构：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[workspace]/
+    WORKSPACE
+    third_party/
+        some_lib/
+            include/
+                some_lib.h
+            BUILD
+            some_lib.cc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Bazel希望用&lt;code&gt;third_party/some_lib/include/some_lib.h&lt;/code&gt;方式包含&lt;code&gt;some_lib.h&lt;/code&gt;，但是&lt;code&gt;some_lib.cc&lt;/code&gt;可能跟希望用&lt;code&gt;&amp;quot;include/some_lib.h&amp;quot;&lt;/code&gt;方式包含。为了使得包含路径有效，需要在&lt;code&gt;third_party/some_lib/BUILD&lt;/code&gt;文件中将&lt;code&gt;some_lib/&lt;/code&gt;目录添加到头文件包含路径的搜索列表中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;some_lib&amp;quot;,
+    srcs = [&amp;quot;some_lib.cc&amp;quot;],
+    hdrs = [&amp;quot;some_lib.h&amp;quot;],
+    copts = [&amp;quot;-Ithird_party/some_lib&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这对于依赖的外部第三方库特别有效，因为可以避免在头文件路径中出现无关的&lt;code&gt;external/[repository-name]/&lt;/code&gt;前缀。&lt;/p&gt;
+
+&lt;h2 id=&#34;包含外部库-一个例子&#34;&gt;包含外部库：一个例子&lt;/h2&gt;
+
+&lt;p&gt;假设使用了 &lt;a href=&#34;https://github.com/google/googletest&#34;&gt;Google Test&lt;/a&gt;。可以在&lt;code&gt;WORKSPACE&lt;/code&gt;文件中使用&lt;code&gt;new_&lt;/code&gt;开头的仓库相关的函数，下载依赖的GTest代码到当前仓库中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;new_http_archive(
+    name = &amp;quot;gtest&amp;quot;,
+    url = &amp;quot;https://googletest.googlecode.com/files/gtest-1.7.0.zip&amp;quot;,
+    sha256 = &amp;quot;247ca18dd83f53deb1328be17e4b1be31514cedfc1e3424f672bf11fd7e0d60d&amp;quot;,
+    build_file = &amp;quot;gtest.BUILD&amp;quot;,
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建&lt;code&gt;gtest.BUILD&lt;/code&gt;文件，对应Google Test的构建配置文件。配置文件中有几个需要特别注意的地方：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;gtest-1.7.0/src/gtest-all.cc&lt;/code&gt;文件已经采用&lt;code&gt;#include&lt;/code&gt;语法包含了&lt;code&gt;gtest-1.7.0/src/&lt;/code&gt;目录中其它&lt;code&gt;*.cc&lt;/code&gt;文件，因此需要将它排除在外（也可以只包含它一个文件，但是需要正确配置包含路径）。&lt;/li&gt;
+&lt;li&gt;它的头文件在&lt;code&gt;gtest-1.7.0/include/&lt;/code&gt;目录，需要将它添加到头文件包含路径列表中&lt;/li&gt;
+&lt;li&gt;GTest依赖&lt;code&gt;pthread&lt;/code&gt;多线程库，通过&lt;code&gt;linkopt&lt;/code&gt;选项指定。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最终的规则大概是这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;main&amp;quot;,
+    srcs = glob(
+        [&amp;quot;gtest-1.7.0/src/*.cc&amp;quot;],
+        exclude = [&amp;quot;gtest-1.7.0/src/gtest-all.cc&amp;quot;]
+    ),
+    hdrs = glob([
+        &amp;quot;gtest-1.7.0/include/**/*.h&amp;quot;,
+        &amp;quot;gtest-1.7.0/src/*.h&amp;quot;
+    ]),
+    copts = [
+        &amp;quot;-Iexternal/gtest/gtest-1.7.0/include&amp;quot;
+    ],
+    linkopts = [&amp;quot;-pthread&amp;quot;],
+    visibility = [&amp;quot;//visibility:public&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是有点混乱：所有以&lt;code&gt;gtest-1.7.0&lt;/code&gt;为前缀的其实都是生成的临时文件。我们可以通过&lt;code&gt;new_http_archive&lt;/code&gt;函数中的&lt;code&gt;strip_prefix&lt;/code&gt;属性来忽略它：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;new_http_archive(
+    name = &amp;quot;gtest&amp;quot;,
+    url = &amp;quot;https://googletest.googlecode.com/files/gtest-1.7.0.zip&amp;quot;,
+    sha256 = &amp;quot;247ca18dd83f53deb1328be17e4b1be31514cedfc1e3424f672bf11fd7e0d60d&amp;quot;,
+    build_file = &amp;quot;gtest.BUILD&amp;quot;,
+    strip_prefix = &amp;quot;gtest-1.7.0&amp;quot;,
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在&lt;code&gt;gtest.BUILD&lt;/code&gt;简洁多了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;main&amp;quot;,
+    srcs = glob(
+        [&amp;quot;src/*.cc&amp;quot;],
+        exclude = [&amp;quot;src/gtest-all.cc&amp;quot;]
+    ),
+    hdrs = glob([
+        &amp;quot;include/**/*.h&amp;quot;,
+        &amp;quot;src/*.h&amp;quot;
+    ]),
+    copts = [&amp;quot;-Iexternal/gtest/include&amp;quot;],
+    linkopts = [&amp;quot;-pthread&amp;quot;],
+    visibility = [&amp;quot;//visibility:public&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在&lt;code&gt;cc_&lt;/code&gt;相关的规则可以通过&lt;code&gt;//external:gtest/main&lt;/code&gt;引用GTest了。&lt;/p&gt;
+
+&lt;p&gt;例如：我们可以创建以下测试：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;quot;gtest/gtest.h&amp;quot;
+
+TEST(FactorialTest, Negative) {
+  EXPECT_EQ(1, 1);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建对应的BUILD文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_test(
+    name = &amp;quot;my_test&amp;quot;,
+    srcs = [&amp;quot;my_test.cc&amp;quot;],
+    copts = [&amp;quot;-Iexternal/gtest/include&amp;quot;],
+    deps = [&amp;quot;@gtest//:main&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用&lt;code&gt;bazel test&lt;/code&gt;命令运行测试。&lt;/p&gt;
+
+&lt;h2 id=&#34;依赖预编译的库&#34;&gt;依赖预编译的库&lt;/h2&gt;
+
+&lt;p&gt;如果要依赖一个已经编译好的库（可能只有头文件和对应的&lt;code&gt;*.so&lt;/code&gt;库文件），可以使用&lt;code&gt;cc_library&lt;/code&gt;规则包装一个库对象：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;mylib&amp;quot;,
+    srcs = [&amp;quot;mylib.so&amp;quot;],
+    hdrs = [&amp;quot;mylib.h&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其它的目标就可以依赖这个包装的库对象了。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>使用Go语言开发iOS应用(Swift版)</title>
+      <link>https://chai2010.cn/post/golang/go-ios-app/</link>
+      <pubDate>Wed, 25 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-ios-app/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;使用go语言开发ios应用-swift版&#34;&gt;使用Go语言开发iOS应用(Swift版)&lt;/h1&gt;
+
+&lt;p&gt;本文加上读者对Go语言和Swift语言都有一定了解, 但是对二者混合使用不了解的同学.&lt;/p&gt;
+
+&lt;p&gt;本教程是基于一个真实上架的iOS应用做的简单的总结。&lt;/p&gt;
+
+&lt;p&gt;我们先看看运行效果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-ios-yjyy-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+
+&lt;p&gt;Go语言是Google公司于2010年开源的一个面向网络服务和多并发环境的编程语言，特点是简单。
+但是因为简单，也就只能实现90%的性能，这是Go语言的最大优点，因为 少即是多 的道理不是每个人都能领悟的。&lt;/p&gt;
+
+&lt;p&gt;Swift是Apple公司于2014年发布的用来替代ObjectiveC的语言，主要面向iOS和OS X上的界面程序开发。
+当然用swift来开发服务器也是大家关注的一个领域，作者看好在不远的将来Swift将逐步替代C++和Rust语言。&lt;/p&gt;
+
+&lt;p&gt;Go语言和Swift语言本来是风马牛不相及的两个语言，为何非一定要整到一起呢？
+原因很简单，因为作者是一个Go粉，同时也算是半个Swift粉；想试水iOS开发，但是实在是受不了ObjectiveC的裹脚布语法。&lt;/p&gt;
+
+&lt;p&gt;补充下：本人虽然不喜欢ObjectiveC的语法，但是觉得ObjectiveC的runtime还是很强悍的。
+理论上，基于ObjectiveC的runtime，可以用任何流行的编程语言来开发iOS应用，RubyMotion就是一个例子。&lt;/p&gt;
+
+&lt;p&gt;其实，现在流行的绝大部分语言都有一个交集，就是c语言兼容的二进制接口。
+所以说，C++流行并不是C++多厉害，而是它选择几本无缝兼容了C语言的规范。&lt;/p&gt;
+
+&lt;p&gt;但是，完全兼容C语言的规范也有缺点，就是语言本身无法自由地发展，因为很多地方会受到C语言编程模型的限制。
+C++和ObjectiveC是两个比较有代表的例子。&lt;/p&gt;
+
+&lt;p&gt;所以说，Swift一出世就兼容C语言的二进制接口规范，同时抱紧了ObjectiveC的runtime大腿，而去自己确实有很大优秀的特性。&lt;/p&gt;
+
+&lt;p&gt;但是，我们这里暂时不关心Swift和ObjectiveC的混合编程，我们只关注作为ObjectiveC子集的C语言如何与Swift混合编程。&lt;/p&gt;
+
+&lt;h2 id=&#34;swift调用c函数&#34;&gt;Swift调用C函数&lt;/h2&gt;
+
+&lt;p&gt;Swift调用C函数的方法有多种：通过ObjectiveC桥接调用和直接调用。其实两者的原理是一样的，我个人跟喜欢选择最直接也最暴力的直接调用C函数的方式。&lt;/p&gt;
+
+&lt;p&gt;比如有一个C函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+
+void getInput(int *output) {
+    scanf(&amp;quot;%i&amp;quot;, output);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成一个桥接的头文件&lt;code&gt;xxx-Bridging-Header.h&lt;/code&gt;，里面包含c函数规格说明：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void getInput(int *output);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;swift就可以直接使用了:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import Foundation
+
+var output: CInt = 0
+getInput(&amp;amp;output)
+
+println(output)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果不用桥接文件，可以在swift中声明一个Swift函数，对应C函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@_silgen_name(&amp;quot;getInput&amp;quot;) func getInput_swift(query:UnsafePointer&amp;lt;CInt&amp;gt;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;为了明确区分C函数和swift函数，我们将&lt;code&gt;getInput&lt;/code&gt;重新声明为&lt;code&gt;getInput_swift&lt;/code&gt;，使用方法和前面一样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import Foundation
+
+var output: CInt = 0
+getInput_swift(&amp;amp;output)
+
+println(output)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;swift中如何管理c返回的内存&#34;&gt;Swift中如何管理c返回的内存&lt;/h2&gt;
+
+&lt;p&gt;Swift语言本身是自带ARC的，用户很少直接关注内存问题。但是C函数如果返回内存到Swift空间，
+Swift的ARC是无效的，需要手工释放C内存。&lt;/p&gt;
+
+&lt;p&gt;假设我们自己用C语言实现了一个字符串克隆的函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char* MyStrDup(char* s) {
+    return strdup(s);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在swift中可以这样使用：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@_silgen_name(&amp;quot;MyStrDup&amp;quot;)
+func MyStrDup_swift(query:UnsafePointer&amp;lt;CChar&amp;gt;) -&amp;gt; UnsafeMutablePointer&amp;lt;CChar&amp;gt;
+
+let p = MyStrDup_swift(&amp;quot;hello swift-c!&amp;quot;)
+let s = String.fromCString(p)!
+p.dealloc(1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用&lt;code&gt;String.fromCString(p)!&lt;/code&gt;从C字符串构建一个swift字符串，然后手工调用&lt;code&gt;p.dealloc(1)&lt;/code&gt;释放c字符串内存空间。&lt;/p&gt;
+
+&lt;p&gt;函数调用和内存管理是跨语言编程中最重要的两个基础问题，目前已久初步可以工作了。&lt;/p&gt;
+
+&lt;h2 id=&#34;go语言导出c静态库&#34;&gt;Go语言导出C静态库&lt;/h2&gt;
+
+&lt;p&gt;Go语言提供了一个cgo的工具，用于Go语言和C语言交互。这是Go语言使用C语言的一个例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+//#include &amp;lt;stdio.h&amp;gt;
+import &amp;quot;C&amp;quot;
+
+func main() {
+    C.puts(C.CString(&amp;quot;abc&amp;quot;))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;既然要交互，自然会涉及到C语言回调Go语言函数的情形。为此，cgo提供了一个&lt;code&gt;export&lt;/code&gt;注释命令，
+用于生成Go语言函数对应的C语言函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//export MyStrDup
+func MyStrDup(s *C.char) *C.char {
+    return C.strdup(s)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;MyStrDup&lt;/code&gt;指定的名字必须和Go函数名字一致，函数的参数最后是C语言支持的类型。&lt;/p&gt;
+
+&lt;p&gt;现在，我们就得到了用Go语言实现的&lt;code&gt;MyStrDup&lt;/code&gt;函数，使用方法和前面的C语言实现的&lt;code&gt;MyStrDup&lt;/code&gt;是一样的。&lt;/p&gt;
+
+&lt;p&gt;和引用C语言函数库遇到的问题一样，我们如何在工程中引用这些C代码或Go代码实现的函数呢？&lt;/p&gt;
+
+&lt;p&gt;答案还是来自C语言：将代码构建为C静态库或者C动态库，然后将静态库或动态库导入Swift工程。&lt;/p&gt;
+
+&lt;p&gt;但是，对于iOS来说，构建C静态库或者C动态库的过程要麻烦（使用xcode也只是隐藏了构建的具体步骤）。&lt;/p&gt;
+
+&lt;p&gt;因为，iOS涉及到多种CPU架构：模拟器的x86、4s的32位arm、5s以后的64位arm，64位arm中还有不同当版本&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;这是C静态库或者C动态库构建始终都要面对的问题。&lt;/p&gt;
+
+&lt;h2 id=&#34;交叉构建的参数&#34;&gt;交叉构建的参数&lt;/h2&gt;
+
+&lt;p&gt;Go1.6之后增加了构建C静态库的支持，交叉编译也非常简单，只需要设置好&lt;code&gt;GOARCH&lt;/code&gt;和&lt;code&gt;GOOS&lt;/code&gt;就行。&lt;/p&gt;
+
+&lt;p&gt;因为，iOS的&lt;code&gt;GOOS&lt;/code&gt;只有&lt;code&gt;Darwin&lt;/code&gt;一种类型，我们只需要设置&lt;code&gt;GOARCH&lt;/code&gt;就可以了。&lt;/p&gt;
+
+&lt;p&gt;要构建C静态库，我们需要将上面的&lt;code&gt;MyStrDup&lt;/code&gt;实现放到一个&lt;code&gt;main&lt;/code&gt;包中:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+//#include &amp;lt;string.h&amp;gt;
+import &amp;quot;C&amp;quot;
+
+func main() {
+    //
+}
+
+//export MyStrDup
+func MyStrDup(s *C.char) *C.char {
+    return C.strdup(s)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;main&lt;/code&gt;包中的&lt;code&gt;main&lt;/code&gt;函数不会被执行，但是&lt;code&gt;init&lt;/code&gt;函数依然有效。&lt;/p&gt;
+
+&lt;p&gt;使用下面的命令就可以构建当前系统的c静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go build -buildmode=c-archive
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要交叉编译iOS可用的c静态库，我们需要先设置&lt;code&gt;GOARCH&lt;/code&gt;，同时打开cgo特性（交叉编译时，cgo默认是关闭的）。&lt;/p&gt;
+
+&lt;p&gt;下面是构建针对模拟器的x86/amd64类型的C静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export CGO_ENABLED=1
+export GOARCH=amd64
+
+go build -buildmode=c-archive -o libmystrdup_amd64.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们使用&lt;code&gt;-o&lt;/code&gt;参数指定了输出的静态库文件名。构建命令同时还会生成一个头文件（可能叫&lt;code&gt;libmystrdup_386.h&lt;/code&gt;），
+我们没有用到这个头文件，直接删除掉就可以。&lt;/p&gt;
+
+&lt;p&gt;下面是构建针对模拟器的x86/386类型的C静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export CGO_ENABLED=1
+export GOARCH=386
+
+go build -buildmode=c-archive -o libmystrdup_386.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在构建x86/386类型的C静态库时可能会有一些link错误，我们暂时先用以下方法回避。&lt;/p&gt;
+
+&lt;p&gt;创建一个&lt;code&gt;patch_386.go&lt;/code&gt;文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Copyright 2016 &amp;lt;chaishushan{AT}gmail.com&amp;gt;. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// 针对iOS模拟器link时缺少的函数
+// 属于临时解决方案
+
+package main
+
+/*
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+#include &amp;lt;stdlib.h&amp;gt;
+#include &amp;lt;time.h&amp;gt;
+
+size_t fwrite$UNIX2003(const void* a, size_t b, size_t c, FILE* d) {
+    return fwrite(a, b, c, d);
+}
+
+char* strerror$UNIX2003(int errnum) {
+    return strerror(errnum);
+}
+
+time_t mktime$UNIX2003(struct tm * a) {
+    return mktime(a);
+}
+double strtod$UNIX2003(const char * a, char ** b) {
+    return strtod(a, b);
+}
+
+int setenv$UNIX2003(const char* envname, const char* envval, int overwrite) {
+    return setenv(envname, envval, overwrite);
+}
+int unsetenv$UNIX2003(const char* name) {
+    return unsetenv(name);
+}
+
+*/
+import &amp;quot;C&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然，还是会有一些警告出现，暂时忽略它们。&lt;/p&gt;
+
+&lt;h2 id=&#34;构建多cpu类型的静态库&#34;&gt;构建多cpu类型的静态库&lt;/h2&gt;
+
+&lt;p&gt;然后，将C静态库加入到ios的xcode工程文件就可以了。&lt;/p&gt;
+
+&lt;p&gt;x86构建是比较简单的，因为我们可以默认使用本地的构建命令。
+但是，如果要构建arm的静态库，则需要先配置好构建环境。&lt;/p&gt;
+
+&lt;p&gt;我从Go代码中扣出了一个&lt;code&gt;clangwrap.sh&lt;/code&gt;脚本（好像是在&lt;code&gt;$GOROOT/misci/ios&lt;/code&gt;目录）:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/sh
+# This uses the latest available iOS SDK, which is recommended.
+# To select a specific SDK, run &#39;xcodebuild -showsdks&#39;
+# to see the available SDKs and replace iphoneos with one of them.
+SDK=iphoneos
+SDK_PATH=`xcrun --sdk $SDK --show-sdk-path`
+export IPHONEOS_DEPLOYMENT_TARGET=7.0
+# cmd/cgo doesn&#39;t support llvm-gcc-4.2, so we have to use clang.
+CLANG=`xcrun --sdk $SDK --find clang`
+
+if [ &amp;quot;$GOARCH&amp;quot; == &amp;quot;arm&amp;quot; ]; then
+    CLANGARCH=&amp;quot;armv7&amp;quot;
+elif [ &amp;quot;$GOARCH&amp;quot; == &amp;quot;arm64&amp;quot; ]; then
+    CLANGARCH=&amp;quot;arm64&amp;quot;
+else
+    echo &amp;quot;unknown GOARCH=$GOARCH&amp;quot; &amp;gt;&amp;amp;2
+    exit 1
+fi
+
+exec $CLANG -arch $CLANGARCH -isysroot $SDK_PATH &amp;quot;$@&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;里面比较重要的是&lt;code&gt;IPHONEOS_DEPLOYMENT_TARGET&lt;/code&gt;环境变量，这里意思是目标最低支持ios7.0系统。&lt;/p&gt;
+
+&lt;p&gt;构建arm64环境的静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export CGO_ENABLED=1
+export GOARCH=arm64
+export CC=$PWD/clangwrap.sh
+export CXX=$PWD/clangwrap.sh
+
+go build -buildmode=c-archive -o libmystrdup_arm64.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;构建armv7环境的静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export CGO_ENABLED=1
+export GOARCH=arm
+export GOARM=7
+export CC=$PWD/clangwrap.sh
+export CXX=$PWD/clangwrap.sh
+
+go build -buildmode=c-archive -o libmystrdup_armv7.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后我们用&lt;code&gt;lipo&lt;/code&gt;命令将以上这些不同的静态库打包到一个静态库中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;lipo libmystrdup_386.a libmystrdup_adm64.a libmystrdup_arm64.a libmystrdup_armv7.a -create -output libmystrdup.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样的话，只要引入一个静态库就可以支持不同cpu类型的目标了。&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;毛主席教导我们：要在战争中学习战争。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://appsto.re/cn/QH8ocb.i&#34;&gt;野鸡医院&lt;/a&gt;&lt;/strong&gt; 这个app是作者第一个iOS应用，这篇教程也是在iOS开发过程逐步学习总结的结果。&lt;/p&gt;
+
+&lt;p&gt;完整的例子：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;AppStore安装: &lt;a href=&#34;https://appsto.re/cn/QH8ocb.i&#34;&gt;https://appsto.re/cn/QH8ocb.i&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Swift工程: &lt;a href=&#34;https://github.com/chai2010/ptyy/tree/master/ios-app/yjyy-swift&#34;&gt;https://github.com/chai2010/ptyy/tree/master/ios-app/yjyy-swift&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Go静态库工程: &lt;a href=&#34;https://github.com/chai2010/ptyy/tree/master/cmd/yjyy&#34;&gt;https://github.com/chai2010/ptyy/tree/master/cmd/yjyy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;静态库构建脚本: &lt;a href=&#34;https://github.com/chai2010/ptyy/tree/master/ios-app/yjyy-swift/vendor/gopkg&#34;&gt;https://github.com/chai2010/ptyy/tree/master/ios-app/yjyy-swift/vendor/gopkg&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;所有的代码均可以免费获取(BSD协议): &lt;a href=&#34;https://github.com/chai2010/ptyy&#34;&gt;https://github.com/chai2010/ptyy&lt;/a&gt;&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

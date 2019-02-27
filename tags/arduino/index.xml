@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Arduino on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/arduino/</link>
+    <description>Recent content in Arduino on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 12 May 2009 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/arduino/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Arduino备忘资料</title>
+      <link>https://chai2010.cn/post/2009/arduino-wiring-hack/</link>
+      <pubDate>Tue, 12 May 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/arduino-wiring-hack/</guid>
+      
+        <description>
+
+&lt;h3 id=&#34;wiringnano&#34;&gt;WiringNano&lt;/h3&gt;
+
+&lt;p&gt;WiringNano是参考Wiring Mini和Arduino Nano两款板子改的.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/arduino/WiringNano_01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;对于Wiring Mini的优点是, 增加了USB接口, 可以直接通过USB供电和串口通讯.
+对于Arduino Nano的优点是, 采用ATMega128单片机, 功能更强大.&lt;/p&gt;
+
+&lt;p&gt;软件部分打算自己重新做一个, api可以部分参考wiring和arduino, 主要是要
+增加一个实时系统.&lt;/p&gt;
+
+&lt;p&gt;WiringNano的外形尺寸和Wiring Mini一致, 下面是Wiring Mini的外形:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/arduino/WiringNano_02.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;以前没做过板子, PCB做起来遇到很多问题. 不过是业余的东西, 慢慢来了 :)&lt;/p&gt;
+
+&lt;h3 id=&#34;基于atmega128的wiring&#34;&gt;基于ATmega128的Wiring&lt;/h3&gt;
+
+&lt;p&gt;官方的Wiring开发板:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/arduino/Wiring.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;据说Arduino也是参考的Wiring设计. 今天看了一些它的网站, 发现软件基本一样, 电路也基本一样.
+比较理想的是Wiring是采用的128芯片, 如果再把软件接口加强一下, 就完全符合我的需求了.&lt;/p&gt;
+
+&lt;p&gt;这是我参考Arduino改造的原理图:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/arduino/wiring128-01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这是 Eagle 软件渲染的效果图:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/arduino/wiring128-02.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

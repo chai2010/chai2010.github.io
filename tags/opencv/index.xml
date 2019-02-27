@@ -1,0 +1,1710 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Opencv on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/opencv/</link>
+    <description>Recent content in Opencv on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 06 Dec 2009 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/opencv/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CvImage中的陷阱和BUG</title>
+      <link>https://chai2010.cn/post/2009/opencv-cvimage-bug/</link>
+      <pubDate>Sun, 06 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/opencv-cvimage-bug/</guid>
+      
+        <description>
+
+&lt;h3 id=&#34;cvimage类的定义&#34;&gt;CvImage类的定义&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;class CV_EXPORTS CvImage {
+public:
+    CvImage() : image(0), refcount(0) {}
+    CvImage( CvSize size, int depth, int channels ) {
+        image = cvCreateImage( size, depth, channels );
+        refcount = image ? new int(1) : 0;
+    }
+    CvImage( IplImage* img ): image(img)  {
+        refcount = image ? new int(1) : 0;
+    }
+    ~CvImage() {
+        if( refcount &amp;amp;&amp;amp; !(--*refcount) ) {
+            cvReleaseImage( &amp;amp;image );
+            delete refcount;
+        }
+    }
+    void attach( IplImage* img, bool use_refcount=true ) {
+        if( refcount ) {
+            if( --*refcount == 0 ) cvReleaseImage( &amp;amp;image );
+            delete refcount;
+        }
+        image = img;
+        refcount = use_refcount &amp;amp;&amp;amp; image ? new int(1) : 0;
+    }
+    void detach() {
+        if( refcount ) {
+            if( --*refcount == 0 )  cvReleaseImage( &amp;amp;image );
+            delete refcount;
+            refcount = 0;
+        }
+        image = 0;
+    }
+    CvImage&amp;amp; operator = (const CvImage&amp;amp; img)   {
+        if( img.refcount ) ++*img.refcount;
+        if( refcount &amp;amp;&amp;amp; !(--*refcount) ) cvReleaseImage( &amp;amp;image );
+        image=img.image;
+        refcount=img.refcount;
+        return *this;
+    }
+protected:
+    IplImage* image; // 实际影象
+    int* refcount;   // 引用计数
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CvImage类的相关代码在以下位置：
+&lt;code&gt;OpenCV\cxcore\include\cxcore.hpp&lt;/code&gt;/&lt;code&gt;OpenCV\cxcore\src\cximage.cpp&lt;/code&gt;
+这里给出的只是部分函数。&lt;/p&gt;
+
+&lt;p&gt;为了提高效率，&lt;code&gt;CvImage&lt;/code&gt;采用的是引用计数。不过目前的&lt;code&gt;CvImage&lt;/code&gt;实现中，引用计数机制存在bug。&lt;/p&gt;
+
+&lt;h3 id=&#34;关于引用计数&#34;&gt;关于引用计数&lt;/h3&gt;
+
+&lt;p&gt;引用计数应该也可以叫写时复制技术。就是在复制一个数据时，先只是简单地复制数据的 指针（地址），只有在数据被修改的时候才真的进行数据的复制操作。写时复制技术对用户 是透明的，也就是说用户可以当作数据是真的复制了。&lt;/p&gt;
+
+&lt;p&gt;一般数据（或者是文件，类等）都会对应创建/销毁操作。因此，采用写时复制技术的数据 一般还对应一个计数，记录该数据被别人引用的次数。数据在第一次被创建的时候被设置为1， 以后每次被重复创建则增加1，如果是被销毁则减少1。再销毁数据减少引用计数的时候，如果 记录变为0则真的执行删除数据操作，否则的话只执行逻辑删除。&lt;/p&gt;
+
+&lt;p&gt;这里需要注意的一点是，每个引用计数和它对应的数据是绑定的。因此，任何一个引用计数都 不应该独立于数据存在。&lt;/p&gt;
+
+&lt;h3 id=&#34;cvimage中的引用计数机制&#34;&gt;CvImage中的引用计数机制&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;class CV_EXPORTS CvImage {
+    IplImage* image;
+    int* refcount;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;image&lt;/code&gt;指向影像数据的地址，&lt;code&gt;refcount&lt;/code&gt;指向影像数据对应的引用计数的地址。需要强调的一点是， &lt;code&gt;refcount&lt;/code&gt;指向的引用计数并不属于哪个类，而是属于&lt;code&gt;image&lt;/code&gt;指向影像数据！
+任何将影像数据 和其对应的引用计数分离的操作都是错误的。&lt;/p&gt;
+
+&lt;h3 id=&#34;cvimage-iplimage-img-陷阱&#34;&gt;&lt;code&gt;CvImage(IplImage* img)&lt;/code&gt; 陷阱&lt;/h3&gt;
+
+&lt;p&gt;假设有下面一个段代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IplImage *pIplImg = cvLoadImage(&amp;quot;load.tiff&amp;quot;);  {
+    CvImage cvImg(pIplImg);
+}
+cvSaveImage(&amp;quot;save.tiff&amp;quot;, pIplImg);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;虽然逻辑上好像没有错误，但再执行到&lt;code&gt;cvSaveImage&lt;/code&gt;语句的时候却会产生异常！跟踪调试后发现， 原来pIplImg对应的数据在cvImg析构的时候被释放了！&lt;/p&gt;
+
+&lt;p&gt;仔细分析后会发现，&lt;code&gt;CvImage&lt;/code&gt;将&lt;code&gt;pIplImg&lt;/code&gt;对应的数据和它本身的&lt;code&gt;refcount&lt;/code&gt;绑定到一起了。&lt;code&gt;pIplImg&lt;/code&gt; 对应的数据虽然不属于&lt;code&gt;CvImage&lt;/code&gt;，但是它却依据&lt;code&gt;refcount&lt;/code&gt;对其进行管理，直到&lt;code&gt;(*refcount)&lt;/code&gt;变为0 的时候私自释放了&lt;code&gt;pIplImg&lt;/code&gt;影像。&lt;/p&gt;
+
+&lt;p&gt;对于这个问题，我不建议使用引用计数，因此可以将代码修改为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CvImage( IplImage* img, bool use_refcount=false) : image(img)  {
+    refcount = use_refcount &amp;amp;&amp;amp; image ? new int(1) : 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在默认的时候不使用引用计数机制，用户自己维护img内存空间。&lt;/p&gt;
+
+&lt;h3 id=&#34;attach问题&#34;&gt;attach问题&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;void attach( IplImage* img, bool use_refcount=true ) {
+    if( refcount ) {
+        if( --*refcount == 0 ) cvReleaseImage( &amp;amp;image );
+        delete refcount;
+    }
+    image = img;
+    refcount = use_refcount &amp;amp;&amp;amp; image ? new int(1) : 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;attach&lt;/code&gt;是将一个&lt;code&gt;IplImage&lt;/code&gt;影像绑定到&lt;code&gt;CvImage&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;其中的一个陷阱和前面的&lt;code&gt;CvImage&lt;/code&gt;类似：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IplImage *pIplImg = cvLoadImage(&amp;quot;load.tiff&amp;quot;);
+{
+    CvImage cvImg;
+    cvImg.attach(pIplImg);
+}  cvSaveImage(&amp;quot;save.tiff&amp;quot;, pIplImg); // 异常
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;处理是方法是把参数&lt;code&gt;use_refcount&lt;/code&gt;的默认值改为&lt;code&gt;false&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;除了和&lt;code&gt;CvImage&lt;/code&gt;类型的陷阱外，&lt;code&gt;attach&lt;/code&gt;本身还有一个bug！&lt;/p&gt;
+
+&lt;p&gt;前面我们分析过，CvImage类中 &lt;code&gt;refcount&lt;/code&gt;指向的空间和image指向的空间是绑在一起的。
+因此，&lt;code&gt;if( --*refcount == 0 )&lt;/code&gt; 语句中将&lt;code&gt;cvReleaseImage( &amp;amp;image )&lt;/code&gt;和&lt;code&gt;delete refcount&lt;/code&gt;
+分离的操作肯定是错误的！！&lt;/p&gt;
+
+&lt;p&gt;假设有以下代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IplImage *pIplImg = cvLoadImage(&amp;quot;load.tiff&amp;quot;);
+{
+    CvImage cvImg;
+    cvImg.create(cvSize(600,400), 8, 1); // 创建一个600*400的单字节单通道影像
+    CvImage cvImgX(cvImg);               // 由cvImg拷贝构造cvImgX
+    cvImgX.attach(pIplImg);
+}
+cvSaveImage(&amp;quot;save.tiff&amp;quot;, pIplImg);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;代码将在执行完&lt;code&gt;cvImgX.attach(pIplImg)&lt;/code&gt;语句后发生异常！&lt;/p&gt;
+
+&lt;p&gt;分析代码可以发现，&lt;code&gt;cvImg.create&lt;/code&gt;先创建了一个影像，同时影像还对应一个引用计数。
+由于&lt;code&gt;cvImgX&lt;/code&gt; 是有&lt;code&gt;cvImg&lt;/code&gt;拷贝构造得到，因此&lt;code&gt;cvImgX&lt;/code&gt;也保存了和&lt;code&gt;cvImg&lt;/code&gt;一样的&lt;code&gt;image&lt;/code&gt;和&lt;code&gt;refcount&lt;/code&gt;。
+在接着执行的 &lt;code&gt;attach&lt;/code&gt;中，&lt;code&gt;cvImgX&lt;/code&gt;将&lt;code&gt;refcount&lt;/code&gt;指向的空间释放（&lt;code&gt;delete refcount&lt;/code&gt;）。
+注意, &lt;code&gt;cvImgX&lt;/code&gt;和&lt;code&gt;cvImg&lt;/code&gt;的&lt;code&gt;refcount&lt;/code&gt; 对应同一个空间！！&lt;/p&gt;
+
+&lt;p&gt;那么在，&lt;code&gt;cvImg&lt;/code&gt;退出花括号执行析构函数的时候，&lt;code&gt;delete refcount&lt;/code&gt;语句就非法了！&lt;/p&gt;
+
+&lt;p&gt;修改bug后的&lt;code&gt;attach&lt;/code&gt;代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void attach( IplImage* img, bool use_refcount=false ) // use_refcount默认值没有修改
+{
+    if( refcount )   {
+        if( --*refcount == 0 ) { // 同时释放
+            cvReleaseImage( &amp;amp;image );
+            delete refcount;
+        }
+    }
+    image = img;
+    refcount = use_refcount &amp;amp;&amp;amp; image ? new int(1) : 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;由于CvImage中的许多函数都基于&lt;code&gt;attach&lt;/code&gt;实现，因此没有修改use_refcount的默认值。
+&lt;code&gt;detach&lt;/code&gt;中的问题 和&lt;code&gt;attach&lt;/code&gt;相似，代码修改如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void detach() {
+    if( refcount ) {
+        if( --*refcount == 0 ) { // 同时释放
+            cvReleaseImage( &amp;amp;image );
+            delete refcount;
+        }
+        refcount = 0;
+    }
+    image = 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;重载操作符“=”时的内存泄漏&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CvImage&amp;amp; operator = (const CvImage&amp;amp; img)  {
+    if( img.refcount ) ++*img.refcount;
+    if( refcount &amp;amp;&amp;amp; !(--*refcount) ) cvReleaseImage( &amp;amp;image );
+    image=img.image;
+    refcount=img.refcount;
+    return *this;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;假设有以下类似代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CvImage cvImg1, cvImg2;
+cvImg1.create(cvSize(600,400), 8, 1);
+cvImg2.create(cvSize(800,500), 8, 1);
+cvImg1 = cvImg2;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;虽然看着很清晰，但是该代码却存在内存泄漏！分析如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cvImg1&lt;/code&gt;先创建一个(600,400)大小的影像，默认还对应一个引用计数（&lt;code&gt;refcount&lt;/code&gt;指向的空间）。
+&lt;code&gt;cvImg2&lt;/code&gt; 也采用同样的方式创建一个类似的影像。&lt;/p&gt;
+
+&lt;p&gt;注意：&lt;code&gt;cvImg1&lt;/code&gt;和&lt;code&gt;cvImg1&lt;/code&gt;中&lt;code&gt;refcount&lt;/code&gt;指向的空间是不同的！！&lt;/p&gt;
+
+&lt;p&gt;下面执行“=”操作时，&lt;code&gt;cvImg1&lt;/code&gt;的&lt;code&gt;image&lt;/code&gt;空间被释放（&lt;code&gt;cvReleaseImage( &amp;amp;image )&lt;/code&gt;），
+但是&lt;code&gt;cvImg1&lt;/code&gt;的 &lt;code&gt;refcount&lt;/code&gt;指向的空间却没有释放！
+然后，&lt;code&gt;cvImg1&lt;/code&gt;的&lt;code&gt;refcount&lt;/code&gt;指向了&lt;code&gt;cvImg2&lt;/code&gt;的&lt;code&gt;refcount&lt;/code&gt;。
+这样，&lt;code&gt;cvImg1&lt;/code&gt; 的&lt;code&gt;refcount&lt;/code&gt;指向内存就丢失了！&lt;/p&gt;
+
+&lt;p&gt;修改后的代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CvImage&amp;amp; operator = (const CvImage&amp;amp; img)  {
+    if( img.refcount ) ++*img.refcount;
+    if( refcount &amp;amp;&amp;amp; !(--*refcount) ) {
+        cvReleaseImage( &amp;amp;image ); // 释放refcount
+        delete refcount;
+    }
+    image=img.image;
+    refcount=img.refcount;
+    return *this;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;小节&#34;&gt;小节&lt;/h3&gt;
+
+&lt;p&gt;虽然讲了这么多关于CvImage的陷阱和bug，单主要目的还是为了更好地使用CvImage。这里给出一个 建议：
+在将IplImage数据和CvImage进行绑定，或者是基于IplImage数据构造CvImage对象的时候， 要清楚是否需要使用CvImage的引用计数技术（有哪些好处/坏处）。
+特别是attach默认是采用引用计数的（没改的理由前面已经说明）。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;附：修复的&lt;code&gt;CvImage&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class CV_EXPORTS CvImage  {
+public:
+    CvImage() : image(0), refcount(0) {}
+    CvImage( CvSize size, int depth, int channels )
+    {
+        image = cvCreateImage( size, depth, channels );
+        refcount = image ? new int(1) : 0;
+    }
+    // 修改
+    CvImage( IplImage* img, bool use_refcount=false): image(img)
+    {
+        refcount = use_refcount &amp;amp;&amp;amp; image ? new int(1) : 0;
+    }
+    ~CvImage()
+    {
+        if( refcount &amp;amp;&amp;amp; !(--*refcount) ) {
+            cvReleaseImage( &amp;amp;image );
+            delete refcount;
+        }
+    }
+    // 修改
+    void attach( IplImage* img, bool use_refcount=false ) // use_refcount默认值没有修改
+    {
+        if( refcount )    {
+            if( --*refcount == 0 ) { // 同时释放
+                cvReleaseImage( &amp;amp;image );
+                delete refcount;
+            }
+        }
+        image = img;
+        refcount = use_refcount &amp;amp;&amp;amp; image ? new int(1) : 0;
+    }
+    // 修改
+    void detach()   {
+        if( refcount )    {
+            if( --*refcount == 0 ) { // 同时释放
+                cvReleaseImage( &amp;amp;image );
+                delete refcount;
+            }
+            refcount = 0;
+        }
+        image = 0;
+    }
+    // 修改
+    CvImage&amp;amp; operator = (const CvImage&amp;amp; img)   {
+        if( img.refcount ) ++*img.refcount;
+        if( refcount &amp;amp;&amp;amp; !(--*refcount) )    {
+            cvReleaseImage( &amp;amp;image );
+            // 释放refcount
+            delete refcount;
+        }
+        image=img.image;
+        refcount=img.refcount;
+        return *this;
+    }
+protected:
+    IplImage* image; // 实际影象
+    int* refcount;   // 引用计数
+};
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>OpenCV中的内存泄漏检测</title>
+      <link>https://chai2010.cn/post/2009/opencv-memory-leak-test/</link>
+      <pubDate>Sun, 06 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/opencv-memory-leak-test/</guid>
+      
+        <description>&lt;p&gt;内存泄漏时程序开发中经常遇到的问题. 而且出现内存泄漏很难检测,
+但是其导致的结果却是灾难性的. 这里讲一下opencv中内存泄漏检测
+的一些技巧.&lt;/p&gt;
+
+&lt;p&gt;OpenCV中关于内存管理主要涉及到以下3个函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CV_IMPL void  cvSetMemoryManager( CvAllocFunc alloc_func, CvFreeFunc free_func, void* userdata );
+CV_IMPL void* cvAlloc( size_t size );
+CV_IMPL void  cvFree_( void* ptr );
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;还有一个对应 &lt;code&gt;cvFree_&lt;/code&gt; 的宏:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#define cvFree(ptr) (cvFree_(*(ptr)), *(ptr)=0)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;宏 &lt;code&gt;cvFree&lt;/code&gt; 的用处是在释放&lt;code&gt;ptr&lt;/code&gt;指针对应的内存后, 将&lt;code&gt;ptr&lt;/code&gt;设置为&lt;code&gt;NULL&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;这里我们先做个假设: opencv中所有的内存分配和释放都是通过&lt;code&gt;cvAlloc&lt;/code&gt;和&lt;code&gt;cvFree&lt;/code&gt;合作完成的.
+如果你使用&lt;code&gt;cvAlloc&lt;/code&gt;分配一个内存, 然后用&lt;code&gt;delete&lt;/code&gt;来是释放内存是错误的(切记)!!!&lt;/p&gt;
+
+&lt;p&gt;因此, 如果我们能够跟踪到&lt;code&gt;cvAlloc&lt;/code&gt;/&lt;code&gt;cvFree&lt;/code&gt;的调用流程, 就可以分析内存泄漏的情况了.&lt;/p&gt;
+
+&lt;p&gt;一般情况下, 一个&lt;code&gt;cvAlloc&lt;/code&gt;分配的内存最终必然要对应&lt;code&gt;cvFree&lt;/code&gt;来释放, 如果&lt;code&gt;cvAlloc&lt;/code&gt;/&lt;code&gt;cvFree&lt;/code&gt;不是
+匹配出现, 那么可以认为出现了内存泄漏.&lt;/p&gt;
+
+&lt;p&gt;为此, 我们需要定义自己的内存管理函数, 然后通过&lt;code&gt;cvSetMemoryManager&lt;/code&gt;装载到opencv中.
+内存管理函数的类型如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;typedef void* (CV_CDECL *CvAllocFunc)(size_t size, void* userdata);
+typedef int (CV_CDECL *CvFreeFunc)(void* pptr, void* userdata);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中的&lt;code&gt;userdata&lt;/code&gt;是用户通过&lt;code&gt;cvSetMemoryManager&lt;/code&gt;来设置的. 我们可以简单的吧&lt;code&gt;userdata&lt;/code&gt;当作一个
+容器指针, 在每次执行我们自己的&lt;code&gt;alloc_func&lt;/code&gt;/&lt;code&gt;free_func&lt;/code&gt;函数时, 将内存的分配/释放情况记录到
+&lt;code&gt;userdata&lt;/code&gt;对应的容器.&lt;/p&gt;
+
+&lt;p&gt;为此, 我自己简单设计了一个&lt;code&gt;MemTracker&lt;/code&gt;类:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#ifndef OPENCV_MEM_TRACKER_H
+#define OPENCV_MEM_TRACKER_H
+
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;vector&amp;gt;
+
+// 内存泄漏追踪
+
+class MemTracker
+{
+public:
+    MemTracker(void);
+    ~MemTracker(void);
+
+private:
+
+    // 登记分配/释放的内存
+    void regAlloc(void *ptr, size_t size);
+    void regFree(void *ptr);
+
+    // 输出泄漏的内存
+    int output(FILE* fp=stderr);
+
+private:
+
+    // 分配内存
+    static void* alloc_func(size_t size, void *userdata);
+    // 释放内存
+    static int free_func(void *ptr, void *userdata);
+
+private:
+
+    struct Ptr
+    {
+        void *ptr;      // 内存地址
+        size_t size;    // 内存大小
+
+        Ptr(void *ptr, size_t size)
+        {
+            this-&amp;gt;ptr = ptr;
+            this-&amp;gt;size = size;
+        }
+    };
+
+    // 记录当前使用中的内存
+    std::vector&amp;lt;Ptr&amp;gt;   m_memTracker;
+};
+
+#endif   // OPENCV_MEM_TRACKER_H
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;类的实现如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;quot;MemTracker.h&amp;quot;
+
+#include &amp;lt;assert.h&amp;gt;
+#include &amp;lt;cv.h&amp;gt;
+
+MemTracker::MemTracker(void)
+{
+    // 注册管理函数
+    cvSetMemoryManager(alloc_func, free_func, (void*)this);
+}
+
+MemTracker::~MemTracker(void)
+{
+    // 取消管理函数
+    cvSetMemoryManager(NULL, NULL, NULL);
+
+    // 输出结果
+    this-&amp;gt;output();
+}
+
+// 登记分配/释放的内存
+void MemTracker::regAlloc(void *ptr, size_t size)
+{
+    m_memTracker.push_back(Ptr(ptr, size));
+}
+
+void MemTracker::regFree(void *ptr)
+{
+    int i;
+    for(i = 0; i &amp;lt; m_memTracker.size(); ++i)
+    {
+        // 删除记录
+        if(m_memTracker[i].ptr == ptr)
+        {
+            m_memTracker[i] = m_memTracker[m_memTracker.size()-1];
+            m_memTracker.pop_back();
+            return;
+        }
+    }
+}
+
+// 输出泄漏的内存
+
+int MemTracker::output(FILE* fp)
+{
+    int n = m_memTracker.size();
+    int i;
+
+    for(i = 0; i &amp;lt; n; ++i)
+    {
+        fprintf(fp, &amp;quot;%d: %p, %u\n&amp;quot;, i, m_memTracker[i].ptr, m_memTracker[i].size);
+    }
+    return n;
+}
+
+// 分配内存
+
+void* MemTracker::alloc_func(size_t size, void *userdata)
+{
+    assert(size &amp;gt; 0 &amp;amp;&amp;amp; userdata != NULL);
+
+    // 分配内存
+    void *ptr = malloc(size);
+    if(!ptr) return NULL;
+
+    // 登记
+    MemTracker *tracker = (MemTracker*)userdata;
+    tracker-&amp;gt;regAlloc(ptr, size);
+    return ptr;
+}
+
+// 释放内存
+int MemTracker::free_func(void *ptr, void *userdata)
+{
+    assert(ptr != NULL &amp;amp;&amp;amp; userdata != NULL);
+
+    // 释放内存
+    free(ptr);
+
+    // 登记
+    MemTracker *tracker = (MemTracker*)userdata;
+    tracker-&amp;gt;regFree(ptr);
+
+    // CV_OK == 0
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;MemTracker在构造的时候会注册自己的内存管理函数, 在析构的时候会输出没有被释放的内存.
+下面我们编写一个测试程序:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;cv.h&amp;gt;
+#include &amp;lt;highgui.h&amp;gt;
+
+#include &amp;quot;MemTracker.h&amp;quot;
+
+int main()
+{
+    MemTracker mem;
+
+    IplImage *img = cvLoadImage(&amp;quot;lena.jpg&amp;quot;, 1);
+    if(!img) return -1;
+
+    // 没有释放img内存
+    // cvReleaseImage(&amp;amp;img);
+
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在main函数退出的时候mem会被析构, 然后输出内存的泄漏情况. 下面是在我的电脑上测试的结果:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C:\work\vs2005\MemTracker\debug&amp;gt;MemTracker.exe
+0: 00C750C0, 112
+1: 00D90040, 786432
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;OK, 先说到这里吧, 下次再补充&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;前面我们已经解决了内存泄漏的检测, 但是在出现内存泄漏的时候我们怎么才能
+跟踪到出现内存泄漏的代码呢? 如果能够调试到没有被释放内存对应的cvAlloc函数就好了.&lt;/p&gt;
+
+&lt;p&gt;这个我们可以通过&lt;code&gt;m_memTracker[i].ptr&lt;/code&gt;来比较内存的地址来检测, 例如在alloc_func中
+添加以下代码, 然后设置断点:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 检测00C750C0内存
+if(ptr == (void*)00C750C0)
+{
+    // 设置断点
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是这个方法可能还有缺陷. 因为每次运行程序的时候, 内存的布局可能是有区别的.
+最好的方法是把cvAlloc的调用顺序记录下来.&lt;/p&gt;
+
+&lt;p&gt;变动的部分代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class MemTracker
+{
+    struct Ptr
+    {
+        void *ptr;      // 内存地址
+        size_t size;    // 内存大小
+        int   id;
+
+        Ptr(void *ptr, size_t size, int id)
+        {
+            this-&amp;gt;ptr = ptr;
+            this-&amp;gt;size = size;
+            this-&amp;gt;id = id;
+        }
+    };
+
+    // 记录当前使用中的内存
+    std::vector&amp;lt;Ptr&amp;gt;   m_memTracker;
+
+    // alloc_func对应的编号
+    int               m_id;
+};
+
+MemTracker::MemTracker(void)
+{
+    m_id = 0;
+
+    // 注册管理函数
+
+    cvSetMemoryManager(alloc_func, free_func, (void*)this);
+}
+
+void MemTracker::regAlloc(void *ptr, size_t size)
+{
+    // 每次记录一个新的m_id
+    m_memTracker.push_back(Ptr(ptr, size, m_id++));
+}
+
+// 输出泄漏的内存
+int MemTracker::output(FILE* fp)
+{
+    int n = m_memTracker.size();
+    int i;
+
+    for(i = 0; i &amp;lt; n; ++i)
+    {
+        fprintf(fp, &amp;quot;%d: %p, %u\n&amp;quot;, m_memTracker[i].id, m_memTracker[i].ptr, m_memTracker[i].size);
+    }
+    return n;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以后就可以根据&lt;code&gt;m_memTracker[i].id&lt;/code&gt;来设置断点跟踪调试. 因为每次运行程序的时候, &lt;code&gt;cvAlloc&lt;/code&gt;的调用次序是不变
+的, 因此可以认为每次&lt;code&gt;cvAlloc&lt;/code&gt;对应的&lt;code&gt;id&lt;/code&gt;也是不变的. 这样就可以根据&lt;code&gt;id&lt;/code&gt;来追踪出现内存泄漏的&lt;code&gt;cvAlloc&lt;/code&gt;了.&lt;/p&gt;
+
+&lt;p&gt;前面的帖子中我们已经讨论了&lt;code&gt;cvAlloc&lt;/code&gt;/&lt;code&gt;cvFree_&lt;/code&gt;/&lt;code&gt;cvSetMemoryManager&lt;/code&gt;等函数的使用技巧.
+下面开始分析OpenCV中以上函数的实现代码. 我觉得如果在阅读代码之前, 如果能对函数的
+用法有个基本的认识, 那么对于分析源代码是很有帮助的.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CV_IMPL  void*  cvAlloc( size_t size )
+{
+    void* ptr = 0;
+
+    CV_FUNCNAME( &amp;quot;cvAlloc&amp;quot; );
+
+    __BEGIN__;
+
+    if( (size_t)size &amp;gt; CV_MAX_ALLOC_SIZE )
+        CV_ERROR( CV_StsOutOfRange,
+                &amp;quot;Negative or too large argument of cvAlloc function&amp;quot; );
+
+    ptr = p_cvAlloc( size, p_cvAllocUserData );
+    if( !ptr )
+        CV_ERROR( CV_StsNoMem, &amp;quot;Out of memory&amp;quot; );
+
+    __END__;
+
+    return ptr;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从代码我们可以直观的看出, &lt;code&gt;cvAlloc&lt;/code&gt;分配的内存不得大于&lt;code&gt;CV_MAX_ALLOC_SIZE&lt;/code&gt;, 即使是使用我们
+自己的内存管理函数也会有这个限制.&lt;/p&gt;
+
+&lt;p&gt;然后通过&lt;code&gt;p_cvAlloc&lt;/code&gt;对应的函数指针对应的函数来分配内存. &lt;code&gt;p_cvAlloc&lt;/code&gt;是一个全局&lt;code&gt;static&lt;/code&gt;变量, 对应的
+还有&lt;code&gt;p_cvFree&lt;/code&gt;和&lt;code&gt;p_cvAllocUserData&lt;/code&gt;, 分别对应释放内存函数和用户数据. 它们的定义如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// pointers to allocation functions, initially set to default
+static CvAllocFunc p_cvAlloc = icvDefaultAlloc;
+static CvFreeFunc p_cvFree = icvDefaultFree;
+static void* p_cvAllocUserData = 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;默认的内存管理函数分别为&lt;code&gt;icvDefaultAlloc&lt;/code&gt;和&lt;code&gt;icvDefaultFree&lt;/code&gt;(&lt;code&gt;icv&lt;/code&gt;开头的表示为内部函数), 用户数据指针为空.&lt;/p&gt;
+
+&lt;p&gt;继续跟踪默认的内存分配函数&lt;code&gt;icvDefaultAlloc&lt;/code&gt;, 代码如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;static void*
+icvDefaultAlloc( size_t size, void* )
+{
+    char *ptr, *ptr0 = (char*)malloc(
+        (size_t)(size + CV_MALLOC_ALIGN*((size &amp;gt;= 4096) + 1) + sizeof(char*)));
+
+    if( !ptr0 )
+        return 0;
+
+    // align the pointer
+    ptr = (char*)cvAlignPtr(ptr0 + sizeof(char*) + 1, CV_MALLOC_ALIGN);
+    *(char**)(ptr - sizeof(char*)) = ptr0;
+
+    return ptr;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;内部使用的是C语言中的&lt;code&gt;malloc&lt;/code&gt;函数, 在分配的时候多申请了&lt;code&gt;CV_MALLOC_ALIGN*((size &amp;gt;= 4096) + 1) + sizeof(char*)&lt;/code&gt;
+大小的空间. 多申请空间的用处暂时先不分析.&lt;/p&gt;
+
+&lt;p&gt;下面的&lt;code&gt;cvAlignPtr&lt;/code&gt;函数用于将指针对其到&lt;code&gt;CV_MALLOC_ALIGN&lt;/code&gt;边界, 对于我们常规的PC来说是32bit, 也就是4字节.
+&lt;code&gt;cvAlignPtr&lt;/code&gt;函数在后面会详细讨论.&lt;/p&gt;
+
+&lt;p&gt;下面语句将ptr0记录到&lt;code&gt;(ptr - sizeof(char*))&lt;/code&gt;, 可以把它看作一个指针. 最后返回&lt;code&gt;ptr&lt;/code&gt;.
+细心的朋友可能会发现, 前面&lt;code&gt;malloc&lt;/code&gt;分配的是&lt;code&gt;ptr0&lt;/code&gt;, 现在返回的却是&lt;code&gt;ptr&lt;/code&gt;, 这个是为什么呢?&lt;/p&gt;
+
+&lt;p&gt;这个的原因还是先放下, 但是返回ptr而不返回&lt;code&gt;ptr0&lt;/code&gt;带来的影响至少有2个:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;返回的&lt;code&gt;ptr&lt;/code&gt;指针不能通过C语言的&lt;code&gt;free&lt;/code&gt;函数释放(这也是&lt;code&gt;cvAlloc&lt;/code&gt;/&lt;code&gt;cvFree&lt;/code&gt;必须配对使用的原因).&lt;/li&gt;
+&lt;li&gt;在&lt;code&gt;cvFree&lt;/code&gt;的时候, 可以根据&lt;code&gt;(ptr - sizeof(char*))&lt;/code&gt;对应的值来检测该内存是不是由&lt;code&gt;icvDefaultAlloc&lt;/code&gt;申请.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这样应该说可以增加程序的健壮性, &lt;code&gt;icvDefaultFree&lt;/code&gt;可以不像傻瓜似的对于任何指针都进行释放.&lt;/p&gt;
+
+&lt;p&gt;下面来看看&lt;code&gt;cvAlignPtr&lt;/code&gt;函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CV_INLINE void* cvAlignPtr( const void* ptr, int align=32 )
+{
+    assert( (align &amp;amp; (align-1)) == 0 );
+    return (void*)( ((size_t)ptr + align - 1) &amp;amp; ~(size_t)(align-1) );
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;该函数的目的主要是将指针&lt;code&gt;ptr&lt;/code&gt;调整到&lt;code&gt;align&lt;/code&gt;的整数倍&lt;/p&gt;
+
+&lt;p&gt;其中&lt;code&gt;align&lt;/code&gt;必须为2的幂, &lt;code&gt;assert&lt;/code&gt;语言用于该检测. 语句&lt;code&gt;(align &amp;amp; (align-1))&lt;/code&gt;
+一般用于将&lt;code&gt;align&lt;/code&gt;的最低的为1的bit位设置为0. 如果为2的幂那么就只有1个为1
+的bit位, 因此语句&lt;code&gt;(x&amp;amp;(x-1) == 0)&lt;/code&gt;可以完成该检测.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;return&lt;/code&gt;语句简化后为 &lt;code&gt;(ptr+align-1)&amp;amp;~(align-1)&lt;/code&gt;, 等价于&lt;code&gt;((ptr+align-1)/align)*align&lt;/code&gt;.
+就是找到不小于&lt;code&gt;ptr&lt;/code&gt;, 且为&lt;code&gt;align&lt;/code&gt;整数倍的最小整数, 这里对应为将指针对其到4字节(32bit).&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cvFree_&lt;/code&gt;函数和&lt;code&gt;cvAlloc&lt;/code&gt;类似, 就不详细分析了:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CV_IMPL  void  cvFree_( void* ptr )
+{
+    CV_FUNCNAME( &amp;quot;cvFree_&amp;quot; );
+
+    __BEGIN__;
+
+    if( ptr )
+    {
+        CVStatus status = p_cvFree( ptr, p_cvAllocUserData );
+        if( status &amp;lt; 0 )
+            CV_ERROR( status, &amp;quot;Deallocation error&amp;quot; );
+    }
+
+    __END__;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;p_cvFree&lt;/code&gt;默认值为&lt;code&gt;icvDefaultFree&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;static int
+icvDefaultFree( void* ptr, void* )
+{
+    // Pointer must be aligned by CV_MALLOC_ALIGN
+    if( ((size_t)ptr &amp;amp; (CV_MALLOC_ALIGN-1)) != 0 )
+        return CV_BADARG_ERR;
+    free( *((char**)ptr - 1) );
+
+    return CV_OK;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后我们简要看下&lt;code&gt;cvSetMemoryManager&lt;/code&gt;函数, 它主要用来设置用户自己定义的内存管理函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CV_IMPL void cvSetMemoryManager( CvAllocFunc alloc_func, CvFreeFunc free_func, void* userdata )
+{
+    CV_FUNCNAME( &amp;quot;cvSetMemoryManager&amp;quot; );
+
+    __BEGIN__;
+
+    // 必须配套出现
+    if( (alloc_func == 0) ^ (free_func == 0) )
+        CV_ERROR( CV_StsNullPtr, &amp;quot;Either both pointers should be NULL or none of them&amp;quot;);
+
+    p_cvAlloc = alloc_func ? alloc_func : icvDefaultAlloc;
+    p_cvFree = free_func ? free_func : icvDefaultFree;
+    p_cvAllocUserData = userdata;
+
+    __END__;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果函数指针不为空, 则记录到&lt;code&gt;p_cvAlloc&lt;/code&gt;和&lt;code&gt;p_cvFree&lt;/code&gt;指针, 如果为空则恢复到默认的内存管理函数.
+需要注意的是if语句的条件&lt;code&gt;(alloc_func == 0) ^ (free_func == 0)&lt;/code&gt;, 只有当2个函数1个为&lt;code&gt;NULL&lt;/code&gt;, 1个
+不为&lt;code&gt;NULL&lt;/code&gt;的时候才会出现, 出现这个的原因是内存管理函数的分配和释放函数不匹配了, 这个是不允许的.&lt;/p&gt;
+
+&lt;p&gt;因此, 我们需要设置自己的内存管理函数, 就需要同时指定alloc_func和free_func函数, 清空的时候
+则把2个参数都设置NULL就可以了.&lt;/p&gt;
+
+&lt;p&gt;今天再来补充一个小技巧 :)&lt;/p&gt;
+
+&lt;p&gt;我们前面通过&lt;code&gt;cvSetMemoryManager&lt;/code&gt;函数来重新设置了自己的内存管理函数.
+但是前面也说到过, 如果&lt;code&gt;cvAlloc&lt;/code&gt;/&lt;code&gt;cvFree&lt;/code&gt;覆盖的周期和&lt;code&gt;MemTracker&lt;/code&gt;相交, 那么
+内存会出现错误.&lt;/p&gt;
+
+&lt;p&gt;即,&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;原来OpenCV默认函数分配的内存可能使用我们自己的&lt;code&gt;cvFree&lt;/code&gt;函数来释放.&lt;/li&gt;
+&lt;li&gt;我们自己定义的&lt;code&gt;cvAlloc&lt;/code&gt;分配的内存可能使用原来OpenCV默认的函数来释放.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这都会造成错误!&lt;/p&gt;
+
+&lt;p&gt;其实我们定义的目的只是要统计内存的使用情况, 我们并不想真的使用自己的函数的管理
+OpenCV的内存. 道理很简单, OpenCV的内存经过优化, 对齐到某个字节, 效率更好.&lt;/p&gt;
+
+&lt;p&gt;如果能获取OpenCV原始的内存管理函数就好了, 但是没有这样的函数!!!&lt;/p&gt;
+
+&lt;p&gt;但是, 我们任然有方法来绕过这个缺陷.&lt;/p&gt;
+
+&lt;p&gt;我们可以在&lt;code&gt;MemTracker::alloc_func&lt;/code&gt;函数进入之后, 在用&lt;code&gt;cvSetMemoryManager&lt;/code&gt;恢复原来的
+内存管理函数, 这样我们统计目的也达到了, 而且还是用了OpenCV本身的函数来分配内存.&lt;/p&gt;
+
+&lt;p&gt;代码如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void* MemTracker::alloc_func(size_t size, void *userdata)
+{
+    assert(size &amp;gt; 0 &amp;amp;&amp;amp; userdata != NULL);
+
+    // 取消管理函数
+    cvSetMemoryManager(NULL, NULL, NULL);
+
+    // 用OpenCV的方式分配内存
+    void *ptr = cvAlloc(size);
+
+    // 登记
+    if(ptr)
+    {
+        MemTracker *tracker = (MemTracker*)userdata;
+        tracker-&amp;gt;regAlloc(ptr, size);
+    }
+
+    // 重新注册注册管理函数
+    cvSetMemoryManager(alloc_func, free_func, userdata);
+
+    return ptr;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;MemTracker::free_func&lt;/code&gt;的方法和上面类似, 就不贴代码了.&lt;/p&gt;
+
+&lt;p&gt;以后我们就可以透明的使用&lt;code&gt;MemTracker&lt;/code&gt;了, 不管&lt;code&gt;MemTracker&lt;/code&gt;对象在那个地方定义,
+它对OpenCV的内存管理都不会有影响.&lt;/p&gt;
+
+&lt;p&gt;前面的方法虽然使得 &lt;code&gt;MemTracker&lt;/code&gt; 可以在任何地方使用, 但是可能带来理解的难度.&lt;/p&gt;
+
+&lt;p&gt;因为 在&lt;code&gt;cvAlloc&lt;/code&gt;之后进入的是 &lt;code&gt;MemTracker::alloc_func&lt;/code&gt;, 但是在这个函数中又调用了&lt;code&gt;cvAlloc&lt;/code&gt;!
+这看起来很像一个无穷递归调用!!&lt;/p&gt;
+
+&lt;p&gt;但是实际的运行结果却没有出现无穷递归导致的栈溢出情形. 仔细分析就知道原理了:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. 定义MemTracker对象&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;中间调用了 &lt;code&gt;cvSetMemoryManager(alloc_func, free_func, (void*)this);&lt;/code&gt; 函数,
+设置 &lt;code&gt;MemTracker::alloc_func&lt;/code&gt; 为分配函数.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2. 调用cvAlloc&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;内部执行到 &lt;code&gt;MemTracker::alloc_func&lt;/code&gt;, 依次执行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 取消管理函数
+cvSetMemoryManager(NULL, NULL, NULL);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此刻, 分配函数又恢复为OpenCV的&lt;code&gt;icvDefaultAlloc&lt;/code&gt;函数.&lt;/p&gt;
+
+&lt;p&gt;执行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 用OpenCV的方式分配内存
+void *ptr = cvAlloc(size);
+
+// 登记
+if(ptr)
+{
+    CvxMemTracker *tracker = (CvxMemTracker*)userdata;
+    tracker-&amp;gt;regAlloc(ptr, size);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里的&lt;code&gt;cvAlloc&lt;/code&gt;函数内部调用的是&lt;code&gt;icvDefaultAlloc&lt;/code&gt;函数, 并不是&lt;code&gt;MemTracker::alloc_func&lt;/code&gt; !!
+就是这里了, &lt;code&gt;alloc_func&lt;/code&gt;内部虽然调用了&lt;code&gt;cvAlloc&lt;/code&gt;, 但是没有执行到&lt;code&gt;alloc_func&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;因此&lt;code&gt;alloc_func&lt;/code&gt;不会出现递归.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>OpenCV的图像读写框架</title>
+      <link>https://chai2010.cn/post/2009/opencv-image-driver-framework/</link>
+      <pubDate>Sun, 06 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/opencv-image-driver-framework/</guid>
+      
+        <description>&lt;p&gt;&lt;code&gt;cvSaveImage&lt;/code&gt;/&lt;code&gt;cvLoadImage&lt;/code&gt;函数用于保存和读取图像，两者的结构基本相似。
+下面我们主要分析&lt;code&gt;cvSaveImage&lt;/code&gt;函数的实现。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cvLoadImage&lt;/code&gt;函数位于 &amp;ldquo;OpenCV\otherlibs\highgui\loadsave.cpp&amp;rdquo; 文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CV_IMPL IplImage*
+cvLoadImage( const char* filename, int iscolor )
+{
+    return (IplImage*)icvLoadImage( filename, iscolor, false );
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;内部基于&lt;code&gt;icvLoadImage&lt;/code&gt;函数实现。其中&lt;code&gt;icvLoadImage&lt;/code&gt;函数的第三个参数可以
+用于装载矩阵，这里被忽略（&lt;code&gt;false&lt;/code&gt;表示读图像）。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;icvLoadImage&lt;/code&gt;函数的主要部分如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;static void*
+icvLoadImage( const char* filename, int flags, bool )
+{
+    // 查找图像的读驱动
+
+    GrFmtReader* reader = g_Filters.FindReader( filename );
+
+    // 利用图像读驱动读出图像头信息（高宽等属性）
+
+    reader-&amp;gt;ReadHeader();
+
+    // 高度/宽度
+
+    size.width = reader-&amp;gt;GetWidth();
+    size.height = reader-&amp;gt;GetHeight();
+
+    // 是否彩色
+
+    int iscolor = reader-&amp;gt;IsColor();
+
+    // 彩色通道数为3，灰度为1
+
+    int cn = iscolor ? 3 : 1;
+
+    // 创建影像
+
+    IplImage* image = cvCreateImage( size, type, cn );
+
+    // 利用读驱动读图像的所有像素
+    // image-&amp;gt;data.ptr对应数据的开始地址
+    // image-&amp;gt;step表示每行像素所在内存的大小
+
+    reader-&amp;gt;ReadData( image-&amp;gt;data.ptr, image-&amp;gt;step, iscolor );
+
+    return image;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中&lt;code&gt;g_Filters&lt;/code&gt;是一个静态变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// global image I/O filters
+static CvImageFilters  g_Filters;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CvImageFilters在构造的时候，将已知的图像读写驱动保存到一个链表中。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CvImageFilters::CvImageFilters()
+{
+    m_factories = new GrFmtFactoriesList;
+
+    m_factories-&amp;gt;AddFactory( new GrFmtBmp() );
+    m_factories-&amp;gt;AddFactory( new GrFmtJpeg() );
+    m_factories-&amp;gt;AddFactory( new GrFmtSunRaster() );
+    m_factories-&amp;gt;AddFactory( new GrFmtPxM() );
+    m_factories-&amp;gt;AddFactory( new GrFmtTiff() );
+
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;GrFmtFactoriesList&lt;/code&gt;在&lt;code&gt;grfmt_base.h&lt;/code&gt;/&lt;code&gt;grfmt_base.cpp&lt;/code&gt;中定义，用于保存&lt;code&gt;GrFmtFilterFactory&lt;/code&gt;
+对象指针的链表。&lt;code&gt;GrFmtFilterFactory&lt;/code&gt;为各种格式图像读写驱动的构造工厂基类：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class   GrFmtFilterFactory
+{
+public:
+
+    GrFmtFilterFactory();
+    virtual ~GrFmtFilterFactory() {};
+
+    const char*  GetDescription() { return m_description; };
+    int     GetSignatureLength()  { return m_sign_len; };
+    virtual bool CheckSignature( const char* signature );
+    virtual bool CheckExtension( const char* filename );
+    virtual GrFmtReader* NewReader( const char* filename ) = 0;
+    virtual GrFmtWriter* NewWriter( const char* filename ) = 0;
+
+protected:
+    const char* m_description;
+        // graphic format description in form:
+        // &amp;lt;Some textual description&amp;gt;( *.&amp;lt;extension1&amp;gt; [; *.&amp;lt;extension2&amp;gt; ...]).
+        // the textual description can not contain symbols &#39;(&#39;, &#39;)&#39;
+        // and may be, some others. It is safe to use letters, digits and spaces only.
+        // e.g. &amp;quot;Targa (*.tga)&amp;quot;,
+        // or &amp;quot;Portable Graphic Format (*.pbm;*.pgm;*.ppm)&amp;quot;
+
+    int          m_sign_len;    // length of the signature of the format
+    const char*  m_signature;   // signature of the format
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中&lt;code&gt;GetDescription()&lt;/code&gt;用于获取图像文件名的描述，类似于&amp;rdquo;文本文件 (*.txt)&amp;ldquo;格式。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;GetSignatureLength()&lt;/code&gt;用于获取图像文件的标志大小。对于tiff格式，开头有一个&amp;rdquo;II&amp;rdquo;或者是&amp;rdquo;MM&amp;rdquo;的标志，长度为2。
+如果是算上tiff后面的42版本号，长度则为4。长度大小和&lt;code&gt;CheckSignature&lt;/code&gt;相关。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;CheckSignature&lt;/code&gt;用于匹配图像文件的标志。如果对应的图像不需要标志，则可以在从&lt;code&gt;GrFmtFilterFactory&lt;/code&gt;派生的
+子类中将其屏蔽。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;CheckExtension&lt;/code&gt;匹配图像文件名的后缀名，用于也可以自己重新实现。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;NewReader&lt;/code&gt;/&lt;code&gt;NewWriter&lt;/code&gt;为读写驱动对应的构造函数，利用它们可以针对不同图像构造相应的驱动。&lt;/p&gt;
+
+&lt;p&gt;工厂类链表定义如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class   GrFmtFactoriesList
+{
+public:
+
+    GrFmtFactoriesList();
+    virtual ~GrFmtFactoriesList();
+    void  RemoveAll();
+    bool  AddFactory( GrFmtFilterFactory* factory );
+    int   FactoriesCount() { return m_curFactories; };
+    ListPosition  GetFirstFactoryPos();
+    GrFmtFilterFactory*  GetNextFactory( ListPosition&amp;amp; pos );
+    virtual GrFmtReader*  FindReader( const char* filename );
+    virtual GrFmtWriter*  FindWriter( const char* filename );
+
+protected:
+
+    GrFmtFilterFactory** m_factories;
+    int  m_maxFactories;
+    int  m_curFactories;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;FindReader/FindWriter用于查找图像对应的驱动。如果想修改查找的规则，可以通过
+GetNextFactory遍历链表来实现。&lt;/p&gt;
+
+&lt;p&gt;真正的读写类从GrFmtReader派生，分别对应grfmt_bmp/grfmt_jpeg等各种格式驱动。
+然后通过前面的CvImageFilters::CvImageFilters()来讲各个驱动串到g_Filters.m_factories链表中。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class   GrFmtReader
+{
+public:
+
+    GrFmtReader( const char* filename );
+    virtual ~GrFmtReader();
+
+    int   GetWidth()  { return m_width; };
+    int   GetHeight() { return m_height; };
+    bool  IsColor()   { return m_iscolor; };
+    int   GetDepth()  { return m_bit_depth; };
+    void  UseNativeDepth( bool yes ) { m_native_depth = yes; };
+    bool  IsFloat()   { return m_isfloat; };
+
+    virtual bool  ReadHeader() = 0;
+    virtual bool  ReadData( uchar* data, int step, int color ) = 0;
+    virtual void  Close();
+
+protected:
+
+    bool    m_iscolor;
+    int     m_width;    // width  of the image ( filled by ReadHeader )
+    int     m_height;   // height of the image ( filled by ReadHeader )
+    int     m_bit_depth;// bit depth per channel (normally 8)
+    char    m_filename[_MAX_PATH]; // filename
+    bool    m_native_depth;// use the native bit depth of the image
+    bool    m_isfloat;  // is image saved as float or double?
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;GrFmtReader&lt;/code&gt;比较核心的地方是3个&lt;code&gt;virtual&lt;/code&gt;函数，分表用于读图像文件头、读数据、关闭图像文件。
+图像文件在读图像头的时候被打开。&lt;/p&gt;
+
+&lt;p&gt;对于图像的其他属性，可以通过在子类中直接操作&lt;code&gt;m_iscolor&lt;/code&gt;等&lt;code&gt;protected&lt;/code&gt;成员完成。&lt;/p&gt;
+
+&lt;p&gt;先大概说这么多，下一步将在上述分析的基础上，自己定义一个图像格式，然后提供相应的读写驱动，
+然后集成到&lt;code&gt;cvSaveImage&lt;/code&gt;/&lt;code&gt;cvLoadImage&lt;/code&gt;函数中。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>OpenCV的测试框架</title>
+      <link>https://chai2010.cn/post/2009/opencv-test-framework/</link>
+      <pubDate>Sun, 06 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/opencv-test-framework/</guid>
+      
+        <description>&lt;p&gt;OpenCV提供了一套测试, 这里做简要的分析.&lt;/p&gt;
+
+&lt;p&gt;我选择的是 &lt;code&gt;cvFindContours&lt;/code&gt;对应的测试, &lt;code&gt;cvFindContours&lt;/code&gt; 函数本身的说明请参考:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.opencv.org.cn/index.php/Cv%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86#FindContours&#34;&gt;http://wiki.opencv.org.cn/index.php/Cv图像处理#FindContours&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cvFindContours&lt;/code&gt; 的测试函数对应 &lt;code&gt;OpenCV\tests\cv\src\acontours.cpp&lt;/code&gt; 文件.&lt;/p&gt;
+
+&lt;p&gt;下面我们来分析一下测试代码的结构, 这样可以方便我们以后向opencv集成自己的代码以及代码测试.
+测试对应的类为 &lt;code&gt;CV_FindContourTest&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class CV_FindContourTest : public CvTest
+{
+public:
+    enum { NUM_IMG = 4 };
+
+    CV_FindContourTest();
+    ~CV_FindContourTest();
+    int write_default_params(CvFileStorage* fs);
+    void clear();
+
+protected:
+    int read_params( CvFileStorage* fs );
+    int prepare_test_case( int test_case_idx );
+    int validate_test_results( int test_case_idx );
+    void run_func();
+
+    int min_blob_size, max_blob_size;
+    int blob_count, max_log_blob_count;
+    int retr_mode, approx_method;
+
+    int min_log_img_size, max_log_img_size;
+    CvSize img_size;
+    int count, count2;
+
+    IplImage *img[NUM_IMG];
+    CvMemStorage* storage;
+    CvSeq *contours, *contours2, *chain;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;CV_FindContourTest&lt;/code&gt; 从 &lt;code&gt;CvTest&lt;/code&gt; 派生, &lt;code&gt;CvTest&lt;/code&gt; 位于 &lt;code&gt;OpenCV\tests\cxts\cxts.h&lt;/code&gt;.
+我们主要关注的是基类CvTest的构造函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CvTest::CvTest( const char* _test_name, const char* _test_funcs, const char* _test_descr ) :
+    name(_test_name ? _test_name : &amp;quot;&amp;quot;), tested_functions(_test_funcs ? _test_funcs : &amp;quot;&amp;quot;),
+    description(_test_descr ? _test_descr : &amp;quot;&amp;quot;), ts(0)
+{
+    if( last )
+        last-&amp;gt;next = this;
+    else
+        first = this;
+    last = this;
+    test_count++;
+
+...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;first&lt;/code&gt; 等都是 &lt;code&gt;CvTest&lt;/code&gt; 中的 &lt;code&gt;static&lt;/code&gt; 成员:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protected:
+    static CvTest* first;
+    static CvTest* last;
+    static int test_count;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;到这里我们就可以基本断定, &lt;code&gt;CV_FindContourTest&lt;/code&gt; 在构造的是被连接到了 &lt;code&gt;CvTest::first&lt;/code&gt; 的链表.
+我们通过这个链表就可以访问所有从 &lt;code&gt;CvTest&lt;/code&gt; 派生的子类, 也就是用户自己实现的测试类.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;OpenCV\tests\cv\src\acontours.cpp&lt;/code&gt; 文件的末尾有一下代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CV_FindContourTest find_contour_test;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;该 &lt;code&gt;find_contour_test&lt;/code&gt; 对象的主要功能是在构造的时候将自身串到 &lt;code&gt;CvTest::first&lt;/code&gt; 链表.&lt;/p&gt;
+
+&lt;p&gt;下面就是测试代码的驱动了. 查看 &lt;code&gt;OpenCV\tests\cv\src\tsysa.cpp&lt;/code&gt; 中的 &lt;code&gt;main&lt;/code&gt; 函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;quot;cvtest.h&amp;quot;
+
+CvTS test_system;
+
+int main(int argC,char *argV[])
+{
+    test_system.run( argC, argV );
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;CvTS::run&lt;/code&gt; 的基本功能就是遍历 &lt;code&gt;CvTest::first&lt;/code&gt; 链表上的每个测试类, 然后调用测试类的
+&lt;code&gt;safe_run&lt;/code&gt;函数. &lt;code&gt;safe_run&lt;/code&gt; 函数可以包含具体的测试代码, 具体的细节这里这里先不讨论.&lt;/p&gt;
+
+&lt;p&gt;C/C++的单元测试框架还有很多, 比如: &lt;code&gt;CppUint&lt;/code&gt;, &lt;code&gt;GTest&lt;/code&gt; 等.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;补充(2014):&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;还有本人仿造Go语言测试根据而设计的迷你版C++单元测试库:
+&lt;a href=&#34;https://github.com/chai2010/cc-mini-test&#34;&gt;https://github.com/chai2010/cc-mini-test&lt;/a&gt;&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>PyQt&amp;OpenCV实现边缘检测</title>
+      <link>https://chai2010.cn/post/2009/pyqt-opencv-edge/</link>
+      <pubDate>Sun, 06 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/pyqt-opencv-edge/</guid>
+      
+        <description>&lt;p&gt;首先设计UI界面, 调整自己满意的布局.
+其中黑色为 QLabel, 对象名为labelImage, 用于显示图像. 左下角为拖动条, 对称为sliderThreshold, 用于修改参数.
+Open按钮用于打开文件, 对象名为openButton.
+在界面编辑器中, 将Close按钮的clicked信号连接到窗口的close槽.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/pyqt-opencv-edge/pyqt-opencv-edge-01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;窗口设计完成后保存到edge.ui, 然后基于edge.ui文件构造程序:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# -*- coding:utf-8 -*-
+###########################################################
+# PyQt+OpenCV example
+#
+# 查找图像中的边界.
+# 参考 OpenCV\samples\python\edge.py 改写
+#
+# By chaishushan{AT}gmail.com 2008
+###########################################################
+
+import sys
+
+# 导入PyQt模块
+from PyQt4.Qt import *
+from PyQt4 import uic
+
+# 导入OpenCV模块
+from opencv.cv import *
+from opencv.highgui import *
+
+# 边界检测类
+class WinEdge(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent)
+        uic.loadUi(&amp;quot;edge.ui&amp;quot;, self)
+
+        # OpenCV相关参数
+        self.cv_img = None
+        self.cv_col_edge = None
+        self.cv_gray = None
+        self.cv_edge = None
+
+        # 标题
+        self.defaultTitle = self.windowTitle()
+
+
+    @pyqtSignature(&amp;quot;&amp;quot;)
+    def on_openButton_clicked(self):
+        filename = QFileDialog.getOpenFileName(self,
+                            self.tr(&amp;quot;Choose a Image&amp;quot;), &amp;quot;.&amp;quot;,
+                            self.tr(&amp;quot;Image Files (*.jpg;*.bmp);;All Files (*)&amp;quot;))
+
+        if not filename.isEmpty():
+            self.sliderThreshold.setEnabled(False)
+
+            self.openImage(filename)
+            self.dectorEdge(self.sliderThreshold.value())
+
+            # 更新UI
+            if self.cv_col_edge:
+                self.setWindowTitle(filename)
+                self.sliderThreshold.setEnabled(True)
+            else:
+                self.setWindowTitle(self.defaultTitle)
+                self.sliderThreshold.setEnabled(False)
+
+    @pyqtSignature(&amp;quot;int&amp;quot;)
+    def on_sliderThreshold_valueChanged(self, val):
+
+        # 重新计算边界
+        self.dectorEdge(val)
+
+    def resizeEvent(self, event):
+        self.showImage()
+
+    # 打开图像
+    def openImage(self, qstringName):
+        # 将QString转换为char *
+        filename = qstringName.toLocal8Bit().data()
+
+        # 释放以前的图像
+        if self.cv_img :
+            cvReleaseImage( self.cv_img ); self.cv_img = None
+            cvReleaseImage( self.cv_col_edge ); self.cv_col_edge = None
+            cvReleaseImage( self.cv_gray ); self.cv_gray = None
+            cvReleaseImage( self.cv_edge ); self.cv_edge = None
+
+        # 打开新的图像
+        self.cv_img = cvLoadImage(filename)
+        if not self.cv_img:
+            msg = self.tr(&amp;quot;Can&#39;t open %1 file!&amp;quot;).arg(filename)
+            QMessageBox.warning (self, &amp;quot;Warning&amp;quot;, msg)
+            return False
+
+        # 创建辅助空间
+        size = cvSize(self.cv_img.width, self.cv_img.height)
+
+        self.cv_col_edge = cvCreateImage (size, 8, 3)
+        self.cv_gray = cvCreateImage (size, 8, 1)
+        self.cv_edge = cvCreateImage (size, 8, 1)
+
+        return True
+
+    # 生成边界
+
+    def dectorEdge(self, position):
+
+        if not self.cv_img: return
+
+        # 转换为灰度
+        cvCvtColor (self.cv_img, self.cv_gray, CV_BGR2GRAY)
+
+        cvSmooth (self.cv_gray, self.cv_edge, CV_BLUR, 3, 3, 0)
+        cvNot (self.cv_gray, self.cv_edge)
+
+        # run the edge dector on gray scale
+        cvCanny (self.cv_gray, self.cv_edge, position, position * 3, 3)
+
+        # 结构保存到cv_col_edge中
+        cvSetZero (self.cv_col_edge)
+        cvCopy (self.cv_img, self.cv_col_edge, self.cv_edge)
+
+        # 显示
+        self.showImage()
+
+    # 显示图像
+    def showImage(self):
+        if not self.cv_col_edge: return
+
+        # 转化IplImage为QImage
+        w = self.cv_col_edge.width
+        h = self.cv_col_edge.height
+
+        step = self.cv_col_edge.widthStep
+        data = self.cv_col_edge.imageData
+
+        img = QImage(data, w, h, step, QImage.Format_RGB888).rgbSwapped()
+
+        # 显示图像[缩放到窗口大小]
+        size = self.labelImage.size()
+        self.labelImage.setPixmap(QPixmap.fromImage(img.scaled(size)))
+
+if __name__ == &#39;__main__&#39;:
+    app = QApplication(sys.argv)
+    widget = WinEdge()
+    widget.show()
+    app.exec_()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行结果如图:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/pyqt-opencv-edge/pyqt-opencv-edge-02.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;完整的代码以后补充。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>给OpenCV增加新的图像格式支持</title>
+      <link>https://chai2010.cn/post/2009/opencv-new-image-format/</link>
+      <pubDate>Sun, 06 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/opencv-new-image-format/</guid>
+      
+        <description>&lt;p&gt;在&lt;highgui.h&gt;中提供了cvSaveImage/cvLoadImage两个
+函数用来读写影像。opencv本身支持一些常见的格式。&lt;/p&gt;
+
+&lt;p&gt;但是如果是自己定义的特殊影像格式，cvSaveImage/cvLoadImage则不能正确处理。&lt;/p&gt;
+
+&lt;p&gt;不过opencv本身的影像读写模块设计的比较好，很容易进行扩充。而且opencv在处理
+tiff等格式的图像的时候也是借用了libtiff库。因此，我们自己也可以给opencv的
+cvSaveImage/cvLoadImage增加新的图像格式支持。&lt;/p&gt;
+
+&lt;p&gt;例如，假设定义了一个txt格式的图像。那么就可以用以下代码进行读写：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IplImage *img;
+img = cvLoadImage(&amp;quot;test.txt&amp;quot;, 1);
+cvSaveImage(&amp;quot;save.txt&amp;quot;, img);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;具体的示例代码现在没有完全写好，等完善之后会将驱动的实现细节整理出来。&lt;/p&gt;
+
+&lt;p&gt;由于内容比较多，我另开了一帖 &lt;a href=&#34;https://chai2010.cn/blog/2009/12/06/opencv-image-driver-framework&#34;&gt;OpenCV的图像读写框架&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;关于cvLoadImage/cvSaveImage的读写框架已经分析过。
+现在我们来尝试自己实现一个图像格式的读写操作。&lt;/p&gt;
+
+&lt;p&gt;现在，我们定义图像后缀名为bin，例如image.bin等。
+bin格式的结构和IplImage结构基本对应，具体如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;BIN&amp;quot;          // 文件类型，三个字节
+width          // 图像宽度，int
+height         // 图像高度，int
+depth          // 像素深度，int
+channels       // 通道数，int
+data           // 每个像素数据
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;bin格式图像文件为二进制格式。由于opencv内部实现的一些限制，
+对于文本格式的图像文件支持可能相对困难一些（后面会提到）。&lt;/p&gt;
+
+&lt;p&gt;现在，参考grfmt_bmp代码，创建对应的grfmt_bin.h/grfmt_bin.cpp文件。&lt;/p&gt;
+
+&lt;p&gt;grfmt_bin.h内容如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#ifndef _GRFMT_BIN_H_
+#define _GRFMT_BIN_H_
+
+#include &amp;quot;grfmt_base.h&amp;quot;
+
+// 测试：自己实现的图像格式
+
+// 采用内存格式
+// 内部保存一个img图像
+// IplImage
+
+class GrFmtBinReader : public GrFmtReader
+{
+public:
+
+    GrFmtBinReader( const char* filename );
+    ~GrFmtBinReader();
+
+    bool  ReadData( uchar* data, int step, int color );
+    bool  ReadHeader();
+    void  Close();
+
+protected:
+
+FILE*   m_fp;        // 文件指针
+int     m_channels;  // 通道数
+};
+
+
+// ... writer
+class GrFmtBinWriter : public GrFmtWriter
+{
+public:
+
+    GrFmtBinWriter( const char* filename );
+    ~GrFmtBinWriter();
+
+    bool  WriteImage( const uchar* data, int step,
+                    int width, int height, int depth, int channels );
+protected:
+
+FILE*   m_fp;  // 文件指针
+};
+
+
+// ... and filter factory
+class GrFmtBin : public GrFmtFilterFactory
+{
+public:
+
+    GrFmtBin();
+    ~GrFmtBin();
+
+    GrFmtReader* NewReader( const char* filename );
+    GrFmtWriter* NewWriter( const char* filename );
+
+};
+
+#endif/*_GRFMT_BIN_H_*/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;grfmt_bin.cpp对应各个成员函数的实现。首先包含必要的头文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;quot;_highgui.h&amp;quot;
+#include &amp;quot;grfmt_bin.h&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;GrFmtBin对应bin格式的对象工厂，其中NewReader/NewWriter用于创建
+用于读/写bin格式图像的驱动。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GrFmtBin::GrFmtBin()
+{
+    // 文件标志在开头，对应3个字节
+    m_sign_len = 3;
+
+    // 文件标志为&amp;quot;BIN&amp;quot;
+    m_signature = &amp;quot;BIN&amp;quot;;
+
+    // 图像文件名描述，小括弧中的为后缀名
+    m_description = &amp;quot;Bin image (*.bin)&amp;quot;;
+
+    // 只有后缀名为bin，并且以&amp;quot;BIN&amp;quot;3个字节开头的
+    // 文件才会被当作bin格式图像。
+}
+
+GrFmtBin::~GrFmtBin()
+{
+}
+
+// 构造读驱动
+GrFmtReader* GrFmtBin::NewReader( const char* filename )
+{
+    return new GrFmtBinReader( filename );
+}
+
+// 构造写驱动
+GrFmtWriter* GrFmtBin::NewWriter( const char* filename )
+{
+    return new GrFmtBinWriter( filename );
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;读驱动为GrFmtBinReader，从GrFmtReader派生：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GrFmtBinReader::GrFmtBinReader( const char* filename ) : GrFmtReader( filename )
+{
+    m_fp = NULL;
+}
+
+GrFmtBinReader::~GrFmtBinReader()
+{
+}
+
+// 关闭图像文件
+void  GrFmtBinReader::Close()
+{
+    if(m_fp) fclose(m_fp);
+    GrFmtReader::Close();
+}
+
+// 读图像的属性
+bool  GrFmtBinReader::ReadHeader()
+{
+    // 打开图像文件
+    m_fp = fopen(m_filename, &amp;quot;rb&amp;quot;);
+    if(!m_fp) return false;
+
+    // 跳过图像格式&amp;quot;BIN&amp;quot;
+    char signature[3];
+    fread(signature, 1, 3, m_fp);
+
+    // int t[] = { width, height, depth, channels };
+    // fwrite(t, sizeof(t), 1, m_fp);
+
+    int t[4];
+    fread(t, sizeof(t), 1, m_fp);
+
+    m_width      = t[0];
+    m_height   = t[1];
+    m_bit_depth   = t[2];
+    m_channels   = t[3];
+
+    m_iscolor   = (m_channels&amp;gt;1)? true: false;
+
+    assert(m_height &amp;gt; 0 &amp;amp;&amp;amp; m_width &amp;gt; 0);
+    return true;
+}
+
+// 图像的像素数据
+bool  GrFmtBinReader::ReadData( uchar* data, int step, int color)
+{
+    if(color &amp;amp;&amp;amp; m_channels == 1)
+    {
+        // 转换为彩色
+        int y;
+        for( y = 0; y &amp;lt; m_height; y++, data += step )
+        {
+            int x;
+            for(x = 0; x &amp;lt; m_width; ++x)
+            {
+                int size = m_channels*m_bit_depth/8;
+
+                char buf[8];
+                fread(buf, 1, size, m_fp);
+
+                data[size*x+0] = buf[0];
+                data[size*x+1] = buf[1];
+                data[size*x+2] = buf[2];
+            }
+        }
+    }
+    else
+    {
+        // 这里有待完善
+        int y;
+        for( y = 0; y &amp;lt; m_height; y++, data += step )
+        {
+            int size = m_channels*m_bit_depth*m_width/8;
+            fread(data, 1, size, m_fp);
+        }
+    }
+
+    return true;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;写驱动为GrFmtBinWriter，从GrFmtWriter派生：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GrFmtBinWriter::GrFmtBinWriter( const char* filename ) : GrFmtWriter( filename )
+{
+}
+
+GrFmtBinWriter::~GrFmtBinWriter()
+{
+}
+
+bool  GrFmtBinWriter::WriteImage( const uchar* data, int step,
+                                int width, int height, int depth, int channels )
+{
+    m_fp = fopen(m_filename, &amp;quot;wb&amp;quot;);
+    if(!m_fp) return false;
+
+    const char *signature = fmtSignBin;
+    fwrite(signature, 1, 3, m_fp);
+
+    {
+        int t[] = { width, height, depth, channels };
+        fwrite(t, sizeof(t), 1, m_fp);
+    }
+
+    int i;
+    for(i = 0; i &amp;lt; height; ++i, data += step)
+    {
+        fwrite(data, depth*channels/8, width, m_fp);
+    }
+
+    fclose(m_fp);
+
+    return true;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;到这里bin格式的驱动已经基本实现。下面还需要将驱动集成到opencv中。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. 在grfmts.h包含bin格式图像驱动&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;quot;grfmt_bin.h&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;2. 在loadsave.cpp中构造g_Filters的时候，添加驱动到链表&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;具体代码在CvImageFilters构造函数中完成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CvImageFilters::CvImageFilters()
+{
+    m_factories = new GrFmtFactoriesList;
+
+    m_factories-&amp;gt;AddFactory( new GrFmtBmp() );
+    m_factories-&amp;gt;AddFactory( new GrFmtJpeg() );
+    m_factories-&amp;gt;AddFactory( new GrFmtSunRaster() );
+    m_factories-&amp;gt;AddFactory( new GrFmtPxM() );
+    m_factories-&amp;gt;AddFactory( new GrFmtTiff() );
+#ifdef HAVE_PNG
+    m_factories-&amp;gt;AddFactory( new GrFmtPng() );
+#endif
+#ifdef HAVE_JASPER
+    m_factories-&amp;gt;AddFactory( new GrFmtJpeg2000() );
+#endif
+#ifdef HAVE_ILMIMF
+    m_factories-&amp;gt;AddFactory( new GrFmtExr() );
+#endif
+
+    // Bin格式图像驱动
+    m_factories-&amp;gt;AddFactory( new GrFmtBin() );
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里需要补充的是，m_factories链表中的顺序可能会影响
+FindReader/FindWriter查找结果。在默认实现中是顺序查找，
+因此链表中排在前面的驱动被优先查找。&lt;/p&gt;
+
+&lt;p&gt;现在bin格式图像的驱动已经全部实现，重新编译highgui工程。&lt;/p&gt;
+
+&lt;p&gt;下一节将讲述cvLoadImage/cvSaveImage的具体执行流程。&lt;/p&gt;
+
+&lt;p&gt;测试bin格式的驱动代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;assert.h&amp;gt;
+#include &amp;lt;highgui.h&amp;gt;
+
+int main()
+{
+    const char *file_bmp = &amp;quot;E:\\TestXX\\gtalk-Alien.bmp&amp;quot;;
+    const char *file_bin = &amp;quot;E:\\TestXX\\gtalk-Alien.bin&amp;quot;;
+
+    // 将bmp转换为bin格式
+
+    IplImage *img_bmp = cvLoadImage(file_bmp, 1);
+    assert(img_bmp != NULL);
+
+    cvSaveImage(file_bin, img_bmp);
+
+    // 从bin格式装载图像
+    // 目前bin驱动还不完善，第二个参数需设置为1
+
+    IplImage *img_bin = cvLoadImage(file_bin, 1);
+    assert(img_bin != NULL);
+
+    // 创建窗口，用于显示图像
+
+    const char *win_bmp = &amp;quot;Bmp Image&amp;quot;;
+    const char *win_bin = &amp;quot;Bin Image&amp;quot;;
+
+    cvNamedWindow(win_bmp);
+    cvNamedWindow(win_bin);
+
+    // 显示2个图像
+    cvShowImage(win_bmp, img_bmp);
+    cvShowImage(win_bin, img_bin);
+
+    // 等待
+    cvWaitKey(0);
+
+    // 释放资源
+    cvDestroyAllWindows();
+
+    cvReleaseImage(&amp;amp;img_bmp);
+    cvReleaseImage(&amp;amp;img_bin);
+
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;转换后的bin格式图像见附件，用户可以自己尝试打开bin图像文件。&lt;/p&gt;
+
+&lt;p&gt;调试驱动：&lt;/p&gt;
+
+&lt;p&gt;假设上面的测试对应的程序为C:\testBin.exe。
+用VC6打开opencv的工程，设置highgui工程的属性：在调试可以执行栏中输入C:\testBin.exe。&lt;/p&gt;
+
+&lt;p&gt;现在就可以调试highgui了。可以单步调试，也可以在bin的相关位置设置断点。
+需要注意的是，highgui工程和testBin工程默认的路径可能不同，因此在打开/保存图像的时候
+最好使用绝对路径。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

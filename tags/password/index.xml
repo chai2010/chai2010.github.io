@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Password on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/password/</link>
+    <description>Recent content in Password on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 27 Mar 2013 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/password/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>PwdGen - 用Go语言实现的密码生成工具</title>
+      <link>https://chai2010.cn/post/misc/pwdgen/</link>
+      <pubDate>Wed, 27 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/misc/pwdgen/</guid>
+      
+        <description>&lt;p&gt;针对CSDN等各大网站私自保存密码的问题, 尝试用Go语言 写了个密码生成工具.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://bitbucket.org/chai2010/pwdgen/wiki/Home&#34;&gt;pwdgen&lt;/a&gt; 是 password generator 的缩写, 支持生成&lt;a href=&#34;http://keepass.info/&#34;&gt;KeePass&lt;/a&gt;格式.&lt;/p&gt;
+
+&lt;p&gt;下面是生成算法和实现的代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// base58(sha512(md5hex(encrypt_key+encrypt_salt)+site_id+site_salt)[0:16]
+func pwdgen(site_id, site_salt, encrypt_key, encrypt_salt string) string {
+    md5 := md5.New()
+    md5.Write([]byte(encrypt_key + encrypt_salt))
+    md5Hex := fmt.Sprintf(&amp;quot;%x&amp;quot;, md5.Sum(nil))
+
+    sha := sha512.New()
+    sha.Write([]byte(md5Hex + site_id + site_salt))
+    shaSum := sha.Sum(nil)
+
+    pwd := base58.EncodeBase58(shaSum)[0:16]
+    return string(pwd)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;完整的程序请访问: &lt;a href=&#34;https://bitbucket.org/chai2010/pwdgen/wiki/Home&#34;&gt;https://bitbucket.org/chai2010/pwdgen/wiki/Home&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;在线文档请访问:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://godoc.org/bitbucket.org/chai2010/pwdgen&#34;&gt;http://godoc.org/bitbucket.org/chai2010/pwdgen&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://godoc.org/bitbucket.org/chai2010/pwdgen/base58&#34;&gt;http://godoc.org/bitbucket.org/chai2010/pwdgen/base58&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://godoc.org/bitbucket.org/chai2010/pwdgen/ini&#34;&gt;http://godoc.org/bitbucket.org/chai2010/pwdgen/ini&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

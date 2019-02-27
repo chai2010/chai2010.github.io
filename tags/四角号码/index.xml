@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>四角号码 on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/%E5%9B%9B%E8%A7%92%E5%8F%B7%E7%A0%81/</link>
+    <description>Recent content in 四角号码 on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 04 Jan 2013 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/%E5%9B%9B%E8%A7%92%E5%8F%B7%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>潜伏17集中与四角号码有关的穿帮情节分析 </title>
+      <link>https://chai2010.cn/post/2013/qianfu-bugs/</link>
+      <pubDate>Fri, 04 Jan 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2013/qianfu-bugs/</guid>
+      
+        <description>&lt;p&gt;潜伏中第17集有提到用四角号码作为秘码本的情节。作为一个四角号码爱好者，考证之后发现有好几个破绽。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. 民国20年的四角号码似乎为民国22年&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/qianfu-bugs/qianfu-bugs-01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;参考wiki的四角号码词条: &lt;a href=&#34;http://zh.wikipedia.org/wiki/%E5%9B%9B%E8%A7%92%E5%8F%B7%E7%A0%81&#34;&gt;https://zh.wikipedia.org/wiki/四角号码&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;王云五发明的四角号码。
+商务印书馆1925年5月出版《号码检字法》，1926年9月出版的是《四角号码检字法》，1933年12月出版《四角号码检字法·附检字表》。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/qianfu-bugs/qianfu-bugs-02.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;而根据潜伏17集视频截图，应该是1933年的《四角号码检字法?附检字表》，对应民国22年，不是民国20年。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2. 电文中只有&amp;rdquo;方&amp;rdquo;字的四角号码00227是对的, 其他都不对&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/qianfu-bugs/qianfu-bugs-03.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/qianfu-bugs/qianfu-bugs-04.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3. 视频中电文前后不一样&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/qianfu-bugs/qianfu-bugs-05.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;方&amp;rdquo;的左边为&amp;rdquo;?2033&amp;rdquo;，右边是&amp;rdquo;5????&amp;ldquo;。但是，&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/qianfu-bugs/qianfu-bugs-06.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在译完之后，左右的电码全都变了，只有&amp;rdquo;方&amp;rdquo;字的电码还是&amp;rdquo;00227&amp;rdquo;。&lt;/p&gt;
+
+&lt;p&gt;可见导演对四角号码了解不多，情节中除了&amp;rdquo;方&amp;rdquo;字的四角号码是对的，
+其他电文的四角号码应该都是随手编的。&lt;/p&gt;
+
+&lt;p&gt;如果是不懂四角号码的朋友可能有些疑问，电文中的每个字为何是五个数字？
+这是因为多了最后一个附角码的原因，附角是 高梦旦 发明。&lt;/p&gt;
+
+&lt;p&gt;我根据现在的四角号码规则把电文对应的电文反译了一遍(有些繁体字和现在的取号方式可能有差异)：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/qianfu-bugs/qianfu-bugs-07.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;長(71732)首(80602)號(61217)一(10000)方(00227)北(12110)海(38157)深(37194)
+晤(61061)會(80606)你(27292)與(77801)時(64041)八(80000)於(08233)将(37142)
+廊(00227)酒(31164)店(00261)酒(31164)華(44504)龍(01211)點(61360)地(44112)
+誤(06684)有(40227)得(26241)不(10900)號(61217)暗(60061)類(91886)二(10100)&lt;/p&gt;
+
+&lt;p&gt;如果想用四角号码作为输入法，可以参考我写的Google输入法的四角号码扩展:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/im4corner&#34;&gt;https://github.com/chai2010/im4corner&lt;/a&gt;&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

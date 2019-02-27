@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Defer on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/defer/</link>
+    <description>Recent content in Defer on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 27 Mar 2013 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/defer/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>C&#43;&#43;版的defer语句</title>
+      <link>https://chai2010.cn/post/cpp/cpp-defer/</link>
+      <pubDate>Wed, 27 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/cpp/cpp-defer/</guid>
+      
+        <description>&lt;p&gt;Go语言的defer语句是汤普森大神的神来之笔, 非常适合于局部资源安全的延迟释放. 本文将探讨如何在C++语言中实现一个近似的defer特性.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Go语言的defer具体用法可参考:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://golang.org/doc/articles/defer_panic_recover.html&#34;&gt;http://golang.org/doc/articles/defer_panic_recover.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;c-版defer&#34;&gt;C++版defer&lt;/h2&gt;
+
+&lt;p&gt;一直想在C++中也能模拟类似defer的效果, 经过无数次google和尝试之后重要找到解决方法.
+整理后的代码在这里:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/chai2010/defer&#34;&gt;https://github.com/chai2010/defer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;基本的使用方法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FILE* fp = fopen(&amp;quot;foo.txt&amp;quot;, &amp;quot;rt&amp;quot;);
+if(fp == NULL) return false;
+defer([&amp;amp;](){ printf(&amp;quot;fclose(fp)\n&amp;quot;); fclose(fp); });
+
+char* buf = new char[1024];
+defer([&amp;amp;](){ printf(&amp;quot;delete buf\n&amp;quot;); delete[] buf; });
+
+defer([](){ printf(&amp;quot;defer a: %d\n&amp;quot;, __LINE__); });
+defer([](){ printf(&amp;quot;defer a: %d\n&amp;quot;, __LINE__); });
+defer([](){ printf(&amp;quot;defer a: %d\n&amp;quot;, __LINE__); });
+
+{
+    defer([](){ printf(&amp;quot;defer b: %d\n&amp;quot;, __LINE__); });
+    defer([](){ printf(&amp;quot;defer b: %d\n&amp;quot;, __LINE__); });
+    defer([](){ printf(&amp;quot;defer b: %d\n&amp;quot;, __LINE__); });
+}
+
+defer([](){
+    printf(&amp;quot;defer c:\n&amp;quot;);
+    for(int i = 0; i &amp;lt; 3; ++i) {
+        defer([&amp;amp;](){ defer([&amp;amp;](){
+            printf(&amp;quot;\ti = %d: begin\n&amp;quot;, i);
+            defer([&amp;amp;](){ printf(&amp;quot;\ti = %d\n&amp;quot;, i); });
+            printf(&amp;quot;\ti = %d: end\n&amp;quot;, i);
+        });});
+    }
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要注意的地方:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;defer 定义的对象在超出作用域时执行闭包函数(析构函数)&lt;/li&gt;
+&lt;li&gt;defer 定义的对象在同一个文件内部标识符不同(根据行号生成)&lt;/li&gt;
+&lt;li&gt;defer 在全局作用域使用可能会出现重名现象(行号相同)&lt;/li&gt;
+&lt;li&gt;defer 在判断语句使用可能提前执行(作用域结束时)&lt;/li&gt;
+&lt;li&gt;defer 在循环语句内使用无效(作用域结束时)&lt;/li&gt;
+&lt;li&gt;defer 和Go语言的defer并不完全等价&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考链接&#34;&gt;参考链接&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.korfuri.fr/post/go-defer-in-cpp/&#34;&gt;http://blog.korfuri.fr/post/go-defer-in-cpp/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.korfuri.fr/attachments/go-defer-in-cpp/defer.hh&#34;&gt;http://blog.korfuri.fr/attachments/go-defer-in-cpp/defer.hh&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blogs.msdn.com/b/vcblog/archive/2011/09/12/10209291.aspx&#34;&gt;http://blogs.msdn.com/b/vcblog/archive/2011/09/12/10209291.aspx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://golang.org/doc/effective_go.html#defer&#34;&gt;http://golang.org/doc/effective_go.html#defer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://golang.org/ref/spec#Defer_statements&#34;&gt;http://golang.org/ref/spec#Defer_statements&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

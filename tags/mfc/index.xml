@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mfc on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/mfc/</link>
+    <description>Recent content in Mfc on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 20 Mar 2006 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/mfc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>《深入浅出MFC》学习笔记</title>
+      <link>https://chai2010.cn/post/2006/mfc-notes/</link>
+      <pubDate>Mon, 20 Mar 2006 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2006/mfc-notes/</guid>
+      
+        <description>
+
+&lt;p&gt;时间：2006.3.19 - 2006.2.30&lt;/p&gt;
+
+&lt;h2 id=&#34;第一章-win32基本程序概念&#34;&gt;第一章 win32基本程序概念&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/mfc-notes/mfc_1_2-large.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;windows是一个“以消息为基础的事件驱动系统”。当系统内核捕捉到外围设备发生的事件后，将以一种特定的消息传递出去。而用户程序在接收到相应的消息后再做出相应的处理（否则系统以默认函数处理）。处理窗口过程的一般是窗口函数（window procedure）。Windows程序的执行流程如上图。&lt;/p&gt;
+
+&lt;p&gt;窗口函数习惯上称作回调函数，回调函数类似于C语言中&lt;code&gt;bsearch&lt;/code&gt;（二分法查找）函数的&lt;code&gt;cmp&lt;/code&gt;（用于比较两个元素的大小）参数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdlib.h&amp;gt;
+void *bsearch(const void *key, const void *base,
+    size_t n, size_t size,
+    int (*cmp)(const void *keyval, const void *datum)
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;想一想开发&lt;code&gt;bsearch&lt;/code&gt;函数的人怎么会知道两个元素的是什么，怎么比较大小呢？因此就必须留给用户要自己定义&lt;code&gt;cmp&lt;/code&gt;函数了！&lt;/p&gt;
+
+&lt;p&gt;回调函数一般都有固定的格式（不知道是否会用变参数的情况），不然可能会发生错误。回调函数一般都是由windows系统来调用，不是用户自己调用。在用户使用bsearch函数时，用户自己定义的cmp函数也是由C函数库来调用，不是自己调用。&lt;/p&gt;
+
+&lt;p&gt;回调函数的概念虽然在C语言中就已经存在，但使用的范围远没有windows中的这么广（其实在设计接口时，遇到某些有共性的未知操作就可以用传递一个函数的方法解决——例如遍历某个未知集合中的每个元素）。&lt;/p&gt;
+
+&lt;p&gt;回调函数在windows开发中得到推广应该是由其“以消息为基础的事件驱动系统”本质决定的。用用户要实现某个操作，但是不知道什么时候开始执行（因为不知道什么时候能收到相应的消息）；系统则知道什么时候触发操作（因为消息由系统发出），但是又不知道操作的具体细节（操作是用户自己定义的）。在这种时候回调函数就成了用户和系统之间沟通的桥梁——用户自己定义操作的细节，但是由系统在适当的时刻帮助调用。&lt;/p&gt;
+
+&lt;p&gt;因此，回调函数就成了“以消息为基础的事件驱动系统”系统平台上程序开发的核心！&lt;/p&gt;
+
+&lt;p&gt;为了向面向对象思想看齐，一般把回调函数也设计成类的成员。又因为回调函数有固定格式，不能随便修改，因此在类中要把它声明为static类型函数（这是利用了C++编译器不会为类中&lt;code&gt;static&lt;/code&gt;函数添加&lt;code&gt;this&lt;/code&gt;指针参数的隐含特征）。&lt;/p&gt;
+
+&lt;p&gt;在windows中程序设计的主要任务就是对自己感兴趣的消息做出相应的处理：程序等待某个特定消息的发生，然后针对该消息做出特定的操作，如此而已！&lt;/p&gt;
+
+&lt;h2 id=&#34;第二章-c-的重要性质&#34;&gt;第二章 C++的重要性质&lt;/h2&gt;
+
+&lt;p&gt;面向对象有三个核心概念：封装，继承，多态。封装和继承这里不想细说，主要讲一下多态。&lt;/p&gt;
+
+&lt;p&gt;很多书里都说多态是面向对象的核心（也不知道对不对）。在C++中支持多态的关键技术就是虚函数。虚函数的有些特征很怪异，这主要是和传统C函数比较而言的（如果没有传统的函数概念也就不会觉得奇怪了）。&lt;/p&gt;
+
+&lt;p&gt;以前很多人用C语言（现在也有好多人用C入门），对C的执行机制很熟悉。C语言是一种高级的汇编语言，写一段代码就是一段代码，编译器不会暗中给你做什么手脚。即使编译器做也就是在初始化和退出的时候调用一些函数，这些用户都知道（fork、exec、exit……）。&lt;/p&gt;
+
+&lt;p&gt;关于函数这一块也一样：
+函数参数是值传递——数组除外（数组传地址），为了支持变参数，参数是从右到左进栈，函数名就代表一个函数的入口地址，比较复杂一些的就是函数指针。&lt;/p&gt;
+
+&lt;p&gt;所以C程序员在调用一个函数的时候就根本想不出它会有什么出格的行为！&lt;/p&gt;
+
+&lt;p&gt;在C++中就不一样了，特别是虚函数，有时候简直搞不清楚它到底是调用了哪个函数（真是麻烦）！&lt;/p&gt;
+
+&lt;p&gt;这种情况是由C++是一个面向对象的语言性质决定的。如果你还是用C++编写C程序，那么它还是一个高级的汇编语言；但是如果你用C++编写（特别是有虚函数的）面向对象程序就不是那么回事了！&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class A {
+public:
+    virtual void display() { cout &amp;lt;&amp;lt; &amp;quot;class A&amp;quot; &amp;lt;&amp;lt; endl; }
+};
+
+class B: public A {
+public:
+    virtual void display() { cout &amp;lt;&amp;lt; &amp;quot;class B&amp;quot; &amp;lt;&amp;lt; endl; }
+};
+
+void main() {
+    A *pa = new B;
+    pa-&amp;gt;display();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行的结果却打印是：&lt;code&gt;class B&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;让人感觉不解的地方就是pa明明是类A的指针，却是执行了类B的函数（不可原谅）！！！其实有这种感觉的人在不知不觉中就犯了一个形而上的错误：用C语言的函数行为来套用display()的行为。在此我想提醒一点：把C++当作一个新的语言，C只是参考，不是金科玉律，切记！！！&lt;/p&gt;
+
+&lt;p&gt;很多书上用什么动态绑定来解释虚函数（还保存了一张什么虚函数表），我觉得这可能是因为他们了解一些C++编译器的实现细节。如果他们不知道C++编译器怎么实现的，他们怎么就知道就要用虚函数表来实现虚函数呢（而且用户也不可能知道每个编译器的细节）？&lt;/p&gt;
+
+&lt;p&gt;虽然C++编译器是一个黑盒子，但我们仍然可以用C语言中方法来模拟一个虚函数。我自己喜欢把虚函数看作一个函数指针，该指针初始值为NULL，每遇到函数的定义时就把该指针设置为新定义的函数的地址（当然派生类从基类中继承了这个函数指针）。这样，用户在通过函数指针调用虚函数的行为就很清楚了（如果不熟悉指针就不好办了）。又由于函数是类的成员，不是对象的成员，因此把虚函数看作static型的函数指针更准确。&lt;/p&gt;
+
+&lt;h2 id=&#34;第三章-mfc六大关键技术之仿真&#34;&gt;第三章 MFC六大关键技术之仿真&lt;/h2&gt;
+
+&lt;p&gt;其实除了消息外，其他的几个技术细节都可以看作是面向对象语言的特征。例如：对象的产生过程、动态识别 ……。动态识别、动态创建、序列化特征已经在JAVA等新的面向对象语言中得到支持了。如果不想了解编译器的实现细节的话，也可以不看。MFC本身特有的东西应该是消息的传播机制。当然这里还是要全部总结一下了（毕竟也是这本书最有特色的地方了）。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-对象创建&#34;&gt;1 对象创建&lt;/h3&gt;
+
+&lt;p&gt;MFC中所有的类都继承自&lt;code&gt;CObject&lt;/code&gt;，创建对象时要考虑其父类的创建。个人觉得是这样一个规则（不知道对不对）：创建对象之前要先创建父类，除非它没有父类！构造的函数的调用规则也是这样：如果有就先调用父类的构造函数（这是MFC，不是C++，不考虑多重继承的情况）。&lt;/p&gt;
+
+&lt;p&gt;这就像人类的繁衍：一个人要出生，他的爸爸妈妈肯定要先出生，除非他是第一个进化成人类的（或者是人工合成的）。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-运行时类型识别&#34;&gt;2 运行时类型识别&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/mfc-notes/mfc_3_1-large.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我觉得这里的识别有两种级别，打个比方：X是某个人，还是具有某个人的血统？&lt;/p&gt;
+
+&lt;p&gt;这个问题该问谁，怎么问？问X的爸爸妈妈、爷爷奶奶还是X自己？如果李四想知道自己身上是否有李世民的血统，是要亲自问李世民吗（他怎么会知道自己有多少后代）？&lt;/p&gt;
+
+&lt;p&gt;正确的办法是：
+1. 把X设为李四。
+2. X是不是李世民？
+3. 如果X是就停止，并输出结果是。
+4. 如果X不是，但X有爸爸，就X设成X的爸爸，然后转到2。
+5. 如果X没有爸爸就停止，输出结果否。&lt;/p&gt;
+
+&lt;p&gt;在MFC中保存了一棵类的家族树，&lt;code&gt;CObject&lt;/code&gt;是根结点，其他的类都是他的后代（有几个特殊的除外，如： &lt;code&gt;CPoint&lt;/code&gt;等）。由于类的家族树存放的是类的信息——不是对象的信息，因此只需要保存一个就够了，所以MFC将这棵树保存为&lt;code&gt;static&lt;/code&gt;类型。&lt;/p&gt;
+
+&lt;p&gt;MFC类的家族树和数据结构中的树并不相同，普通的树通过跟结点就可以访问所有的结点（包括叶子）。但在MFC中却不行——它只能逆向地从叶子结点向根结点方向访问（从父结点访问不到子结点）。&lt;/p&gt;
+
+&lt;p&gt;我自己把这种树叫做逆树（和通常的树相反，好象是反物质一类的东东）。 其实在所有关于指针的数据结构中都有这种逆引用关系的存在。你可以想象在一个单向链表中，从一个结点移动到后一个结点时，就回不到之前的结点了（除非你另外保存了它的地址）。在现实中也有很多这种情况：你可以知道你所认识的人，但却很难知道所有认识你的人——这是指针的不可逆性造成的。&lt;/p&gt;
+
+&lt;p&gt;MFC为了隐藏类的家族树的实现细节，定义了2个宏：&lt;code&gt;DEALARE_DYNAMIC&lt;/code&gt;和&lt;code&gt;IMPLEMENT_DYNAMIC&lt;/code&gt;。&lt;code&gt;DEALARE_DYNAMIC&lt;/code&gt;用于定义变量，&lt;code&gt;IMPLEMENT_DYNAMIC&lt;/code&gt;则进行相应的初始化，宏的具体细节可以参考书中代码。&lt;/p&gt;
+
+&lt;p&gt;我比较感兴趣的是&lt;code&gt;AFX_CLASSINIT&lt;/code&gt;的初始化过程，代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;static AFX_CLASSINIT _init_classname(class_name::classclass_name);
+
+struct AFX_CLASSINIT {
+    AFX_CLASSINIT(CRuntimeClass *pNewClass);
+};
+
+AFX_CLASSINIT::AFX_CLASSINIT(CRuntimeClass *pNewClass) {
+    pNewClass-&amp;gt;m_pNextClass = CRuntimeClass::pFirstClass;
+    CRuntimeClass::pFirstClass = pNewClass;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;由于&lt;code&gt;_init_classname&lt;/code&gt;是静态的&lt;code&gt;AFX_CLASSINIT&lt;/code&gt;类型，因此在定义的时候自动的调用&lt;code&gt;AFX_CLASSINIT&lt;/code&gt;初始化操作从而将&lt;code&gt;pNewClass&lt;/code&gt;神不知鬼不觉地插入到了&lt;code&gt;CRuntimeClass::pFirstClass&lt;/code&gt;链表的开头（这个&lt;code&gt;pFirstClass&lt;/code&gt;链表在动态识别中还用不着）！&lt;/p&gt;
+
+&lt;p&gt;这很有点像一种静态的初始化操作——&lt;code&gt;AFX_CLASSINIT&lt;/code&gt;在运行之前已经被自动地完成了。当然&lt;code&gt;AFX_CLASSINIT&lt;/code&gt;和静态初始化还是有些区别的：我感觉静态初始化应该是在编译时被调用，而不是在执行时被调用。这应该算是C++中一些很晦涩的技巧吧&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;pFirstClass&lt;/code&gt;链表是通过&lt;code&gt;AFX_CLASSINIT&lt;/code&gt;自动初始化的。但是&lt;code&gt;class_name::classclass_name::m_pBaseClass&lt;/code&gt;指向的同宗链表则完全是手工初始化的（通过宏传递的参数）。在同宗链表中每个类和它的父类都可以用确定名称直接访问（静态的类别型录网中的每个&lt;code&gt;CRuntimeClass&lt;/code&gt;都可以通过一个确定的名称直接访问——不必要从&lt;code&gt;pFirstClass&lt;/code&gt;开始遍历）。&lt;/p&gt;
+
+&lt;p&gt;补充一点：定义&lt;code&gt;CObject&lt;/code&gt;类时要手工生成&lt;code&gt;pFirstClass&lt;/code&gt;链表和手工初始化&lt;code&gt;CRuntimeClass&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-动态创建&#34;&gt;3 动态创建&lt;/h3&gt;
+
+&lt;p&gt;MFC也定义了2个宏：&lt;code&gt;DEALARE_DYNCREATE&lt;/code&gt; 和 &lt;code&gt;IMPLEMENT_DYNCREATE&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;要动态的生成对象，首先要知道对象的初始化函数，在MFC中采用在&lt;code&gt;CRuntimeClass&lt;/code&gt;中保存函数指针的方法来实现。保存指针等操作的代码也是在宏中加入的（MFC要求要有一个空参数的构造函数，个人觉得也可以让它们传递一个void型指针）。&lt;/p&gt;
+
+&lt;p&gt;上面说过，在动态识别一个类时不需要&lt;code&gt;pFirstClass&lt;/code&gt;链表，因为类是沿着它的同宗路线比较（这也是一种隐含的链表）。但是动态创建就需要了，因为它也不知道自己是什么类型，因此要遍历&lt;code&gt;pFirstClass&lt;/code&gt;链表中所有的已知的类，直到找到与自己相符的类型。如果查找成功则通过指针调用初始化函数来创建对象（指针为&lt;code&gt;NULL&lt;/code&gt;则不能创建），否则就无法动态创建。&lt;/p&gt;
+
+&lt;p&gt;在强调一点：这是MFC——不是C++，所有的类都是从&lt;code&gt;COject&lt;/code&gt;继承而来（个别类除外），因此他们如果存在就一定被保存在&lt;code&gt;pFirstClass&lt;/code&gt;链表中。如果你要是另起炉灶，随便派生自一个类，又使用了&lt;code&gt;DEALARE_DYNCREATE&lt;/code&gt;和&lt;code&gt;IMPLEMENT_DYNCREATE&lt;/code&gt;宏，那情况就糟糕了，&lt;code&gt;pFirstClass&lt;/code&gt;链表可能被彻底的破坏，那&lt;code&gt;COject&lt;/code&gt;的什么特性就都没了（切记）！！！&lt;/p&gt;
+
+&lt;h3 id=&#34;4-序列化-serialize&#34;&gt;4 序列化 Serialize&lt;/h3&gt;
+
+&lt;p&gt;序列化就是要支持对象的动态存储与恢复（像打开一个网页，然后自动下载一个未知的程序到你电脑上运行……）。个人感觉，序列化和动态创建应该是面向对象数据库的核心！&lt;/p&gt;
+
+&lt;p&gt;以前数据存放之后就是死的数据，数据的操作要靠其他的程式来支持——就是那种传统的数据组织方式。面向对象数据库则比较有意思：数据放进去之后，再拿出来的话还可以自己活动，甚至自己生长、演化！！！&lt;/p&gt;
+
+&lt;p&gt;序列化中关键的技术是：在保存数据本身的同时，还要保存数据的行为——也就是对象的行为（或者是类的信息）。有了数据的行为就好办，这就又回到了上面的对象动态创建问题。&lt;/p&gt;
+
+&lt;p&gt;关于对象的行为保存细节很多，但基本上就数据库中数据组织的那一套（关键是要看怎么应付复杂的硬件环境）。&lt;/p&gt;
+
+&lt;p&gt;其实面向对象东西只是更高一层的抽象，为了简化大型项目开发的难度，但最终还是要回到过程性的操作上——毕竟所有的程序都运行在冯.诺依曼机器上（这本身就是顺序运行的机器）。在MFC中更是许多与问题无关的细节，让开发人员集中精力解决最核心的问题。&lt;/p&gt;
+
+&lt;h3 id=&#34;5-消息&#34;&gt;5 消息&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/blog/mfc-notes/mfc_3_5-large.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;消息是windows程序开发的核心概念，程序的行为不再是像以前那样——用户只需要安排好事情的内容，不需要安排什么时候去做事情。在收到系统通知的时候就去做事情，没收到通知的话就先歇着（看来机器就是喜欢偷懒呢）。这很像我们人的行为：如果没有人给我分配任务，我就休息。&lt;/p&gt;
+
+&lt;p&gt;消息在MFC中的传播机制很复杂（我自己是没高清楚），一般可以分2种类型：一是只能向父类传播的消息，还有可以横向传播的消息。向父类传播的消息的行为很简单（和动态识别的路线相似），一路向上直到&lt;code&gt;CCmdTarget&lt;/code&gt;，就完成任务了。可以横向传播的消息有固定的传播路线（我不知道为什么要按这个顺序），在书中有具体的描述，最后也是到&lt;code&gt;CCmdTarget&lt;/code&gt;，但是中途要走了很多弯路（走弯路是为了让别人拦截）。&lt;/p&gt;
+
+&lt;p&gt;关于横向消息在不同类之间的跳跃机制还没有搞清楚，我自己估计是借助了几个类中变量（不知道对不对），代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class CWinApp : public CWinThread
+{
+public:
+    CWinApp *m_pCurrentWinApp;
+    CWnd * m_pMainWnd;
+}
+
+class CFrameWnd : public CWnd
+{
+public:
+    CView *m_pViewActive;
+}
+
+class CView : public CWnd
+{
+public:
+    CDocument * m_pDocument;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;借助&lt;code&gt;m_pCurrentWinApp&lt;/code&gt;, &lt;code&gt;m_pMainWnd, m_pViewActive&lt;/code&gt;, &lt;code&gt;m_pDocument&lt;/code&gt;可以轻易地实现在不同类之间的移动，因此实现消息的固定传播路线也就比较容易了。&lt;/p&gt;
+
+&lt;p&gt;注意：由于MFC是一种Application Framework，它之间的类是强耦合的，类之间是有生命联系的，因此可以融为一体，所以可以借助&lt;code&gt;m_pCurrentWinApp&lt;/code&gt;, &lt;code&gt;m_pMainWnd&lt;/code&gt;, &lt;code&gt;m_pViewActive&lt;/code&gt;, &lt;code&gt;m_pDocument&lt;/code&gt;的相互配合（就象人的各个器官相互协作一样），达到目的。&lt;/p&gt;
+
+&lt;h2 id=&#34;第三章小结&#34;&gt;第三章小结&lt;/h2&gt;
+
+&lt;p&gt;大的方面说不清楚，只是想提醒一下那几个宏的用法。以前在C中总是想让宏模拟函数的行为，使用的时候也照着函数的习惯用。比如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#define swap(a,b) do { \
+    long t = a; a = b; b = t; \
+}while(0)
+
+void main(void) {
+    int a = 1, b = 2;
+    swap(a, b);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们不自觉地就在&lt;code&gt;swap(a, b)&lt;/code&gt;后面加了&lt;code&gt;‘;’&lt;/code&gt;（好象它就是一个函数），但MFC中的宏并不是这样。在MFC中要严格按照宏的定义使用，否则可能存在危险。当然，如果能用向导生成就最好了，省得烦心。另外&lt;code&gt;RUNTIME_CLASS(class_name)&lt;/code&gt; 用于获得类的&lt;code&gt;CRuntimeClass&lt;/code&gt;静态成员。&lt;/p&gt;
+
+&lt;h2 id=&#34;第四章-vc-的集成开发环境&#34;&gt;第四章 VC++的集成开发环境&lt;/h2&gt;
+
+&lt;p&gt;这一章不知道说什么，经常使用吧。&lt;/p&gt;
+
+&lt;h2 id=&#34;第五章-总观application-framework&#34;&gt;第五章 总观Application Framework&lt;/h2&gt;
+
+&lt;p&gt;这里也不知道说些什么，太抽象了，我想每个人的体会可能都不一样。&lt;/p&gt;
+
+&lt;h2 id=&#34;第六章-mfc程序的生死因果&#34;&gt;第六章 MFC程序的生死因果&lt;/h2&gt;
+
+&lt;p&gt;这一章只要能把294页的流程图搞清楚了就差不多了（中文简体第2版），当然也要把消息机制融入其中（以及回调函数）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/mfc-notes/mfc_6_x-large.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;第七章-简单而完整-mfc骨干程序&#34;&gt;第七章 简单而完整：MFC骨干程序&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/mfc-notes/mfc_7_x1-large.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;介绍了一般框架所需要的类(如图):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/mfc-notes/mfc_7_x2-large.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;第八章-document-view深入探讨&#34;&gt;第八章 Document-View深入探讨&lt;/h2&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

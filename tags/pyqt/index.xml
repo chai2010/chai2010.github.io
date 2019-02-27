@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pyqt on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/pyqt/</link>
+    <description>Recent content in Pyqt on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 06 Dec 2009 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/pyqt/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>PyQt&amp;OpenCV实现边缘检测</title>
+      <link>https://chai2010.cn/post/2009/pyqt-opencv-edge/</link>
+      <pubDate>Sun, 06 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/pyqt-opencv-edge/</guid>
+      
+        <description>&lt;p&gt;首先设计UI界面, 调整自己满意的布局.
+其中黑色为 QLabel, 对象名为labelImage, 用于显示图像. 左下角为拖动条, 对称为sliderThreshold, 用于修改参数.
+Open按钮用于打开文件, 对象名为openButton.
+在界面编辑器中, 将Close按钮的clicked信号连接到窗口的close槽.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/pyqt-opencv-edge/pyqt-opencv-edge-01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;窗口设计完成后保存到edge.ui, 然后基于edge.ui文件构造程序:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# -*- coding:utf-8 -*-
+###########################################################
+# PyQt+OpenCV example
+#
+# 查找图像中的边界.
+# 参考 OpenCV\samples\python\edge.py 改写
+#
+# By chaishushan{AT}gmail.com 2008
+###########################################################
+
+import sys
+
+# 导入PyQt模块
+from PyQt4.Qt import *
+from PyQt4 import uic
+
+# 导入OpenCV模块
+from opencv.cv import *
+from opencv.highgui import *
+
+# 边界检测类
+class WinEdge(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent)
+        uic.loadUi(&amp;quot;edge.ui&amp;quot;, self)
+
+        # OpenCV相关参数
+        self.cv_img = None
+        self.cv_col_edge = None
+        self.cv_gray = None
+        self.cv_edge = None
+
+        # 标题
+        self.defaultTitle = self.windowTitle()
+
+
+    @pyqtSignature(&amp;quot;&amp;quot;)
+    def on_openButton_clicked(self):
+        filename = QFileDialog.getOpenFileName(self,
+                            self.tr(&amp;quot;Choose a Image&amp;quot;), &amp;quot;.&amp;quot;,
+                            self.tr(&amp;quot;Image Files (*.jpg;*.bmp);;All Files (*)&amp;quot;))
+
+        if not filename.isEmpty():
+            self.sliderThreshold.setEnabled(False)
+
+            self.openImage(filename)
+            self.dectorEdge(self.sliderThreshold.value())
+
+            # 更新UI
+            if self.cv_col_edge:
+                self.setWindowTitle(filename)
+                self.sliderThreshold.setEnabled(True)
+            else:
+                self.setWindowTitle(self.defaultTitle)
+                self.sliderThreshold.setEnabled(False)
+
+    @pyqtSignature(&amp;quot;int&amp;quot;)
+    def on_sliderThreshold_valueChanged(self, val):
+
+        # 重新计算边界
+        self.dectorEdge(val)
+
+    def resizeEvent(self, event):
+        self.showImage()
+
+    # 打开图像
+    def openImage(self, qstringName):
+        # 将QString转换为char *
+        filename = qstringName.toLocal8Bit().data()
+
+        # 释放以前的图像
+        if self.cv_img :
+            cvReleaseImage( self.cv_img ); self.cv_img = None
+            cvReleaseImage( self.cv_col_edge ); self.cv_col_edge = None
+            cvReleaseImage( self.cv_gray ); self.cv_gray = None
+            cvReleaseImage( self.cv_edge ); self.cv_edge = None
+
+        # 打开新的图像
+        self.cv_img = cvLoadImage(filename)
+        if not self.cv_img:
+            msg = self.tr(&amp;quot;Can&#39;t open %1 file!&amp;quot;).arg(filename)
+            QMessageBox.warning (self, &amp;quot;Warning&amp;quot;, msg)
+            return False
+
+        # 创建辅助空间
+        size = cvSize(self.cv_img.width, self.cv_img.height)
+
+        self.cv_col_edge = cvCreateImage (size, 8, 3)
+        self.cv_gray = cvCreateImage (size, 8, 1)
+        self.cv_edge = cvCreateImage (size, 8, 1)
+
+        return True
+
+    # 生成边界
+
+    def dectorEdge(self, position):
+
+        if not self.cv_img: return
+
+        # 转换为灰度
+        cvCvtColor (self.cv_img, self.cv_gray, CV_BGR2GRAY)
+
+        cvSmooth (self.cv_gray, self.cv_edge, CV_BLUR, 3, 3, 0)
+        cvNot (self.cv_gray, self.cv_edge)
+
+        # run the edge dector on gray scale
+        cvCanny (self.cv_gray, self.cv_edge, position, position * 3, 3)
+
+        # 结构保存到cv_col_edge中
+        cvSetZero (self.cv_col_edge)
+        cvCopy (self.cv_img, self.cv_col_edge, self.cv_edge)
+
+        # 显示
+        self.showImage()
+
+    # 显示图像
+    def showImage(self):
+        if not self.cv_col_edge: return
+
+        # 转化IplImage为QImage
+        w = self.cv_col_edge.width
+        h = self.cv_col_edge.height
+
+        step = self.cv_col_edge.widthStep
+        data = self.cv_col_edge.imageData
+
+        img = QImage(data, w, h, step, QImage.Format_RGB888).rgbSwapped()
+
+        # 显示图像[缩放到窗口大小]
+        size = self.labelImage.size()
+        self.labelImage.setPixmap(QPixmap.fromImage(img.scaled(size)))
+
+if __name__ == &#39;__main__&#39;:
+    app = QApplication(sys.argv)
+    widget = WinEdge()
+    widget.show()
+    app.exec_()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行结果如图:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/pyqt-opencv-edge/pyqt-opencv-edge-02.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;完整的代码以后补充。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>
