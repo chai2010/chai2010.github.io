@@ -14,18 +14,20 @@ mathjax: false
 
 <img style="float: right;" src="/images/chai2010.jpg">
 
-Go语言代码的[贡献者](https://golang.org/CONTRIBUTORS)(Chaishushan), [《Go语言圣经》](https://github.com/golang-china/gopl-zh)翻译者, [《Go语言高级编程》](https://github.com/chai2010/advanced-go-programming-book)开源免费图书作者, [《WebAssembly标准入门》](https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md)图书作者.
+[凹语言](https://wa-lang.org)作者，Go语言代码的[贡献者](https://golang.org/CONTRIBUTORS)(Chaishushan), [《Go语言圣经》](https://github.com/golang-china/gopl-zh)翻译者, [《Go语言高级编程》](https://github.com/chai2010/advanced-go-programming-book)开源免费图书作者, [《WebAssembly标准入门》](https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md)等多本畅销图书作者.
 
 个人签名:
 
 - 当歌曲和传说都已经哑巴的时候，只有代码还在说话!
 - Less is more!
+- Slow is fast!
 
 相关链接:
 
 - https://github.com/chai2010
 - https://twitter.com/chaishushan
 - https://chai2010.cn
+- https://wa-lang.cn
 
 
 ## 捐助支持

@@ -10,7 +10,7 @@ comment: true
 mathjax: false
 ---
 
-## µGo语言实现——从头开发一个迷你Go语言编译器 - Doing
+## µGo——从头开发一个迷你Go语言编译器 - Doing
 
 ![](/images/book-ugo.png)
 
