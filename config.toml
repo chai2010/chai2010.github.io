@@ -85,12 +85,18 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
   baidu_verification = ""   # Baidu Verification
   google_verification = ""  # Google_Verification         # 谷歌
 
-  # https://github.com/imsun/gitment
-  gitment = true
-  gitment_github_id = "chai2010"
-  gitment_repo = "chai2010.cn.gitment"
-  gitment_oauth_client_id = "5bf22aef62556632fc90"
-  gitment_oauth_client_secret = "42268725aafb70714dd18d169f75d70e3a9804fc"
+[params.giscus]
+repo = "chai2010/chai2010.github.io"
+repoID = "MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+category = "General"
+categoryID = "DIC_kwDOB2ai_c4CR3mk"
+mapping = "og:title"
+reactionsEnabled = "1"
+emitMetadata = "0"
+inputPosition = "bottom"
+theme = "light"
+lang = "en"
+loading = "lazy"
 
   [params.publicCDN]        # load these files from public cdn                          # 启用公共CDN，需自行定义
     enable = false

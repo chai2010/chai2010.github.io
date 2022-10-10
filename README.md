@@ -14,6 +14,8 @@
 
 
 <!--
+https://cdwilson.dev/articles/using-giscus-for-comments-in-hugo/
+
 ### 注意点
 
 gitment 添加评论时默认会将每个页面的 id 作为 label 创建.
