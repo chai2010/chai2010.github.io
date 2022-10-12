@@ -10,6 +10,14 @@ comment: true
 mathjax: false
 ---
 
+#### 2021 - Go+ 公开课第9期｜如何基于Go语言和Go编译器定制语言
+
+[![](/images/talks-go+2021.png)](https://www.bilibili.com/video/BV1Lm4y1Q7kb)
+
+
+- B站视频: https://www.bilibili.com/video/BV1Lm4y1Q7kb/
+- 在线幻灯片: https://wa-lang.org/ugo-compiler-book/talks/go-compiler-intro.html
+
 #### 2021 - GIAC2021: KCL云原生配置策略语言
 
 介绍KCL云原生配置语言在蚂蚁的诞生背景、语言特性、实践探索和未来的发展思考。
