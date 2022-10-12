@@ -3,8 +3,8 @@ title: "Go实现Python模块"
 date: 2018-10-01
 draft: false
 
-tags: ["python"]
-categories: ["python"]
+tags: ["golang", "python"]
+categories: ["golang", "python"]
 ---
 
 Go语言和Python语言作为当下最红的语言，使用Go语言来为Python语言编写模块是很多用户梦寐以求的方式。这里我们将演示如何通过Go语言来为Python脚本语言编写扩展模块。
