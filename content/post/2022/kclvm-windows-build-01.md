@@ -1,6 +1,6 @@
 ---
 title: "Windows环境构建KCLVM(01)"
-date: 2020-10-10
+date: 2022-10-10
 draft: false
 
 tags: ["kclvm", "rust"]
