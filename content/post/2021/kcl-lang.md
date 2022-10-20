@@ -1,7 +1,7 @@
 ---
 title: "KCL：蚂蚁自研的配置策略语言"
 date: 2021-08-10
-draft: false
+draft: true
 
 tags: ["kcl", "kusion"]
 categories: ["kcl", "kusion"]
