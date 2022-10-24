@@ -4,7 +4,6 @@
 - 必须使用 hugo 0.30 版本
 - 手工生成html文件, 必须有 `.nojekyll` 文件，master分支用于显示
 - 定制域名必须包含 `CNAME` 文件
-- source对应源文件
 - 较大的静态文件放在 https://github.com/chai2010/static-public
 
 ### 测试和运行
