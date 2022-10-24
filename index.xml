@@ -289,6 +289,99 @@ https://toutiao.io/subjects/318517
     </item>
     
     <item>
+      <title>1024・GLCC 开源夏令营 KusionStack 顺利结题</title>
+      <link>https://chai2010.cn/post/2022/glcc-done/</link>
+      <pubDate>Mon, 24 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/glcc-done/</guid>
+      
+        <description>
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/glcc-done/00.gif&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;1-1024-程序员节快乐&#34;&gt;1. 1024 程序员节快乐&lt;/h2&gt;
+
+&lt;p&gt;10 月 24 日是程序员节，首先祝所有程序员节日快乐。同时祝贺 GLCC 开源夏令营选择 KusionStack 项目的同学们全部完成考核，祝贺你们！&lt;/p&gt;
+
+&lt;h2 id=&#34;2-glcc-编程夏令营活动&#34;&gt;2. GLCC 编程夏令营活动&lt;/h2&gt;
+
+&lt;p&gt;CCF GitLink 开源编程夏令营（GitLink Code Camp，简称  GLCC），是在 CCF 中国计算机学会指导下，由 GitLink 社区联合 CCF 开源发展委员会（CCF ODC）共同举办的面向全国高校学生的暑期开源项目实习计划。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/glcc-done/20.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;活动主要联合各大开源企业、开源基金会、开源社区及开源领域专家，旨在鼓励高校学生通过参与真实的开源软件开发，感受开源文化，提升自身技术能力，进而达到为开源企业和社区输送优秀人才的目的。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-kusionstack-开源项目&#34;&gt;3. KusionStack 开源项目&lt;/h2&gt;
+
+&lt;p&gt;KusionStack 是蚂蚁开源的云原生可编程技术栈！它也是一个可编程、高灵活性的应用交付及运维技术栈，灵感源于融合（Fusion）一词，旨在帮助企业构建的应用运维配置管理平面及 DevOps 生态。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;KusionStack 主仓库：&lt;a href=&#34;https://github.com/KusionStack/kusion&#34;&gt;https://github.com/KusionStack/kusion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;KusionStack KCL 语言仓库：&lt;a href=&#34;https://github.com/KusionStack/KCLVM&#34;&gt;https://github.com/KusionStack/KCLVM&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;KusionStack 网站主页：&lt;a href=&#34;https://kusionstack.io&#34;&gt;https://kusionstack.io&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;主要希望融合以下几种场景：融合专有云，混合云，多云混合场景；融合以云原生技术为主，同时采用多种平台技术的混合平台技术选型；融合多项目、多团队、多角色、多租户、多环境的企业级诉求。&lt;/p&gt;
+
+&lt;p&gt;基于 Platform as Code （平台服务即代码）理念，研发者可以快速收敛围绕应用运维生命周期的全量配置定义，面向混合技术体系及云环境，完成从应用运维研发到上线的端到端工作流程，真正做到一处编写，随处交付。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/glcc-done/30.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;以上是 KusionStack 的主题架构。GLCC 的选题主要集中在 KCL 语言和对应的 VS Code 插件部分。&lt;/p&gt;
+
+&lt;h2 id=&#34;4-kusionstack-的-glcc-编程任务&#34;&gt;4. KusionStack 的 GLCC 编程任务&lt;/h2&gt;
+
+&lt;p&gt;KusionStack 向 GLCC 提交了 3 个编程任务（都被选中）。第一个是 KCL 语言语法解析错误恢复机制改进，目前的 KCL 语言仅收集了语法解析阶段的错误，没有进行错误恢复。本项目目标是实现 KCL 语言语法解析阶段的错误恢复。第二个是为 KCL 设计包管理工具，希望同学能够提出设计方案并给出原形工具的实现。最后是为 KCL 的 VS Code 插件实现基于代码索引实现 KCL 代码 Find References 功能。&lt;/p&gt;
+
+&lt;p&gt;以上三个任务均是从生产使用角度提炼的真实的需求，虽然是相对独立的功能或模块，但是对于在校的同学依然会有不小的挑战。首先 KusionStack 作为一个开源的项目有一些参与的流程和规范，希望同学们通过参与真实的开源项目了解开源社区的文化和开发的一些习惯。其次，这几个任务在不同方向均兼顾了理论和实际的需求，不仅仅便于参与也可以作为长期的一个兴趣专研方向。同时我们也希望即使在 GLCC 结束，同学们能够在响应的方向上专研一段时间，在响应的方向做更多的探索。&lt;/p&gt;
+
+&lt;h2 id=&#34;5-kusionstack-任务考核全部通过&#34;&gt;5. KusionStack 任务考核全部通过&lt;/h2&gt;
+
+&lt;h3 id=&#34;5-1-kcl-语言语法解析错误恢复&#34;&gt;5.1 KCL 语言语法解析错误恢复&lt;/h3&gt;
+
+&lt;p&gt;答辩视频：&lt;a href=&#34;https://edut7hfmib.feishu.cn/file/boxcnZUz6CONQtpU7XV4KpqacYc&#34;&gt;https://edut7hfmib.feishu.cn/file/boxcnZUz6CONQtpU7XV4KpqacYc&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/glcc-done/51.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Issue：&lt;a href=&#34;https://github.com/KusionStack/KCLVM/issues/162&#34;&gt;https://github.com/KusionStack/KCLVM/issues/162&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;PR： &lt;a href=&#34;https://github.com/KusionStack/KCLVM/pull/216&#34;&gt;https://github.com/KusionStack/KCLVM/pull/216&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;5-2-kcl-语言包管理工具&#34;&gt;5.2 KCL 语言包管理工具&lt;/h3&gt;
+
+&lt;p&gt;答辩视频：&lt;a href=&#34;https://www.bilibili.com/video/BV18V4y1V7vM/?vd_source=1c9609588c8606302c89ca9a30cf168a&#34;&gt;https://www.bilibili.com/video/BV18V4y1V7vM/?vd_source=1c9609588c8606302c89ca9a30cf168a&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/glcc-done/52.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Issue: &lt;a href=&#34;https://github.com/KusionStack/KCLVM/issues/223&#34;&gt;https://github.com/KusionStack/KCLVM/issues/223&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;PR：&lt;a href=&#34;https://github.com/KusionStack/kclvm-go/pull/66&#34;&gt;https://github.com/KusionStack/kclvm-go/pull/66&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;5-3-基于代码索引实现-kcl-代码-find-references-功能&#34;&gt;5.3 基于代码索引实现 KCL 代码 Find References 功能&lt;/h3&gt;
+
+&lt;p&gt;答辩视频：&lt;a href=&#34;https://www.bilibili.com/video/BV1nV4y1V7gF/?vd_source=1c9609588c8606302c89ca9a30cf168a&#34;&gt;https://www.bilibili.com/video/BV1nV4y1V7gF/?vd_source=1c9609588c8606302c89ca9a30cf168a&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/glcc-done/53.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Issue: &lt;a href=&#34;https://github.com/KusionStack/KCLVM/issues/212&#34;&gt;https://github.com/KusionStack/KCLVM/issues/212&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;PR：&lt;a href=&#34;https://github.com/KusionStack/KCLVM/pull/226&#34;&gt;https://github.com/KusionStack/KCLVM/pull/226&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;完整的技术方案和代码细节讲在后面的文章中单独分享，欢迎大家关注。&lt;/p&gt;
+
+&lt;h2 id=&#34;6-对开源的展望&#34;&gt;6. 对开源的展望&lt;/h2&gt;
+
+&lt;p&gt;开源已经成为整个社会都在讨论的话题，作为开源的参与者程序员对开源自然非常熟悉。开源最让不同的参与方同学期待的地方是有无限的可能性。通过合作的模式、通过开源社区、GitLink 和 GLCC 夏令营这个桥梁，在校的同学们可以近距离参与一线公司的真实项目，同时在公司的开发人员也可以通过和学生的交流获得不同的反馈。开源是一个多赢的协作，我们期待以后会有更多的开源社区和组织能够参与进来，同时也希望这一届的同学能够通过开源社区这种形式参与、影响和帮助后续的学弟学妹们。最后感谢大家对 KusionStack 项目的关注和支持，谢谢大家！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/glcc-done/60.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
       <title>WebAssembly将引领下一代计算范式[翻译]</title>
       <link>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</link>
       <pubDate>Sun, 23 Oct 2022 00:00:00 +0000</pubDate>
@@ -3146,29 +3239,6 @@ func main() {
 &lt;p&gt;如果对WebAssembly技术感兴趣，可以关注Github上的WebAssembly(wasm)资源精选项目：&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh&#34;&gt;https://github.com/chai2010/awesome-wasm-zh&lt;/a&gt;&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>《Go高级编程》初稿完成</title>
-      <link>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</link>
-      <pubDate>Wed, 08 Aug 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</guid>
-      
-        <description>&lt;p&gt;《Go高级编程》从2016年就开始计划写作。2016年底因为开始学习《Go语言圣经》临时搁置了《Go高级编程》的写作。到了2018年决定重启项目，为了回馈Go语言中国社区，我们尝试以开源的模式进行创作。项目开源后，在不到半年的时间内就已经获得近3k个star，有几十个贡献者帮忙改进内容和代码。感谢中国广大的Go语言爱好者，感谢开源的创作模式，让我们在半年多的时间内成功完成了写作任务。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/advanced-go-programming-book/master/cover.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;《Go高级编程》一书涵盖了CGO、Go汇编语言、RPC实现、Web框架实现、分布式系统等高阶主题，主要针对Go语言有一定经验想深入了解Go语言各种高级用法的开发人员。&lt;/p&gt;
-
-&lt;p&gt;为了便于和大家交流和分享，我们新创建了“Go高级编程”公众号。公众号的ID为golang-china，保持和Go语言中国社区名字一致。公众号重点和大家分享《Go高级编程》、《Go语言圣经》以及Go语言中诸多高级编程问题。大家有任何Go语言相关的问题都可以给我们留言。&lt;/p&gt;
-
-&lt;p&gt;项目地址：&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;https://github.com/chai2010/advanced-go-programming-book&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;最后感谢各位同学的鼓励和支持，谢谢大家🙏&lt;/p&gt;</description>
       
     </item>
     

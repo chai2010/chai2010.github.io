@@ -24,6 +24,13 @@
   </url>
   
   <url>
+    <loc>https://chai2010.cn/post/2022/glcc-done/</loc>
+    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</loc>
     <lastmod>2022-10-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -773,6 +780,20 @@
   </url>
   
   <url>
+    <loc>https://chai2010.cn/tags/glcc/</loc>
+    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/categories/glcc/</loc>
+    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://chai2010.cn/tags/golang/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -859,6 +880,20 @@
   <url>
     <loc>https://chai2010.cn/categories/kcl/</loc>
     <lastmod>2021-08-10T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/tags/kclvm/</loc>
+    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/categories/kclvm/</loc>
+    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -956,7 +991,7 @@
   
   <url>
     <loc>https://chai2010.cn/post/</loc>
-    <lastmod>2022-10-23T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
