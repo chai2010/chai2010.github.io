@@ -17,6 +17,7 @@ jobs:
       - run: tar zxvf _hugo/hugo_0.30.2_Linux-64bit.tar.gz
       - run: chmod +x ./hugo
       - run: ./hugo version
+      - run: ./hugo
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
