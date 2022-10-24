@@ -11,8 +11,10 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v2
 
-      - run: mkdir -p /root/_hugo && cd /root/_hugo && wget https://github.com/gohugoio/hugo/releases/download/v0.30.2/hugo_0.30.2_Linux-64bit.tar.gz
-      - run: tar zxvf /root/_hugo/hugo_0.30.2_Linux-64bit.tar.gz
+      - run: pwd
+      - run: mkdir -p _hugo && cd _hugo && wget https://github.com/gohugoio/hugo/releases/download/v0.30.2/hugo_0.30.2_Linux-64bit.tar.gz
+      - run: pwd
+      - run: tar zxvf _hugo/hugo_0.30.2_Linux-64bit.tar.gz
       - run: chmod +x ./hugo
       - run: ./hugo version
 
