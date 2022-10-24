@@ -18,11 +18,11 @@ jobs:
       - run: chmod +x ./hugo
       - run: ./hugo version
 
-      #- name: Deploy
-      #  uses: peaceiris/actions-gh-pages@v3
-      #  with:
-      #    personal_token: ${{ secrets.MY_DEPLOY_KEY }}
-      #    publish_dir: ./publish
-      #    publish_branch: gh-pages
-      #    user_name: 'github-actions[bot]'
-      #    user_email: 'github-actions[bot]@users.noreply.github.com'
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.MY_DEPLOY_KEY }}
+          publish_dir: ./publish
+          publish_branch: gh-pages
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
