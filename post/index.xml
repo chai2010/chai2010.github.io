@@ -1,0 +1,3046 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on chai2010 的博客</title>
+    <link>https://chai2010.cn/post/</link>
+    <description>Recent content in Posts on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 23 Oct 2022 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>WebAssembly将引领下一代计算范式[翻译]</title>
+      <link>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</link>
+      <pubDate>Sun, 23 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</guid>
+      
+        <description>
+
+&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。2018 年 WebAssembly 第一个规范草案诞生，2019 年成为 W3C 第四个标准语言。到了 2022 年底，WebAssembly 现在怎么样了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/00.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;作者：Anders Ranum, Justin Liu, David Carter&lt;/li&gt;
+&lt;li&gt;译者：柴树杉，凹语言作者，2本WASM图书作者，WASM布道者，目前在蚂蚁从事 KusionStack 和 KCL 开发。&lt;/li&gt;
+&lt;li&gt;时间：Thought Leadership / October 18, 2022&lt;/li&gt;
+&lt;li&gt;原文：&lt;a href=&#34;https://sapphireventures.com/blog/whats-up-with-webassembly-computes-next-paradigm-shift/&#34;&gt;https://sapphireventures.com/blog/whats-up-with-webassembly-computes-next-paradigm-shift/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;WebAssembly（简称Wasm）是一个自诞生之日起就充满潜力的技术，从 &amp;ldquo;JavaScript杀手 &amp;ldquo;到 &amp;ldquo;云计算的下一个前沿方向&amp;rdquo;几乎覆盖了全部新兴领域。同时在从云计算项边缘计算渗透，Wasm已经远远超出了起作为第四种Web标准语言的角色。甚至重新定义了应用软件的开发模式，正逐渐接近其“一次编写，随处运行”的愿景。&lt;/p&gt;
+
+&lt;p&gt;在Wasm从诞生到现在的几年间，我们见证了从最开始的Wasm应用演示到为数十亿的头部技术产品提供基础设施支持。在同整个Wasm社区交谈过程中，我们也发现虽然很多人很看好Wasm未来发展前景，但是也存在争议和讨论。&lt;/p&gt;
+
+&lt;p&gt;不过在Sapphire，依然对围绕Wasm的快速发展和Wasm开始为更广泛的计算世界带来的新的可能性感到非常兴奋。在本文中我们将探讨什么是Wasm，为什么它很重要、今天它是如何被使用的、以及对这个生态系统的繁荣有什么期待。我们不会详细展开讨论Wasm的历史，但如果你对这些感到好奇可以看看Lin Clark 的精彩系列文章。&lt;/p&gt;
+
+&lt;h2 id=&#34;一-什么是wasm&#34;&gt;一、什么是Wasm？&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/10.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;WebAssembly正在沿着其名字中Web和Assembly两个领域之外的方向发展，因此这是一个极其有误导性的名字。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;首先它不完全是汇编语言。Wasm是一种类似汇编字节码的指令格式标准，它更像LLVM-IR那种比汇编语言更高一些抽象的中间语言（比如其中函数的参数和返回值定义更像高级语言）。开发人员也不需要完全手写Wasm；相反人们一般选择使用其他高级语言（如C、C++、Rust、Go、凹语言等）将他们的代码编译为Wasm。&lt;/li&gt;
+&lt;li&gt;另外它不再只是Web网络。虽然Wasm最初被设计为Web浏览器的编译目标，但它的影响并没有停止。今天，使用与Wasm兼容的运行时，Wasm文件可以在客户端和服务器端执行，将使用范围扩大到浏览器之外——稍后将进一步探讨这些例子。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;二-为什么wasm很重要&#34;&gt;二、为什么Wasm很重要？&lt;/h2&gt;
+
+&lt;p&gt;Wasm有几个关键的设计目标使其出生开始就自带令人亮眼的关注：&lt;/p&gt;
+
+&lt;h3 id=&#34;2-1-首先wasm是可移植的&#34;&gt;2.1 首先Wasm是可移植的&lt;/h3&gt;
+
+&lt;p&gt;虽然Wasm最初是为Web设计的，而且今天所有主要的浏览器都提供对Wasm的支持。同时它也被设计为针对低级虚拟机架构，其指令由物理机单独翻译成机器代码。这意味着Wasm二进制文件最终可以在各种操作系统和芯片架构上运行——无论是在运行X86笔记本电脑的浏览器中，还是在内部或云端的服务器上，在移动设备、物联网设备上等等。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-2-其次wasm是多语言之下的一个标准&#34;&gt;2.2 其次Wasm是多语言之下的一个标准&lt;/h3&gt;
+
+&lt;p&gt;因为Wasm是一个编译目标，用于编程模块的具体语言并不重要，重要的是是否有支持将该语言编译到Wasm。开发人员可以灵活地使用多种语言（如C、C++、Rust、凹语言等）来构建二进制文件，并享受Wasm带来的复利。这意味着不需要考虑诸多组件和库链接等狗屁问题，只要他们都被编译到Wasm可以用于支持一个单一的应用。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-3-最后wasm是轻量和高效的&#34;&gt;2.3 最后Wasm是轻量和高效的&lt;/h3&gt;
+
+&lt;p&gt;作为一个低级别的二进制指令格式，只需要较少的操作来将Wasm翻译成优化的机器代码。例如比如和Javascript进行比较（感兴趣的话可以参考 Lin Clark 的一些分析文章）。Javascript作为解释型语言，必须在运行时用即时编译（JIT）进行编译，并且必须经过获取/解析/编译/优化，最后才能执行和垃圾回收等步骤。&lt;/p&gt;
+
+&lt;p&gt;虽然JavaScript也可以被解析并转换为字节码，但Wasm已经是原生的字节码。另外Wasm也是静态类型的，这使得大多数优化在其初始编译时就已完成。最后JavaScript是动态类型的，需要在运行时进行优化和再优化，这共同导致了较难预测的性能。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/23.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这些优势也体现在浏览器之外，特别是Wasm模块的大小对于冷启动有极大的优势。目前，Serverless 的一个有问题是冷启动缓慢。虽然Serverless为开发者节省了管理后台基础设施和资源分配的时间，但如果该功能在冷态下被调用，就必须启动新的资源从而带来执行时间增加的额外成本。因为Wasm模块是非常轻量级的，和库调用类似方式使得启动时间可以大大减少（低至毫秒）。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-4-wasm是默认安全的&#34;&gt;2.4 Wasm是默认安全的&lt;/h3&gt;
+
+&lt;p&gt;Wasm 目标之一是安全，它在一个沙盒环境中执行，对主机运行时没有初始可见性。这意味着对系统资源（如文件系统，硬件等）的访问是受限制的，除非明确导入了对应的函数以支持。因此Wasm极大限制了攻击面，实现了多租户环境中不受信任的代码安全受限地执行。这种安全模式是一个关键的促成因素，允许开发人员使用插件和用户提交的代码来扩展现有的应用程序，我们将在下面进一步探讨这一使用情况。 &lt;/p&gt;
+
+&lt;h2 id=&#34;三-wasm现在是如何使用的&#34;&gt;三、Wasm现在是如何使用的？&lt;/h2&gt;
+
+&lt;h3 id=&#34;3-1-客户端使用案例&#34;&gt;3.1 客户端使用案例&lt;/h3&gt;
+
+&lt;h4 id=&#34;3-1-1-浏览器中的多语言支持&#34;&gt;3.1.1 浏览器中的多语言支持&lt;/h4&gt;
+
+&lt;p&gt;开发客户端的流行语言不多，大部分都是Javascript构建的。应用程序的语言在历史上是有限的，今天大多数现代网络应用程序是用Javascript构建的。而浏览器和前端框架对Wasm的支持已经开始打开闸门，使开发者更容易在浏览器中编译和执行其他流行语言。现在开发者可以选择在浏览器中直接运行C、C++、Rust、和Go等语言。此外，像Zig这样的新兴系统语言已经为Wasm增加了很好的支持。而其他专门从Wasm设计的语言也已经出现，包括AssemblyScript、Grain、Motoko和凹语言等。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-1-2-高性能的网络应用&#34;&gt;3.1.2 高性能的网络应用&lt;/h4&gt;
+
+&lt;p&gt;已经有一些公司使用Wasm来显著提高他们的网络应用程序的性能。例如，Figma（刚刚被Adobe以200亿美元收购），一个基于浏览器的协作界面设计工具，使用C++构建其渲染引擎，最初将其代码交叉编译到称为asm.js的Javascript子集。在之前因为面临Javascript固有的优化限制，在改用Wasm后Figma的加载时间快了3倍，无论正在加载的文档大小如何。&lt;/p&gt;
+
+&lt;p&gt;其他价值数十亿美元的公司也已经在产品采用了Wasm。比如Adobe的Photoshop、Autodesk的AutoCAD。重新利用现有的代码库，用Wasm将整个桌面应用移植到网络上已经是真实发生的事情。其他有趣的例子包括移植成熟的视频游戏和项目，如完全在浏览器中运行的Doom3和Angrybots，Unity明确地将其WebGL构建的编译目标转换为Wasm。&lt;/p&gt;
+
+&lt;p&gt;除了移植已有的应用，我们还看到一些公司利用Wasm建立新的功能，这些功能在以前会受到性能限制的制约。 一些例子包括Runway，这是一个下一代内容创作套件，使用Wasm来支持其视频编解码器和媒体操作，以及StackBlitz，使用Wasm来支持纯Web的IDE开发环境，这比以前伪在线IDE外挂一个远程服务器拖油瓶的方式有着更好的安全性和性能优势。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-1-3-浏览器内的数据库和分析&#34;&gt;3.1.3 浏览器内的数据库和分析&lt;/h4&gt;
+
+&lt;p&gt;我们已经开始看到数据库的出现，它们利用Wasm的执行性能，使以前的服务器端分析工作负载更接近数据的存在。这里的例子包括DuckDB-Wasm，它使用Wasm为浏览器的中分析SQL数据库提供动力。以及SQL.js，它允许开发人员完全在浏览器中创建和查询SQLite数据库。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-wasi-突破浏览器的桎梏&#34;&gt;3.2 WASI：突破浏览器的桎梏&lt;/h3&gt;
+
+&lt;p&gt;鉴于Wasm模块在默认情况下不能访问被明确授权的功能，纯WASM其实只能实现一些纯运算的功能。在上面的例子中，浏览器本身代表Wasm模块对系统资源的访问控制界面（例如，文件系统、I/O、时钟、全局变量等）。然而当我们在浏览器之外使用Wasm时需要什么呢？ &lt;/p&gt;
+
+&lt;p&gt;在实践中，运行时实如何提供对系统资源的访问方面有很大的不同。这就是WebAssembly系统接口（WASI）出现的地方。WASI是W3C的一个项目，是一个供应商中立的、模块化的标准化API集合，正如其名称所示，它作为Wasm模块和操作系统之间的接口，促进与主机运行时的通信，并以一致的方式使用选定的系统资源。&lt;/p&gt;
+
+&lt;p&gt;当然，WASI是扩大Wasm可能的范围的关键促成因素之一，包括像下面即将提到的服务器端应用程序。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-3-服务器端场景&#34;&gt;3.3 服务器端场景&lt;/h3&gt;
+
+&lt;p&gt;虽然已经有很多例子证明了Wasm在客户端的优势和价值，但我们对Wasm在服务器端的想象空间更加兴奋。Wasm的每一个设计原则（速度、安全和可移植性）都能使下一波服务器端的工作负载成为可能。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-1-serverless计算&#34;&gt;3.3.1 Serverless计算&lt;/h4&gt;
+
+&lt;p&gt;Serverless强依赖高度优化的冷启动，Wasm运行时（如WasmEdge）非常适合为下一代无服务器平台提供动力。SecondState、Cloudflare、Netlify和Vercel等公司都支持通过其边缘运行时部署WebAssembly功能。其他公司如Grafbase正在使用Wasm，使开发者能够在边缘用他们选择的语言编写和部署GraphQL解析器。同时，Fermyon提供了一个类似于FaaS的自助式开发平台，用Wasm合成和运行基于云的应用程序。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-2-边缘的数据分析和机器学习&#34;&gt;3.3.2 边缘的数据分析和机器学习&lt;/h4&gt;
+
+&lt;p&gt;Wasm的效率和可移植性使其独特地适合于支持边缘的机器学习工作负载，部署在外形和计算能力差异很大的设备上。我们相信，实时ML用例将推动计算越来越接近数据产生的地方，无论是运行在网络边缘（如CDN）还是设备边缘（如IoT）。Wasi-nn（神经网络）是一个API规格，旨在将服务器端的Wasm程序与运行在主机上的流行ML框架（如Tensorflow、PyTorch、OpenVINO）连接起来。 今天利用Wasm的ML场景的公司包括Edge Impulse和Hammer of the Gods，前者提供一个低代码开发平台，将TinyML模型设计和部署到Wasm模块中，在嵌入式设备上运行；后者使开发者能够创建超便携容器，通过其开源项目Rune，使用Rust和Wasm在边缘运行ML的工作负载。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-3-插件和扩展&#34;&gt;3.3.3 插件和扩展&lt;/h4&gt;
+
+&lt;p&gt;Wasm的多语言支持和沙盒隔离技术使其成为产品的有力的候选技术，产品开发者希望在现有的应用程序上提供一个可扩展的模型和执行第三方（可信或不可信）代码的能力。例如，Shopify在其Shopify Scripts框架背后使用了WebAssembly，为商家提供了以更有效的方式定制客户体验中对性能敏感的方面（如购物车、结账）的能力。 Suborbital提供了一个扩展引擎，使SaaS供应商能够安全、独立地运行 &amp;ldquo;终端用户开发者 &amp;ldquo;提供的代码。 Dynaboard使开发者能够在其低代码网络应用程序开发平台之上运行用户提供的代码，包括客户端和服务器端。&lt;/p&gt;
+
+&lt;p&gt;SingleStore和ScyllaDB已经开始利用Wasm，用用户定义的函数（UDF）引擎来扩展他们的数据库，允许开发人员重新使用现有的库，并将计算转移到数据库本身（例如，规避了将数据导出到另一个应用程序进行处理的限制）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/333.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;同时，RedPanda和Infinyon允许用户使用Wasm对流媒体数据进行实时内联转换。  代理服务器领域也开始接受Wasm，Tetrate（Sapphire Portfolio公司）等服务网格供应商正在开发func-e等工具，以帮助团队快速构建Wasm模块，扩展开源的Envoy。&lt;/p&gt;
+
+&lt;p&gt;Profian是Enarx的监护人，这是一个开源项目，使用Wasmtime运行时间在可信执行环境（TEE）内执行Wasm二进制文件——这是Wasm的硬件可移植性的另一个场景。虽然Wasm的安全模型保护主机免受不受信任的代码影响，但Profian将这一好处翻转过来，在TEE内使用Wasm二进制文件，以保护应用程序免受不受信任的主机影响。这使企业能够将其敏感的应用程序和数据部署到云端或内部，并获得加密保证。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-4-web3应用开发和智能合约&#34;&gt;3.3.4 Web3应用开发和智能合约&lt;/h4&gt;
+
+&lt;p&gt;Wasm天然适合以加密为中心的场景：首先Wasm的可移植性使运行不同硬件集的节点网络具有可靠性；其次Wasm的性能在这些网络中转化为更广泛的效率。&lt;/p&gt;
+
+&lt;p&gt;Ewasm是一个关键的例子，并被视为以太坊第二阶段升级的一个关键组成部分。Ewasm将取代以太坊虚拟机（EVM），EVM虚拟机目前为交易提供动力并维护以太坊的网络状态，但没有针对不同的硬件平台进行优化，因此效率不高。Ewasm（连同分片和转向股权证明）代表了改善整体网络性能，并提供了一个更具扩展性的底层，为希望建立去中心化应用程序的开发人员扩大了对Solidity以外的语言支持。&lt;/p&gt;
+
+&lt;p&gt;Wasm也被用来支持其他网络和可互操作区块链的计算。例如，Parity是Substrate的开发者，这是一个开源框架，使用Wasm作为Polkadot生态系统的骨干。同时，CosmWasm是一个为Cosmos生态系统建立的多链智能合约平台，运行Wasm字节码。 Fluence实验室提供Marine，这是一个通用的Wasm运行时，与他们的专用编程语言Aqua相结合，使分散的应用程序和协议能够在他们的点对点网络上运行。目前利用Wasm的其他协议包括NEAR、Dfinity、EOS等。&lt;/p&gt;
+
+&lt;h2 id=&#34;四-wasm的应用和基础大图&#34;&gt;四、Wasm的应用和基础大图&lt;/h2&gt;
+
+&lt;p&gt;我们已经列出了一些公司和组织，他们主要分为两类：一类是使用Wasm来支持他们自己的产品和平台；另一类是提供所需的基础工具和基础设施，使开发人员能够自己建立Wasm。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/40.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;五-最后总结&#34;&gt;五、最后总结&lt;/h2&gt;
+
+&lt;h3 id=&#34;5-1-wasm的未来&#34;&gt;5.1 Wasm的未来&lt;/h3&gt;
+
+&lt;p&gt;虽然我们看到许多初创企业和科技巨头采用Wasm技术，但生态系统的一些关键技术只是在最近才逐渐发展起来。今天，Wasm带来增量效益往往被使用一个低级技术和一个不成熟的工具链所带来的额外成本所抵销。&lt;/p&gt;
+
+&lt;p&gt;我们认为在推动Wasm的未来应用中有四个方面是最重要的。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;无缝的开发者体验。在最初阶段，开发人员在企业级利用Wasm所需的环境一直是比较复杂的。Wasm的开发者体验并不舒适（例如，调试Wasm仍然是众所周知的困难），在整个开发生命周期中，在编译到Wasm和以实际方式利用Wasm方面，有大量的空间可以提供更好的工具。 同时大多数开发人员不具备低级语言和技术的专业知识，因此，通过抽象来提高可用性对促进更多的人的采用是非常重要的。我们已经开始看到第一波明确致力于为开发者配备这些工具的公司，包括Fermyon、Second State、Suborbital、Wasmer和Cosmonic。&lt;/li&gt;
+&lt;li&gt;标准的继续推进。 虽然社区有一些分裂意见（例如，见AssemblyScript决定放弃对WASI的支持），但是Wasm标准的活力依然重要。除了蓬勃发展的创业生态系统，微软、亚马逊、谷歌、Fastly、Cloudflare、Mozilla等科技巨头也开始认识到Wasm是支持下一代云工作负载的有效底层，他们正在积极为标准机构和非营利组织（如W3C和字节码联盟）做出贡献，以推动这个社区的发展。CNCF也在发挥重要作用，接受wasmCloud和WasmEdge作为沙盒项目。仍有重要的工作要做；像文档，如垃圾收集、本地DOM访问、套接字、线程、组件模型等，都在激烈讨论中。标准的总体目标是使Wasm更适用于更多的目标，并适用于更多的使用案例。&lt;/li&gt;
+&lt;li&gt;编程语言支持。 虽然Wasm最常被吹捧的好处之一是多语言支持，但目前支持的现实状态是介于两者之间。像C++、Go（包括TinyGo）和Rust这样的语言已经接受了Wasm，但一些最常见的语言，如Python、Java和PHP还在努力实现一等公民的地位。 为了真正实现主流采用，Wasm的支持必须继续扩展到一些更复杂的语言，如C++和Rust，并向最广泛采用的语言扩展。 对于那些有兴趣跟踪这方面进展的人来说，Fermyon团队已经做了一项伟大的工作，即跟踪Wasm在RedMonk的前20种编程语言中的支持情况。中国的Gopher创建的凹语言则将支持WASM作为第一目的，其语言命名正是Wasm图标基于中国汉字的变形。&lt;/li&gt;
+&lt;li&gt;理念、传播和社区。  正如我们在容器和协调引擎（如Kubernetes）的案例中看到的那样，开发者对Wasm的采用可以通过布道者和更广泛的、成熟的倡导者社区来进一步推动。像云原生计算基金会（CNCF）和字节码联盟这样的组织已经走在了吸引开发者的前列，以促进对Wasm相关项目、活动和倡议的参与。除了开发者受众，其他利益相关者对Wasm的认识可以通过阐述二阶价值主张来推动，例如在云和Serverless环境中使用Wasm可能带来的成本节约。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/x-lang.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;5-2-wasm会取代容器吗&#34;&gt;5.2 Wasm会取代容器吗？&lt;/h3&gt;
+
+&lt;p&gt;随着时间的推移，我们相信Wasm运行时将作为containerd、microVMs（Firecracker）和其他流行的容器结构的合法替代品 - 特别是随着WASI等标准的进一步扩展。这并不是说Wasm将全盘取代容器；在可预见的未来，它们将并肩存在，而利用每种容器的决定是由特定工作负载的特点所驱动的。&lt;/p&gt;
+
+&lt;p&gt;与传统的基于管理程序的虚拟机相比，Docker风格的容器提供了显著的改进，而Wasm已经能够将这些相同的效率提高到 &amp;ldquo;下一个水平&amp;rdquo;。凭借其亚毫秒级的冷启动，Wasm容器非常适合寿命较短的无服务器和边缘工作负载（除了现有的客户端用例之外）。同时，传统的Docker式工作负载非常适用于需要大量I/O或需要访问网络套接字的长期运行的服务（如缓存服务器）。&lt;/p&gt;
+
+&lt;p&gt;我们渴望看到像Kubernetes这样的协调引擎如何随着时间的推移与Wasm进行整合。尽管还很早，但像Krustlet（kubelet代理的替代品）、runwasi、Containerd Wasm Shims和crun的Wasm处理程序等项目和扩展都旨在将Wasm提升为容器环境中的一等公民，将其作为一个新的运行时类，可以由K8s进行相应的调度和管理。&lt;/p&gt;
+
+&lt;h3 id=&#34;5-3-谁会赢&#34;&gt;5.3 谁会赢？&lt;/h3&gt;
+
+&lt;p&gt;云厂商和Serverless是这里的明显候选人。但在Sapphire依然期望保持对Wasm生态每一个新兴技术保持近距离的关注依然。&lt;/p&gt;
+
+&lt;p&gt;随着任何新兴技术的出现，需要使其能够被主流采用。我们已经开始看到了许多真实的案例。然而，尽管今天正在推进的标准和正在开发的框架和运行时为实现Wasm的潜力奠定了基础，但百废待兴仍有许多工作要做。从以Wasm为中心的应用开发到开发人员生产力工具，到监控和安全解决方案，我们很高兴支持那些建立基础设施和工具的人，为每个人释放Wasm的优势，从个人开发者到全球企业。&lt;/p&gt;
+
+&lt;p&gt;如果你正在为Wasm生态系统做出贡献，或者正在使用Wasm为你的基础设施提供动力，请联系 anders@sapphireventures.com, liu@sapphireventures.com 或 carter@sapphireventures.com - 我们很乐意听到你的意见！&lt;/p&gt;
+
+&lt;p&gt;特别感谢Michael Yuan、Matt Butcher、Liam Randall、Connor Hicks和Alexander Gallego的宝贵观点和反馈。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>KCL：蚂蚁自研的配置策略语言</title>
+      <link>https://chai2010.cn/post/2021/kcl-lang/</link>
+      <pubDate>Tue, 10 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2021/kcl-lang/</guid>
+      
+        <description>
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/000.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;楔子: 以蚂蚁集团典型的建站场景为例，在接入 Kusion 后，用户侧配置代码减少到 5.5%，用户面对的 4 个平台通过接入统一代码库而消减，在无其他异常的情况下交付时间从 2 天下降到 2 小时……&lt;/p&gt;
+
+&lt;p&gt;注：本文是柴树杉在 2021 GIAC 大会上分享的内容。蚂蚁杭州云原生和蚂蚁链正在招聘DSL语言设计和开发，欢迎推荐。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;0-你好-giac&#34;&gt;0. 你好 GIAC&lt;/h2&gt;
+
+&lt;p&gt;大家好，我是来自蚂蚁集团的同学，很高兴能在 GIAC 的编程语言新范式板块和大家分享《KCL 配置策略语言》。KCL 语言是蚂蚁内部的 Kusion 解决方案中针对云原生基础设施配置代码化自研的 DSL 语言，目前已经在建站场景等一些场景开始小范围推广试用。&lt;/p&gt;
+
+&lt;p&gt;我们先看一下简单的 KCL 代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema GIACInvitation[name: str]:
+  Name:     str = name
+  Topic:    str = &amp;quot;分享主题&amp;quot;
+  Company?: str = None
+  Type:     str = &amp;quot;分享嘉宾&amp;quot;
+  Address:  str = &amp;quot;深圳&amp;quot;
+
+invitation = GIACInvitation(&amp;quot;姓名&amp;quot;) {
+  Topic:   &amp;quot;KCL 配置策略语言&amp;quot;
+  Company: &amp;quot;蚂蚁集团&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个例子代码先通过 schema 定义了一个 GIACInvitation 结构体：该结构体有一个 str 类型的 Name 参数，同时还有一组标注了类型和默认值的属性。然后通过声明式的语法构造了 GIACInvitation 的实例 invitation。&lt;/p&gt;
+
+&lt;p&gt;这个例子虽然简单，但是包含了 KCL 最重要的 schema 语言结构。从例子可以看出 KCL 尝试通过声明式的语法、静态类型检查特性来改进配置代码的编写和维护工作。这也是设计 KCL 语言的初衷，我们希望通过编程领域成熟的技术理论来解决云原生领域的配置代码化的问题。&lt;/p&gt;
+
+&lt;h2 id=&#34;1-kcl-语言的诞生背景&#34;&gt;1. KCL 语言的诞生背景&lt;/h2&gt;
+
+&lt;p&gt;在经典的 Linux/UNIX 操作系统中，我们通过 Shell 和系统内置的各种工具和内核进行交互，同时通过 Shell 脚本来管理更上层的 App。可以说 Shell 语言极大地简化了内核的编程界面，不仅仅提升了操作系统易用性也简化了上层 App 的管理和运维，也提高了生产效率。而 Kubernetes 作为容器管理领域的事实标准，已经成为云计算时代的 Linux/UNIX。类比 UNIX 系统，Kubernetes 目前还缺少一种符合其声明式、开放、共享设计理念的交互语言及工具。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;1-1-为何要设计-kcl-语言&#34;&gt;1.1 为何要设计 KCL 语言？&lt;/h3&gt;
+
+&lt;p&gt;K8s 已经成为云计算的操作系统，但是目前尚缺少功能完备的 Shell 交互界面。目前虽然有很多而且开源方案，但是还没有像 UNIX 的 Shell 那种出现比较成熟的方案，特别是尚无法满足头部互联网企业大规模工程化的要求。云原生技术与企业落地之间存在 Gap 需要填补，这正是云原生工程化要解决的问题，也是设计 KCL 语言的出发点。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-2-目前是一个好时机&#34;&gt;1.2 目前是一个好时机&lt;/h3&gt;
+
+&lt;p&gt;云原生的思路是高度的开放化和民主化，结果就是万物可配置，一切配置都是代码。在配置代码面前人人平等，每个用户都可以通过调整配置代码和基础平台设施进行交互。因此对配置的编写和维护正在成为云计算时代软件工程师的必备的技能和需求。基于对云原生配置代码化需求的日益旺盛，硅谷的诸多头部公司已经对这个方向进行了大规模的实践和验证，这些都给了我们大量可以参考的经验。&lt;/p&gt;
+
+&lt;p&gt;因此蚂蚁的 Kusion 项目尝试通过 KCL 配置策略语言正是为了简化云原生技术设施的接入方式设计，其设计目标不仅仅是为了提升蚂蚁基础设施的开放程度及使用效率，同时希望能够优化共享、协同的开发流程，可以说其定位正是云原生时代的 Shell 语言。虽然目前还处于探索和实践阶段，我们通过此文和大家分享下 KCL 语言的设计与实现的一些理念，为云原生的快速到来贡献一点绵薄之力。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-3-kcl-诞生历史&#34;&gt;1.3 KCL 诞生历史&lt;/h3&gt;
+
+&lt;p&gt;KCL 语言从 2019 年开始初期的调研和设计工作。到 2020 年 3 月发布 kcl-0.1，基于 Python 定制语法，采用 Go 版本的 Grumpy 和 AntLR 等工具开发。2020 年下半年改用 Python 语言并加快了开发和迭代速度，发布的 kcl-0.2.x 引入了大量语言特性、增加了 Plugin 扩展支持、同时支持 IDEA 插件。2021 年上半年开始统一优化和整合语言特性，发布的 kcl-0.3 优化类型系统、集成单元测试工具、优化执行性能并提供了 Go 等多语言的 API 支持、同时通过 LSP 为 VSCode 提供支持。2021 年下半年开始在建站等常见落地，同时引入静态类型检查和优化性能，完善语言的文档支持。&lt;/p&gt;
+
+&lt;h2 id=&#34;2-kcl-语言的设计原则&#34;&gt;2. KCL 语言的设计原则&lt;/h2&gt;
+
+&lt;p&gt;基于蚂蚁践行多年的经典运维中台沉淀的经验和对各种问题利弊的思考，Kusion 项目对如何充分利用云原生技术带来的红利，打造一个开放、透明、声明式、可协同的运维体系进行了探索和思考，提出并实践了基于基础设施代码化的云原生协同开发的模型。而 KCL 语言正是 Kusion 项目为了解决云原生协同开发而设计的声明式的配置编程语言，简单、稳定、高效和工程化是 KCL 语言设计的设计理念。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-1-简单为王&#34;&gt;2.1 简单为王&lt;/h3&gt;
+
+&lt;p&gt;简单不仅仅可以降低学习和沟通的成本，而且可以减少代码出问题的风险。不论是 UNIX 奉行的 KISS 原则还是 Go 语言推崇的 Less is more 设计理念，简化易用的界面始终是各种成功产品追求的一个目标。同样从简单原则出发，KCL 语言在参考现代编程语言之上只保留了必要的元素，同时通过类型自动推导、引入受限的控制流和 schema 提供了基础灵活的配置定义编写能力，删减语言特性始终是 KCL 语言设计工作的一个重要目标。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-1-1-声明式语法&#34;&gt;2.1.1 声明式语法&lt;/h4&gt;
+
+&lt;p&gt;声明式编程是和命令式编程并列的一种编程范式，声明式编程只告诉你想要的结果，执行引擎负责执行的过程。声明式编程使用更加简单，可以降低命令式拼装造成的复杂性和副作用，保持配置代码清晰可读，而复杂的执行逻辑已经由 Kubernetes 系统提供支持。&lt;/p&gt;
+
+&lt;p&gt;KCL 语言通过简化对 schema 结构体实例化的语法结构对声明式语法提供支持，通过仅提供少量的语句来减少命令过程式编程带来的复杂性。围绕 schema 和配置相关的语法，KCL 希望每种配置需求尽可能通过固定的写法完成，使得配置代码尽可能的统一化。&lt;/p&gt;
+
+&lt;p&gt;比如作为 KCL 声明式语法的核心结构 schema 可以采用声明式方式实例化：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema Name:
+    firstName: str
+    lastName: str
+
+schema Person:
+    name: Name = {
+        firstName: &amp;quot;John&amp;quot;
+        lastName: &amp;quot;default&amp;quot;
+    }
+
+JohnDoe = Person {
+    name.lastName: &amp;quot;Doe&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;首先通过 schema 定义了一个 Name 结构，结构包含 2 个字符串类型的必填属性。&lt;/p&gt;
+
+&lt;p&gt;然后在 Person 中复用 Name 类型声明一个 Name 属性，并且给 Name 属性设置了默认值以简化用户使用。&lt;/p&gt;
+
+&lt;p&gt;最终在定义 JohnDoe 配置定义的时候，只需填写 Name.lastName 一个属性参数即可，其他部分属性均采用默认的参数。&lt;/p&gt;
+
+&lt;p&gt;对于一些标准的业务应用，通过将可复用的模型封装为 KCL schema，这样可以为前端用户提供最简单的配置界面。比如基于蚂蚁内部 Konfig 大库中 sofa.SofaAppConfiguration 只需添加少量的配置参数就可以定制一个 App。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;appConfiguration = sofa.SofaAppConfiguration {
+    resource: resource.Resource {
+        cpu: &amp;quot;4&amp;quot;
+        memory: &amp;quot;8Gi&amp;quot;
+        disk: &amp;quot;50Gi&amp;quot;
+    }
+    overQuota: True
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过声明式语法描述必要的参数（其他的参数全部采用默认配置），可以极大简化普通用户的配置代码。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-1-2-顺序无关语法&#34;&gt;2.1.2 顺序无关语法&lt;/h4&gt;
+
+&lt;p&gt;有别于命令式编程，KCL 推崇的是更适合于配置定义的声明式语法。以斐波那契数列为例，可以把一组声明式的定义看作一个方程组，方程式的编写顺序本质上不影响方程组的求解，而计算属性依赖并“求解”的过程由 KCL 解释器完成，这样可以避免大量命令式拼装过程及顺序判断代码。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema Fib:
+    n1: int = n - 1
+    n2: int = n1 - 1
+    n: int
+    value: int
+
+    if n &amp;lt;= 1:
+        value = 1
+    elif n == 2:
+        value = 1
+    else:
+        value = (Fib {n: n1}).value + (Fib {n: n2}).value
+
+fib8 = (Fib {n: 8}).value  # 21
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;代码中 Fib 定义的成员 n、n1 和 n2 有一定的依赖关系，但是和它们书写的顺序并无关系。KCL 语言引擎会根据声明式代码中的依赖关系自动计算出正确的执行顺序，同时对类似循环引用等异常状态告警。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-1-3-同名配置合并&#34;&gt;2.1.3 同名配置合并&lt;/h4&gt;
+
+&lt;p&gt;当整个业务和开发维护团队都变得复杂时，配置代码的编写和维护也将变得复杂化：同一份配置参数可能散落在多个团队的多个模块中，同时一个完整的应用配置则需要合并这些散落在不同地方的相同和不同配置参数才可以生效，而相同的配置参数可能因为不同团队的修改而产生冲突。通过人工方式同步这些同名配置和合并不同的配置都是一个极大的挑战。&lt;/p&gt;
+
+&lt;p&gt;比如 Konfig 大库中应用配置模型分为 base 和各环境 stack 配置，要求程序运行时按照某一 merge 策略合并为一份应用配置，相当于要求大库前端配置能够自动合并，即能够分开多次定义并且合并，然后实例化生成相应的唯一前端配置。&lt;/p&gt;
+
+&lt;p&gt;借助 KCL 语言的能力和 Konfig 的最佳实践，可通过将基线配置和环境配置自动合并简化配置的编写。比如对于标准 SOFA 应用 opsfree，其基线配置和环境配置分别维护，最终交由平台工具进行配置合并和检查。KCL 语言通过自动化合并同名配置实现简化团队协同开发的设计目标。&lt;/p&gt;
+
+&lt;p&gt;比如 base 配置收集的通用的配置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;appConfiguration = sofa.SofaAppConfiguration {
+    mainContainer: container.Main {
+        readinessProbe: probe_tpl.defaultSofaReadinessProbe
+    }
+    resource: res_tpl.medium
+    releaseStrategy: &amp;quot;percent&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后再预发环境在 base 配置的基础之上针对某些参数进行微调：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;appConfiguration = sofa.SofaAppConfiguration {
+    resource: resource.Resource {
+        cpu: &amp;quot;4&amp;quot;
+        memory: &amp;quot;8Gi&amp;quot;
+        disk: &amp;quot;50Gi&amp;quot;
+    }
+    overQuota: True
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;合并的 pre 配置实际是一份 SofaAppConfiguration 配置（相当于如下等效代码，环境配置的优先级默认高于基线配置）&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;appConfiguration = sofa.SofaAppConfiguration {
+    mainContainer: container.Main {
+        readinessProbe: probe_tpl.defaultSofaReadinessProbe
+    }
+    resource: resource.Resource {
+        cpu: &amp;quot;4&amp;quot;
+        memory: &amp;quot;8Gi&amp;quot;
+        disk: &amp;quot;50Gi&amp;quot;
+    }
+    overQuota: True
+    releaseStrategy: &amp;quot;percent&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;目前的同名配置虽然只针对应用的主包配置有效，但已经带来了可观察的收益。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-2-稳定压倒一切&#34;&gt;2.2 稳定压倒一切&lt;/h3&gt;
+
+&lt;p&gt;越是基础的组件对稳定性要求越高，复用次数越多的稳定性带来的收益也更好。因为稳定性是基础设施领域一个必备的要求，不仅仅要求逻辑正确，而且需要降低错误出现的几率。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-2-1-静态类型和强不可变性&#34;&gt;2.2.1 静态类型和强不可变性&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/221.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;很多配置语言采用运行时动态检查类型。动态类型最大的缺点只能检查正在被执行属性的类型，这非常不利于开发阶段提前发现类型的错误。静态类型不仅仅可以提前分析大部分的类型错误，还可以降低后端运行时的动态类型检查的性能损耗。&lt;/p&gt;
+
+&lt;p&gt;除了静态类型，KCL 还通过 final 关键字禁止某些重要属性被修改。静态类型再结合属性的强不可变性，可以为配置代码提供更强的稳定性保障。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema CafeDeployment:
+    final apiVersion: str = &amp;quot;apps.cafe.cloud.alipay.com/v1alpha1&amp;quot;
+    final kind: str = 123  # 类型错误
+
+schema ContainerPort:
+    containerPort: int = 8080
+    protocol: &amp;quot;TCP&amp;quot; | &amp;quot;UDP&amp;quot; | &amp;quot;SCTP&amp;quot; = &amp;quot;TCP&amp;quot;
+    ext? : str = None
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;比如对于 CafeDeployment 中的 apiVersion 信息是一种常量类型的配置参数，final 为这类配置提供保障：&lt;/p&gt;
+
+&lt;p&gt;代码中 apiVersion 和 kind 属性都被 final 保护禁止被修改。但是 kind 因为属性类型初始值不同而隐含一个错误，通过静态类型检查很容易在开发阶段发现错误并改正。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-2-2运行时类型和逻辑-check-验证&#34;&gt;2.2.2运行时类型和逻辑 check 验证&lt;/h4&gt;
+
+&lt;p&gt;KCL 的 schema 不仅仅是带类型的结构体，也可以用于在运行时校验存量的无类型的 JSON 和 YAML 数据。此外 schema 的 check 块可以编写语义检查的代码，在运行时实例化 schema 时会自动进行校验。同时，基于 schema 的继承和 mixin 可以产生跟多关联的 check 规则。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/222.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;比如以下的例子展示 check 的常见用法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema sample:
+    foo: str
+    bar: int
+    fooList: [str]
+
+    check:
+        bar &amp;gt; 0 # minimum, also support the exclusive case
+        bar &amp;lt; 100, &amp;quot;message&amp;quot; # maximum, also support the exclusive case
+        len(fooList) &amp;gt; 0 # min length, also support exclusive case
+        len(fooList) &amp;lt; 100 # max length, also support exclusive case
+        regex.match(foo, &amp;quot;^The.*Foo$&amp;quot;) # regex match
+        isunique(fooList) # unique
+        bar in range(100) # range
+        bar in [2, 4, 6, 8] # enum
+        multiplyof(bar, 2) # multipleOf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;check 中每个语句都是一个可以产生 bool 结果的表达式和可选的错误信息组成（每个普通的 bool 表达式其实是 assert 语句的简化而来）。通过内置的语法和函数可以实现在运行时对属性值的逻辑验证。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-2-3-内置测试支持&#34;&gt;2.2.3 内置测试支持&lt;/h4&gt;
+
+&lt;p&gt;单元测试是提升代码质量的有效手段。KCL 基于已有的 schema 语法结构，配合一个内置 kcl-test 命令提供灵活的单元测试框架（结合 testing 包可指定面值类型的命令行参数）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/223.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;内置测试工具&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema TestPerson:
+    a = Person{}
+    assert a.name == &#39;kcl&#39;
+
+schema TestPerson_age:
+    a = Person{}
+    assert a.age == 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;kcl-test 命令不仅仅执行单元测试，还会统计每个测试执行的时间，而且可以通过正则表达式参数选择执行指定的测试。此外通过 kcl-test ./&amp;hellip; 可以递归执行子目录的单元测试，同时支持集成测试和 Plugin 测试。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-3-高效是永恒的追求&#34;&gt;2.3 高效是永恒的追求&lt;/h3&gt;
+
+&lt;p&gt;KCL 代码不仅仅通过声明式的风格简化编程，同时通过模块支持、mixin 特性、内置的 lint 和 fmt 工具、以及 IDE 插件提供高效的开发体验。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-3-1-schema-中好用的语法&#34;&gt;2.3.1 schema 中好用的语法&lt;/h4&gt;
+
+&lt;p&gt;schema 是 KCL 编写配置程序的核心语法结构，其中几乎每个特性均是针对具体的业务场景提效而设计。比如在定义和实例化深层次嵌套的配置参数时，均可以直接指定属性的路径定义和初始化。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema A:
+    a: b: c: int
+    a: b: d: str = &#39;abc&#39;
+
+A {
+    a.b.c: 5
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同时为了安全，对于每个属性默认都是非空的字段，在实例化时会自动进行检查。&lt;/p&gt;
+
+&lt;p&gt;schema 不仅仅是一个独立的带类型注解的配置对象，我们也可以通过继承的方式来扩展已有的 schema：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema Person:
+    firstName: str
+    lastName: str
+
+# schema Scholar inherits schema Person
+schema Scholar(Person):
+    fullName: str = firstName + &#39;_&#39; + lastName
+    subject: str
+
+JohnDoe = Scholar {
+    firstName: &amp;quot;John&amp;quot;,
+    lastName: &amp;quot;Doe&amp;quot;,
+    subject: &amp;quot;CS&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;代码中 Scholar 从 Person 继承，然后又扩展了一些属性。作为子类的 Scholar 可以直接访问父类中定义的 firstName 等属性信息。&lt;/p&gt;
+
+&lt;p&gt;继承是 OOP 编程中基础的代码复用手段，但同时也有多继承导致的菱形继承的技术问题。KCL 语言刻意简化了继承的语法，只保留了单继承的语法。同时 schema 可以通过 mixin 特性混入复用相同的代码片段，对于不同的能力配套，我们通过 mixin 机制编写，并通过 mixin 声明的方式“混入”到不同的结构体中。&lt;/p&gt;
+
+&lt;p&gt;比如通过在 Person 中混入 FullnameMixin 可以给 schema 增加新的属性或逻辑（包括 check 代码块）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema FullnameProtocol:
+    firstName : str = &amp;quot;default&amp;quot;
+    lastName : str
+
+mixin FullnameMixin for FullnameProtocol:
+    fullName : str = &amp;quot;${firstName} ${lastName}&amp;quot;
+
+schema relax Person:
+    mixin [FullnameMixin]
+    firstName : str = &amp;quot;default&amp;quot;
+    lastName : str
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过 KCL 的语言能力，平台侧同学可以通过单继承的方式扩展结构体，通过 mixin 机制定义结构体内属性的依赖关系及值内容，通过结构体内顺序无关的编写方式完成声明式的结构体定义，此外还支持如逻辑判断、默认值等常用功能。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-3-2-doc-fmt-lint-和外围的-lsp-工具&#34;&gt;2.3.2 doc、fmt、lint 和外围的 LSP 工具&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/232.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在编程领域代码虽然是最核心的部分，但是代码对应的文档和配套的工具也是和编程效率高度相关的部分。KCL 配置策略语言设计哲学并不局限于语言本身，还包括文档、代码格式化工具、代码风格评估工具和 IDE 的支持等。&lt;/p&gt;
+
+&lt;p&gt;KCL 通过 kcl-doc 支持从配置代码直接提取产生文档，自动化的文档不仅仅减少了手工维护的成本，也降低的学习和沟通成本。kcl-fmt 则很方便将当前目录下的全部代码（包含嵌套的子目录）格式化为唯一的一种风格，而相同格式的代码同样降低的沟通和代码评审的成本。&lt;/p&gt;
+
+&lt;p&gt;kcl-lint 工具则是通过将一些内置的风险监测策略对 KCL 代码平行评估，方便用户根据评估结果优化代码的风格。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-4-工程化的解决方案&#34;&gt;2.4 工程化的解决方案&lt;/h3&gt;
+
+&lt;p&gt;任何语言想要在工程中实际应用，不仅仅需要很好的设计，还需要为升级、扩展和集成等常规的场景提供完整的解决方案。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-4-1-多维度接口&#34;&gt;2.4.1 多维度接口&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/241.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;KCL 语言设计通过在不同的抽象层次为普通用户（KCL 命令行）、KCL 语言定制者（Go-API、Python-API）、KCL 库扩展者（Plugin）和 IDE 开发者（LSP 服务）均提供了几乎等价的功能界面，从而提供了最大的灵活度。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-4-2-千人千面的配置-db&#34;&gt;2.4.2 千人千面的配置 DB&lt;/h4&gt;
+
+&lt;p&gt;KCL 是面向配置的编程语言，而配置的核心是结构化的数据。因此，我们可以将完整 KCL 代码看做是一种配置数据库。通过 KCL 的配置参数的查询和更新（override/-O 命令）可以和对应的配置属性路径，可以实现对属性参数的查询、临时修改和存盘修改。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/242.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;将代码化的配置作为 DB 的唯一源，不仅仅可以集成 DB 领域成熟的查询和分析手段，而且可以通过配置代码视角调整配置代码的逻辑结构。特别是在自动化运维实践中，通过程序自动生成的配置代码修改的 PullRequest 可以方便引入开发人员进行代码评审，很好地达到人机通过不同界面配合运维。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-4-3-版本平滑升级&#34;&gt;2.4.3 版本平滑升级&lt;/h4&gt;
+
+&lt;p&gt;随着业务和代码的演化，相关模块的 API 也会慢慢腐化。KCL 语言设计通过严格的依赖版本管理，然后结合语言内置的语法和检查工具保障 API 平滑的升级和过渡，再配合代码集成测试和评审流程提升代码安全。KCL 语言通过 @deprecated 特性在代码出现腐化早期给出提示，同时为用户的过渡升级留出一定的时间窗口，甚至等到 API 彻底腐烂前通过报错的方式强制要求同步升级相关的代码。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/243.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;比如在某次升级中，Name 属性被 fullName 替代了，则可以通过 @deprecated 特性标志：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-py&#34;&gt;schema Person:
+    @deprecated(version=&amp;quot;1.1.0&amp;quot;, reason=&amp;quot;use fullName instead&amp;quot;, strict=True)
+    name: str
+    ... # Omitted contents
+
+person = Person {
+    # report an error on configing a deprecated attribute
+    name: &amp;quot;name&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样在实例化 Person 时，Name 属性的初始化语句将会及时收到报错信息。&lt;/p&gt;
+
+&lt;h4 id=&#34;2-4-4-内置模块-kcl-模块-插件模块&#34;&gt;2.4.4 内置模块、KCL 模块、插件模块&lt;/h4&gt;
+
+&lt;p&gt;KCL 是面向配置的编程语言，通过内置模块、KCL 模块和插件模块提供工程化的扩展能力。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/244.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;用户代码中不用导入直接使用 builtin 的函数（比如用 len 计算列表的长度、通过 typeof 获取值的类型等），而对于字符串等基础类型也提供了一些内置方法（比如转化字符串的大小写等方法）。&lt;/p&gt;
+
+&lt;p&gt;对于相对复杂的通用工作则通过标志库提供，比如通过 import 导入 math 库就可以使用相关的数学函数，可以通过导入 regex 库使用正则表达式库。而针对 KCL 代码也可以组织为模块，比如 Konfig 大库中将基础设施和各种标准的应用抽象为模块供上层用户使用。&lt;/p&gt;
+
+&lt;p&gt;此外还可以通过 Plugin 机制，采用 Python 为 KCL 开发插件，比如目前有 meta 插件可以通过网络查询中心配置信息，app-context 插件则可以用于获取当前应用的上下文信息从而简化代码的编写。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-kcl语言的实现原理&#34;&gt;3. KCL语言的实现原理&lt;/h2&gt;
+
+&lt;h3 id=&#34;3-1-整体架构&#34;&gt;3.1 整体架构&lt;/h3&gt;
+
+&lt;p&gt;KCL 虽然作为一个专用于云原生配置和策略定义的语言，但是保持大多数过程式和函数式编程语言的相似实现架构，其内部整体架构组成也是经典的编译器 “三段式” 架构。下面是 KCL 实现的架构图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/310.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;主要有以下几个关键模块：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;解析器 Parser：解析器分析 KCL 源代码产生 AST（抽象语法树）。&lt;/li&gt;
+&lt;li&gt;编译器 Compiler：对 AST 进行多次遍历，对 AST 进行语义检查（比如进行类型检查、无效代码检查）并对 AST 进行优化（合并常量表达式等），最终产生虚拟机可以执行的字节码。&lt;/li&gt;
+&lt;li&gt;虚拟机 Virtual Machine (VM)：执行 Compiler 产生的字节码，计算产生相应的配置结果，并将配置结果序列化为 YAML/JSON 进行输出。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;整体架构分为三段式的好处是可以把针对 KCL 源语言的前端和针对目标机器的后端组合起来，这种创建编译器组合的方法可以大大减少工作量。&lt;/p&gt;
+
+&lt;p&gt;比如目前的 KCL 字节码定义和后端虚拟机采用自研实现，KCL 虚拟机主要用于计算产生配置结果并序列化为 YAML/JSON 进行输出。&lt;/p&gt;
+
+&lt;p&gt;如果遇到在其他特殊使用 KCL 的场景比如在浏览器中执行 KCL，则可以重写一个适配 WASM 的后端，就可轻易将 KCL 移植到浏览器中使用，但是 KCL 本身的语法和语义不需要发生任何变化，编译器前端代码也无需任何改动。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-go-和-python-通信原理&#34;&gt;3.2 Go 和 Python 通信原理&lt;/h3&gt;
+
+&lt;p&gt;为了更好地释放 KCL 配置策略语言的能力以及遍于上层自动化产品集成（比如著名的编译器后端 LLVM 就因其 API 设计良好，开发人员可以利用其 API 快速地构建自己的编程语言），KCLVM 目前提供了 Python 和 Go 两种语言的 API，使得用户可以使用相应的 API 快速地构建语言外围工具，语言自动化查询修改工具等提升语言的自动化能力，并且进一步可以基于此构建服务化能力，帮助更多的用户构建自己云原生配置代码化应用或者快速接入基础设施。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/320.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;KCLVM 主体采用 Python 代码实现，而很多的云原生应用以 Go 程序构建，因此为了更好地满足云原生应用用户诉求。KCLVM 首先基于 CGo 和 CPython 构建了 Go 程序和 Python 程序通信媒介，基于此设计了 Python 函数到 Go 函数的 RPC 调用，调用参数以 JSON 形式存储，使得 KCLVM-Python 编译器的能力平滑地过度到 Go 代码中，通过 Go 一行 import 调用即可操作 KCL 代码。&lt;/p&gt;
+
+&lt;p&gt;补充：在服务化实践的过程中，基于 CGO 调用 Python 的方案也遇到了一些问题：首先是 Go + CGO + Python 导致交叉编译困难，对 ACI 的自动化测试和打包产生了挑战；其次是 CGO 之后的 Python 不支持多语言多线程并发，无法利用多核的性能；最后即使通过 CGO 将 Python 虚拟机编译到了 Go 程序中，依然还是需要安装 Python 的标准库和第三方库。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-3-协同配置原理&#34;&gt;3.3 协同配置原理&lt;/h3&gt;
+
+&lt;p&gt;当有了一个简单易用并能够保证稳定性的配置语言后，另一个面临的问题是如何使用配置代码化的方式提升协同能力。基于此，KCL 配置可分为用户侧和平台侧配置两类，最终的配置内容由各自用户侧和平台侧的配置内容共同决定，因此存在两个方面的协同问题：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;平台侧配置与用户侧配置之间的协同；&lt;/li&gt;
+&lt;li&gt;用户侧配置之间的协同。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;针对上述协同问题，KCL 在技术侧提出了顺序无关语法，同名配置合并等抽象模型来满足不同的协同配置场景。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/giac2021/330.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;以上图为例，首先 KCL 代码在编译过程中形成两张图（用户不同配置直接的引用和从属关系一般形式一张有向无环图），分别对应结构体内部声明代码及结构体使用声明代码。编译过程可以简单分为三步：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;首先定义平台侧的结构体并形成结构体内部声明代码图；&lt;/li&gt;
+&lt;li&gt;其次声明并合并不同用户侧配置代码图；&lt;/li&gt;
+&lt;li&gt;最后将用户侧配置代码图计算的结果代入平台侧结构体内部声明代码图求解，最终得到完整配置图定义。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通过这样简单的计算过程，可以在编译时完成大部分代换运算，最终运行时仅进行少量计算即可得到最终的解。同时在编译合并图过程中仍然能够执行类型检查和值的检查，区别是类型检查是做泛化、取偏序上确界（检查某个变量的值是否满足既定类型或者既定类型的子类型），值检查是做特化、取偏序下确界（比如将两个字典合并为一个字典）&lt;/p&gt;
+
+&lt;h2 id=&#34;4-对未来的展望&#34;&gt;4. 对未来的展望&lt;/h2&gt;
+
+&lt;p&gt;KCL 语言目前依然处于一个高速发展的阶段，目前已经有一些应用开始试用。我们希望通过 KCL 语言为 Kusion 技术栈提供更强的能力，在运维、可信、云原生架构演进方面起到积极的作用。同时对于一些特殊的非标应用提供灵活的扩展和集成方案，比如我们正在考虑如何让后端支持 WebAssembly 平台，从而支持更多的集成方案。&lt;/p&gt;
+
+&lt;p&gt;在合适的时间我们希望能够开放 KCL 的全部代码，为云原生代码化的快速落地贡献绵薄之力。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Go 语言十年而立，Go2 蓄势待发</title>
+      <link>https://chai2010.cn/post/2019/go-10year/</link>
+      <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2019/go-10year/</guid>
+      
+        <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;Go语言十年，第一代Gopher也到了下岗到年龄，感谢各种福报&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+&lt;li&gt;作者 | 柴树杉&lt;/li&gt;
+&lt;li&gt;责编 | 郭   芮&lt;/li&gt;
+&lt;li&gt;出品 | CSDN（ID：CSDNnews）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/00.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在21世纪的第一个十年，计算机在中国大陆才逐渐开始普及，高校的计算机相关专业也逐渐变得热门。当时学校主要以C/C++和Java语言学习为主，而这些语言大多是上个世纪90年代或更早诞生的，因此这些计算机领域的理论知识或编程语言仿佛是上帝创世纪时的产物，作为计算机相关专业的学生只能仰望这些成果。&lt;/p&gt;
+
+&lt;p&gt;Go语言诞生在21世纪新一波工业编程语言即将爆发的时期。在2010年前后诞生了编译型语言Rust、Kotlin和Swift语言，前端诞生了Dart、TypeScript等工业型语言，最新出现的V语言更甚至尝试站在Go和Rust语言肩膀之上创新。而这些变化都发生在我们身边，让中国的计算机爱好者在学习的过程中见证历史的发展，甚至有机会参与其中。&lt;/p&gt;
+
+&lt;p&gt;2019年是CSDN的二十周年，也是Go语言面世十周年。感谢CSDN平台提供的机会，让笔者可以跟大家分享十年来中国Go语言社区的一些故事。&lt;/p&gt;
+
+&lt;h2 id=&#34;1-go语言诞生&#34;&gt;1. Go语言诞生&lt;/h2&gt;
+
+&lt;p&gt;Go语言最初由Google公司的Robert Griesemer、Ken Thompson和Rob Pike三位大牛于2007年开始设计发明的。其设计最初的洪荒之力来自于对超级复杂的C++11特性的吹捧报告的鄙视，最终目标是设计网络和多核时代的C语言。到2008年中期，语言的大部分特性设计已经完成，并开始着手实现编译器和运行，大约在这一年Russ Cox作为主力开发者加入。到了2009年，Go语言已经逐步趋于稳定。同年9月，Go语言正式发布并开源了代码。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/10.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;以上是《Go语言高级编程》一书中第一章第一节的内容。Go语言刚刚开源的时候，大家对它的编译速度印象异常深刻：秒级编译完成，几乎像脚本一样可以马上编译并执行。同时Go语言的隐式接口让一个编译型语言有了鸭子类型的能力，笔者也第一次认识到原来C++的虚表vtab也可以动态生成！至于大家最愿意讨论的并非特性，其实并不是Go语言新发明的基石，早在上个世纪的八九十年代就有诸多语言开始陆续尝试将CSP理论引入编程语言（Rob Pike是其中坚定的实践者）。只不过早期的CSP实践的语言没有进入主流开发领域，导致大家对这种并发模式比较陌生。&lt;/p&gt;
+
+&lt;p&gt;除了语言特性的创新之外，Go语言还自带了一套编译和构建工具，同时小巧的标准库携带了完备的Web编程基础构建，我们可以用Go语言轻松编写一个支持高并发访问的Web服务。&lt;/p&gt;
+
+&lt;p&gt;作为互联网时代的C语言，Go语言终于强势进入主流的编程领域。&lt;/p&gt;
+
+&lt;h2 id=&#34;2-go语言十年奋进&#34;&gt;2. Go语言十年奋进&lt;/h2&gt;
+
+&lt;p&gt;Go从2007年开始设计，在2009年正式对外公布，至今刚好十年。十年来Go语言以稳定著称，Go1.0的代码在2019年依然可以不用修改直接被编译运行。但是在保持语言稳定的同时，Go语言也在逐步夯实基础，十年来一直向着完美的极限逼近。让我们看看这十年来Go语言有哪些变化。&lt;/p&gt;
+
+&lt;h3 id=&#34;界面变化&#34;&gt;界面变化&lt;/h3&gt;
+
+&lt;p&gt;首先是看看界面的变化。第一次是在2009刚开源的时候，这时候可以说是Go语言的上古时代。Go语言的主页如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/20.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;那个年代的Gopher们，使用的是hg工具下载代码（而不是Git），Go代码是在Google Code托管（而不是GitHub）。随着代码的发展，hg已经慢慢淡出Gopher视野，Google Code网站也早已经关闭，而Go1之前的上古时代的Go老代码已经开始慢慢腐化了。&lt;/p&gt;
+
+&lt;p&gt;首页中心是Go语言最开始的口号：Go语言是富有表现力的、并发的编程语言，并且是简洁的。同时给了一个“Hello, 世界”的例子（注意，这里的“世界”是日文）。&lt;/p&gt;
+
+&lt;p&gt;然后右上角是初学者的乐园：首先是安装环境，然后可能是早期的三日教程，第三个是标准库的使用。右上角的图片是Russ Cox的一个视频，在Youtube应该还能找到。&lt;/p&gt;
+
+&lt;p&gt;左上角是Go实战的那个经典文档。此外FAQ、语言规范、内存模型是非常重要的核心温度。左下角还有cmd等文档链接，子页面的内容应该没有什么变化。&lt;/p&gt;
+
+&lt;p&gt;然后在2012年准备发布第一个正式版本Go1，在Go1之前语言、标准库和godoc都进行了大量的改进。Go1风格的页面效果如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/21.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;新页面刚出来的时候有眼睛一亮的感觉，这个是目前存在时间最长久的页面布局。但是不仅仅是笔者我，甚至Go语言官方也慢慢对中国页面有点审美疲劳了。因此，从2018年开始Go语言开始新的Logo和网站的重新设计工作。&lt;/p&gt;
+
+&lt;p&gt;下面的是Go语言新的Logo：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/22.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;2019年是对Go语言发展极其重要的一年，今年8月将发布Go1.13，而这个版本将正式重启Go语言语法的进化，向着Go2前进。而新的网站已经在Go1.13正式发布之前的7月份就已经上线：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/23.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;头部的按钮风格的菜单变成了平铺的风格，显得更加高大上。同时页面的颜色做了调整，保持和新Logo颜色一致。页面的布局也做了调整，将下载左右两列做了调换。同时地鼠的脑袋歪到一边，估计是颈椎病复发了。&lt;/p&gt;
+
+&lt;p&gt;总的来说，Go语言官网主页经历了Go1前、Go1（1.0～1.10）、Go1后（或者叫Go2前）三个阶段，分别对应3种风格的页面。新的布局或许会成为下个十年Go2的主力页面。&lt;/p&gt;
+
+&lt;h3 id=&#34;语法变化&#34;&gt;语法变化&lt;/h3&gt;
+
+&lt;p&gt;Go语言虽然从2009年诞生，但是到了2012年才发布第一个正式的版本Go1。其实在Go1诞生之前Go语言就已经足够稳定了，国内的七牛云从Go1之前就开始大力转向Go语言开发，是国内第一家广泛采用Go语言开发的互联网公司。Go1的目标是梳理语法和标准库阴暗的角落，为后续的10年打下坚实的基础。&lt;/p&gt;
+
+&lt;p&gt;从目前的结果看，Go1无疑是取得了极大的成果，Go1时代的代码依然可以不用修改就可以用最新的Go语言工具编译构建（不包含CGO或汇编语言部分，因为这些外延的工具并不在Go1的承诺范围）。但是Go1之后依然有一些语法的更新，在Go1.10前的Go1时代语法和标准库部分的重大变化主要有三个：&lt;/p&gt;
+
+&lt;p&gt;第一个重大的语法变化是在2012年发布的Go1.2中，给切片语法增加了容量的控制，这样可以避免不同的切片不小心越界访问有着相同底层数组的其它切片的内存。&lt;/p&gt;
+
+&lt;p&gt;第二个重大的变化是2016年发布的Go1.7标准库引入了context包。context包是Go语言官方对Go进行并发编程的实践成果，用来简化对于处理单个请求的多个Goroutine之间与请求域的数据、超时和退出等操作。context包推出后就被社区快速吸收使用，例如gRPC以及很多Web框架都通过context来控制Goroutine的生命周期。&lt;/p&gt;
+
+&lt;p&gt;第三个重大的语法变化是2017年发布的Go1.9 ，引入了类型别名的特性：type T1 = T2。其中类型别名T1是通过=符号从T2定义，这里的T1和T2是完全相同的类型。之所以引入类型别名，很大的原因是为了解决Go1.7将context扩展库移动到标准库带来的问题。因为标准库和扩展库中分别定义了context.Context类型，而不同包中的类型是不相容的。而gRPC等很多开源的库使用的是最开始以来的扩展库中的context.Context类型，结果导致其无法和Go1.7标准库中的context.Context类型兼容。这个问题最终通过类型别名解决了：扩展库中的context.Context类型是标准库中context.Context的别名类型，从而实现了和标准库的兼容。&lt;/p&gt;
+
+&lt;p&gt;此外还有一些语法细节的变化，比如Go1.4对for循环语法进行了增强、Go1.8放开对有着相同内存布局的结构体强制转型限制。读者可以根据自己新需要查看相关发布日志的文档说明。&lt;/p&gt;
+
+&lt;h3 id=&#34;运行时的变化&#34;&gt;运行时的变化&lt;/h3&gt;
+
+&lt;p&gt;运行时部分最大的变化是动态栈部分。在Go1.2之前Go语言采用分段栈的方式实现栈的动态伸缩。但是分段式动态栈有个性能问题，因为栈内存不连续会导致CPU缓存命中率下降，从而导致热点的函数调用性能受到影响。因此从Go1.3开始该有连续式的动态栈。连续式的动态栈虽然部分缓解了CPU 缓存命中率问题（依然存在栈的切换问题，这可能导致CPU缓存失效），但同时也带来了更大的实现问题：栈上变量的地址可能会随着栈的移动而发生变化。这直接带来了CGO编程中，Go语言内存对象无法直接传递给C语言空间使用，因此后来Go语言官方针对CGO问题制定了复杂的内存使用规范。&lt;/p&gt;
+
+&lt;p&gt;总体来说，动态栈如何实现是一个如何取舍的问题，因为没有银弹、鱼和熊掌不可兼得，目前的选择是第一保证纯Go程序的性能。&lt;/p&gt;
+
+&lt;h3 id=&#34;gc性能改进&#34;&gt;GC性能改进&lt;/h3&gt;
+
+&lt;p&gt;Go语言是一个带自动垃圾回收的语言（Garbage Collection ），简称GC（注意这是大写的GC，小写的gc表示Go语言的编译器）。从Go语言诞生开始，GC的回收性能就是大家关注的热点话题。&lt;/p&gt;
+
+&lt;p&gt;Go语言之所以能够支持GC特性，是因为Go语言中每个变量都有完备的元信息，通过这些元信息可以很容易跟踪全部指针的声明周期。在Go1.4之前，GC采用的是STW停止世界的方式回收内存，停顿的时间经常是几秒甚至达到几十秒。因此早期社区有很多如何规避或降低GC操作的技巧文章。&lt;/p&gt;
+
+&lt;p&gt;第一次GC性能变革发生在Go1.5时期，这个时候Go语言的运行时和工具链已经全部从C语言改用Go语言实现，为GC代码的重构和优化提供了便利。Go1.5首次改用并行和增量的方式回收内存，这将GC挺短时间缩短到几百毫秒。下图是官网“Go GC: Latency Problem Solved”一文给出的数据：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/24.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Go1.5并发和增量的改进效果明显，但是最重要的是为未来的改进奠定了基础。在Go1.5之后的Go1.6版本中GC性能终于开始得到了彻底的提升：从Go1.6.0停顿时间降低到几十毫秒，到Go1.6.3降低到了十毫秒以内。而Go1.6取得的成果在Go1.8的官方日志得到证实：Go语言的GC通常低于100毫秒，甚至低于10毫秒！&lt;/p&gt;
+
+&lt;p&gt;当然，Go的GC优化的脚步不会停止，但是想再现Go1.5和Go1.6时那种激动人心的成果估计比较难了。在Go1.8之后的几个版本中，官方的发布日志已经很少再出现量化的GC性能提升数据了。&lt;/p&gt;
+
+&lt;h3 id=&#34;go语言自举历程&#34;&gt;Go语言自举历程&lt;/h3&gt;
+
+&lt;p&gt;据说Go语言刚开始实现时是基于汤普森的C语言编译改造而成，并且最开始输出的是C语言代码（还没有对外公开之前）。在开源之后到Go1.4之前，Go语言的编译器和运行时都是采用C语言实现的。以至于早期可以用C语言实现一个Go语言函数！因为强烈依赖C语言工具链，因此Go1.4之前Go语言是完全不能自举的。&lt;/p&gt;
+
+&lt;p&gt;从Go1.4开始，Go语言的运行时采用Go语言实现。具体实施的方式是Go团队的rsc首先实现了一个简化的C代码到Go代码的转换工具，这个工具主要用于将之前C语言实现的Go语言运行时转换为Go语言代码。因为是自动转换的代码，因此可以得到比较可靠的Go代码。运行时转换为Go语言实现之后，带来的第一个好处就是GC可以精确知道每个内存指针的状态（因为Go语言的变量有详细的类型信息），这也为Go1.5重写GC提供了运行时基础。&lt;/p&gt;
+
+&lt;p&gt;然后到了Go1.5，将编译器也转为Go语言实现。但是转换到代码性能有一定的下降。很多程序的编译时间甚至缓慢到几十秒，这个时期网上出现了很多吐槽Go1.5编译速度慢的问题。Go1.5采用Go语言编写编译器的同时，对工具链和目标代码都做了大量的重构工作。从Go1.5之后，交叉编译变得异常简单，只要GOOS=linux GOARCH=amd64 go build命令就可以从任何Go语言环境生成Linux/amd64的目标代码。&lt;/p&gt;
+
+&lt;p&gt;Go语言从Go1.4到Go1.5，经历了两个版本的演化终于实现了自举的支持。当然自举也会带来一个哲学问题：Go语言的编译器是否有后门？如果有后门的编译器编译出来的Go程序是否有后门？有后门的编译器编译出来的Go编译器程序是否有后门？&lt;/p&gt;
+
+&lt;h3 id=&#34;失败的尝试&#34;&gt;失败的尝试&lt;/h3&gt;
+
+&lt;p&gt;Go语言发展过程中也并不全是成功的案例，同时也存在一些失败的尝试。失败乃成功之母，这些尝试虽然最终失败了，但是在尝试的过程之中积累的经验为新的方向提供了前进的动力。&lt;/p&gt;
+
+&lt;p&gt;因为Go语言的常量只支持数值和字符串等少数几个类型，早期的社区中一直呼吁为切片增加只读类型。为此rsc在开发分支首先试验性地实现了该特性，但是在之后的实践过程中又发现了和Go编程特性冲突的诸多问题，以至于在短暂的尝试之后就放弃了只读切片的特性。当然，初始化之后不能修改的变量特性依然是大家期望的一个特性（类似其它语言的final特性），希望在未来的Go2中能有一定的改善。&lt;/p&gt;
+
+&lt;p&gt;另一个尝试是早期基于vendor的版本管理。在Go1.5中首次引入vendor和internal特性，vendor用于打包外部第三方包，internal用户保护内部的包。后来vendor被开源社区的各种版本管理工具所滥用，导致Go语言代码经常会出现一些不可构建的诡异问题。滥用vendor导致了vendor嵌套的问题，这和nodejs社区中node_modules目录嵌套的问题类似。嵌套的vendor中最终会出现同一个包的不同版本，这根最后的稻草终于彻底击溃了vendor机制，以至于Go语言官方团队从头开发了模块特性来彻底解决版本管理的问题。等到Go1.13模块化特性转正之中，GOPATH和vendor等机制将被彻底淘汰。&lt;/p&gt;
+
+&lt;p&gt;Go语言作为一个开源项目，所有导入的包必须有源代码。一些号称是商业用户，呼吁Go语言支持二进制包的导入，这样可以最大限度地保护商业代码。为了响应社区的需求，Go1.7增加了导入二进制包的功能。但是比较戏剧化的是，Go语言支持二进制包导入之后并没有多少人在使用，甚至当初呼吁二进制包的人也没有使用（所以说很多社区的声音未必能够反映真实的需求）。为了一个没有人使用的二进制包特性，需要Go语言团队投入相当的人力进行维护代码。为了减少这种不需要的特性，Go1.13将彻底关闭二进制包的特性，从新轻装上阵解决真实的需求。当然，Go语言也已经支持了生成静态库、共享库和插件的特性，也可以通过这些机制来保护代码。&lt;/p&gt;
+
+&lt;p&gt;失败的尝试可能还有一些，比如最近Go语言之父之一Robert Griesemer提交的通过try内置函数来简化错误处理就被否决了。失败的尝试是一个好的现象，它表示Go语言依然在一些新兴领域的尝试——Go语言依然处于活跃期。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-go2的发展方向&#34;&gt;3. Go2的发展方向&lt;/h2&gt;
+
+&lt;p&gt;Go语言原本就是短小精悍的语言，经过多年的发展Go1已经逼近稳定的极限。查看官网的Talk页面的报告数量可以发现，2015年之前是各种报告的巅峰，2016到2017年分享数量已经开始急剧下降，2018年至今已经没有新的报告被收录，这是因为该讲的Go1语言特性早就被讲过多次了。对于第一波Go语言爱好者来说也是如此，Go语言已经没有什么新的特性可以挖掘和学习了，或者说它已经不够酷了。我们想Go语言官方团队也是这样的感觉，因此从2018年开始首先开始解决模块化的问题，然后开始正式讨论Go2的新特性，并且从Go1.13重新启动语言的进化。&lt;/p&gt;
+
+&lt;p&gt;模块化和构建管理有关系。在Go语言刚刚诞生之初，其实是通过一个Makefile目标进行构建。然后官方提供了go build命令构建，实现了零配置文件构建，极大地简化了构建的流程。再后来出现了go get命令，支持从互联网上自动下载hg或git仓库的代码进行构建，并同时引入GOPATH环境变量来防止非标准库的代码。此后，第一波的版本管理工具也开始出现，通过动态调整GOPATH实现导入特定版本的代码。随后各种开源模仿、克隆的版本管理工具如雨后春笋般冒出来，基本都是模仿godeps的设计思路，基于GOPATH和后来的vendor来管理依赖包的版本，这也最终导致了vendor被过度滥用（前文已经讲过vendor滥用带来的问题）。最终在2018年，由rsc亲自操刀从头发明了基于最小化版本依赖算法的版本管理特性。模块化特性从Go1.11开始引入，将在Go1.13版本正式转正，以后GOAPATH将彻底退出历史舞台。&lt;/p&gt;
+
+&lt;p&gt;因为rsc的工作直接宣判了开源社区的各种版本管理工具的死亡，这也导致了Go语言官方团队和开源社区的诸多冲突和矛盾。在此需要补充说明下，Go语言的开发并不完全是开源陌生，Go语言的开源仅仅限于Issue的提交或BUG的修改，真正的语言设计始终走的是教堂元老会的模式。笔者以为这是最好的开源方式，很多开源社区的例子也说明了需要独裁者的角色，而元老会正是这种角色。&lt;/p&gt;
+
+&lt;p&gt;在Go1.13中，除了模块化特性转正之外，还有诸多语法的改进：比如十六进制的浮点数、大的数字可以通过下划线进行分隔、二进制和八进制的面值常量等。但是Go1.13还有一个重大的改进发生在errors标准库中。errors库增加了Is/As/Unwrap三个函数，这将用于支持错误的再次包装和识别处理，是为了Go2中新的错误处理改进提前做准备。后续改进方向就是错误处理的控制流，之前已经出现用try/check关键字和try内置函数改进错误处理流程的提案，目前还没有确定采用什么方案。&lt;/p&gt;
+
+&lt;p&gt;Go2最期待的特性是泛型。从开始Go语言官方明显抵制泛型，到2018年开始公开讨论泛型，让泛型的爱好者看到了希望。很多人包括早期的Go官方都会说用接口模拟泛型，这其实只是一个借口。泛型最大的问题不在于性能，而是只有泛型才能够为泛型容器或算法提供一个类型安全的接口。比如一个Add(a, b T) T泛型函数是无法通过接口来实现对返回值类型的检查的。如果Go语言支持了泛型，再结合Go语言汇编语言支持的AVX512指令，可以期待Go语言将在CPU运算密集型领域占有一席之地，甚至以后会出现纯Go语言的机器学习算法库的实现。&lt;/p&gt;
+
+&lt;p&gt;最后一个值得关注的是Go语言对WebAssembly平台的支持。根据Ending定律：一切可编译为WebAssembly的，终将会被编译为WebAssembly。2018年，Fabrice Bellard大神基于WebAssembly技术，将Windows 2000操作系统搬到了浏览器环境运行。2019年出现了WebAssembly System Interface技术，这很可能是一个更轻量化的Docker替代技术。而Go语言也出现了一个变异版本TinyGo，目标就是为了更好地在WebAssembly或其它单片机等受限环境运行Go程序。&lt;/p&gt;
+
+&lt;h2 id=&#34;4-go语言在中国&#34;&gt;4. Go语言在中国&lt;/h2&gt;
+
+&lt;p&gt;回想Go语言刚面世时的第一个例子，是打印&amp;rdquo;Hello, 世界&amp;rdquo;。只可惜这里的“世界”并不是中文的“Hello, 世界”，而是日文的“Hello, 世界”。而日文还是基于中文汉字改造而来，这是整个中文世界的悲哀！&lt;/p&gt;
+
+&lt;p&gt;比较庆幸的是中国程序员比较给力，目前中国不仅仅是世界上Go语言关注度最高的国家，也是贡献排名第二的国家。根据谷歌趋势的数据，Go语言在中国的关注度占全球的90%以上：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/40.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;不仅仅是Go语言用户，中国的Gopher对Go语言的贡献也稳居美国之后。其中韦京光早在2010年就深度参与Go语言开发，将Go语言移植到Windows系统并实现了CGO支持。之后来自中国的Minux实现了iOS等诸多平台的移植，并已经正式加入Go语言开发团队。而目前Go语言中国贡献者排名第一的是来自天津的史斌（benshi001），他的很多工作集中在编译的优化方面，在全球Go语言贡献者排名第39位。&lt;/p&gt;
+
+&lt;p&gt;最早Go语言中文爱好者都是通过谷歌讨论组golang-china讨论，目前该讨论组还陆续会有新的文章发布。然后到了2012年前后，因为诸多因素国内的讨论开始集中到QQ群中（笔者在2010年建立了国内第一个Go语言QQ讨论群）。再往后就是微信各种论坛遍地开花了。十年来，Go语言中文社区也一直非常活跃，社区人数稳步增长。这里简单回顾一下我知道的Go社区中的一些人和事。&lt;/p&gt;
+
+&lt;h3 id=&#34;fango&#34;&gt;Fango&lt;/h3&gt;
+
+&lt;p&gt;如果在2010年关注Go语言，肯定会听到Fango的名字。Fango是来自新加坡的Go语言爱好者，在Go语言刚面世不久他就写了第一本（很可能是唯一一本）以Go语言为题材的小说《胡文·Go》，然后他还出版了第一本Go语言中文教材《Go语言·云动力》。感谢Fango给大家带来的精彩的Go语言故事。&lt;/p&gt;
+
+&lt;h3 id=&#34;许式伟和七牛云&#34;&gt;许式伟和七牛云&lt;/h3&gt;
+
+&lt;p&gt;七牛是国内第一家大面积采用Go语言开发的公司，时间还在Go1.0正式发布之前。许式伟也是大中华第一个知名的Go语言布道师。许式伟和七牛云在2012年也出版了一本《Go语言编程》教程，和Fango的图书可能只差了一个多月的时间，编辑都是杨海铃老师。其后七牛还有多本Go语言相关的专著或译著，可以说在2015年之前，许式伟和七牛云团队绝对是国内Go语言社区推广的主力。&lt;/p&gt;
+
+&lt;p&gt;笔者也在第一时间拜读了《Go语言编程》一书，对其中如何实现接口和Goroutine调度的模拟依然印象深刻。感谢许式伟当时赠送的签名版本《Go语言编程》，同时也感谢为我新出的《Go语言高级编程》写序，谢谢许大！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/41.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;astaxie和gopherchina大会&#34;&gt;Astaxie和GopherChina大会&lt;/h3&gt;
+
+&lt;p&gt;对谢大最早的印象是在2012年前后，当时他开了一个免费的《Go Web编程》图书，当前QQ群中很多小伙伴都参与审校（比如四月份平民、边江和Oling Cat等）。Go Web编程是大家比较关注的方向，书中不仅仅讲到了ORM的实现，还讲到了beedb等组件。而beedb等这些组件最早演化成了Beego框架。根据前一段时间JetBrains展开的一个调查，Beego是Go语言三大流行的Web框架之一。&lt;/p&gt;
+
+&lt;p&gt;然后到了2015年，谢大正式开启GopherChina大会的历程。我虽然因为其它事情没有现场参与，但是也预定了第一节GopherChina大会的会衫。然后在2018年终于以讲师身份参加了上海的GopherChina大会，跟大家分享了CGO方向的技术，同时第一次见到谢大本尊。感谢谢大的GopherChina大会和《Go Web编程》！&lt;/p&gt;
+
+&lt;h3 id=&#34;其他人和项目&#34;&gt;其他人和项目&lt;/h3&gt;
+
+&lt;p&gt;此外还有很多大家耳熟能详的Go爱好者，比如《Learning Go》和Go Tour的中文翻译者星星，创建了gogs的无闻，一种在翻译Go官方文档的Oling Cat，雨痕的《Go语言学习笔记》对Go源码深度的解读，创建了GoHackers的郝林等等。此外由国内的PingCAP公司主导开发的开源TiDB分布式数据库也是一个极为著名的项目。感谢Go中国社区这些朋友和项目，是大家的努力带来了Go语言在国内的繁荣。&lt;/p&gt;
+
+&lt;h2 id=&#34;5-向go语言学习&#34;&gt;5. 向Go语言学习&lt;/h2&gt;
+
+&lt;p&gt;候杰老师曾经说过：勿在浮沙筑高台。而中国互联网公司的繁荣更多是在业务层面，底层的基石软件几乎没有一个是中国所创造。作为一个严肃的软件开发人员，我们需要向Go语言学习，继续扎实掌握底层的理论基础，不能只聚焦于业务层面，否则下次中美贸易战的时候依然要被西方卡脖子。&lt;/p&gt;
+
+&lt;p&gt;经过这么多年发展，中国的软件行业已经非常繁荣和成熟，同时很多软件开发人员也开始进入35岁的中年门槛。其实35岁正是软件开发人员第二次职业生涯的开始，是开始形成自我创造力的时候。但是某些资本家短视的996或007等急功近利的福报观点正导致中国软件人员过早进入未创新而衰的阶段。中国的软件工程师不应该是码农、更不是码畜牧，我们虽然不会喊口号但是始终在默默前行。&lt;/p&gt;
+
+&lt;p&gt;目前中国已经有大量的软件开发人员有能力参与基础软件的设计和开发，正因为这一波脚踏实地程序开发人员的努力，我相信在下个十年我们可以Go得更远。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>谈谈Go语言字符串</title>
+      <link>https://chai2010.cn/post/2019/learn-string/</link>
+      <pubDate>Fri, 17 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2019/learn-string/</guid>
+      
+        <description>
+
+&lt;p&gt;字符串是一种特别重要的类型, 可以说整个世界都是建立在字符串处理基础之上的, 甚至有很多专门针对字符串处理设计的编程语言(比如perl). 因为字符串处理非常重要, Go语言将字符串作为值以简化使用, 同时标准库提供了strings/fmt/strconv/regexp/template等诸多包用于协助处理字符串.&lt;/p&gt;
+
+&lt;h2 id=&#34;1-基本用法&#34;&gt;1. 基本用法&lt;/h2&gt;
+
+&lt;p&gt;Go语言中字符串是一个不可修改的字节序列, 如果要做类比的话可以看作是一个只读的byte数组类型. 字符串有两种方式构建: 第一种是在代码中通过双引号包括起来的字符串字面值, 这是编译前就知道了字符串的内容; 另一种是在运行时通过代码运行动态产生的字符串.&lt;/p&gt;
+
+&lt;p&gt;因为Go语言源代码要求是UTF8编码, 因此字符串面值的内容也是UTF8编码的. 为了方便面值字符串的遍历, Go语言的for range内置了对UTF8的支持:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;for i, c := range &amp;quot;hello, 世界&amp;quot; {
+    // ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中i是字符所在的索引下标,  c表示Unicode字符的值(对应int32类型). 因为UTF8是一种变长的编码, 因此每次i的步进长度是变化的, 每次步进的是前当前字符串对应UTF8编码的长度.&lt;/p&gt;
+
+&lt;p&gt;此外字符串语法还支持切片、链接和获取某个下标字节值的功能, 比如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = &amp;quot;光谷码农 - https://guanggu-coder.cn/&amp;quot;
+var c = s[0] // 获取字节值, 而不是字符对应的Unicode值
+var x = s[:len(s)-1] + &amp;quot;abc&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;字符串不仅仅可以作为字面值, 还可以当做二进制数组使用, 这时候可以用于保存任意类型的数据:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = &amp;quot;\xe4\xb8\x96&amp;quot; // 世
+var x = []byte{0xE4, 0xB8, 0x96}
+var s = string(x)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;字符串的基本用法大家都是熟悉的, 我们这里不再向西展开.&lt;/p&gt;
+
+&lt;h2 id=&#34;2-内部表示&#34;&gt;2. 内部表示&lt;/h2&gt;
+
+&lt;p&gt;Go语言字符串的底层结构在reflect.StringHeader中定义：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type StringHeader struct {
+    Data uintptr
+    Len  int
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;字符串结构由两个信息组成：第一个是字符串指向的底层字节数组，第二个是字符串的字节的长度。字符串其实是一个结构体，因此字符串的赋值操作也就是reflect.StringHeader结构体的复制过程，并不会涉及底层字节数组的复制。&lt;/p&gt;
+
+&lt;p&gt;需要注意的是字符串的头部结构是切片头部结构的前缀(只是缺少了cap表示的容量部分), 这是为了便于[]byte类型的切片和字符串相互之间的转化.&lt;/p&gt;
+
+&lt;h2 id=&#34;3-其它类型转换&#34;&gt;3. 其它类型转换&lt;/h2&gt;
+
+&lt;p&gt;这里讨论是底层有着不同数据布局的类型和字符串的相互转换. 如果是基于字符串重新定义的类型不在讨论之列.&lt;/p&gt;
+
+&lt;p&gt;Go语言中和字符串相关的内置转换主要有三种类型: 首先是字符转为字符串, 其次是字符串和字节切片的转换, 最后是字符串和rune切片的转换.&lt;/p&gt;
+
+&lt;p&gt;字符到字符串的转换时单向操作(无法从字符串反向转为字符), 下面的例子中是从“a”这个字符的ASCII值转为字符串“a”:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;fmt.Println(string(97))       // a
+fmt.Println(string(rune(97))) // a
+fmt.Println(string(&#39;a&#39;))      // a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在第一行语句中, 97是一个无具体类型的数值类型的字面值常量. 在遇到string强制转型时, 只有rune类型可以和无具体类型的数值类型建立关系, 因此97被捕获为rune类型的常量, 也就是第二个语句的方法. 第三个语句中&amp;rsquo;a&amp;rsquo;是rune(97)对应字符的字面值写法.&lt;/p&gt;
+
+&lt;p&gt;然后是字符串和字节切片的相互转换:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = string([]byte{97, 98, 99}) // abc
+var x = []byte(&amp;quot;abc&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为字节切片和字符串底层的数据布局是相融的, 因此这种转换一般有着较高的优化空间(前提是不能破坏字符串只读的语义).&lt;/p&gt;
+
+&lt;p&gt;内置转换的语法中最特殊的是字符串和rune切片的转换:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = string([]rune{97, 98, 99}) // abc
+var x = []rune(&amp;quot;abc&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;rune其实是int32类型的别名, 因此换成以下写法会发现其特殊之处:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = string([]int32{97, 98, 99}) // abc
+var x = []int32(&amp;quot;abc&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Go语言居然内置了字符串和int32切片的转型操作, 而这个操作是有相当的复杂度的(具体要涉及内存分配和UTF8字符串编码解码, 时间复杂度和长度相关)! 很多人如果看到上面代码可行, 自然会下意识将int32推广为其它整数类型的切片. 但是这只是字符串为int32开的一个特例(所以说Go语言也不是完全正交的设计, 有不是补丁特性).&lt;/p&gt;
+
+&lt;p&gt;除了内置的转换之外, 字符串还进程需要和其它bool/int等类型的转换. 这里大部分也是双向的转换, 不过我们重点讨论其他类型到字符串的转换. strconv包提供了很多这类转换操作:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;s := strconv.Itoa(-42)
+
+s10 := strconv.FormatInt(v, 10)
+s16 := strconv.FormatInt(v, 16)
+
+s := strconv.FormatBool(true)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中Itoa是Int-to-ASCII的缩写, 表示整数到字符串转换, 采用十进制模式转换.  而FormatInt则可以用于指定进制进行转换. 此外FormatBool等用于其他数值类型的转换.&lt;/p&gt;
+
+&lt;p&gt;strconv的转换实现性能较好. 如果不在意这转换操作这一点点的性能损耗, 可以通过fmt.Sprintf来实现到字符串的转换(fmt.Sscanf可解析, 但是打破了链式操作的便捷性):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;i := fmt.Srpintf(&amp;quot;%v&amp;quot;, -42)
+b := fmt.Srpintf(&amp;quot;%v&amp;quot;, true)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;fmt包会通过反射识别输入参数的类型, 然后以默认的方式转换为字符串.&lt;/p&gt;
+
+&lt;p&gt;此外, 对于字符串本身也提供了一种转换, 就是字符串和字符串面值格式. 比如以下代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;q := strconv.Quote(`&amp;quot;hello&amp;quot;`)     // &amp;quot;\&amp;quot;hello\&amp;quot;&amp;quot;
+q := fmt.Sprintf(&amp;quot;%q&amp;quot;, `&amp;quot;hello&amp;quot;`) // &amp;quot;\&amp;quot;hello\&amp;quot;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出的字符串会有一个双引号包裹, 内部的特殊符号会采用转义语法表示, 它对应fmt包中%q格式的输出.&lt;/p&gt;
+
+&lt;p&gt;更进一步, 为了方便不支持中文的环境也能处理, 还可以选择完全用ASCII方式表示字符串面值:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;q := strconv.Quote(`&amp;quot;世&amp;quot;`)      // &amp;quot;\&amp;quot;\u4e16\&amp;quot;&amp;quot;
+q := fmt.Sprintf(&amp;quot;%+q&amp;quot;, `&amp;quot;世&amp;quot;`) // &amp;quot;\&amp;quot;\u4e16\&amp;quot;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中“世”已经超出ASCII值域, 因此通过\u???语法通过Unicode码点值表示, , 它对应fmt包中%+q格式的输出.&lt;/p&gt;
+
+&lt;h2 id=&#34;4-字符串替换&#34;&gt;4. 字符串替换&lt;/h2&gt;
+
+&lt;p&gt;字符串处理中除了涉及其他类型和字符串之间相互转换, 另一种经常遇到的是将一个字符串处理为另一个字符串. 标准库中strings包提供了诸多字符串处理函数.&lt;/p&gt;
+
+&lt;p&gt;比如, 将字符串改成大写字符串:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = strings.ToUpper(&amp;quot;Gopher&amp;quot;) // GOPHER
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这其实是将字符串中某些子串根据某种指定的规则替换成新的字符串.&lt;/p&gt;
+
+&lt;p&gt;我们可以通过strings.Map来重新实现ToUpper的功能:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;strings.Map(func(r rune) rune { return r &amp;amp;^ &#39; &#39; }, &amp;quot;Gopher&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;strings.Map会遍历字符串中的每个字符, 然后通过第一参数传入的函数转换为新的字符, 最后构造出新的字符串. 而字符转换函数只有一个语句r &amp;amp;^ &amp;lsquo; &amp;lsquo;, 作用是将小写字母转为大写字母.&lt;/p&gt;
+
+&lt;p&gt;strings.Map函数的输出是根据输入字符动态生成输出的字符, 但是这种替换是一个字符对应一个字符, 因此输出的字符串长度输入的字符串是一样的.&lt;/p&gt;
+
+&lt;p&gt;字符层面的替换是比较简单的需求. 更多时候我们需要将一个子串替换为一个新的子串. 子串的替换虽然看似功能强大, 但是因为没有统一的遍历子串的规则, 因此标准库并没有类似strings.Map这样方便的函数.&lt;/p&gt;
+
+&lt;p&gt;简单的替换可以通过strings. Replace完成:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;fmt.Println(strings.Replace(&amp;quot;oink oink oink&amp;quot;, &amp;quot;k&amp;quot;, &amp;quot;ky&amp;quot;, 2))
+fmt.Println(strings.Replace(&amp;quot;oink oink oink&amp;quot;, &amp;quot;oink&amp;quot;, &amp;quot;moo&amp;quot;, -1))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面是strings自带的例子. strings.Replace的第一个参数是输入的字符串, 第二个是要替换的子串, 第三个是用了替换的子串, 最后一个参数表示要替换几个子串.
+如果替换规则稍微复杂一点, strings.Replace就比较难以实现了.&lt;/p&gt;
+
+&lt;p&gt;复杂的替换可以通过regexp的包完成:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;regexp.MustCompile(`a(x*)b`).ReplaceAllString(&amp;quot;-ab-axxb-&amp;quot;, &amp;quot;T&amp;quot;)
+// -T-T-
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果满足a(x*)b模式的子串将被替换为新的子串.&lt;/p&gt;
+
+&lt;h2 id=&#34;5-模板输出&#34;&gt;5. 模板输出&lt;/h2&gt;
+
+&lt;p&gt;字符串替换其实是模板的雏形. 我们可以通过字符串替换来构造一个简单的模板:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func ReplaceMap(s string, m map[string]string) string {
+    for old, new := m {
+        s = strings.Replace(s, old, new, -1)
+    }
+    return s
+}
+
+func main() {
+    var s = ReplaceMap(`{a}+{b} = {c}`, map[string]string{
+        &amp;quot;a&amp;quot;: 1, &amp;quot;b&amp;quot;: 2, &amp;quot;c&amp;quot;: 3,
+    })
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过{name}来表示要替换的子串, 然后通过map来定一个子串替换表格.&lt;/p&gt;
+
+&lt;p&gt;基于类型的技巧, 我们可以将{name}定义为子串的查找规则, 这样我们将得到一个子串列表:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func MapString(s string,
+    mapping func(x string) string,
+) string {
+    re := regexp.MustCompile(`\{\w+\}`)
+    for _, old := range re.FindAllString(&amp;quot;{name}{age}&amp;quot;, -1) {
+        s = strings.Replace(s, old, mapping(old), -1)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;既然能够得到子串列表, 那么就可以仿造strings.Map的接口, 通过一个转换函数来实现子串的替换(函数比表格更加灵活).&lt;/p&gt;
+
+&lt;p&gt;如果结合反射机制, 完全可以基于一个接口类型输出转换表格:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func RenderTemplate(s string, data interface{}) string {
+    return MapString(s, func(filedName string) string {
+        // 通过反射, 根据 filedName 从 data 获取数据
+    })
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然, 这种模板比较粗糙, 没有实现结构化编程中分支和循环等语句的支持. 完整的模板可以查看标准库的template包实现. template包是一个较大的话题, 有机会的话会在新的文章中专门讨论.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>io.EOF设计的缺陷和改进</title>
+      <link>https://chai2010.cn/post/2019/io-eof-mistake/</link>
+      <pubDate>Tue, 14 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2019/io-eof-mistake/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;1-认识io-eof&#34;&gt;1. 认识io.EOF&lt;/h2&gt;
+
+&lt;p&gt;io.EOF是io包中的变量, 表示文件结束的错误:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package io
+
+var EOF = errors.New(&amp;quot;EOF&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;也通过以下命令查看详细文档:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go doc io.EOF
+var EOF = errors.New(&amp;quot;EOF&amp;quot;)
+
+EOF is the error returned by Read when no more input is available. Functions
+should return EOF only to signal a graceful end of input. If the EOF occurs
+unexpectedly in a structured data stream, the appropriate error is either
+ErrUnexpectedEOF or some other error giving more detail.
+$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;io.EOF大约可以算是Go语言中最重要的错误变量了,  它用于表示输入流的结尾. 因为每个文件都有一个结尾, 所以io.EOF很多时候并不能算是一个错误, 它更重要的是一个表示输入流结束了.&lt;/p&gt;
+
+&lt;h2 id=&#34;2-io-eof设计的缺陷&#34;&gt;2. io.EOF设计的缺陷&lt;/h2&gt;
+
+&lt;p&gt;可惜标准库中的io.EOF的设计是有问题的. 首先EOF是End-Of-File的缩写, 根据Go语言的习惯大写字母缩写一般表示常量. 可惜io.EOF被错误地定义成了变量, 这导致了API权限的扩散. 而最小化API权限是任何一个模块或函数设计的最高要求. 通过最小化的权限, 可以尽早发现代码中不必要的错误.&lt;/p&gt;
+
+&lt;p&gt;比如Go语言一个重要的安全设计就是禁止隐式的类型转换. 因此这个设计我们就可以很容易发现程序的BUG. 此外Go语言禁止定义没有被使用到的局部变量(函数参数除外, 因此函数参数是函数接口的一个部分)和禁止导入没有用到的包都是最小化权限的最佳实践. 这些最小API权限的设计不仅仅改进了程序的质量, 也提高了编译工具的性能和输出的目标文件.&lt;/p&gt;
+
+&lt;p&gt;因为EOF被定义成一个变量, 这导致了该变量可能会被恶意改变. 下面的代码就是一种优雅的埋坑方式:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func init() {
+    io.EOF = nil
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这虽然是一个段子, 但是却真实地暴漏了EOF接口的设计缺陷: 它存在严重的安全隐患. 变量的类型似乎也在暗示用户可以放心地修改变量的值. 因此说EOF是一个不安全也不优雅的设计.&lt;/p&gt;
+
+&lt;h2 id=&#34;3-io-eof改为常量&#34;&gt;3. io.EOF改为常量&lt;/h2&gt;
+
+&lt;p&gt;一个显然的改进思路是将io.EOF定义为常量. 但是因为EOF对应一个表示error接口类型, 而Go语言目前的常量语法并不支持定义常量类型的接口. 但是我们可以通过一些技巧绕过这个限制.&lt;/p&gt;
+
+&lt;p&gt;Go语言的常量有bool/int/float/string/nil这几种主要类型. 常量不仅仅不包含接口等复杂类型, 甚至连常量的数组或结构体都不支持! 不过常量有一个重要的扩展规则: 以bool/int/float/string/nil为基础类型定义的新类型也支持常量.&lt;/p&gt;
+
+&lt;p&gt;比如, 我们重新定义一个字符串类型, 它也可以支持常量的:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type MyString string
+
+const name MyString = &amp;quot;chai2010&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个例子中MyString是一个新定义的类型, 可以定义这种类型的常量, 因为它的底层的string类型是支持常量的.&lt;/p&gt;
+
+&lt;p&gt;那么io.EOF的底层类型是什么呢? EOF是通过errors.New(&amp;ldquo;EOF&amp;rdquo;)定义的, 下面是这个函数的实现:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package errors
+
+// New returns an error that formats as the given text.
+func New(text string) error {
+    return &amp;amp;errorString{text}
+}
+
+// errorString is a trivial implementation of error.
+type errorString struct {
+    s string
+}
+
+func (e *errorString) Error() string {
+    return e.s
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因此io.EOF底层的类型是errors.errorString结构体. 而结构体类型是不支持定义常量的. 不过errors.errorString结构体中只有一个字符串类型, io.EOF对应的错误字符串正是&amp;rdquo;EOF&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;我们可以为EOF重新实现一个以字符串为底层类型的新错误类型:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package io
+
+type errorString string
+
+func (e errorString) Error() string {
+    return string(e)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个新的io.errorString实现了两个特性: 首先是满足了error接口; 其次它是基于string类型重新定义, 因此支持定义常量. 因此我们可以基于errorString重新将io.EOF定义为常量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;const EOF = errorString(&amp;quot;EOF&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样EOF就变成了编译时可以确定的常量类型, 常量的值依然是“EOF”字符串. 但是也带来了新的问题: EOF已经不再是一个接口类型, 它会破坏旧代码的兼容性吗?&lt;/p&gt;
+
+&lt;h2 id=&#34;4-eof常量到error接口的隐式转换&#34;&gt;4. EOF常量到error接口的隐式转换&lt;/h2&gt;
+
+&lt;p&gt;重新将EOF从error类型的变量改定义为errorString类型的常量并不会带来兼容问题!&lt;/p&gt;
+
+&lt;p&gt;首先io.EOF虽然被定义为变量, 但是从语义角度看它其实是常量, 换言之我们只会读取这个值. 其次读取到io.EOF之后, 我们是将其作为error接口类型使用, 唯一的用处是和用户返回的错误进行相等性比较.&lt;/p&gt;
+
+&lt;p&gt;比如有以下的代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func Foo(r io.Reader) {
+    var p []byte
+    if _, err := r.Read(p); err != io.EOF {
+        // ...
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里和io.EOF进行比较的err变量必然是error类型, 或者是满足error接口的其他类型. 如果err是接口类型, 那么将io.EOF换成errorString(&amp;ldquo;EOF&amp;rdquo;)常量也是可以工作的:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func Foo(r io.Reader) {
+    var p []byte
+    if _, err := r.Read(p); err != errorString(&amp;quot;EOF&amp;quot;) {
+        // ...
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是因为Go语言中一个普通类型的值在和接口类型的值进行比较运算时, 会被隐式转会为接口类型(开这个后门的原因时为了方便接口代码的编写). 或则说在进行比较的时刻, errorString(&amp;ldquo;EOF&amp;rdquo;)已经被替换成error(errorString(&amp;ldquo;EOF&amp;rdquo;)).&lt;/p&gt;
+
+&lt;p&gt;普通类型到接口的隐式转会虽然方便, 但是也带来了很多坑. 比如以下的例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func Foo() error {
+    var p *SomeError = nil
+    return p
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以上代码的nil其实是&lt;code&gt;*SomeError(nil)&lt;/code&gt;. 而&lt;code&gt;if err != nil&lt;/code&gt; 中的nil其实是error(nil).&lt;/p&gt;
+
+&lt;p&gt;而定义为常量的io.EOF常量在和error接口类型的值比较时, io.EOF常量会被转化为对应的接口类型. 这样新的io.EOF错误常量就可以和以前的代码无缝兼容了.&lt;/p&gt;
+
+&lt;h2 id=&#34;5-总结&#34;&gt;5. 总结&lt;/h2&gt;
+
+&lt;p&gt;普通类型到接口类型的隐式转换、常量的默认类型和基础类型是Go语言中比较隐晦的特性, 很多人虽然在使用这些规则但是并没有意识到它们的细节. 本文从分析io.EOF设计缺陷为起点, 讨论了将常量用于接口值定义的一种思路.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>《WebAssembly 标准入门》开始预售了，欢迎关注!</title>
+      <link>https://chai2010.cn/post/wasm/wasm-book/</link>
+      <pubDate>Fri, 07 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/wasm/wasm-book/</guid>
+      
+        <description>&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。本书详尽介绍了 WebAssembly 程序在 JavaScript 环境下的使用方法、WebAssembly 汇编语言和二进制格式，给出了大量简单易懂的示例，同时以 C/C++和 Go 语言开发环境为例，介绍了如何使用其他高级语言开发 WebAssembly 模块。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://erpimg.epubit.com:8081/upload/img/erp/A20181946.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;序&#34;&gt;序&lt;/h2&gt;
+
+&lt;p&gt;某一天，有朋友向我推荐了一项新技术——WebAssembly。我认为这是一项值得关注的技术。&lt;/p&gt;
+
+&lt;p&gt;说WebAssembly是一门编程语言，但它更像一个编译器。实际上它是一个虚拟机，包含了一门低级汇编语言和对应的虚拟机体系结构，而WebAssembly这个名字从字面理解就说明了一切——Web的汇编语言。它的优点是文件小、加载快、执行效率非常高，可以实现更复杂的逻辑。&lt;/p&gt;
+
+&lt;p&gt;其实，我觉得出现这样的技术并不令人意外，而只是顺应了潮流，App的封闭系统必然会被新一代Web OS取代。但现有的Web开发技术，如JavaScript，前端执行效率和解决各种复杂问题的能力还不足，而WebAssembly的编译执行功能恰恰能弥补这些不足。WebAssembly标准是在谋智（Mozilla）、谷歌（Google）、微软（Microsoft）、苹果（Apple）等各大厂商的大力推进下诞生的，目前包括Chrome、Firefox、Safari、Opera、Edge在内的大部分主流浏览器均已支持WebAssembly。这使得WebAssembly前景非常好。&lt;/p&gt;
+
+&lt;p&gt;WebAssembly是Web前端技术，具有很强的可移植性，技术的潜在受益者不局限于传统的前端开发人员，随着技术的推进，越来越多的其他语言的开发者也将从中受益。如果开发者愿意，他们可以使用C/C++、Go、Rust、Kotlin、C#等开发语言来写代码，然后编译为WebAssembly，并在Web上执行，这是不是很酷？它能让我们很容易将用其他编程语言编写的程序移植到Web上，对于企业级应用和工业级应用都是巨大利好。&lt;/p&gt;
+
+&lt;p&gt;WebAssembly的应用场景也相当丰富，如Google Earth，2017年10月Google Earth开始在Firefox上运行，其中的关键就是使用了WebAssembly；再如网页游戏，WebAssembly能让HTML5游戏引擎速度大幅提高，国内一家公司使用WebAssembly后引擎效率提高了300%。&lt;/p&gt;
+
+&lt;p&gt;WebAssembly作为一种新兴的技术，为开发者提供了一种崭新的思路和工作方式，未来是很有可能大放光彩的，不过目前其相关的资料和社区还不够丰富，尽管已经有一些社区开始出现了相关技术文章，CSDN上也有较多的文章，但像本书这样全面系统地介绍WebAssembly技术的还不多，甚至没有。本书的两位作者都是有10多年经验的一线开发者，他们从WebAssembly概念诞生之初就开始密切关注该技术的发展，其中柴树杉是Emscripten（WebAssembly的技术前身之一）的首批实践者，丁尔男是国内首批工程化使用WebAssembly的开发者。&lt;/p&gt;
+
+&lt;p&gt;2018年7月，WebAssembly社区工作组发布了WebAssembly 1.0标准。现在，我在第一时间就向国内开发者介绍和推荐本书，是希望开发者能迅速地了解和学习新技术，探索新技术的价值。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;——蒋涛 CSDN创始人、总裁，极客帮创始合伙人&lt;/em&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言实现WebDAV文件系统</title>
+      <link>https://chai2010.cn/post/2018/webdav/</link>
+      <pubDate>Wed, 24 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/webdav/</guid>
+      
+        <description>&lt;p&gt;WebDAV （Web-based Distributed Authoring and Versioning） 是一种基于 HTTP 1.1协议的通信协议。它扩展了HTTP 1.1，在GET、POST、HEAD等几个HTTP标准方法以外添加了一些新的方法，使应用程序可对Web Server直接读写，并支持写文件锁定(Locking)及解锁(Unlock)，还可以支持文件的版本控制。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;使用WebDAV可以完成的工作包括：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;特性（元数据）处理。可以使用WebDAV中的PROPFIND和PROPPATCH方法可创建、删除和查询有关文件的信息，例如作者和创建日期。&lt;/li&gt;
+&lt;li&gt;集合和资源的管理。可以使用GET、PUT、DELETE和MKCOL方法创建文档集合并检索分层结构成员列表（类似于文件系统中的目录）。&lt;/li&gt;
+&lt;li&gt;锁定。可以禁止多人同时对一个文档进行操作。这将有助于防止出现“丢失更新”（更改被覆盖）的问题。&lt;/li&gt;
+&lt;li&gt;名称空间操作。您可以使用COPY和MOVE方法让服务器复制和删除相关资源。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;目前常见的NAS都提供WebDAV服务功能，很多手机应用也是通过WebDAV协议来实现应用间的文件共享。要提供自己的WebDAV服务首先要安装相应的软件。macOS下可以从App Store中安装免费的WebDAVNav Server软件。WebDAVNav Server服务启动界面如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/webdav/webdavnav-server.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;本节我们尝试用Go语言实现自己的WebDAV服务。&lt;/p&gt;
+
+&lt;h2 id=&#34;webdav对http的扩展&#34;&gt;WebDAV对HTTP的扩展&lt;/h2&gt;
+
+&lt;p&gt;WebDAV扩展了HTTP/1.1协议。它定义了新的HTTP标头，客户机可以通过这些新标头传递WebDAV特有的资源请求。这些标头为：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Destination:&lt;/li&gt;
+&lt;li&gt;Lock-Token:&lt;/li&gt;
+&lt;li&gt;Timeout:&lt;/li&gt;
+&lt;li&gt;DAV:&lt;/li&gt;
+&lt;li&gt;If:&lt;/li&gt;
+&lt;li&gt;Depth:&lt;/li&gt;
+&lt;li&gt;Overwrite:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;同时，WebDAV标准还引入了若干新HTTP方法，用于告知启用了WebDAV的服务器如何处理请求。这些方法是对现有方法（例如 GET、PUT和DELETE）的补充，可用来执行WebDAV事务。下面是这些新HTTP方法的介绍：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;LOCK。锁定资源，使用 Lock-Token: 标头。&lt;/li&gt;
+&lt;li&gt;UNLOCK。解除锁定，使用 Lock-Token: 标头。&lt;/li&gt;
+&lt;li&gt;PROPPATCH。设置、更改或删除单个资源的特性。&lt;/li&gt;
+&lt;li&gt;PROPFIND。用于获取一个或多个资源的一个或多个特性信息。该请求可能会包含一个值为 0、1或infinity的Depth: 标头。其中，0表示指定将获取指定URI处的集合的特性（也就是该文件或目录）；1表示指定将获取该集合以及位于该指定URI之下与其紧邻的资源的特性（非嵌套的子目录或子文件）；infinity表示指定将获取全部子目录或子文件（深度过大会加重对服务器的负担）。&lt;/li&gt;
+&lt;li&gt;COPY。复制资源，可以使用 Depth: 标头移动资源，使用 Destination: 标头指定目标。如果需要，COPY 方法也使用 Overwrite: 标头。&lt;/li&gt;
+&lt;li&gt;MOVE。移动资源，可以使用 Depth: 标头移动资源，使用 Destination: 标头指定目标。如果需要，MOVE 方法也使用 Overwrite: 标头。&lt;/li&gt;
+&lt;li&gt;MKCOL。用于创建新集合（对应目录）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;最简的webdav服务&#34;&gt;最简的WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;Go语言扩展包 &lt;code&gt;golang.org/x/net/webdav&lt;/code&gt; 提供了WebDAV服务的支持。其中webdav.Handler实现了http.Handle接口，用处理WebDAV特有的http请求。要构造webdav.Handler对象的话，我们至少需要指定一个文件系统和锁服务。其中webdav.Dir将本地的文件系统映射为WebDAV的文件系统，webdav.NewMemLS则是基于本机内存构造一个锁服务。&lt;/p&gt;
+
+&lt;p&gt;下面是最简单的WebDAV服务实现：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;net/http&amp;quot;
+
+	&amp;quot;golang.org/x/net/webdav&amp;quot;
+)
+
+func main() {
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	})
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行之后，当前目录就可以通过WebDAV方式访问了。&lt;/p&gt;
+
+&lt;h2 id=&#34;只读的webdav服务&#34;&gt;只读的WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;前面实现的WebDAV服务默认不需要任何密码就可以访问文件系统，任何匿名的用户可以添加、修改、删除文件，这对于网络服务来说太不安全了。&lt;/p&gt;
+
+&lt;p&gt;为了防止被用户无意或恶意修改，我们可以关闭WebDAV的修改功能。参考WebDAV协议规范可知，修改相关的操作主要涉及PUT/DELETE/PROPPATCH/MKCOL/COPY/MOVE等几个方法。我们只要将这几个方法屏蔽了就可以实现一个只读的WebDAV服务。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		switch req.Method {
+		case &amp;quot;PUT&amp;quot;, &amp;quot;DELETE&amp;quot;, &amp;quot;PROPPATCH&amp;quot;, &amp;quot;MKCOL&amp;quot;, &amp;quot;COPY&amp;quot;, &amp;quot;MOVE&amp;quot;:
+			http.Error(w, &amp;quot;WebDAV: Read Only!!!&amp;quot;, http.StatusForbidden)
+			return
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们通过http.HandleFunc重新包装了fs.ServeHTTP方法，然后将和更新相关的操作屏蔽掉。这样我们就实现了一个只读的WebDAV服务。&lt;/p&gt;
+
+&lt;h2 id=&#34;密码认证webdav服务&#34;&gt;密码认证WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;WebDAV是基于HTTP协议扩展的标准，我们可以通过HTTP的基本认证机制设置用户名和密码。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		// 获取用户名/密码
+		username, password, ok := req.BasicAuth()
+		if !ok {
+			w.Header().Set(&amp;quot;WWW-Authenticate&amp;quot;, `Basic realm=&amp;quot;Restricted&amp;quot;`)
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		// 验证用户名/密码
+		if username != &amp;quot;user&amp;quot; || password != &amp;quot;123456&amp;quot; {
+			http.Error(w, &amp;quot;WebDAV: need authorized!&amp;quot;, http.StatusUnauthorized)
+			return
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们通过req.BasicAuth来获取用户名和密码，然后进行验证。如果没有设置用户名和密码，则返回一个http.StatusUnauthorized状态，HTTP客户端会弹出让用户输入密码的窗口。&lt;/p&gt;
+
+&lt;p&gt;由于HTTP协议并没有加密，因此用户名和密码也是明文传输。为了更安全，我们可以选择用HTTPS协议提供WebDAV服务。为此，我们需要准备一个证书文件（crypto/tls包中的generate_cert.go程序可以生成证书），然后用http.ListenAndServeTLS来启动https服务。&lt;/p&gt;
+
+&lt;p&gt;同时需要注意的是，从Windows Vista起，微软就禁用了http形式的基本WebDAV验证形式(KB841215)，默认必须使用https连接。可以在Windows Vista/7/8中，改注册表:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;HKEY_LOCAL_MACHINE&amp;gt;&amp;gt;SYSTEM&amp;gt;&amp;gt;CurrentControlSet&amp;gt;&amp;gt;Services&amp;gt;&amp;gt;WebClient&amp;gt;&amp;gt;Parameters&amp;gt;&amp;gt;BasicAuthLevel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;把这个值从1改为2，然后进控制面板/服务，把WebClient服务重启。&lt;/p&gt;
+
+&lt;h2 id=&#34;浏览器视图&#34;&gt;浏览器视图&lt;/h2&gt;
+
+&lt;p&gt;WebDAV是基于HTTP协议，理论上从浏览器访问WebDAV服务器会更简单。但是，当我们在浏览器中访问WebDAV服务的根目录之后，收到了“Method Not Allowed”错误信息。&lt;/p&gt;
+
+&lt;p&gt;这是因为，根据WebDAV协议规范，http的GET方法只能用于获取文件。在Go语言实现的webdav库中，如果用GET访问一个目录，会返回一个http.StatusMethodNotAllowed状态码，对应“Method Not Allowed”错误信息。&lt;/p&gt;
+
+&lt;p&gt;为了支持浏览器删除目录列表，我们对针对目录的GET操作单独生成html页面：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		if req.Method == &amp;quot;GET&amp;quot; &amp;amp;&amp;amp; handleDirList(fs.FileSystem, w, req) {
+			return
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，handleDirList函数用于处理目录列表，然后返回ture。handleDirList的实现如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func handleDirList(fs webdav.FileSystem, w http.ResponseWriter, req *http.Request) bool {
+	ctx := context.Background()
+
+	f, err := fs.OpenFile(ctx, req.URL.Path, os.O_RDONLY, 0)
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+
+	if fi, _ := f.Stat(); fi != nil &amp;amp;&amp;amp; !fi.IsDir() {
+		return false
+	}
+
+	dirs, err := f.Readdir(-1)
+	if err != nil {
+		log.Print(w, &amp;quot;Error reading directory&amp;quot;, http.StatusInternalServerError)
+		return false
+	}
+
+	w.Header().Set(&amp;quot;Content-Type&amp;quot;, &amp;quot;text/html; charset=utf-8&amp;quot;)
+	fmt.Fprintf(w, &amp;quot;&amp;lt;pre&amp;gt;\n&amp;quot;)
+	for _, d := range dirs {
+		name := d.Name()
+		if d.IsDir() {
+			name += &amp;quot;/&amp;quot;
+		}
+		fmt.Fprintf(w, &amp;quot;&amp;lt;a href=\&amp;quot;%s\&amp;quot;&amp;gt;%s&amp;lt;/a&amp;gt;\n&amp;quot;, name, name)
+	}
+	fmt.Fprintf(w, &amp;quot;&amp;lt;/pre&amp;gt;\n&amp;quot;)
+	return true
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在可以通过浏览器来访问WebDAV目录列表了。&lt;/p&gt;
+
+&lt;h2 id=&#34;实用的webdav服务&#34;&gt;实用的WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;为了构造实用的WebDAV服务，我们通过命令行参数设置相关信息，同时将前面的功能整合起来。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;flag&amp;quot;
+	&amp;quot;fmt&amp;quot;
+	&amp;quot;log&amp;quot;
+	&amp;quot;net/http&amp;quot;
+	&amp;quot;os&amp;quot;
+
+	&amp;quot;golang.org/x/net/context&amp;quot;
+	&amp;quot;golang.org/x/net/webdav&amp;quot;
+)
+
+var (
+	flagRootDir   = flag.String(&amp;quot;dir&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;webdav root dir&amp;quot;)
+	flagHttpAddr  = flag.String(&amp;quot;http&amp;quot;, &amp;quot;:80&amp;quot;, &amp;quot;http or https address&amp;quot;)
+	flagHttpsMode = flag.Bool(&amp;quot;https-mode&amp;quot;, false, &amp;quot;use https mode&amp;quot;)
+	flagCertFile  = flag.String(&amp;quot;https-cert-file&amp;quot;, &amp;quot;cert.pem&amp;quot;, &amp;quot;https cert file&amp;quot;)
+	flagKeyFile   = flag.String(&amp;quot;https-key-file&amp;quot;, &amp;quot;key.pem&amp;quot;, &amp;quot;https key file&amp;quot;)
+	flagUserName  = flag.String(&amp;quot;user&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;user name&amp;quot;)
+	flagPassword  = flag.String(&amp;quot;password&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;user password&amp;quot;)
+	flagReadonly  = flag.Bool(&amp;quot;read-only&amp;quot;, false, &amp;quot;read only&amp;quot;)
+)
+
+func init() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, &amp;quot;Usage of WebDAV Server\n&amp;quot;)
+		flag.PrintDefaults()
+		fmt.Fprintf(os.Stderr, &amp;quot;\nReport bugs to &amp;lt;chaishushan{AT}gmail.com&amp;gt;.\n&amp;quot;)
+	}
+}
+
+func main() {
+	flag.Parse()
+
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(*flagRootDir),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		if *flagUserName != &amp;quot;&amp;quot; &amp;amp;&amp;amp; *flagPassword != &amp;quot;&amp;quot; {
+			username, password, ok := req.BasicAuth()
+			if !ok {
+				w.Header().Set(&amp;quot;WWW-Authenticate&amp;quot;, `Basic realm=&amp;quot;Restricted&amp;quot;`)
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			if username != *flagUserName || password != *flagPassword {
+				http.Error(w, &amp;quot;WebDAV: need authorized!&amp;quot;, http.StatusUnauthorized)
+				return
+			}
+		}
+
+		if req.Method == &amp;quot;GET&amp;quot; &amp;amp;&amp;amp; handleDirList(fs.FileSystem, w, req) {
+			return
+		}
+
+		if *flagReadonly {
+			switch req.Method {
+			case &amp;quot;PUT&amp;quot;, &amp;quot;DELETE&amp;quot;, &amp;quot;PROPPATCH&amp;quot;, &amp;quot;MKCOL&amp;quot;, &amp;quot;COPY&amp;quot;, &amp;quot;MOVE&amp;quot;:
+				http.Error(w, &amp;quot;WebDAV: Read Only!!!&amp;quot;, http.StatusForbidden)
+				return
+			}
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	if *flagHttpsMode {
+		http.ListenAndServeTLS(*flagHttpAddr, *flagCertFile, *flagKeyFile, nil)
+	} else {
+		http.ListenAndServe(*flagHttpAddr, nil)
+	}
+}
+
+func handleDirList(fs webdav.FileSystem, w http.ResponseWriter, req *http.Request) bool {
+	// 参考前面的代码
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;显示帮助信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go run main.go -h
+Usage of WebDAV Server
+  -dir string
+    	webdav root dir
+  -http string
+    	http or https address (default &amp;quot;:80&amp;quot;)
+  -https-cert-file string
+    	https cert file (default &amp;quot;cert.pem&amp;quot;)
+  -https-key-file string
+    	https key file (default &amp;quot;key.pem&amp;quot;)
+  -https-mode
+    	use https mode
+  -password string
+    	user password
+  -read-only
+    	read only
+  -user string
+    	user name
+
+Report bugs to &amp;lt;chaishushan{AT}gmail.com&amp;gt;.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下命令以Https启动一个WebDAV服务，对应本机的Go语言安装目录，同时设置用户名和密码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go run main.go -https-mode -user=user -password=123456 -dir=/usr/local/go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面是在iPod上通过WebDANNav+应用通过WebDAV协议访问/usr/local/go的预览图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/webdav/ios-webdav-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言和Windows服务</title>
+      <link>https://chai2010.cn/post/2018/window-service/</link>
+      <pubDate>Sun, 21 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/window-service/</guid>
+      
+        <description>&lt;p&gt;Windows服务使您能够创建在后台Windows会话中可长时间运行的可执行应用程序。Windows服务可以在计算机启动时自动启动，管理员也可以临时暂停和重新启动服务。Windows服务非常适合运行一些需要长时间在后台运行的服务器程序，例如Web服务器等应用。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Go语言的官方扩展包&lt;code&gt;&amp;quot;golang.org/x/sys/windows&amp;quot;&lt;/code&gt;以及其子包对Windows服务提供了必要的支持。不过这个扩展包比较偏向底层使用比较繁琐，为了简化Windows服务的开发作者在此基础上封装了一个简化的&lt;code&gt;&amp;quot;github.com/chai2010/winsvc&amp;quot;&lt;/code&gt;包。通过封装的&lt;code&gt;winsvc&lt;/code&gt;包我们可以很容易构造一个windows服务。&lt;/p&gt;
+
+&lt;h2 id=&#34;简单的web服务&#34;&gt;简单的web服务&lt;/h2&gt;
+
+&lt;p&gt;因为Windows服务一般是在后台长时间运行的程序，为了便于演示我们先构造一个简单的现实当前服务器时间的http服务程序。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;context&amp;quot;
+	&amp;quot;net&amp;quot;
+	&amp;quot;net/http&amp;quot;
+	&amp;quot;time&amp;quot;
+)
+
+var (
+	server *http.Server
+)
+
+func main() {
+	StartServer()
+}
+
+func StartServer() {
+	log.Println(&amp;quot;StartServer, port = 8080&amp;quot;)
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, &amp;quot;winsrv server&amp;quot;, time.Now())
+	})
+
+	server = &amp;amp;http.Server{Addr: &amp;quot;:8080&amp;quot;}
+	server.ListenAndServe()
+}
+
+func StopServer() {
+	if server != nil {
+		server.Shutdown(context.Background()) // Go 1.8+
+	}
+	log.Println(&amp;quot;StopServer&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，&lt;code&gt;StartServer&lt;/code&gt;和&lt;code&gt;StopServer&lt;/code&gt;函数分别对应服务的启动和停止操作。在这个程序中，&lt;code&gt;StopServer&lt;/code&gt;函数并没有用到，我们只需要通过&lt;code&gt;CTRL+C&lt;/code&gt;强制停止服务就可以了。但是对于Windows服务程序，我们不能用暴力的方式强制终止程序，因此需要封装一个程序可以主动停止的函数。&lt;/p&gt;
+
+&lt;h2 id=&#34;windows服务的运行环境&#34;&gt;Windows服务的运行环境&lt;/h2&gt;
+
+&lt;p&gt;因为普通的程序无法处理Windows服务特有的消息，普通的Go程序也无法在服务模式运行。我们通过&lt;code&gt;&amp;quot;github.com/chai2010/winsvc&amp;quot;&lt;/code&gt;包启动的服务可以吹Windows服务特有的消息，因此也就可以支持服务模式运行。同时Windows服务程序需要在后台长时间运行不能随意退出，普通的小程序是不能作为Windows服务来运行的。&lt;/p&gt;
+
+&lt;p&gt;如果要提供Windows服务模式的支持, main需要做适当调整:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;import (
+	&amp;quot;github.com/chai2010/winsvc&amp;quot;
+)
+
+func main() {
+	// run as service
+	if !winsvc.IsAnInteractiveSession() {
+		log.Println(&amp;quot;main:&amp;quot;, &amp;quot;runService&amp;quot;)
+		if err := winsvc.RunAsService(&amp;quot;myserver&amp;quot;, StartServer, StopServer, false); err != nil {
+			log.Fatalf(&amp;quot;svc.Run: %v\n&amp;quot;, err)
+		}
+		return
+	}
+
+	// run as normal
+	StartServer()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;程序中通过&lt;code&gt;winsvc.IsAnInteractiveSession&lt;/code&gt;来判断是否运行在交互模式，普通程序运行一般都是交互模式，windows服务则是运行在非交互模式。当程序处在非交互模式时，我们通过&lt;code&gt;winsvc.RunAsService&lt;/code&gt;来运行服务，也就是以Windows服务的模式运行。同时该程序依然可以在普通模式下运行。&lt;/p&gt;
+
+&lt;p&gt;当程序运行在名为&lt;code&gt;myserver&lt;/code&gt;服务模式时，提供对Windows服务相关消息的处理支持。可以通过管理员手工注册Windows服务，这时需要指定服务名称和服务程序的绝对路径。下面四个命令分别是注册服务、启动服务、停止服务、删除服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sc  create myserver binPath= &amp;quot;C:\path\to\myserver.exe -data-dir=C:\path\myserver.data&amp;quot;
+net start  myserver
+net stop   myserver
+sc  delete myserver
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为Windows服务启动时并不需要登录用户帐号，因此程序不能引用普通帐号的环境变量，同时要尽量避免通过相对路径依赖当前目录。&lt;/p&gt;
+
+&lt;h2 id=&#34;自动注册服务&#34;&gt;自动注册服务&lt;/h2&gt;
+
+&lt;p&gt;手工注释Windows服务比较繁琐，我们可以在程序的命令行参赛中增加自动注册服务的支持。&lt;/p&gt;
+
+&lt;p&gt;要在程序中将程序本身注册为服务，首先需要获取当前程序的绝对路径。我们可以通过&lt;code&gt;winsvc.GetAppPath()&lt;/code&gt;来获取当前程序的绝对路径。同时，为了让服务程序在运行时有一个固定的当前目录，我们一般可以在启动的时候将当前目录切换到进程所在目录，这些工作可以在&lt;code&gt;init&lt;/code&gt;函数中完成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var (
+	appPath string // 程序的绝对路径
+)
+
+func init() {
+	var err error
+	if appPath, err = winsvc.GetAppPath(); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Chdir(filepath.Dir(appPath)); err != nil {
+		log.Fatal(err)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注册服务可以通过&lt;code&gt;winsvc.InstallService&lt;/code&gt;实现，注册服务是需要指定服务程序的路径和唯一服务的名称：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.InstallService(appPath, &amp;quot;myserver&amp;quot;, &amp;quot;myserver service&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;和注册服务相对应的是取消注册服务，取消注册服务可以通过&lt;code&gt;winsvc.RemoveService&lt;/code&gt;实现，直接通过服务的名称就可以删除服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.RemoveService(&amp;quot;myserver&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Windows服务在成功注册之后就可以以服务模式运行了，可以通过&lt;code&gt;winsvc.StartService&lt;/code&gt;向服务发送启动消息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.StartService(&amp;quot;myserver&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对于已经在运行的Windows服务，可以通过&lt;code&gt;winsvc.StopService&lt;/code&gt;向服务发送停止运行的命令。Windows服务在收到停止运行的命令后，会在程序退出之前调用&lt;code&gt;StopServer&lt;/code&gt;函数，&lt;code&gt;StopServer&lt;/code&gt;函数是在启动Windows服务时由&lt;code&gt;winsvc.RunAsService&lt;/code&gt;函数参数指定。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.StopService(&amp;quot;myserver&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在我们可以将这些功能整合在一起，然后通过命令行参数来选择具体的命令。下面是完整的例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var (
+	appPath string
+
+	flagServiceName = flag.String(&amp;quot;service-name&amp;quot;, &amp;quot;myserver&amp;quot;, &amp;quot;Set service name&amp;quot;)
+	flagServiceDesc = flag.String(&amp;quot;service-desc&amp;quot;, &amp;quot;myserver service&amp;quot;, &amp;quot;Set service description&amp;quot;)
+
+	flagServiceInstall   = flag.Bool(&amp;quot;service-install&amp;quot;, false, &amp;quot;Install service&amp;quot;)
+	flagServiceUninstall = flag.Bool(&amp;quot;service-remove&amp;quot;, false, &amp;quot;Remove service&amp;quot;)
+	flagServiceStart     = flag.Bool(&amp;quot;service-start&amp;quot;, false, &amp;quot;Start service&amp;quot;)
+	flagServiceStop      = flag.Bool(&amp;quot;service-stop&amp;quot;, false, &amp;quot;Stop service&amp;quot;)
+)
+
+func init() {
+	// change to current dir
+	var err error
+	if appPath, err = winsvc.GetAppPath(); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Chdir(filepath.Dir(appPath)); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func main() {
+	flag.Parse()
+
+	// install service
+	if *flagServiceInstall {
+		if err := winsvc.InstallService(appPath, *flagServiceName, *flagServiceDesc); err != nil {
+			log.Fatalf(&amp;quot;installService(%s, %s): %v\n&amp;quot;, *flagServiceName, *flagServiceDesc, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// remove service
+	if *flagServiceUninstall {
+		if err := winsvc.RemoveService(*flagServiceName); err != nil {
+			log.Fatalln(&amp;quot;removeService:&amp;quot;, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// start service
+	if *flagServiceStart {
+		if err := winsvc.StartService(*flagServiceName); err != nil {
+			log.Fatalln(&amp;quot;startService:&amp;quot;, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// stop service
+	if *flagServiceStop {
+		if err := winsvc.StopService(*flagServiceName); err != nil {
+			log.Fatalln(&amp;quot;stopService:&amp;quot;, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// run as service
+	if !winsvc.InServiceMode() {
+		log.Println(&amp;quot;main:&amp;quot;, &amp;quot;runService&amp;quot;)
+		if err := winsvc.RunAsService(*flagServiceName, StartServer, StopServer, false); err != nil {
+			log.Fatalf(&amp;quot;svc.Run: %v\n&amp;quot;, err)
+		}
+		return
+	}
+
+	// run as normal
+	StartServer()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;假设程序构成的目标文件为&lt;code&gt;myserver.exe&lt;/code&gt;，那么我们现在可以通过以下命令来分别注册服务、启动和停止服务、删除服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 普通模式运行
+$ go build -o myserver.exe myserver.go
+$ myserver.exe
+
+# 注册为Windows服务
+$ myserver.exe -service-install
+
+# 启动和停止Windows服务
+$ myserver.exe -service-start
+$ myserver.exe -service-stop
+
+# 删除服务
+# 删除之前需要先停止服务
+$ myserver.exe -service-remove
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在前面的章节中，我们演示过一个WebDAV的服务。读者可以尝试实现一个支持Windows后台服务模式运行的WebDAV的服务器。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go中的wasm汇编语言</title>
+      <link>https://chai2010.cn/post/2018/go-wasm-asm/</link>
+      <pubDate>Wed, 03 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-wasm-asm/</guid>
+      
+        <description>&lt;p&gt;Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;runtime-memclrnoheappointers-函数&#34;&gt;runtime·memclrNoHeapPointers 函数&lt;/h2&gt;
+
+&lt;p&gt;改函数源文件在：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s&#34;&gt;https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;函数的实现如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;// func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+TEXT runtime·memclrNoHeapPointers(SB), NOSPLIT, $0-16
+	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;函数签名&#34;&gt;函数签名&lt;/h2&gt;
+
+&lt;p&gt;函数的签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对应C语言的签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;void memclrNoHeapPointers(int32_t ptr, int32_t n);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对应WebAssembly的函数签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	...
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;读取函数参数&#34;&gt;读取函数参数&lt;/h2&gt;
+
+&lt;p&gt;因为Go语言是动态栈，和WebAssembly的内存模型并不一样。我们先忽略这些问题的细节，看看如何读取参数的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;熟悉Go汇编语言的同学肯定很容易理解上述代码。其中第一行指令是将Go函数的第一个参数加载到R0寄存器，第二行指令是将第二个参数加载到R1寄存器。FP是伪寄存器，表示当前函数调用的帧寄存器，每个参数分别使用参数名作为前缀+参数相对于FP的地址偏移量确定。&lt;/p&gt;
+
+&lt;p&gt;不过WebAssembly是基于栈式的虚拟机结构，并不存在寄存器的概念。不过我们可以将R0和R1看作是函数的局部变量。因此在memclrNoHeapPointers函数的定义中再增加2个局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+	...
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;webassembly汇编语言&#34;&gt;WebAssembly汇编语言&lt;/h2&gt;
+
+&lt;p&gt;现在将函数的主体指令改为WebAssembly汇编语言，大概是如下的写法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;具体的算法类似以下的Go语言代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func memclrNoHeapPointers(ptr, n int32) {
+	R0 := ptr
+	R1 := n
+
+	loop: for {
+		if R1 == 0 {
+			return
+		}
+
+		Memort[R0] = 0
+		R0++
+		R1--
+
+		continue loop
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在循环中，第一组指令是R1表示的未清0的元素个数是否未0，如果未0则返回。对应代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R1
+		I64Eqz
+		If
+			RET
+		End
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中Get对应WebAssembly的get_local指令，用于根据局部变量的索引标号获取一个值，放到栈中。I64Eqz对应i64.eqz指令，从栈中取出一个值，判断是否为0，并将结果从新放入栈中。而If则对应br_if控制流指令，首先从栈取出一个值，如果非0则执行分支内的指令。RET返回函数，和WebAssembly的return指令不一定完全等价。&lt;/p&gt;
+
+&lt;p&gt;第二组指令是强R0表示的内存地址对应的空间清0：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Get对应get_local指令，取出一个i64类型的值。I32WrapI64对应i32.wrap/i64指令，将i64类型强制转型为i32类型，重新入栈。I64Const则是生成一个常数0，入栈。I64Store8对应i32.store8指令，从栈取出内存地址，第二个参数是0表示地址采用默认的对其方式。简而言之就是将R0对应的地址设置为0。&lt;/p&gt;
+
+&lt;p&gt;第三组是将R0加一后存回R0局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;第四组是将R1减一后存回R1局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;循环内的最后一个&lt;code&gt;Br loop&lt;/code&gt;指令是继续从loop标号开始的循环。&lt;/p&gt;
+
+&lt;p&gt;函数最后的UNDEF并不是WebAssembly汇编指令。&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;因为Go语言序言支持栈的分裂，Go语言对WebAssembly的汇编语言是一个变异的版本。Go语言使用局部或者是全局变量来模拟寄存器，在函数的内部在依然基于WebAssembly栈虚拟机的方式工作。&lt;/p&gt;
+
+&lt;p&gt;因为WebAssembly也是刚刚支持的平台，很多技术细节还需要进一步确认。想深入了解WebAssembly汇编语言的同学，本人写的 &lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md&#34;&gt;《WebAssembly标准入门
+》&lt;/a&gt; 中的汇编语言章节部分的内容。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go实现Python模块</title>
+      <link>https://chai2010.cn/post/2018/go-python/</link>
+      <pubDate>Mon, 01 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-python/</guid>
+      
+        <description>
+
+&lt;p&gt;Go语言和Python语言作为当下最红的语言，使用Go语言来为Python语言编写模块是很多用户梦寐以求的方式。这里我们将演示如何通过Go语言来为Python脚本语言编写扩展模块。&lt;/p&gt;
+
+&lt;p&gt;Python的本地模块采用C语言接口规范，因此Go语言编写的函数也需要以C语言接口规范导出。Go语言的CGO特性很早就实现了将Go语言编写为C语言的静态库或动态库。关于CGO的使用细节请参考作者编写的《Go语言高级编程》的第二章CGO编程部分。&lt;/p&gt;
+
+&lt;h2 id=&#34;基于ctypes&#34;&gt;基于ctypes&lt;/h2&gt;
+
+&lt;p&gt;Python内置了非常丰富的模块，其中ctypes支持直接从C动态库调用函数。为了演示如何基于ctypes技术来扩展模块，我们需要先用Go语言创建一个C动态库。&lt;/p&gt;
+
+&lt;p&gt;我们使用的是之前出现过的例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// main.go
+
+package main
+
+import &amp;quot;C&amp;quot;
+import &amp;quot;fmt&amp;quot;
+
+func main() {}
+
+//export SayHello
+func SayHello(name *C.char) {
+    fmt.Printf(&amp;quot;hello %s!\n&amp;quot;, C.GoString(name))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中只导出了一个SayHello函数，用于打印字符串。通过以下命令基于上述Go代码创建say-hello.so动态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go build -buildmode=c-shared -o say-hello.so main.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在我们就可以通过ctypes模块调用say-hello.so动态库中的SayHello函数了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# hello.py
+import ctypes
+
+libso = ctypes.CDLL(&amp;quot;./say-hello.so&amp;quot;)
+
+SayHello = libso.SayHello
+SayHello.argtypes = [ctypes.c_char_p]
+SayHello.restype = None
+
+SayHello(ctypes.c_char_p(b&amp;quot;hello&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们首先通过ctypes.CDLL加载动态库到libso，并通过libso.SayHello来获取SayHello函数。获取到SayHello函数之后设置函数的输入参数为一个C语言类型的字符串，该函数没有返回值。然后我们通过&lt;code&gt;ctypes.c_char_p(b&amp;quot;hello&amp;quot;)&lt;/code&gt;将Python字节串转为C语言格式的字符串作为参数调用SayHello。如果一切正常的话就可以输出字符串了。&lt;/p&gt;
+
+&lt;p&gt;从这个例子可以看出，给予ctypes构造Python扩展模块非常简单，本质上只是在构建一个纯C语言规格的动态库。比较复杂的部分在ctypes的具体使用，关于ctypes的具体细节就不详细展开的，用户可以自行参考Python自带的官方文档。&lt;/p&gt;
+
+&lt;h2 id=&#34;基于python-c接口创建&#34;&gt;基于Python C接口创建&lt;/h2&gt;
+
+&lt;p&gt;在前面的例子中，通过ctypes创建的模块必须要用Python再包装一层，否则就要直接面对C语言风格的接口。如果基于基于Python C接口，我们可以完全再Go和C语言层面创建灵活强大的模块，重点是不再需要在Python中重新包装。&lt;/p&gt;
+
+&lt;p&gt;基于Python C接口创建模块和使用C语言的静态库的流程类似：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+/*
+// macOS:
+#cgo darwin pkg-config: python3
+
+// linux
+#cgo linux pkg-config: python3
+
+// windows
+// should generate libpython3.a from python3.lib
+
+#define Py_LIMITED_API
+
+#include &amp;lt;Python.h&amp;gt;
+
+extern PyObject* PyInit_gopkg();
+extern PyObject* Py_gopkg_sum(PyObject *, PyObject *);
+
+static int cgo_PyArg_ParseTuple_ii(PyObject *arg, int *a, int *b) {
+    return PyArg_ParseTuple(arg, &amp;quot;ii&amp;quot;, a, b);
+}
+
+static PyObject* cgo_PyInit_gopkg(void) {
+    static PyMethodDef methods[] = {
+        {&amp;quot;sum&amp;quot;, Py_gopkg_sum, METH_VARARGS, &amp;quot;Add two numbers.&amp;quot;},
+        {NULL, NULL, 0, NULL},
+    };
+    static struct PyModuleDef module = {
+        PyModuleDef_HEAD_INIT, &amp;quot;gopkg&amp;quot;, NULL, -1, methods,
+    };
+
+    return PyModule_Create(&amp;amp;module);
+}
+*/
+
+import &amp;quot;C&amp;quot;
+
+func main() {}
+
+//export PyInit_gopkg
+func PyInit_gopkg() *C.PyObject {
+    return C.cgo_PyInit_gopkg()
+}
+
+//export Py_gopkg_sum
+func Py_gopkg_sum(self, args *C.PyObject) *C.PyObject {
+    var a, b C.int
+    if C.cgo_PyArg_ParseTuple_ii(args, &amp;amp;a, &amp;amp;b) == 0 {
+        return nil
+    }
+
+    return C.PyLong_FromLong(C.long(a + b))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为Python的链接参数要复杂了很多，我们借助pkg-config工具来获取编译参数和链接参数。然后我们在Go语言中分别导出了PyInit_gopkg和Py_gopkg_sum函数，其中PyInit_gopkg函数用于初始化名为gopkg的Python模块，而Py_gopkg_sum函数则是模块中sum方法的实现。&lt;/p&gt;
+
+&lt;p&gt;因此PyArg_ParseTuple是可变参数类型，CGO中无法使用可变参数的C函数，因此我们通过增加一个cgo_PyArg_ParseTuple_ii辅助函数小消除可变参数的影响。同样，模块的方法列表必须在C语言内存空间创建，因为CGO是禁止将Go语言内存直接返回到C语言空间的。&lt;/p&gt;
+
+&lt;p&gt;然后通过以下命令创建gopkg.so动态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go build -buildmode=c-shared -o gopkg.so main.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里需要注意几个出现gopkg名字的地方。gopkg是我们创建的Python模块的名字，因此它对应一个gopkg.so动态库。再gopkg.so动态库中必须有一个PyInit_gopkg函数，该函数是模块的初始化函数。在PyInit_gopkg函数初始化模块时，同样需要指定模块的名字时gopkg。模块中的方法函数是通过函数指针访问，具体的名字没有影响。&lt;/p&gt;
+
+&lt;h3 id=&#34;macos环境构建&#34;&gt;macOS环境构建&lt;/h3&gt;
+
+&lt;p&gt;因为在macOS中，pkg-config不支持Python3版本。不过macOS有一个python3-config的命令可以实现pkg-config类似的功能。不过python3-config生成的编译参数无法直接用于CGO编译选项（因为GCC不能识别部分参数会导致错误构建）。&lt;/p&gt;
+
+&lt;p&gt;我们在python3-config的基础只是又包装了一个工具，在通过python3-config获取到编译参数之后将GCC不支持的参数剔除掉。&lt;/p&gt;
+
+&lt;p&gt;创建py3-config.go文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    for _, s := range os.Args {
+        if s == &amp;quot;--cflags&amp;quot; {
+            out, _ := exec.Command(
+                &amp;quot;python3-config&amp;quot;, &amp;quot;--cflags&amp;quot;,
+            ).CombinedOutput()
+
+            out = bytes.Replace(out, []byte(&amp;quot;-arch&amp;quot;), []byte{}, -1)
+            out = bytes.Replace(out, []byte(&amp;quot;i386&amp;quot;), []byte{}, -1)
+            out = bytes.Replace(out, []byte(&amp;quot;x86_64&amp;quot;), []byte{}, -1)
+
+            fmt.Print(string(out))
+            return
+        }
+        if s == &amp;quot;--libs&amp;quot; {
+            out, _ := exec.Command(
+                &amp;quot;python3-config&amp;quot;, &amp;quot;--ldflags&amp;quot;,
+            ).CombinedOutput()
+
+            fmt.Print(string(out))
+            return
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;cgo中的pkg-config只需要两个参数&lt;code&gt;--cflags&lt;/code&gt;和&lt;code&gt;--libs&lt;/code&gt;。其中&lt;code&gt;--libs&lt;/code&gt;选项的输出我们采用的是&lt;code&gt;python3-config --ldflags&lt;/code&gt;的输出，因为&lt;code&gt;--libs&lt;/code&gt;选项没有包含库的检索路径，而&lt;code&gt;--ldflags&lt;/code&gt;选项则是在指定链接库参数的基础上增加了库的检索路径。&lt;/p&gt;
+
+&lt;p&gt;基于py3-config.go可以创建一个py3-config命令。然后通过PKG_CONFIG环境变量将cgo使用的pkg-config命令指定为我们订制的命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PKG_CONFIG=./py3-config go build -buildmode=c-shared -o gopkg.so main.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对于不支持pkg-config的平台我们都可以基于类似的方法处理。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>《C&#43;&#43;面向wasm编程》开源！[转]</title>
+      <link>https://chai2010.cn/post/2018/cppwasm-book/</link>
+      <pubDate>Tue, 25 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/cppwasm-book/</guid>
+      
+        <description>&lt;p&gt;目前支持WebAssembly的各种高级语言中，与WebAssembly匹配度最高的无疑是C/C++，为此，我们将开源编写《C++面向wasm编程》一书。本书将围绕“如何开发对WebAssembly友好的C/C++程序”这一中心，从Emscripten工具链的使用、C/C++与JavaScript互操作、一般性的设计原则等多方面介绍相关知识，并分享作者在实际工程应用中总结出的诸多经验。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/3dgen/cppwasm-book/master/cover.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;原文：&lt;a href=&#34;https://mp.weixin.qq.com/s/o4NIuc67eV3U_FGODT0ufA&#34;&gt;https://mp.weixin.qq.com/s/o4NIuc67eV3U_FGODT0ufA&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;目录&#34;&gt;目录&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第0章 WebAssembly简介&lt;/li&gt;
+&lt;li&gt;第1章 Emscripten快速入门
+
+&lt;ul&gt;
+&lt;li&gt;1.1 安装Emscripten&lt;/li&gt;
+&lt;li&gt;1.2 你好，世界！&lt;/li&gt;
+&lt;li&gt;1.3 胶水代码初探&lt;/li&gt;
+&lt;li&gt;1.4 编译目标及编译流程&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第2章 C与JavaScript互操作
+
+&lt;ul&gt;
+&lt;li&gt;2.1 JavaScript调用C函数&lt;/li&gt;
+&lt;li&gt;2.2 JavaScript函数注入C&lt;/li&gt;
+&lt;li&gt;2.3 单向透明的内存模型&lt;/li&gt;
+&lt;li&gt;2.4 JavaScript与C交换数据&lt;/li&gt;
+&lt;li&gt;2.5 EM_ASM宏&lt;/li&gt;
+&lt;li&gt;2.6 emscripten_run_script函数&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第3章 Emscripten运行时
+
+&lt;ul&gt;
+&lt;li&gt;3.1 main函数与生命周期&lt;/li&gt;
+&lt;li&gt;3.2 消息循环&lt;/li&gt;
+&lt;li&gt;3.3 文件系统&lt;/li&gt;
+&lt;li&gt;3.4 内存管理&lt;/li&gt;
+&lt;li&gt;3.5 Module定制&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第4章 WebAssembly友好的一般性方法
+
+&lt;ul&gt;
+&lt;li&gt;4.1 消息循环分离&lt;/li&gt;
+&lt;li&gt;4.2 数据对齐&lt;/li&gt;
+&lt;li&gt;4.3 使用C接口导出C++对象&lt;/li&gt;
+&lt;li&gt;4.4 C++对象生命周期控制&lt;/li&gt;
+&lt;li&gt;4.5 使用C接口注入JavaScript对象&lt;/li&gt;
+&lt;li&gt;4.6 小心int64&lt;/li&gt;
+&lt;li&gt;4.7 忘掉文件系统&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第5章 网络IO
+
+&lt;ul&gt;
+&lt;li&gt;5.1 websocket&lt;/li&gt;
+&lt;li&gt;5.2 ajax&lt;/li&gt;
+&lt;li&gt;5.3 fetch&lt;/li&gt;
+&lt;li&gt;5.4 一个通用的网络IO小框架&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第6章 多线程
+
+&lt;ul&gt;
+&lt;li&gt;6.1 JavaScript中的多线模型&lt;/li&gt;
+&lt;li&gt;6.2 一个例子&lt;/li&gt;
+&lt;li&gt;6.3 一个通用的多线程小框架&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第7章 GUI及交互
+
+&lt;ul&gt;
+&lt;li&gt;7.1 canvas&lt;/li&gt;
+&lt;li&gt;7.2 鼠标事件&lt;/li&gt;
+&lt;li&gt;7.3 键盘事件&lt;/li&gt;
+&lt;li&gt;7.4 触屏事件&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第8章 工程管理
+
+&lt;ul&gt;
+&lt;li&gt;8.1 使用Makefile&lt;/li&gt;
+&lt;li&gt;8.2 静态库&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;项目地址：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/3dgen/cppwasm-book&#34;&gt;https://github.com/3dgen/cppwasm-book&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;欢迎围观。加星可以鼓励作者尽快更新哦！&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言并发编程03 - 并发的内存模型</title>
+      <link>https://chai2010.cn/post/2018/go-concurrency-03/</link>
+      <pubDate>Mon, 24 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-concurrency-03/</guid>
+      
+        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
+
+&lt;p&gt;本次整理并发的内存模型部分的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;原子操作&#34;&gt;原子操作&lt;/h2&gt;
+
+&lt;p&gt;在早期，CPU都是以单核的形式顺序执行机器指令。在单核CPU时代只有一个核在读或写数据，因此数据读写不需要额外的保护。但是进入多核时代之后，同一个数据可能被运行在不同CPU上的多个线程同时读写，因此需要额外的手段保证数据的完整性。原子操作则可以保证数据在被原子读或写的操作时不会被其它线程打断，因此可以保证读写数据状态的完整性。&lt;/p&gt;
+
+&lt;p&gt;Go语言的&lt;code&gt;sync/atomic&lt;/code&gt;包提供了对原子操作的支持。&lt;code&gt;sync/atomic&lt;/code&gt;包主要针对四字节或八字节大小并且地址对齐的内存进行原子读写，可以用于整型数或指针等基础数据类型。还有针对更复杂的&lt;code&gt;atomic.Value&lt;/code&gt;类型，可以用于存储结构体对象。&lt;/p&gt;
+
+&lt;p&gt;在Go语言中，其实不使用&lt;code&gt;sync/atomic&lt;/code&gt;包也可以编程。但是&lt;code&gt;sync/atomic&lt;/code&gt;包在某些底层的代码中，可以为性能优化提供更多的灵活性。比如标准库中的sync.Once对象的Do函数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Once struct {
+    m    Mutex
+    done uint32
+}
+
+func (o *Once) Do(f func()) {
+    if atomic.LoadUint32(&amp;amp;o.done) == 1 {
+        return
+    }
+    // Slow-path.
+    o.m.Lock()
+    defer o.m.Unlock()
+    if o.done == 0 {
+        defer atomic.StoreUint32(&amp;amp;o.done, 1)
+        f()
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中&lt;code&gt;atomic.LoadUint32(&amp;amp;o.done)&lt;/code&gt;在开始先以极小的运算代价（院子操作是sync.Mutex等高级元语的代价更低）判断Once对象是否已经运行过了，如果没有则通过sync.Muyex.Lock进行加锁后在运行once对象。如果是第一次运行，则在退出前通过&lt;code&gt;defer atomic.StoreUint32(&amp;amp;o.done, 1)&lt;/code&gt;设置已经运行过的状态标志。&lt;/p&gt;
+
+&lt;p&gt;基于原子包提供的函数可以构造更高级的sync.Mutex等并发编程的工具。不过Go语言的并发哲学是：不要通过共享内存来通信，而是通过通信来共享内存！因此我们需要尽量避免直接使用sync/atomic包提供的原子操作来进行并发编程。&lt;/p&gt;
+
+&lt;h2 id=&#34;同一个goroutine内-满足顺序一致性内存模型&#34;&gt;同一个Goroutine内: 满足顺序一致性内存模型&lt;/h2&gt;
+
+&lt;p&gt;所谓的内存一致性内存模型就是代码的书写的顺序和执行的顺序是否是一致的。对于单线程的程序来说，代码一般是以书写的顺序执行的。更准确地说，顺序一致性内存模型一般是针对代码块中的语句。&lt;/p&gt;
+
+&lt;p&gt;比如以下的代码就是满足顺序一致性内存模型的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done bool = false
+
+func main() {
+    msg = &amp;quot;hello, world&amp;quot;
+    done = true
+
+    for {
+        if done {
+            println(msg)
+            break
+        }
+        println(&amp;quot;retry...&amp;quot;)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中先初始化msg字符串变量，然后将done设置为true表示字符串初始化工作已经完成。因此我们可以通过判断done的状态来间接地推导msg字符串是否已经完成初始化。在Go语言中，同一个Goroutine内满足顺序一致性内存模型。因此上述代码可以正确工作。&lt;/p&gt;
+
+&lt;h2 id=&#34;不同goroutine之间-不满足顺序一致性&#34;&gt;不同Goroutine之间: 不满足顺序一致性!&lt;/h2&gt;
+
+&lt;p&gt;如果我们将初始化msg和done的代码放到另一个Goroutine中，情况就完成不一样了！下面的并发代码将是错误的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done bool = false
+
+func main() {
+    go func() {
+        msg = &amp;quot;hello, world&amp;quot;
+        done = true
+    }()
+
+    for {
+        if done {
+            println(msg); break
+        }
+        println(&amp;quot;retry...&amp;quot;)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行时，大概有几种错误类型：一是main函数无法看到被修改后的done，因此main的for循环无法正常结束；二是main函数虽然看到了done被修改为true，但是msg依然没有初始化，这将导致错误的输出。&lt;/p&gt;
+
+&lt;p&gt;出现上述错误的原因是因为，Go语言的内存模型明确说明不同Goroutine之间不满足顺序一致性！同时编译器为了优化代码，进行初始化的Goroutine可能调整msg和done的执行顺序。main函数并不能从done状态的变化推导msg的初始化状态。&lt;/p&gt;
+
+&lt;h2 id=&#34;通过channel对齐时间参考系&#34;&gt;通过Channel对齐时间参考系&lt;/h2&gt;
+
+&lt;p&gt;每个Goroutine类似一个个独立的宇宙，有着自己的时间系统。当一个Goroutine中的某些操作不可被观察的时候，那么他们的执行状态和执行顺序是未知的。只有当一个Goroutine的某些事件被另一个Goroutine观察的时候，这些事件的状态才会变得确定。观察的手段有很多，通过Channel对齐不同Goroutine的时间参考系是常用的方式。&lt;/p&gt;
+
+&lt;p&gt;下面的代码中，通过将done改为管道类型修复前面的错误：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done = make(chan struct{})
+
+func main() {
+    go func() {
+        msg = &amp;quot;hello, world&amp;quot;
+        done &amp;lt;- struct{}{}
+    }()
+
+    &amp;lt;-done
+    println(msg)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;done管道的发送和接收会强制进行一次同步main函数的主Gorotuine和后台进行初始化工作的Goroutine。在main函数执行&lt;code&gt;&amp;lt;-done&lt;/code&gt;语句完成时，那么后台Goroutine比如也已经执行到了&lt;code&gt;done &amp;lt;- struct{}{}&lt;/code&gt;语句，此时后台Goroutine的msg初始化工作必然已经完成了。因为后台Goroutine的msg初始化工作被main函数通过done管道观察了，因此编译器必须要保证msg在这个时刻完成初始化。因此最后main函数可以正常打印msg字符串。&lt;/p&gt;
+
+&lt;h2 id=&#34;通过sync-mutex对齐时间参考系&#34;&gt;通过sync.Mutex对齐时间参考系&lt;/h2&gt;
+
+&lt;p&gt;对齐时间参考系的方式很多，除了通过管道来同步，还可以通过sync包的Mutex来实现同步：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done sync.Mutex
+
+func main() {
+    done.Lock()
+    go func() {
+        msg = &amp;quot;hello, world&amp;quot;
+        done.Unlock()
+    }()
+
+    done.Lock()
+    println(msg)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;代码中，sync.Mutex必须先Lock然后再Unlock，因为直接Unlock一个Mutex对象会导致panic。代码中，done.Unlock()和第二个done.Lock()分别在不同的Goroutine，它们会强制做一次时间同步。因此最后main函数也可以正常打印msg字符串。&lt;/p&gt;
+
+&lt;h2 id=&#34;带缓存的管道&#34;&gt;带缓存的管道&lt;/h2&gt;
+
+&lt;p&gt;管道是Go语言内置的并发原语。在刚学习Go语言，一般使用的是没有缓存的管道，它是缓存长度为0的管道。对于带缓冲的Channel，对于Channel的第K个接收完成操作发生在第K+C个发送操作完成之前，其中C是Channel的缓存大小。 如果将C设置为0自然就对应无缓存的Channel，也即使第K个接收完成在第K个发送完成之前。因为无缓存的Channel只能同步发1个，也就简化为前面无缓存Channel的规则：对于从无缓冲Channel进行的接收，发生在对该Channel进行的发送完成之前。&lt;/p&gt;
+
+&lt;p&gt;基于带缓存的管道可以实现对并发数量的控制：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    var wg sync.WaitGroup
+    var limit = make(chan struct{}, 3)
+    for i := 0; i &amp;lt; 10; i++ {
+        wg.Add(1)
+        go func(id int) {
+            defer wg.Done()
+
+            limit &amp;lt;- struct{}{}       // len(limit) 小于 cap(limit) 才能进入
+            defer func(){ &amp;lt;-limit }() // 退出时 len(limit) 减 1
+
+            println(id)
+        }(i)
+    }
+    wg.Wait()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为limit管道的长度为3个，因此for循环内部创建的Goroutine在执行println语句时，在同一个时刻最多只能有3个Goroutine在并发执行。&lt;/p&gt;
+
+&lt;h2 id=&#34;初始化顺序&#34;&gt;初始化顺序&lt;/h2&gt;
+
+&lt;p&gt;Go语言中每个包被导入时都会执行包的初始化操作，包括全局包变量的初始化和init初始化函数的执行。如果在包的初始化解决启动了新的Goroutine，那么这些新启动的Goroutine将不能马上被执行，它们只有在所有的包初始化都完成之后才能被创建。在初始化阶段创建的新Goroutine将和main函数是并发执行状态。&lt;/p&gt;
+
+&lt;p&gt;包的初始化示意图如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/init.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;初始化是由runtime.main启动，伪代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func runtime.main() {
+    for pkg := range impported_pkg_list {
+        pkg.init()
+    }
+    go goroutines_from_init()
+    main()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;首先顺序执行导入包的初始化工作，然后并发启动包初始化阶段启动的新Goroutine，同时并发启动main函数。&lt;/p&gt;
+
+&lt;h2 id=&#34;goroutine特点&#34;&gt;Goroutine特点&lt;/h2&gt;
+
+&lt;p&gt;Goroutine是每个并发执行代码的容器，和传统操作系统中线程和进程有点类似。但是Go语言的Goroutine也有自己的特点，理解这些特色是写好并发程序的前提。&lt;/p&gt;
+
+&lt;p&gt;Goroutine特点：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;由go关键字启动, 是一种轻量级的线程&lt;/li&gt;
+&lt;li&gt;以一个很小的栈启动(可能是2KB/4KB), 可以启动很多&lt;/li&gt;
+&lt;li&gt;Goroutine栈的大小会根据需要动态地伸缩, 不用担心栈溢出&lt;/li&gt;
+&lt;li&gt;m个goroutine运行在n个操作系统线程上, n默认对应CPU核数&lt;/li&gt;
+&lt;li&gt;runtime.GOMAXPROCS用于控制当前运行运行正常非阻塞Goroutine的系统线程数目&lt;/li&gt;
+&lt;li&gt;发生在用户态, 切换的代价要比系统线程低(切换时只需要保存必要的寄存器)&lt;/li&gt;
+&lt;li&gt;Goroutine采用的是半抢占式的协作调度(在函数入口处插入协作代码)&lt;/li&gt;
+&lt;li&gt;IO/sleep/runtime.Gosched 均会导致调度&lt;/li&gt;
+&lt;li&gt;Goroutine故意设计为没有ID&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;注意：Goroutine是一种资源，也有泄露的风险！&lt;/p&gt;
+
+&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
+
+&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;幻灯片源文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言并发编程02 - 你好，并发</title>
+      <link>https://chai2010.cn/post/2018/go-concurrency-02/</link>
+      <pubDate>Fri, 21 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-concurrency-02/</guid>
+      
+        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
+
+&lt;p&gt;本次整理“你好，并发”部分的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;并发很简单也很强大&#34;&gt;并发很简单也很强大&lt;/h2&gt;
+
+&lt;p&gt;Go语言通过&lt;code&gt;go&lt;/code&gt;关键字可以将调用的函数直接在新的Goroutine上启动：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// 普通版本
+func main() {
+    println(&amp;quot;你好, 并发!&amp;quot;)
+}
+
+// 并发版本
+func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;相比于传统的通过库的方式启动进程、线程等，&lt;code&gt;go&lt;/code&gt;关键字丢弃了很多心智包袱，降低了并发入门等门槛。当一个新技术随手可得，随便一个按钮开关或一个指令就可以尝试使用等时候，用户总会在下意识中就掌握了改技术。&lt;/p&gt;
+
+&lt;p&gt;Go的并发不仅仅启动简单，而且功能确实很强大。首先是每个 Goroutine 栈很小，切换代价很低，很容易就可以实现海量并发。其次，每个 Goroutine 栈又可以动态扩展到很大，基本可以近似做到无限递归了。Go语言的并发从横向和纵向都可以无限扩展，用户在编写并发程序时不在需要时刻关心栈够不够用、并发数量是否太多等非核心逻辑等问题，极大地释放了并发编程等自由度：&lt;/p&gt;
+
+&lt;p&gt;我们看看如何编写一个海量并发，并且深度递归等程序：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    for i := 0; i &amp;lt; 10000*100; i++ {
+        go printsum(i)
+    }
+}
+
+func printsum(n int) {
+    fmt.Println(&amp;quot;sum(%[1]d): %[1]d\n&amp;quot;, n)
+}
+
+func sum(n int) int {
+    return sum(n-1) + n
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述代码中，printsum函数通过递归计算1到n的和，基本不用太考虑爆栈的问题。同时在main函数中，在for循环内部通过go关键字启动了海量的并发来打印sum的结果。&lt;/p&gt;
+
+&lt;h2 id=&#34;并发中的小问题&#34;&gt;并发中的小问题&lt;/h2&gt;
+
+&lt;p&gt;GO语言并发很简单其实是一个表象，是为了忽悠不懂并发的新手的口号。随便运行下程序就可以戳穿这个纸做的口号：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面等程序需要有中彩票特大奖的运气才能有机会执行成功。大部分普通用户将无法看到输出信息！&lt;/p&gt;
+
+&lt;p&gt;针对这个代码，网上有很多不负责任的Go语言教程教你如何通过调用&lt;code&gt;time.Sleep&lt;/code&gt;或&lt;code&gt;runtime.Gosched&lt;/code&gt;假装解决这个问题：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    time.Sleep(time.Second) // or runtime.Gosched()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每一个严肃的码农在看到这种解决方案的时候，首先需要弄明白time.Sleep为何只休眠了1秒钟？如果换一种极限的思维来问这个问题就是，休眠1万年、1微妙、1纳秒、0纳秒可以吗？&lt;/p&gt;
+
+&lt;p&gt;没有人能够回答为何刚好需要休眠1秒钟就看似能工作了，其实这只是他们常识测试的一个经验值。我们把这种尝试通过调整某些随机的经验值来写代码的方式叫 &lt;strong&gt;“撞大运编程模式”&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;打败这个“撞大运编程模式”写的并发程序很简单，只需要一个或一次反例即可：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    time.Sleep(time.Second)
+}
+
+func println(s string) {
+    time.Sleep(time.Second*2)
+    print(s+&amp;quot;\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的反例中，我们在不改变println函数输出的前提下，休眠了2秒钟（一定要大于前面的1秒钟）。另一种反面的证明是假设，输出的字符串足够大，输出的设备足够慢。因此println很可能需要1万年才能完成工作。因为main函数作为println的使用者，不能也无法要求println函数在几个时钟周期内完成任务（毕竟Go语言无法做到实时编程），因此当println函数执行的时间稍微出现波动时就将影响上述代码的正确性！&lt;/p&gt;
+
+&lt;p&gt;Go语言并发编程的学习一般要经过2个阶段：第一阶段是这个并发程序终于可以产生正确的输出了；第二个阶段是这个并发程序不会产生错误的输出！通过撞大运编程模式编写的代码一般至少处于第一个阶段。&lt;/p&gt;
+
+&lt;p&gt;每一个严禁的并发编程码农，我们的并发程序不仅仅要可以产生正确的输出，而且要保证不会产生错误的输出！&lt;/p&gt;
+
+&lt;h2 id=&#34;并发小问题的解决思路&#34;&gt;并发小问题的解决思路&lt;/h2&gt;
+
+&lt;p&gt;前面代码运行有一定的随机性，无法保证并发程序的正确运行。导致可能产生错误结果的原因有2个：第一个是go启动Goroutine时无法保证新线程马上运行（它的启动是并发的）；第二个是main函数代表的主Goroutine退出将直接退出进程。&lt;/p&gt;
+
+&lt;p&gt;在了解了原因之后，并发小问题的解决思路也就清晰了：在后台Goroutine完成任务之前，main函数代表的主Goroutine不能退出！&lt;/p&gt;
+
+&lt;p&gt;阻止main函数退出的方式有很多：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+
+    for {}
+    select {}
+    &amp;lt;-make(chan bool)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在这个代码中，for、select或管道，任何一个方式都可以阻止在完成任务前退出（其实main函数根本无法退出），因此这个程序好像是可以完成输出任务的（虽然解决方案不太完美）！&lt;/p&gt;
+
+&lt;p&gt;在上述的方案中，for循环阻止main退出是比较特色的一个方案。for其实执行的是一个死循环、忙等待，它会消耗大量的CPU资源。特别是，当只有一个系统线程资源时，main 将独占活跃的 系统线程，其它线程将有被饿死风险！&lt;/p&gt;
+
+&lt;p&gt;因此for循环的方案在单核系统中依然是有问题的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    runtime.GOMAXPROCS(1)
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    for {}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过&lt;code&gt;runtime.GOMAXPROCS(1)&lt;/code&gt;将系统线程限制为一个。然后println函数还没有启动前如果进入了for循环的话，后台的println函数将没有机会再次被执行（被饿死）！&lt;/p&gt;
+
+&lt;p&gt;其实每个已经获取CPU资源的Goroutine都可以霸占CPU：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    runtime.GOMAXPROCS(1)
+    go func() { for {} }()
+    time.Sleep(time.Second)
+
+    fmt.Println(&amp;quot;the answer to life:&amp;quot;, 42)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在这个例子中，Goroutine霸占了CPU，main函数可能被饿死在&lt;code&gt;time.Sleep&lt;/code&gt;行代码，因此宇宙的秘密也就永远无法揭晓！&lt;/p&gt;
+
+&lt;p&gt;既然for循环霸占CPU，那我们换个不占用CPU的方式好了。select和管道都可以：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    runtime.GOMAXPROCS(1)
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    select {}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;目前的代码确实更改进了一步，单核心也可以保证输出结果了！不过这个暴力的解决方法依然有点问题，这个程序退出前出现了异常：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;你好, 并发!
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [select (no cases)]:
+main.main()
+        /path/to/main.go:8 +0x5c
+exit status 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我首先要强调的是，这个异常其实不是问题。我们的首要目标是输出字符串，而且这个目标我们已经顺利完成了。出现异常的原因只是程序退出的善后工作处理不太完美（和C语言程序退出前并不需要释放全部的内存资源类似）。&lt;/p&gt;
+
+&lt;p&gt;异常的提示是，系统中没有其它可运行的goroutine，这就是一种死锁状态。其实如果换会for死循环的话是不会提示死锁的（因为runtime会将for循环当作一个正常执行的goroutine看待）。&lt;/p&gt;
+
+&lt;p&gt;理解的解决方案是：main函数在println完成输出任务前不退出，但是在println完成任务后可以正确退出。改进代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    done := make(chan bool)
+    go func() {
+        println(&amp;quot;你好, 并发!&amp;quot;)
+        done &amp;lt;- true
+    }()
+
+    &amp;lt;-done
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;main函数在退出前需要从done管道取一个消息，后台任务在将消息放入done管道前必须先完成自己的输出任务。因此，main函数成功取到消息时，后台的输出任务确定已经完成了，main函数也就可以放心退出了。&lt;/p&gt;
+
+&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
+
+&lt;p&gt;猫友会：Go语言并发编程01 - 并发的演化历史&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://mp.weixin.qq.com/s/UaY9gJU85dq-dXlOhLYY1Q&#34;&gt;https://mp.weixin.qq.com/s/UaY9gJU85dq-dXlOhLYY1Q&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;幻灯片源文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言并发编程01 - 并发的演化历史</title>
+      <link>https://chai2010.cn/post/2018/go-concurrency-01/</link>
+      <pubDate>Thu, 20 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-concurrency-01/</guid>
+      
+        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
+
+&lt;p&gt;本次整理并发的演化历史部分的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;go语言并发哲学&#34;&gt;Go语言并发哲学&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Do not communicate by sharing memory, instead, share memory by communicating!&lt;/p&gt;
+
+&lt;p&gt;不要通过共享内存来通信, 而是通过通信来共享内存!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;不要逆行!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;并发的演化历史&#34;&gt;并发的演化历史&lt;/h2&gt;
+
+&lt;p&gt;Go语言最早从UNIX系统的B语言和C语言演化而来，其中的并发特性是从Newsqueak、Alef和Limbo等语言演化而来。其中Newsqueak是Go之父Rob Pike于989年设计的语言，Alef则是Phil Winterbottom于1993年对C语言扩展了并发特性的语言，Limbo也是Rob Pike参与设计的支持并发的语言。由此可见，Rob Pike在并发编程语言领域已经积累了几十年的设计经验，Go语言正是站在这些前辈的基础上涅槃重生的。&lt;/p&gt;
+
+&lt;p&gt;Go语言并发的理论基础是来自Hoare于1978年发表的CSP论文（Hoare就是发明快速排序的大牛）。更通俗的类比，CSP对应的编程模型和UNIX中的管道非常相似，而管道更是在1964年就已经发明了。因此，从理论上看，Go语言的并发并非什么新发明的特性，它只不过是将CSP代表的通过消息同步的编程模型带入了工业开发领域。&lt;/p&gt;
+
+&lt;h3 id=&#34;newsqueak素数筛-rob-pike-1989&#34;&gt;Newsqueak素数筛 - Rob Pike, 1989&lt;/h3&gt;
+
+&lt;p&gt;先看看素数筛的原理图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/prime-sieve.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后是Newsqueak素数筛代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;counter := prog(c:chan of int) {
+    i:=2;
+    for(;;)
+        c &amp;lt;-= i++;
+};
+
+filter := prog(prime:int, listen, send:chan of int) {
+    i:int;
+    for(;;)
+        if((i = &amp;lt;-listen)%prime)
+            send &amp;lt;-= i;
+};
+
+sieve := prog() of chan of int {
+    c := mk(chan of int);
+    begin counter(c);
+    prime := mk(chan of int);
+    begin prog(){
+        p:int;
+        newc:chan of int;
+        for(;;){
+            prime &amp;lt;-= p =&amp;lt;- c;
+            newc = mk();
+            begin filter(p, c, newc);
+            c = newc;
+        }
+    }();
+    become prime;
+};
+
+prime:=sieve();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中begin关键字启动一个并发，类似Go语言的go关键字。而become关键字表示返回值，类似return语句。因此说Newsqueak和Go语言的并发有很多相似之处。&lt;/p&gt;
+
+&lt;h3 id=&#34;alef-phil-winterbottom-1993&#34;&gt;Alef - Phil Winterbottom, 1993&lt;/h3&gt;
+
+&lt;p&gt;然后是Alef语言。据说这个语言是C语言之父Ritchie所钟爱的语言。不过Alef只是短暂地出现在Plan9系统中。目前传世的官方文档只有入门指南和参考手册。&lt;/p&gt;
+
+&lt;p&gt;下面的代码是Alef文档中摘取的片段：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;alef.h&amp;gt;
+
+void receive(chan(byte*) c) {
+    byte *s;
+    s = &amp;lt;- c;
+    print(&amp;quot;%s\n&amp;quot;, s);
+    terminate(nil);
+}
+
+void main(void) {
+    chan(byte*) c;
+    alloc c;
+    proc receive(c);
+    task receive(c);
+    c &amp;lt;- = &amp;quot;hello proc or task&amp;quot;;
+    c &amp;lt;- = &amp;quot;hello proc or task&amp;quot;;
+    print(&amp;quot;done\n&amp;quot;);
+    terminate(nil);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以将Alef看作是类似C++的语言，基础的语法完善和C语言保存一致，但是在并发编程方向做了扩展。其中proc是启动一个进程，task是启动一个线程。&lt;/p&gt;
+
+&lt;p&gt;因为C语言没有GC特性，因此Alef并发所创建或分享的资源管理将会是一个极大的调整。并发的语法虽然看着很美，但是进行真正的并发编程可能没有那么容易。&lt;/p&gt;
+
+&lt;p&gt;Alef产生的并发体可能异常复杂，下图是Alef文档中摘取的图片：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/alef.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;总共有6个线程分布在3个进程中，现场并发体相互之间通过管道进行通信。因为Alef同时支持进程和线程，可以说它其实是伪装成编程语言的操作系统!&lt;/p&gt;
+
+&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
+
+&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;幻灯片源文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Ending定律即将生效!</title>
+      <link>https://chai2010.cn/post/wasm/wasm-v1.0/</link>
+      <pubDate>Sun, 16 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/wasm/wasm-v1.0/</guid>
+      
+        <description>&lt;p&gt;WebAssembly草案1.0终于在2018年7月正式诞生，Ending定律即将生效！&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Ending&amp;rsquo;s law: &amp;ldquo;Any application that can be compiled to WebAssembly, will be compiled to WebAssembly eventually.&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/wasm/wasm-book-header.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Ending定律也称为终结者定律，它是Ending在2016年Emscripten技术交流会上给出的断言：所有可以用WebAssembly实现的终将会用WebAssembly实现。&lt;/p&gt;
+
+&lt;p&gt;在2018年7月，WebAssembly的第一份标准草案终于诞生，一切准备就绪。终于到了Ending定律生效的时刻了！&lt;/p&gt;
+
+&lt;p&gt;WebAssembly也叫wasm，是最新的Web汇编语言标准，同时涵盖了一个虚拟机标准，可以用于浏览器或者其它嵌入式环境。WebAssembly被刻意设计为便携式的抽象语法树结构，用于提供比JavaScript更快速的编译和运行。2018年，Firefox、Chrome、Microsoft Edge、Safari等主流的浏览器已经充分支持WebAssembly特性。&lt;/p&gt;
+
+&lt;p&gt;我们知道在JavaScript领域有个木头定律，但是木头定律不适用于WebAssembly！因为WebAssembly是为了性能而诞生，再用JavaScript模拟的WebAssembly性能将是一坨屎，没有任何价值！但是WebAssembly之上却很有可能再跑一个v8引擎。&lt;/p&gt;
+
+&lt;p&gt;Ending定律的威力不仅仅在语言层面。WebAssembly是第一个虚拟机世界标准，以后将人手至少一个wasm虚拟机。曾被大家鄙视的JavaScript语言大举入侵各个领域的情况将再次重演，Lua、Java、Python等语言首当其冲，它们的虚拟机统统将面临被WebAssembly蚕食的境况！&lt;/p&gt;
+
+&lt;p&gt;星辰大海的入口已经打开，let’s dive!&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go1.11和WebAssembly</title>
+      <link>https://chai2010.cn/post/2018/go1.11-and-wasm/</link>
+      <pubDate>Sat, 25 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go1.11-and-wasm/</guid>
+      
+        <description>&lt;p&gt;Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/win2k-on-wasm.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在上一周，qemu的作者bellard大神将Windows 2000搬到浏览器到新闻彻底引爆了WebAssembly技术，这也证明了WebAssembly的强大的性能优势。&lt;/p&gt;
+
+&lt;p&gt;感兴趣的同学可以查看bellard大神到网站，网站提供了在浏览器Linux和Windows等多种系统等运行链接：&lt;a href=&#34;https://bellard.org/jslinux/&#34;&gt;https://bellard.org/jslinux/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;不过本文我们将重点和大家分享如何在Go语言中使用WebAssembly。先安装好Go1.11+版本的Go语言环境。然后创建hello.go文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import &amp;quot;fmt&amp;quot;
+
+func main() {
+	fmt.Println(&amp;quot;你好，WebAssembly！&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;为了不了解Go语言的同学便于理解，让我们简单介绍一下程序。第一句表示当前的包名字为main，同时包中有一个main函数，而main包的main函数就是Go语言程序的入口。在main函数中通过导入的fmt包内的Println方法输出了一个字符串。然后在命令行中直接输入go run hello.go来运行程序。如果一切正常的话。应该可以在命令行看到输出&amp;rdquo;你好，WebAssembly！&amp;rdquo;的结果。&lt;/p&gt;
+
+&lt;p&gt;Go1.11开始支持WebAssembly，对应的操作系统名为js，对应的CPU类型为wasm。目前还无法通过go run的方式直接运行输出的wasm文件，因此我们需要通过go build的方式生成wasm目标文件，然后通过Node环境执行。需要注意的是更新的Node版本对wasm的支持会更好，作者推进使用v10以上的版本。&lt;/p&gt;
+
+&lt;p&gt;通过以下命令将hello.go编译为a.out.wasm：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ GOARCH=wasm GOOS=js go build -o a.out.wasm hello.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成的a.out.wasm文件体积可能超过2MB大小。而且生成等a.out.wasm还无法直接运行，需要初始化Go语言必须的运行时环境。&lt;/p&gt;
+
+&lt;p&gt;对运行时初始化是一个相对复杂的工作，因此Go语言提供了一个$(GOROOT)/misc/wasm/wasm_exec.js文件用于初始化和运行的工作。同时提供了一个基于node包装的$(GOROOT)/misc/wasm/go_js_wasm_exec脚本文件，用于执行Go语言生成的wasm文件。&lt;/p&gt;
+
+&lt;p&gt;参考go_js_wasm_exec脚本的实现，我们可以直接使用wasm_exec.js来运行wasm模块。我们可以先将wasm_exec.js文件复制到当前目录，然后通过以下命令运行wasm模块：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ node wasm_exec.js a.out.wasm
+你好，WebAssembly
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在终于可以正常运行Go语言生成wasm程序了。因此以后可以使用Go语言来开发Web应用了。&lt;/p&gt;
+
+&lt;p&gt;如果对WebAssembly技术感兴趣，可以关注Github上的WebAssembly(wasm)资源精选项目：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh&#34;&gt;https://github.com/chai2010/awesome-wasm-zh&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>《Go高级编程》初稿完成</title>
+      <link>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</link>
+      <pubDate>Wed, 08 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</guid>
+      
+        <description>&lt;p&gt;《Go高级编程》从2016年就开始计划写作。2016年底因为开始学习《Go语言圣经》临时搁置了《Go高级编程》的写作。到了2018年决定重启项目，为了回馈Go语言中国社区，我们尝试以开源的模式进行创作。项目开源后，在不到半年的时间内就已经获得近3k个star，有几十个贡献者帮忙改进内容和代码。感谢中国广大的Go语言爱好者，感谢开源的创作模式，让我们在半年多的时间内成功完成了写作任务。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/advanced-go-programming-book/master/cover.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;《Go高级编程》一书涵盖了CGO、Go汇编语言、RPC实现、Web框架实现、分布式系统等高阶主题，主要针对Go语言有一定经验想深入了解Go语言各种高级用法的开发人员。&lt;/p&gt;
+
+&lt;p&gt;为了便于和大家交流和分享，我们新创建了“Go高级编程”公众号。公众号的ID为golang-china，保持和Go语言中国社区名字一致。公众号重点和大家分享《Go高级编程》、《Go语言圣经》以及Go语言中诸多高级编程问题。大家有任何Go语言相关的问题都可以给我们留言。&lt;/p&gt;
+
+&lt;p&gt;项目地址：&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;https://github.com/chai2010/advanced-go-programming-book&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最后感谢各位同学的鼓励和支持，谢谢大家🙏&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>已启用 https://chai2010.cn, 欢迎访问!</title>
+      <link>https://chai2010.cn/post/2018/chai2010-cn/</link>
+      <pubDate>Sun, 11 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/chai2010-cn/</guid>
+      
+        <description>&lt;p&gt;&lt;a href=&#34;https://chai2010.cn&#34;&gt;https://chai2010.cn&lt;/a&gt; 只是目前的入口. 网址名称并不重要, 关键是内容需要永生.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;为何要启用新站点&#34;&gt;为何要启用新站点？&lt;/h3&gt;
+
+&lt;p&gt;10+年前的很多网址和内容已经彻底死掉并且被遗忘了（校友录/bbs/Go中国 等）。&lt;/p&gt;
+
+&lt;p&gt;谁能保证 10 年后 osc/微信/微博 公众号 等文章都还活着，并且自己还是更新的权限？&lt;/p&gt;
+
+&lt;p&gt;osc 以前都很多文章中的图片已经失效了，期间网址升级还导致了一些md的格式问题。&lt;/p&gt;
+
+&lt;p&gt;关键是之前个人空间保存的一些友情链接也被 osc 彻底隐藏了(每个托管都网址都差不多, 都会逐步插入光谷)。&lt;/p&gt;
+
+&lt;p&gt;新站点只是一个壳子，只是用来发布hugo生成的静态内容, 即使这个域名死了, 内容依然存在。&lt;/p&gt;
+
+&lt;p&gt;用git仓库管理内容, 希望它能比我活的更久.&lt;/p&gt;
+
+&lt;h3 id=&#34;纪念下曾经的炮灰们&#34;&gt;纪念下曾经的炮灰们:&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://chaishushan.googlepages.com/&#34;&gt;http://chaishushan.googlepages.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://sites.google.com/site/chaishushan/&#34;&gt;http://sites.google.com/site/chaishushan/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.csdn.net/chai2010/&#34;&gt;http://blog.csdn.net/chai2010/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://chaishushan.blog.163.com/&#34;&gt;http://chaishushan.blog.163.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://my.oschina.net/chai2010/&#34;&gt;http://my.oschina.net/chai2010/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://chai2010.github.io&#34;&gt;http://chai2010.github.io&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Gopher China 2018 讲师专访: 柴树杉</title>
+      <link>https://chai2010.cn/post/gopherchina/gopherchina2018-chai2010/</link>
+      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/gopherchina/gopherchina2018-chai2010/</guid>
+      
+        <description>&lt;h2 id=&#34;自我介绍&#34;&gt;自我介绍&lt;/h2&gt;
+
+&lt;p&gt;Go 语言代码的贡献者，《Go 语言圣经》翻译者，《Go 语言高级编程》开源免费图书作者，非主流Go语言码农。2010年入坑 Go 语言，因此我的网络 ID 是 chai2010（其实是王小波的一个的小说的名字）。其实我想说的是，即使当歌曲和传说都已经哑巴的时候，Go 语言代码也不会消失。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/gopherchina2018-chai2010.jpg&#34; alt=&#34;Gopher China 2018 讲师专访－柴树杉&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;什么原因-什么时候与-go-结缘&#34;&gt;什么原因，什么时候与 Go 结缘？&lt;/h2&gt;
+
+&lt;p&gt;绝大部分人第一次听说 Go 语言都是因为它是 Google 发明的语言。但是我更感兴趣的是 Go 语言背后的故事：汤普森、派克、Plan9、UTF8、Alef 等等。2010年在深圳参与了一个可能是国内第一个 Go 语言交流会，聆听了韦京光大牛的分享（独立实现 cgo 对 windows 平台的支持）。2010年网上看到边疆同学号召翻译 Go 语言文档正式入坑。现在还记得叫《胡文 Go.ogle》的 Go 语言小说，感谢 fango。&lt;/p&gt;
+
+&lt;h2 id=&#34;在工作中遇到哪些挑战&#34;&gt;在工作中遇到哪些挑战？&lt;/h2&gt;
+
+&lt;p&gt;Go 还是比较新的语言，深度使用时会发现轮子严重不足。比如，如何解码一个视频，如何最大压缩比保持一个TIFF格式的图像？用 Go 语言实现重新全部显然是不切实际的，而通过 CGO 技术就可以轻松利用 C/C++ 已有的解决方案。因此，CGO 虽然不能解决全部问题，但是绝对是一个值得拥有的后备技术。&lt;/p&gt;
+
+&lt;h2 id=&#34;有什么想对-gopher-说的话和建议&#34;&gt;有什么想对 Gopher 说的话和建议？&lt;/h2&gt;
+
+&lt;p&gt;Go 语言是一门短小精悍的语言，它只有25个关键字，整个语言规范也就50来页，我们完全可以像 C/Lua 语言那样完整掌握它的一切，甚至包括 CGO 和 Go 汇编语言等非主流的特性。作为一件工业级的软件艺术品，你值得拥有。&lt;/p&gt;
+
+&lt;h2 id=&#34;有什么学习-go-的方法和书籍推荐&#34;&gt;有什么学习 Go 的方法和书籍推荐？&lt;/h2&gt;
+
+&lt;p&gt;先走马观花快速浏览一遍《Go 语言圣经》，这是为了快速简历对 Go 语言的总体框架，不需要背诵，以后遇到问题有影响慢慢回头查阅。然后是深入挖掘Go语言的相关八卦（比如 issue9 到底是什么，creat 怎么改的名字，是谁什么时候提交了第一次提交代码），这是为了培养对技术持续的热情感受 Go 语言的文化。同时尝试使用 Go 语言解决一切问题，这不仅仅是为了实践语言本身，也是为了探索 Go 语言的边界和不足。多参与 Gopher China 大会，营造全方位的 Go 语言环境，这样不知不觉中你就已经是一个 Gopher 了。&lt;/p&gt;
+
+&lt;h2 id=&#34;如何看待-go-在中国的发展-预计未来是什么样&#34;&gt;如何看待 Go 在中国的发展，预计未来是什么样？&lt;/h2&gt;
+
+&lt;p&gt;中国有着世界上最大的 Go 语言社区，同时也为 Go 语言的发展作出了巨大贡献（cgo/ios/beego 等），因此 Go 在中国的发展也完全可以代表在世界的发展趋势。目前是21世纪云计算百家争鸣的时期，而 Go 语言正是21世纪的互联网时代的 C 语言，其中 Go 语言实现的 Docker 和 K8s 平台均已成员云计算时代事实上的标准。虽然如某些网红所言，Docker 完全也可以用 shell 等任何语言实现，但是为何就选择了 Go 语言呢？大家都不是傻瓜，群众的眼睛是雪亮的，目前云计算时代新出现的很多基础系统软件都已首选 Go 语言实现。Go 语言不是银弹，但是它已经是互联网时代的 C 语言，这就足够了。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/gopherchina2018-chai2010-cgo.jpg&#34; alt=&#34;深入CGO编程&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;提示：报告内容将会在大会前一天公开，敬请关注！&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;第四届 Gopher China 大会4月将在上海举办，今年也是第一次增加了会前的 培训 。本届的大会无论从规模，内容都将有更多值得大家期待的！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://2018.gopherchina.org/&#34;&gt;http://2018.gopherchina.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mp.weixin.qq.com/s?__biz=MjM5OTcxMzE0MQ==&amp;amp;mid=2653370698&amp;amp;idx=1&amp;amp;sn=478c53ece8a715d96aeb0027e7ad772f&amp;amp;chksm=bce4d9508b935046d25532c0ce65d2ebcfa9158ddd6ad5a04a49c2a8f29a7c8662e6842f6d16&amp;amp;scene=38#wechat_redirect&#34;&gt;原文在这里&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>lua中也能用上Go语言的strings包</title>
+      <link>https://chai2010.cn/post/lua/gopherlua-strings/</link>
+      <pubDate>Fri, 22 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/lua/gopherlua-strings/</guid>
+      
+        <description>&lt;p&gt;lua内置的库非常小，我们可以将Go语言的strings包引入到Lua环境。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;下面是具体的例子。&lt;/p&gt;
+
+&lt;p&gt;hello.go:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;github.com/yuin/gopher-lua&amp;quot;
+
+	strings &amp;quot;github.com/chai2010/glua-strings&amp;quot;
+)
+
+func main() {
+	L := lua.NewState()
+	defer L.Close()
+
+	strings.Preload(L)
+
+	if err := L.DoFile(&amp;quot;hello.lua&amp;quot;); err != nil {
+		panic(err)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;hello.lua:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lua&#34;&gt;local strings = require(&amp;quot;strings&amp;quot;)
+
+print(strings.ToUpper(&amp;quot;abc&amp;quot;))
+
+for i, s in ipairs(strings.Split(&amp;quot;aa,b,,c&amp;quot;, &amp;quot;,&amp;quot;)) do
+	print(i, s)
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run hello.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;项目地址:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/glua-strings&#34;&gt;https://github.com/chai2010/glua-strings&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

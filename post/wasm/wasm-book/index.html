@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>《WebAssembly 标准入门》开始预售了，欢迎关注! - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。本书详尽介绍了 WebAssembly 程序在 JavaScript 环境下的使用方法、WebAssembly 汇编语言和二进制格式，给出了大量简单易懂的示例，同时以 C/C&#43;&#43;和 Go 语言开发环境为例，介绍了如何使用其他高级语言开发 WebAssembly 模块。
+
+" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/wasm/wasm-book/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="《WebAssembly 标准入门》开始预售了，欢迎关注!" />
+<meta property="og:description" content="WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。本书详尽介绍了 WebAssembly 程序在 JavaScript 环境下的使用方法、WebAssembly 汇编语言和二进制格式，给出了大量简单易懂的示例，同时以 C/C&#43;&#43;和 Go 语言开发环境为例，介绍了如何使用其他高级语言开发 WebAssembly 模块。
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/wasm/wasm-book/" />
+
+
+
+<meta property="article:published_time" content="2018-12-07T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2018-12-07T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="《WebAssembly 标准入门》开始预售了，欢迎关注!">
+<meta itemprop="description" content="WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。本书详尽介绍了 WebAssembly 程序在 JavaScript 环境下的使用方法、WebAssembly 汇编语言和二进制格式，给出了大量简单易懂的示例，同时以 C/C&#43;&#43;和 Go 语言开发环境为例，介绍了如何使用其他高级语言开发 WebAssembly 模块。
+
+">
+
+
+<meta itemprop="datePublished" content="2018-12-07T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-12-07T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1380">
+
+
+
+<meta itemprop="keywords" content="wasm," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="《WebAssembly 标准入门》开始预售了，欢迎关注!"/>
+<meta name="twitter:description" content="WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。本书详尽介绍了 WebAssembly 程序在 JavaScript 环境下的使用方法、WebAssembly 汇编语言和二进制格式，给出了大量简单易懂的示例，同时以 C/C&#43;&#43;和 Go 语言开发环境为例，介绍了如何使用其他高级语言开发 WebAssembly 模块。
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">《WebAssembly 标准入门》开始预售了，欢迎关注!</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-12-07 </span>
+        <div class="post-category">
+            
+              <a href="/categories/wasm/"> wasm </a>
+            
+          </div>
+        <span class="more-meta"> 约 1380 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#序">序</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。本书详尽介绍了 WebAssembly 程序在 JavaScript 环境下的使用方法、WebAssembly 汇编语言和二进制格式，给出了大量简单易懂的示例，同时以 C/C++和 Go 语言开发环境为例，介绍了如何使用其他高级语言开发 WebAssembly 模块。</p>
+
+<p></p>
+
+<p><img src="http://erpimg.epubit.com:8081/upload/img/erp/A20181946.jpg" alt="" /></p>
+
+<h2 id="序">序</h2>
+
+<p>某一天，有朋友向我推荐了一项新技术——WebAssembly。我认为这是一项值得关注的技术。</p>
+
+<p>说WebAssembly是一门编程语言，但它更像一个编译器。实际上它是一个虚拟机，包含了一门低级汇编语言和对应的虚拟机体系结构，而WebAssembly这个名字从字面理解就说明了一切——Web的汇编语言。它的优点是文件小、加载快、执行效率非常高，可以实现更复杂的逻辑。</p>
+
+<p>其实，我觉得出现这样的技术并不令人意外，而只是顺应了潮流，App的封闭系统必然会被新一代Web OS取代。但现有的Web开发技术，如JavaScript，前端执行效率和解决各种复杂问题的能力还不足，而WebAssembly的编译执行功能恰恰能弥补这些不足。WebAssembly标准是在谋智（Mozilla）、谷歌（Google）、微软（Microsoft）、苹果（Apple）等各大厂商的大力推进下诞生的，目前包括Chrome、Firefox、Safari、Opera、Edge在内的大部分主流浏览器均已支持WebAssembly。这使得WebAssembly前景非常好。</p>
+
+<p>WebAssembly是Web前端技术，具有很强的可移植性，技术的潜在受益者不局限于传统的前端开发人员，随着技术的推进，越来越多的其他语言的开发者也将从中受益。如果开发者愿意，他们可以使用C/C++、Go、Rust、Kotlin、C#等开发语言来写代码，然后编译为WebAssembly，并在Web上执行，这是不是很酷？它能让我们很容易将用其他编程语言编写的程序移植到Web上，对于企业级应用和工业级应用都是巨大利好。</p>
+
+<p>WebAssembly的应用场景也相当丰富，如Google Earth，2017年10月Google Earth开始在Firefox上运行，其中的关键就是使用了WebAssembly；再如网页游戏，WebAssembly能让HTML5游戏引擎速度大幅提高，国内一家公司使用WebAssembly后引擎效率提高了300%。</p>
+
+<p>WebAssembly作为一种新兴的技术，为开发者提供了一种崭新的思路和工作方式，未来是很有可能大放光彩的，不过目前其相关的资料和社区还不够丰富，尽管已经有一些社区开始出现了相关技术文章，CSDN上也有较多的文章，但像本书这样全面系统地介绍WebAssembly技术的还不多，甚至没有。本书的两位作者都是有10多年经验的一线开发者，他们从WebAssembly概念诞生之初就开始密切关注该技术的发展，其中柴树杉是Emscripten（WebAssembly的技术前身之一）的首批实践者，丁尔男是国内首批工程化使用WebAssembly的开发者。</p>
+
+<p>2018年7月，WebAssembly社区工作组发布了WebAssembly 1.0标准。现在，我在第一时间就向国内开发者介绍和推荐本书，是希望开发者能迅速地了解和学习新技术，探索新技术的价值。</p>
+
+<p><em>——蒋涛 CSDN创始人、总裁，极客帮创始合伙人</em></p>
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2018-12-07</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/wasm/">wasm</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2019/io-eof-mistake/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">io.EOF设计的缺陷和改进</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2018/webdav/">
+            <span class="next-text nav-default">Go语言实现WebDAV文件系统</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

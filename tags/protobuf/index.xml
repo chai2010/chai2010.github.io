@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Protobuf on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/protobuf/</link>
+    <description>Recent content in Protobuf on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 08 Jan 2014 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/protobuf/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Go语言的RPC介绍(含Protobuf-RPC)</title>
+      <link>https://chai2010.cn/post/golang/go-protorpc-2014/</link>
+      <pubDate>Wed, 08 Jan 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-protorpc-2014/</guid>
+      
+        <description>
+
+&lt;p&gt;本文在 &lt;a href=&#34;http://blog.go-china.org/&#34;&gt;Golang中国博客&lt;/a&gt; 的地址: &lt;a href=&#34;http://blog.go-china.org/09-protorpc&#34;&gt;http://blog.go-china.org/09-protorpc&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;标准库的rpc&#34;&gt;标准库的RPC&lt;/h2&gt;
+
+&lt;p&gt;RPC是远程调用的简称, 简单的说就是要像调用本地函数一样调用服务器的函数.&lt;/p&gt;
+
+&lt;p&gt;Go语言的标准库已经提供了RPC框架和不同的RPC实现.&lt;/p&gt;
+
+&lt;p&gt;下面是一个服务器的例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type Echo int
+
+func (t *Echo) Hi(args string, reply *string) error {
+    *reply = &amp;quot;echo:&amp;quot; + args
+    return nil
+}
+
+func main() {
+    rpc.Register(new(Echo))
+    rpc.HandleHTTP()
+    l, e := net.Listen(&amp;quot;tcp&amp;quot;, &amp;quot;:1234&amp;quot;)
+    if e != nil {
+        log.Fatal(&amp;quot;listen error:&amp;quot;, e)
+    }
+    http.Serve(l, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;rpc.Register&lt;/code&gt; 用于注册RPC服务, 默认的名字是对象的类型名字(这里是&lt;code&gt;Echo&lt;/code&gt;). 如果需要指定特殊的名字, 可以用 &lt;code&gt;rpc.RegisterName&lt;/code&gt; 进行注册.&lt;/p&gt;
+
+&lt;p&gt;被注册对象的类型所有满足以下规则的方法会被导出到RPC服务接口:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func (t *T) MethodName(argType T1, replyType *T2) error
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;被注册对应至少要有一个方法满足这个特征, 否则可能会注册失败.&lt;/p&gt;
+
+&lt;p&gt;然后 &lt;code&gt;rpc.HandleHTTP&lt;/code&gt; 用于指定 RPC 的传输协议, 这里是采用 http 协议作为RPC调用的载体. 用户也可以用&lt;code&gt;rpc.ServeConn&lt;/code&gt;接口, 定制自己的传输协议.&lt;/p&gt;
+
+&lt;p&gt;客户端可以这样调用&lt;code&gt;Echo.Hi&lt;/code&gt;接口:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    client, err := rpc.DialHTTP(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1234&amp;quot;)
+    if err != nil {
+        log.Fatal(&amp;quot;dialing:&amp;quot;, err)
+    }
+
+    var args = &amp;quot;hello rpc&amp;quot;
+    var reply string
+    err = client.Call(&amp;quot;Echo.Hi&amp;quot;, args, &amp;amp;reply)
+    if err != nil {
+        log.Fatal(&amp;quot;arith error:&amp;quot;, err)
+    }
+    fmt.Printf(&amp;quot;Arith: %d*%d=%d\n&amp;quot;, args.A, args.B, reply)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;客户端先用&lt;code&gt;rpc.DialHTTP&lt;/code&gt;和RPC服务器进行一个链接(协议必须匹配).&lt;/p&gt;
+
+&lt;p&gt;然后通过返回的&lt;code&gt;client&lt;/code&gt;对象进行远程函数调用. 函数的名字是由&lt;code&gt;client.Call&lt;/code&gt; 第一个参数指定(是一个字符串).&lt;/p&gt;
+
+&lt;p&gt;基于HTTP的RPC调用一般是在调试时使用, 默认可以通过浏览&lt;code&gt;&amp;quot;127.0.0.1:1234/debug/rpc&amp;quot;&lt;/code&gt;页面查看RPC的统计信息.&lt;/p&gt;
+
+&lt;h2 id=&#34;基于-json-的-rpc-调用&#34;&gt;基于 JSON 的 RPC 调用&lt;/h2&gt;
+
+&lt;p&gt;在上面的RPC例子中, 我们采用了默认的HTTP协议作为RPC调用的传输载体.&lt;/p&gt;
+
+&lt;p&gt;因为内置&lt;code&gt;net/rpc&lt;/code&gt;包接口设计的缺陷, 我们无法使用&lt;code&gt;jsonrpc&lt;/code&gt;等定制的编码作为&lt;code&gt;rpc.DialHTTP&lt;/code&gt;的底层协议. 如果需要让&lt;code&gt;jsonrpc&lt;/code&gt;支持&lt;code&gt;rpc.DialHTTP&lt;/code&gt;函数, 需要调整rpc的接口.&lt;/p&gt;
+
+&lt;p&gt;以前有个&lt;a href=&#34;https://code.google.com/p/go/issues/detail?id=2738&#34;&gt;Issue2738&lt;/a&gt;是针对这个问题. 我曾提交的 &lt;a href=&#34;https://codereview.appspot.com/10704046/&#34;&gt;CL10704046&lt;/a&gt; 补丁用于修复这个问题. 不过因为涉及到增加rpc的接口, 官方没有接受(因为自己重写一个&lt;code&gt;DialHTTP&lt;/code&gt;会更简单).&lt;/p&gt;
+
+&lt;p&gt;除了传输协议, 还有可以指定一个RPC编码协议, 用于编码/节目RPC调用的函数参数和返回值. RPC调用不指定编码协议时, 默认采用Go语言特有的&lt;code&gt;gob&lt;/code&gt;编码协议.&lt;/p&gt;
+
+&lt;p&gt;因为, 其他语言一般都不支持Go语言的&lt;code&gt;gob&lt;/code&gt;协议, 因此如果需要跨语言RPC调用就需要
+采用通用的编码协议.&lt;/p&gt;
+
+&lt;p&gt;Go的标准库还提供了一个&lt;code&gt;&amp;quot;net/rpc/jsonrpc&amp;quot;&lt;/code&gt;包, 用于提供基于JSON编码的RPC支持.&lt;/p&gt;
+
+&lt;p&gt;服务器部分只需要用&lt;code&gt;rpc.ServeCodec&lt;/code&gt;指定json编码协议就可以了:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    lis, err := net.Listen(&amp;quot;tcp&amp;quot;, &amp;quot;:1234&amp;quot;)
+    if err != nil {
+        return err
+    }
+    defer lis.Close()
+
+    srv := rpc.NewServer()
+    if err := srv.RegisterName(&amp;quot;Echo&amp;quot;, new(Echo)); err != nil {
+        return err
+    }
+
+    for {
+        conn, err := lis.Accept()
+        if err != nil {
+            log.Fatalf(&amp;quot;lis.Accept(): %v\n&amp;quot;, err)
+        }
+        go srv.ServeCodec(jsonrpc.NewServerCodec(conn))
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;客户端部分值需要用 &lt;code&gt;jsonrpc.Dial&lt;/code&gt; 代替 &lt;code&gt;rpc.Dial&lt;/code&gt; 就可以了:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    client, err := jsonrpc.DialHTTP(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1234&amp;quot;)
+    if err != nil {
+        log.Fatal(&amp;quot;dialing:&amp;quot;, err)
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果需要在其他语言中使用&lt;code&gt;jsonrpc&lt;/code&gt;和Go语言进行通讯, 需要封装一个和&lt;code&gt;jsonrpc&lt;/code&gt;
+匹配的库.&lt;/p&gt;
+
+&lt;p&gt;关于&lt;code&gt;jsonrpc&lt;/code&gt;的实现细节这里就不展开讲了, 感兴趣的话可以参考这篇文章: &lt;a href=&#34;http://blog.golang.org/json-rpc-tale-of-interfaces&#34;&gt;JSON-RPC: a tale of interfaces&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;基于-protobuf-的-rpc-调用&#34;&gt;基于 Protobuf 的 RPC 调用&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://code.google.com/p/protobuf/;&#34;&gt;Protobuf&lt;/a&gt; 是 Google 公司开发的编码协议. 它的优势是编码后的数据体积比较小(并不是压缩算法), 比较适合用于命令的传输编码.&lt;/p&gt;
+
+&lt;p&gt;Protobuf 官方团队提供 Java/C++/Python 几个语言的支持, Go语言的版本由Go团队提供支持, 其他语言由第三方支持.&lt;/p&gt;
+
+&lt;p&gt;Protobuf 的语言规范中可以定义RPC接口. 但是在Go语言和C++版本的Protobuf中都没有生成RPC的实现.&lt;/p&gt;
+
+&lt;p&gt;不过作者在 Go语言版本的Protobuf基础上开发了 RPC 的实现 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt;, 同时提供的 &lt;code&gt;protoc-gen-go&lt;/code&gt;命令可以生成相应的RPC代码. 项目地址: &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;https://code.google.com/p/protorpc/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;该实现支持Go语言和C++语言, 在Protobuf官方wiki的第三方RPC实现列表中有介绍: &lt;a href=&#34;https://code.google.com/p/protobuf/wiki/ThirdPartyAddOns#RPC_Implementations&#34;&gt;https://code.google.com/p/protobuf/wiki/ThirdPartyAddOns#RPC_Implementations&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;要使用 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt;, 需要先在proto文件定义接口(&lt;code&gt;arith.pb/arith.proto&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package arith;
+
+// go use cc_generic_services option
+option cc_generic_services = true;
+
+message ArithRequest {
+    optional int32 a = 1;
+    optional int32 b = 2;
+}
+
+message ArithResponse {
+    optional int32 val = 1;
+    optional int32 quo = 2;
+    optional int32 rem = 3;
+}
+
+service ArithService {
+    rpc multiply (ArithRequest) returns (ArithResponse);
+    rpc divide (ArithRequest) returns (ArithResponse);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt;使用&lt;code&gt;cc_generic_services&lt;/code&gt;选择控制是否输出RPC代码. 因此, 需要设置&lt;code&gt;cc_generic_services&lt;/code&gt;为&lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;然后下载 &lt;a href=&#34;https://code.google.com/p/protobuf/downloads/list&#34;&gt;protoc-2.5.0-win32.zip&lt;/a&gt;, 解压后可以得到一个 &lt;code&gt;protoc.exe&lt;/code&gt; 的编译命令.&lt;/p&gt;
+
+&lt;p&gt;然后使用下面的命令获取 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 和对应的 &lt;code&gt;protoc-gen-go&lt;/code&gt; 插件.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go get code.google.com/p/protorpc
+go get code.google.com/p/protorpc/protoc-gen-go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要确保 &lt;code&gt;protoc.exe&lt;/code&gt; 和 &lt;code&gt;protoc-gen-go.exe&lt;/code&gt; 都在 &lt;code&gt;$PATH&lt;/code&gt; 中. 然后运行以下命令将前面的接口文件转换为Go代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd arith.pb &amp;amp;&amp;amp; protoc --go_out=. arith.proto
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;新生成的文件为&lt;code&gt;arith.pb/arith.pb.go&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;下面是基于 Protobuf-RPC 的服务器:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+    &amp;quot;errors&amp;quot;
+
+    &amp;quot;code.google.com/p/goprotobuf/proto&amp;quot;
+
+    &amp;quot;./arith.pb&amp;quot;
+)
+
+type Arith int
+
+func (t *Arith) Multiply(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    reply.Val = proto.Int32(args.GetA() * args.GetB())
+    return nil
+}
+
+func (t *Arith) Divide(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    if args.GetB() == 0 {
+        return errors.New(&amp;quot;divide by zero&amp;quot;)
+    }
+    reply.Quo = proto.Int32(args.GetA() / args.GetB())
+    reply.Rem = proto.Int32(args.GetA() % args.GetB())
+    return nil
+}
+
+func main() {
+    arith.ListenAndServeArithService(&amp;quot;tcp&amp;quot;, &amp;quot;:1984&amp;quot;, new(Arith))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中导入的 &lt;code&gt;&amp;quot;./arith.pb&amp;quot;&lt;/code&gt; 的名字为 &lt;code&gt;arith&lt;/code&gt;, 在 &lt;code&gt;arith.pb/arith.proto&lt;/code&gt; 文件中定义(这2个可能不同名, 导入时要小心).&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;arith.ArithRequest&lt;/code&gt;和&lt;code&gt;arith.ArithResponse&lt;/code&gt;是RPC接口的输入和输出参数, 也是在在 &lt;code&gt;arith.pb/arith.proto&lt;/code&gt; 文件中定义的.&lt;/p&gt;
+
+&lt;p&gt;同时生成的还有一个&lt;code&gt;arith.ListenAndServeArithService&lt;/code&gt;函数, 用于启动RPC服务. 该函数的第三个参数是RPC的服务对象, 必须要满足 &lt;code&gt;arith.EchoService&lt;/code&gt; 接口的定义.&lt;/p&gt;
+
+&lt;p&gt;客户端的使用也很简单, 只要一个 &lt;code&gt;arith.DialArithService&lt;/code&gt; 就可以链接了:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;stub, client, err := arith.DialArithService(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1984&amp;quot;)
+if err != nil {
+    log.Fatal(`arith.DialArithService(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1984&amp;quot;):`, err)
+}
+defer client.Close()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;arith.DialArithService&lt;/code&gt; 返回了一个 &lt;code&gt;stub&lt;/code&gt; 对象, 该对象已经绑定了RPC的各种方法, 可以直接调用(不需要用字符串指定方法名字):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var args ArithRequest
+var reply ArithResponse
+
+args.A = proto.Int32(7)
+args.B = proto.Int32(8)
+if err = stub.Multiply(&amp;amp;args, &amp;amp;reply); err != nil {
+    log.Fatal(&amp;quot;arith error:&amp;quot;, err)
+}
+fmt.Printf(&amp;quot;Arith: %d*%d=%d&amp;quot;, args.GetA(), args.GetB(), reply.GetVal())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;相比标准的RPC的库, &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 由以下几个优点:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;采用标准的Protobuf协议, 便于和其他语言交互&lt;/li&gt;
+&lt;li&gt;自带的 &lt;code&gt;protoc-gen-go&lt;/code&gt; 插件可以生成RPC的代码, 简化使用&lt;/li&gt;
+&lt;li&gt;服务器注册和调用客户端都是具体类型而不是字符串和&lt;code&gt;interface{}&lt;/code&gt;, 这样可以由编译器保证安全&lt;/li&gt;
+&lt;li&gt;底层采用了&lt;code&gt;snappy&lt;/code&gt;压缩传输的数据, 提高效率&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;不足之处是使用流程比标准RPC要繁复(需要将proto转换为Go代码).&lt;/p&gt;
+
+&lt;h2 id=&#34;c-调用-go-提供的-protobuf-rpc-服务&#34;&gt;C++ 调用 Go 提供的 Protobuf-RPC 服务&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 同时也提供了 C++ 语言的实现.&lt;/p&gt;
+
+&lt;p&gt;C++版本的安装如下:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;hg clone https://code.google.com/p/protorpc.cxx/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd protorpc.cxx&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;build with cmake&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;C++ 版本 的 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 对 &lt;code&gt;protoc.exe&lt;/code&gt; 扩展了一个
+&lt;code&gt;--cxx_out&lt;/code&gt; 选项, 用于生成RPC的代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;${protorpc_root}/protobuf/bin/protoc --cxx_out=. arith.proto
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;注:&lt;code&gt;--cxx_out&lt;/code&gt; 选项生成的代码除了RPC支持外, 还有xml的序列化和反序列化支持.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;下面是 C++ 的客户端链接 Go 语言版本的 服务器:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;quot;arith.pb.h&amp;quot;
+
+#include &amp;lt;google/protobuf/rpc/rpc_server.h&amp;gt;
+#include &amp;lt;google/protobuf/rpc/rpc_client.h&amp;gt;
+
+int main() {
+  ::google::protobuf::rpc::Client client(&amp;quot;127.0.0.1&amp;quot;, 1234);
+
+  service::ArithService::Stub arithStub(&amp;amp;client);
+
+  ::service::ArithRequest arithArgs;
+  ::service::ArithResponse arithReply;
+  ::google::protobuf::rpc::Error err;
+
+  // EchoService.mul
+  arithArgs.set_a(3);
+  arithArgs.set_b(4);
+  err = arithStub.multiply(&amp;amp;arithArgs, &amp;amp;arithReply);
+  if(!err.IsNil()) {
+    fprintf(stderr, &amp;quot;arithStub.multiply: %s\n&amp;quot;, err.String().c_str());
+    return -1;
+  }
+  if(arithReply.c() != 12) {
+    fprintf(stderr, &amp;quot;arithStub.multiply: expected = %d, got = %d\n&amp;quot;, 12, arithReply.c());
+    return -1;
+  }
+
+  printf(&amp;quot;Done.\n&amp;quot;);
+  return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;详细的使用说明请参考: &lt;a href=&#34;https://code.google.com/p/protorpc/source/browse/README.md?repo=cxx&#34;&gt;README.md&lt;/a&gt; .
+更多的例子请参考: &lt;a href=&#34;http://code.google.com/p/protorpc/source/browse/tests/rpctest/rpcserver.cc?repo=cxx&#34;&gt;rpcserver.cc&lt;/a&gt;
+和 &lt;a href=&#34;http://code.google.com/p/protorpc/source/browse/tests/rpctest/rpcclient.cc?repo=cxx&#34;&gt;rpcclient.cc&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;Go语言的RPC客户端是一个使用简单, 而且功能强大的RPC库. 基于标准的RPC库我们可以方便的定制自己的RPC实现(传输协议和串行化协议都可以定制).&lt;/p&gt;
+
+&lt;p&gt;不过在开发 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 的过程中也发现了&lt;code&gt;net/rpc&lt;/code&gt;包的一些不足之处:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;内置的&lt;code&gt;HTTP&lt;/code&gt;协议的RPC的串行化协议和传输协议耦合过于紧密, 用户扩展的协议无法支持内置的&lt;code&gt;HTTP&lt;/code&gt;传输协议(因为&lt;code&gt;rpc.Server&lt;/code&gt;和&lt;code&gt;rpc.Client&lt;/code&gt;接口缺陷导致的问题)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rpc.Server&lt;/code&gt; 只能注册 &lt;code&gt;rpc.ServerCodec&lt;/code&gt;, 而不能注册工厂函数. 而&lt;code&gt;jsonrpc.NewServerCodec&lt;/code&gt;需要依赖先建立链接(&lt;code&gt;conn&lt;/code&gt;参数), 这样导致了&lt;code&gt;HTTP&lt;/code&gt;协议只能支持内置的&lt;code&gt;gob&lt;/code&gt;协议&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rpc.Client&lt;/code&gt; 的问题和 &lt;code&gt;rpc.Server&lt;/code&gt; 类似&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;因为Go1需要保证API的兼容性, 因此上述的问题只能希望在未来的Go2能得到改善.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>在Go语言中使用 Protobuf-RPC</title>
+      <link>https://chai2010.cn/post/golang/go-protorpc-2013/</link>
+      <pubDate>Thu, 25 Apr 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-protorpc-2013/</guid>
+      
+        <description>
+
+&lt;p&gt;Go语言版本的Protobuf-RPC基本算完成了. 现在简单说下使用方法.&lt;/p&gt;
+
+&lt;h1 id=&#34;安装测试环境&#34;&gt;安装测试环境&lt;/h1&gt;
+
+&lt;p&gt;先下载代码(不支持&lt;code&gt;go get&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hg clone https://bitbucket.org/chai2010/gopath
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后下载后的目录设置为&lt;code&gt;GOPATH&lt;/code&gt;, 并添加&lt;code&gt;$GOPATH/bin&lt;/code&gt;到&lt;code&gt;PATH&lt;/code&gt;环境变量.&lt;/p&gt;
+
+&lt;p&gt;在&lt;code&gt;$GOPATH/bin&lt;/code&gt;中已经包含了Windows下的&lt;code&gt;2.4.1&lt;/code&gt;版本的&lt;code&gt;protoc.exe&lt;/code&gt;. 如果是&lt;code&gt;Linux&lt;/code&gt;等系统, 请自行下载并安装&lt;code&gt;protoc&lt;/code&gt;程序.&lt;/p&gt;
+
+&lt;p&gt;安装&lt;code&gt;protoc.exe&lt;/code&gt;的Go语言插件:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go install encoding/protobuf/protoc-gen-go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;该插件是基于&lt;code&gt;code.google.com/p/goprotobuf/protoc-gen-go&lt;/code&gt;实现, 主要增加了&lt;code&gt;encoding/protobuf/protoc-gen-go/generator/service.go&lt;/code&gt;文件, 用于&lt;code&gt;RPC&lt;/code&gt;的代码生成. 生成的&lt;code&gt;RPC&lt;/code&gt;代码依赖&lt;code&gt;net/rpc/protorpc&lt;/code&gt;, 这个包是&lt;code&gt;Protobuf-RPC&lt;/code&gt;的底层实现, 可以单独使用.&lt;/p&gt;
+
+&lt;p&gt;现在可以运行一下测试程序:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C:\&amp;gt;go test net/rpc/protorpc/service.pb
+ok      net/rpc/protorpc/service.pb     2.123s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;测试通过, 继续.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;编译-proto-文件&#34;&gt;编译 proto 文件&lt;/h1&gt;
+
+&lt;p&gt;创建一个名为&lt;code&gt;pbrpc&lt;/code&gt;的工作目录, 再创建&lt;code&gt;pbrpc/arith.pb&lt;/code&gt;的子目录.
+将&lt;code&gt;net/rpc/protorpc/service.pb/service.proto&lt;/code&gt;文件复制到&lt;code&gt;pbrpc/arith.pb&lt;/code&gt;的子目录.&lt;/p&gt;
+
+&lt;p&gt;包名字改为&lt;code&gt;arith&lt;/code&gt;, 文件&lt;code&gt;arith.proto&lt;/code&gt;的内容如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package arith;
+
+option cc_generic_services = true;
+option java_generic_services = true;
+option py_generic_services = true;
+
+message ArithRequest {
+    optional int32 a = 1;
+    optional int32 b = 2;
+}
+
+message ArithResponse {
+    optional int32 c = 1;
+}
+
+service ArithService {
+    rpc add (ArithRequest) returns (ArithResponse);
+    rpc mul (ArithRequest) returns (ArithResponse);
+    rpc div (ArithRequest) returns (ArithResponse);
+    rpc error (ArithRequest) returns (ArithResponse);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;主要是定义了一个&lt;code&gt;ArithService&lt;/code&gt;接口. 要注意的是&lt;code&gt;cc_generic_services&lt;/code&gt;/&lt;code&gt;java_generic_services&lt;/code&gt;, &lt;code&gt;py_generic_services&lt;/code&gt;几个选项.
+我前提提到的&lt;code&gt;protoc-gen-go&lt;/code&gt;在生成代码的时候, 这3个选项至少要有一个为&lt;code&gt;true&lt;/code&gt;, 才会生成&lt;code&gt;RPC&lt;/code&gt;的代码.&lt;/p&gt;
+
+&lt;p&gt;当然, 如果不生成&lt;code&gt;RPC&lt;/code&gt;代码的话, 也是可以单独使用&lt;code&gt;net/rpc/protorpc&lt;/code&gt;包的. 不过&lt;code&gt;protoc-gen-go&lt;/code&gt;生成的代码会简便很多.&lt;/p&gt;
+
+&lt;p&gt;进入&lt;code&gt;pbrpc/arith.pb&lt;/code&gt;的子目录, 编译&lt;code&gt;arith.proto&lt;/code&gt;文件:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protoc --go_out=. arith.proto
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成 &lt;code&gt;arith.pb.go&lt;/code&gt; 文件, 其中&lt;code&gt;RPC&lt;/code&gt;的代码主要是下面这些:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type ArithService interface {
+    Add(in *ArithRequest, out *ArithResponse) error
+    Mul(in *ArithRequest, out *ArithResponse) error
+    Div(in *ArithRequest, out *ArithResponse) error
+    Error(in *ArithRequest, out *ArithResponse) error
+}
+
+// RegisterArithService publish the given ArithService implementation on the server.
+func RegisterArithService(srv *rpc.Server, x ArithService) error {
+    if err := srv.RegisterName(&amp;quot;ArithService&amp;quot;, x); err != nil {
+        return err
+    }
+    return nil
+}
+
+// ServeArithService serves the given ArithService implementation on conn.
+func ServeArithService(conn io.ReadWriteCloser, x ArithService) error {
+    srv := rpc.NewServer()
+    if err := srv.RegisterName(&amp;quot;ArithService&amp;quot;, x); err != nil {
+        return err
+    }
+    srv.ServeCodec(protorpc.NewServerCodec(conn))
+    return nil
+}
+
+// ListenAndServeArithService listen announces on the local network address laddr
+// and serves the given ArithService implementation.
+func ListenAndServeArithService(network, addr string, x ArithService) error {
+    clients, err := net.Listen(network, addr)
+    if err != nil {
+        return err
+    }
+    srv := rpc.NewServer()
+    if err := srv.RegisterName(&amp;quot;ArithService&amp;quot;, x); err != nil {
+        return err
+    }
+    for {
+        conn, err := clients.Accept()
+        if err != nil {
+            return err
+        }
+        go srv.ServeCodec(protorpc.NewServerCodec(conn))
+    }
+    panic(&amp;quot;unreachable&amp;quot;)
+}
+
+type rpcArithServiceStub struct {
+    *rpc.Client
+}
+
+func (c *rpcArithServiceStub) Add(in *ArithRequest, out *ArithResponse) error {
+    return c.Call(&amp;quot;ArithService.Add&amp;quot;, in, out)
+}
+func (c *rpcArithServiceStub) Mul(in *ArithRequest, out *ArithResponse) error {
+    return c.Call(&amp;quot;ArithService.Mul&amp;quot;, in, out)
+}
+func (c *rpcArithServiceStub) Div(in *ArithRequest, out *ArithResponse) error {
+    return c.Call(&amp;quot;ArithService.Div&amp;quot;, in, out)
+}
+func (c *rpcArithServiceStub) Error(in *ArithRequest, out *ArithResponse) error {
+    return c.Call(&amp;quot;ArithService.Error&amp;quot;, in, out)
+}
+
+// DialArithService connects to an ArithService at the specified network address.
+func DialArithService(network, addr string) (*rpc.Client, ArithService, error) {
+    conn, err := net.Dial(network, addr)
+    if err != nil {
+        return nil, nil, err
+    }
+    c, srv := NewArithServiceClient(conn)
+    return c, srv, nil
+}
+
+// NewArithServiceClient returns a ArithService rpc.Client and stub to handle
+// requests to the set of ArithService at the other end of the connection.
+func NewArithServiceClient(conn io.ReadWriteCloser) (*rpc.Client, ArithService) {
+    c := rpc.NewClientWithCodec(protorpc.NewClientCodec(conn))
+    return c, &amp;amp;rpcArithServiceStub{c}
+}
+
+// NewArithServiceStub returns a ArithService stub to handle rpc.Client.
+func NewArithServiceStub(c *rpc.Client) ArithService {
+    return &amp;amp;rpcArithServiceStub{c}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中生成的服务器端的代码有: &lt;code&gt;ListenAndServeArithService&lt;/code&gt;, &lt;code&gt;ServeArithService&lt;/code&gt;, &lt;code&gt;RegisterArithService&lt;/code&gt;.
+生成的客户端的接口有: &lt;code&gt;DialArithService&lt;/code&gt;, &lt;code&gt;NewArithServiceClient&lt;/code&gt;, &lt;code&gt;NewArithServiceStub&lt;/code&gt;.
+其中&lt;code&gt;RPC&lt;/code&gt;接口对应&lt;code&gt;ArithService&lt;/code&gt;接口.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;编写测试代码&#34;&gt;编写测试代码&lt;/h1&gt;
+
+&lt;p&gt;在&lt;code&gt;pbrpc&lt;/code&gt;目录创建&lt;code&gt;rpc_server.go&lt;/code&gt;文件, 代码如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+    &amp;quot;encoding/protobuf/proto&amp;quot;
+    &amp;quot;errors&amp;quot;
+
+    &amp;quot;./arith.pb&amp;quot;
+)
+
+type Arith int
+
+func (t *Arith) Add(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    reply.C = proto.Int32(args.GetA() + args.GetB())
+    return nil
+}
+
+func (t *Arith) Mul(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    reply.C = proto.Int32(args.GetA() * args.GetB())
+    return nil
+}
+
+func (t *Arith) Div(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    if args.GetB() == 0 {
+        return errors.New(&amp;quot;divide by zero&amp;quot;)
+    }
+    reply.C = proto.Int32(args.GetA() / args.GetB())
+    return nil
+}
+
+func (t *Arith) Error(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    return errors.New(&amp;quot;ArithError&amp;quot;)
+}
+
+func main() {
+    arith.ListenAndServeArithService(&amp;quot;tcp&amp;quot;, &amp;quot;:1234&amp;quot;, new(Arith))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最关键的是&lt;code&gt;arith.ListenAndServeArithService(&amp;quot;tcp&amp;quot;, &amp;quot;:1234&amp;quot;, new(Arith))&lt;/code&gt;. 当然, 也可以使用&lt;code&gt;RegisterArithService&lt;/code&gt;或&lt;code&gt;ServeArithService&lt;/code&gt;等接口进行定制.&lt;/p&gt;
+
+&lt;p&gt;然后在&lt;code&gt;pbrpc&lt;/code&gt;创建&lt;code&gt;rpc_client.go&lt;/code&gt;对应客户端, 代码如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+    &amp;quot;encoding/protobuf/proto&amp;quot;
+    &amp;quot;log&amp;quot;
+
+    &amp;quot;./arith.pb&amp;quot;
+)
+
+func main() {
+    // client
+    client, stub, err := arith.DialArithService(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1234&amp;quot;)
+    if err != nil {
+        log.Fatalf(`arith.DialArithService(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1234&amp;quot;): %v`, err)
+    }
+    defer client.Close()
+
+    var args arith.ArithRequest
+    var reply arith.ArithResponse
+
+    // Add
+    args.A = proto.Int32(1)
+    args.B = proto.Int32(2)
+    if err = stub.Add(&amp;amp;args, &amp;amp;reply); err != nil {
+        log.Fatalf(`arith.Add: %v`, err)
+    }
+    if reply.GetC() != 3 {
+        log.Fatalf(`arith.Add: expected = %d, got = %d`, 3, reply.GetC())
+    }
+
+    // Mul
+    args.A = proto.Int32(2)
+    args.B = proto.Int32(3)
+    if err = stub.Mul(&amp;amp;args, &amp;amp;reply); err != nil {
+        log.Fatalf(`arith.Mul: %v`, err)
+    }
+    if reply.GetC() != 6 {
+        log.Fatalf(`arith.Mul: expected = %d, got = %d`, 6, reply.GetC())
+    }
+
+    // Div
+    args.A = proto.Int32(13)
+    args.B = proto.Int32(5)
+    if err = stub.Div(&amp;amp;args, &amp;amp;reply); err != nil {
+        log.Fatalf(`arith.Div: %v`, err)
+    }
+    if reply.GetC() != 2 {
+        log.Fatalf(`arith.Div: expected = %d, got = %d`, 2, reply.GetC())
+    }
+
+    // Div zero
+    args.A = proto.Int32(1)
+    args.B = proto.Int32(0)
+    if err = stub.Div(&amp;amp;args, &amp;amp;reply); err.Error() != &amp;quot;divide by zero&amp;quot; {
+        log.Fatalf(`arith.Error: expected = %s, got = %s`, &amp;quot;divide by zero&amp;quot;, err.Error())
+    }
+
+    // Error
+    args.A = proto.Int32(1)
+    args.B = proto.Int32(2)
+    if err = stub.Error(&amp;amp;args, &amp;amp;reply); err.Error() != &amp;quot;ArithError&amp;quot; {
+        log.Fatalf(`arith.Error: expected = %s, got = %s`, &amp;quot;ArithError&amp;quot;, err.Error())
+    }
+
+    log.Printf(&amp;quot;Done&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后就可以启动服务, 并测试客户端了.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

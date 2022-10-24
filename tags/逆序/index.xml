@@ -1,0 +1,1682 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>逆序 on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/%E9%80%86%E5%BA%8F/</link>
+    <description>Recent content in 逆序 on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 07 Dec 2009 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/%E9%80%86%E5%BA%8F/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>单向链表的逆序</title>
+      <link>https://chai2010.cn/post/2009/link-list-reverse/</link>
+      <pubDate>Mon, 07 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/link-list-reverse/</guid>
+      
+        <description>&lt;p&gt;假设链表的结构为:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;struct Node { int item; Node* next; };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;单向链表是一个有序的序列.假设有一个单向链表A:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1, 2, 3, 4, 5, ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在将A表逆序后得到链表B:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;..., 5, 4, 3, 2, 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;常规的反转链表方法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Node *reverse(Node *list)
+{
+    link t, y = list, r = 0;
+    while (y != 0) { t = y-&amp;gt;next; y-&amp;gt;next = r; r = y; y = t; }
+    return r;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其实上面的这个操作自然地对应于栈的出栈/压栈操作.
+因此, 单向链表的逆序问题我们也可以抽象为A和B两个栈的转换问题.&lt;/p&gt;
+
+&lt;p&gt;现在给Node实现用于栈的操作函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 1. 判断栈是否为空
+bool isEmpty(Node* stack)
+{
+    return (stack == NULL);
+}
+
+// 2. 向栈stack中压入一个node元素
+void push(Node* &amp;amp;stack, Node* node)
+{
+    node-&amp;gt;next = stack;
+    stack = node;
+}
+
+// 3. 从栈stack中弹出一个元素
+Node* pop(Node* &amp;amp;stack)
+{
+    assert(!isEmpty(stack));
+
+    Node *t = stack;
+    stack = stack-&amp;gt;next;
+
+    return t;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面可以基于栈实现单向链表的逆序操作了.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Node *reverse(Node *oldList)
+{
+    Node *newList = NULL;
+
+    while(!isEmpty(oldList))
+    {
+        push(newList, pop(oldList));
+    }
+
+    return newList;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;采用栈的思维来思考单向链表的逆序问题之后,许多本来相对复杂的问题都会变得异常简单.
+例如, 我们现在再考虑用递归的方法来逆序链表.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 递归实现反转链表
+Node *reverse(Node *oldList, Node *newList=NULL)
+{
+    // 判断oldList是否为空
+    if(isEmpty(oldList)) return newList;
+
+    // 从oldList栈弹出一个元素
+    // 然后将弹出的元素压到newList栈中
+    push(newList, pop(oldList));
+
+    // 递归处理剩下的oldList链表
+    return reverse(oldList, newList);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;递归版本的调用方式:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int main()
+{
+    Node *list = NULL;
+
+    // newList采用默认的NULL
+    Node *t = reverse(list);
+
+    // ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>挑战递归...</title>
+      <link>https://chai2010.cn/post/2006/recursion-deep-learn/</link>
+      <pubDate>Thu, 30 Nov 2006 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2006/recursion-deep-learn/</guid>
+      
+        <description>&lt;p&gt;发信人: knuth (Knuth), 信区: Program
+标  题: [合集] 挑战递归&amp;hellip;
+发信站: 侏罗纪公园 (Fri Aug  1 17:27:37 2008), 站内&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Thu Nov 30 13:49:23 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我想大家写程序到一定层度都会觉得递归很有意思。
+其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/p&gt;
+
+&lt;p&gt;举个例子：&lt;/p&gt;
+
+&lt;p&gt;从数组顺序查找一个值应该很简单。
+但是，也可以从递归角度来实现！
+我们第一次先比较第一个，然后再递归查找
+剩下的数组。&lt;/p&gt;
+
+&lt;p&gt;下面我先给个小例子开个头：
+假设要把一个十进制的数逆序，119 -&amp;gt; 911&lt;/p&gt;
+
+&lt;p&gt;代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int fx(int n, int k)
+{
+    return (n)? fx(n/10, k*10+(n%10)): k;
+}
+
+main()
+{
+    printf(&amp;quot;%d\n&amp;quot;, fx(119, 0));
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面由大家来接啊&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;char *reverse(char *str);&lt;/code&gt;是将&lt;code&gt;str&lt;/code&gt;逆序后返回。
+要求用递归实现&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;IPconfig (readme.txt) 于  (Thu Nov 30 17:01:54 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;一直不喜欢用递归.
+使用递归时,计算机做了什么,其实我们并不是很了解,也谈不上控制了.
+我宁愿自己构造堆栈,用循环.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Thu Nov 30 18:26:46 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dd&gt;char *reverse(char *str);是将str逆序后返回。&lt;/dd&gt;
+&lt;dd&gt;要求用递归实现&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;期待中&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Thu Nov 30 18:37:17 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 IPconfig (readme.txt) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一直不喜欢用递归.&lt;/dd&gt;
+&lt;dd&gt;使用递归时,计算机做了什么,其实我们并不是很了解,也谈不上控制了.&lt;/dd&gt;
+&lt;dd&gt;我宁愿自己构造堆栈,用循环.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;递归其实是和函数调用的原理一样的（在C中）。
+函数调用参数要进栈，返回要出栈，
+因此，可以隐式地使用系统本身的栈&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;关键是代码看起来简单明了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 10:07:00 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;reverse(char *str,int left,int right)
+{
+    char tmp;
+    tmp = str[left];
+    str[left] = str[right];
+    str[right] = tmp;
+    left++;
+    right--;
+    if(right &amp;gt; left)
+        reverse(str,left,right);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 11:51:57 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;pre&gt;&lt;code&gt;    reverse(str,left,right);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;对ls的程序有个疑问：&lt;/p&gt;
+
+&lt;p&gt;left/right是str的下标还是str的内容？&lt;/p&gt;
+
+&lt;p&gt;如果left/right是下标，那么交换的时候怎么只交换left/right的值？
+如果left/right是内容，那传递str参数是否还有必要？&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 14:22:15 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;下标，写错了&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;reverse(char *str,int left,int right)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;char tmp;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 14:32:54 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;下标，写错了&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;那现在继续增加挑战的难度^_^&lt;/p&gt;
+
+&lt;p&gt;函数的原形为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char *str);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要求用递归实现该函数，但不能自行增加参数。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 14:45:11 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;可以有全局变量吗&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;那现在继续增加挑战的难度^_^&lt;/dd&gt;
+&lt;dd&gt;函数的原形为：&lt;/dd&gt;
+&lt;dd&gt;char *reverse(char *str);&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 15:01:40 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;可以有全局变量吗&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;那个不管，总之用户只是把它当作一个函数使用。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;main()
+{
+    char s1[] = &amp;quot;abc&amp;quot;;
+    char s2[] = &amp;quot;abc&amp;quot;;
+    printf(&amp;quot;%s -&amp;gt; %s&amp;quot;, s1, reverse(s2));
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;debug (Leaving) 于  (Fri Dec  1 17:26:59 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/*
+ * reverse.cpp
+ * IDE: DEV-CPP
+ * &amp;lt;zmstone#gmail.com&amp;gt;
+ */
+#include &amp;lt;cstring&amp;gt;
+#include &amp;lt;cstdio&amp;gt;
+#include &amp;lt;algorithm&amp;gt;
+using namespace std;
+
+void reverse(char* s, int k){
+    if(k&amp;gt;1){
+        reverse(s+1, k-2);
+        swap(*s, s[k]);
+    }
+}
+
+int main(){
+    char str[] = &amp;quot;abcdefghijklmno&amp;quot;;
+    printf(&amp;quot;%s\n&amp;quot;, str);
+    reverse(str, strlen(str)-1);
+    printf(&amp;quot;%s\n&amp;quot;, str);
+    while(1);
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 IPconfig (readme.txt) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一直不喜欢用递归.&lt;/dd&gt;
+&lt;dd&gt;使用递归时,计算机做了什么,其实我们并不是很了解,也谈不上控制了.&lt;/dd&gt;
+&lt;dd&gt;我宁愿自己构造堆栈,用循环.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 17:35:59 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 debug (Leaving) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;/*&lt;/dd&gt;
+&lt;dd&gt;* reverse.cpp&lt;/dd&gt;
+&lt;dd&gt;* IDE: DEV-CPP&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;pre&gt;&lt;code&gt; reverse(s+1, k-2);
+      swap(*s, s[k]);
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;楼上程序还没有完全达到要求哦&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char* str);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;函数只有1个参数，且返回逆序后的字符串。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;debug (Leaving) 于  (Fri Dec  1 17:46:31 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;按你的要求来应该这样:
+    /*
+     * reverse.cpp
+     * IDE: DEV-CPP
+     * &lt;zmstone#gmail.com&gt;
+     */
+    #include &lt;cstring&gt;
+    #include &lt;cstdio&gt;
+    #include &lt;algorithm&gt;
+    using namespace std;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *s, int k){
+    if(k&amp;lt;0) return;
+    reverse(s+1, k-2);
+    swap(*s, s[k]);
+}
+char* reverse(char* s){
+    char* ret = strdup(s);
+    reverse(ret, strlen(ret)-1);
+    return ret;
+}
+int main(){
+    char *tmp, str[256];
+    while(1 == scanf(&amp;quot;%s&amp;quot;, str)){
+        printf(&amp;quot;%s -&amp;gt; %s\n&amp;quot;, str, tmp = reverse(str));
+        if(strcmp(strrev(str), tmp)) printf(&amp;quot;error!\n&amp;quot;);
+        delete []tmp;
+    }
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;前面那个递归写错了&amp;hellip;
+直接调用&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;leo (leo) 于  (Fri Dec  1 17:57:55 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;递归很好的,写出的代码简单又容易理解.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 17:59:18 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 debug (Leaving) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;按你的要求来应该这样:&lt;/dd&gt;
+&lt;dd&gt;/*&lt;/dd&gt;
+&lt;dd&gt;* reverse.cpp&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;楼上使用了C++的重载功能。
+本质上发生递归的是reverse(char *s, int k)函数，
+还是2个参数。&lt;/p&gt;
+
+&lt;p&gt;提高的要求是用1个参数实现递归^_^&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 18:33:29 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我觉得这个如果用递归不划算,我倒是想到了用分治来实现一个参数的,递归.就是让前面
+一半的字符串和后面一半的分别reverse,然后整个再reverse.不过时空复杂度都比不递
+归大的多.不知道,有没有别的简单的递归算法.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;楼上使用了C++的重载功能。&lt;/dd&gt;
+&lt;dd&gt;本质上发生递归的是reverse(char *s, int k)函数，&lt;/dd&gt;
+&lt;dd&gt;还是2个参数。&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 18:35:29 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;如果有全局变量和没有全局变量思路完全不一样.如果有全局变量相当于传递了参数,那
+么把有多个参数的程序稍微改下就可以了.如果没有全局变量用分治可以实现一个参数.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;那个不管，总之用户只是把它当作一个函数使用。&lt;/dd&gt;
+&lt;dd&gt;main()&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 18:41:09 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我觉得这个如果用递归不划算,我倒是想到了用分治来实现一个参数的,递归.就是让?..&lt;/dd&gt;
+&lt;dd&gt;一半的字符串和后面一半的分别reverse,然后整个再reverse.不过时空复杂度都比不递&lt;/dd&gt;
+&lt;dd&gt;归大的多.不知道,有没有别的简单的递归算法.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;贴个代码出来吧&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;不过这里用递归实现并不是要使用，
+只是想大家能更深入些了解递归&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 18:53:27 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;reverse(char *str)
+{
+    int len;
+    char *tmp;
+    len = strlen(str);
+    if(len&amp;amp;1)
+    {
+        tmp=str+len/2+1;
+        reverse(tmp);
+    }
+    else
+    {
+        tmp=str+len/2;
+        reverse(tmp);
+    }
+    int i;
+    for(i=0;i&amp;lt;len/2;i++)
+    {
+        swap(str[i],str[i+len/2]);
+    }
+    reverse(tmp);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;贴个代码出来吧&lt;em&gt;_&lt;/em&gt;&lt;/dd&gt;
+&lt;dd&gt;不过这里用递归实现并不是要使用，&lt;/dd&gt;
+&lt;dd&gt;只是想大家能更深入些了解递归&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 18:55:42 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;把if else里面的reverse()提出来代码更简洁点&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;reverse(char *str)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;int len;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 19:12:22 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;reverse(char *str)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;int len;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;看了你的代码，觉得结果不对,
+而且实际运行的时候错误错误。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 19:16:47 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;思路应该没问题 ,自己改改吧&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;看了你的代码，觉得结果不对,&lt;/dd&gt;
+&lt;dd&gt;而且实际运行的时候错误错误。&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:18:08 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;从软件安全和维护的角度来讲,我认为提醒程序员自己做了什么很重要.
+所以,我认为不应该设计一个返回变量等待程序员释放.
+我的想法是让程序员自己new字符串.这样也许更能提醒程序员注意自己使用的系统资源.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *str)
+{
+    static int begin = -1;
+    static int end = -1;
+
+    if (begin == -1)
+    {
+        begin = 0;
+        end = strlen(str)-1;
+    }
+
+    if ( (end-begin) &amp;gt;= 1 )
+    {
+        str[begin] = str[begin] ^ str[end];
+        str[end]   = str[end]   ^ str[begin];
+        str[begin] = str[begin] ^ str[end];
+        begin++;
+        end--;
+        return reverse(str);
+    }
+    else
+    {
+        begin  = -1;
+        end = -1;
+        return str;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:25:42 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;本来有了这么多的解决方法,自己不应该再多此一举.但是,呵呵,发现自己还是和大一
+初学编程的时候一样会为这样的&amp;rdquo;挑战&amp;rdquo;而狂热&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;编程为什么有趣？作为回报，它的从业者期望得到什么样的快乐？
+首先是一种创建事物的纯粹快乐。如同小孩在玩泥巴时感到愉快一样，成年人喜欢创建事
+物，特别是自己进行设计。我想这种快乐是上帝创造世界的折射，一种呈现在每片独特、
+崭新的树叶和雪花上的喜悦1。
+&amp;hellip;&amp;hellip;&amp;hellip;
+1. Ershov认为编程是一种乐趣和苦恼共存的活动。A.P. Ershov, “Aesthetics and
+ the human factor in programming,” CACM, 15,7(July,1972), pp. 501-505.&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;摘自《人月神话》 作者：FREDERICK P. BROOKS, JR. 翻译：Adams Wang&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 19:30:04 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;conio.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+
+void reverse(char *str)
+{
+    char *tmp;
+    int i;
+    int len;
+    char c;
+    int add;
+    len = strlen(str);
+    if(len &amp;lt; 1)
+        return;
+    if(len&amp;amp;1)
+    {
+        add = len/2+1;
+    }
+    else
+    {
+        add = len/2;
+    }
+    tmp = str + add;
+    reverse(tmp);
+    for(i=0;i&amp;lt;len/2;i++)
+    {
+        c = str[i];
+        str[i] = str[i+add];
+        str[i+add] = c;
+    }
+    reverse(tmp);
+}
+
+void main()
+{
+    char str[10] = &amp;quot;abcdef&amp;quot;;
+    printf(&amp;quot;%s\n&amp;quot;,str);
+    reverse(str);
+    printf(&amp;quot;%s&amp;quot;,str);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;看了你的代码，觉得结果不对,&lt;/dd&gt;
+&lt;dd&gt;而且实际运行的时候错误错误。&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 19:34:38 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;思路应该没问题 ,自己改改吧&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;刚才又看了一下，觉得似乎可以&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:36:06 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;还有一个问题，我刚刚也暗示了。
+这个：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;
+using namespace std;
+int main()
+{
+char* s=&amp;quot;12&amp;quot;;
+s[0] = &#39;1&#39;;
+return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我想大家知道我要说什么。&lt;/p&gt;
+
+&lt;p&gt;也许大家强调题目并没有明确指出这一点，但是knuth函数原型的返回值暗示了：参数
+也许指向常量。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;reverse(char *str,int left,int right)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;char tmp;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 19:37:35 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;你说什么呢?
+我一直没看懂&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;还有一个问题，我刚刚也暗示了。&lt;/dd&gt;
+&lt;dd&gt;这个：&lt;/dd&gt;
+&lt;dd&gt;#include &lt;iostream&gt;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:45:53 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;你运行一下我那段小代码，常量不能访问的问题。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 19:49:06 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;本来有了这么多的解决方法,自己不应该再多此一举.但是,呵呵,发现自己还是和..&lt;/dd&gt;
+&lt;dd&gt;初学编程的时候一样会为这样的&amp;rdquo;挑战&amp;rdquo;而狂热&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;ldquo;编程为什么有趣？作为回报，它的从业者期望得到什么样的快乐？&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;地大bbs在外网访问太慢了！！！
+根本大不开帖子！
+现在才看到已经回了好多。&lt;/p&gt;
+
+&lt;p&gt;magicGG的方法和我的有些相似&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char *str)
+{
+    static int stk;
+    static char *s;
+
+    if(!stk) s = str+strlen(str)-1;
+
+    stk++;
+    if(str &amp;lt; s)
+    {
+        char c = *s; *s = *str; *str = c;
+        s--; reverse(str+1);
+    }
+    stk--;
+
+    return str;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;都用到了static变量！&lt;/p&gt;
+
+&lt;p&gt;发了这个回去就回去了，下周再看。
+要是现在看，估计得等到10点&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:57:22 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;不好意思：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *str)
+{
+    static int begin = -1;
+    static int end = -1;
+
+    if (begin == -1)
+    {
+        begin = 0;
+        end = strlen(str)-1;
+    }
+
+    if ( (end-begin) &amp;gt;= 1 )
+    {
+        str[begin] = str[begin] ^ str[end];
+        str[end]   = str[end]   ^ str[begin];
+        str[begin] = str[begin] ^ str[end];
+        begin++;
+        end--;
+        //return
+        reverse(str);
+    }
+    else
+    {
+        begin  = -1;
+        end = -1;
+        //return str;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 20:16:06 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我认为 TomasMao (毛豆) 是最“递归”的解法。
+相比之下，我和knuth过多依赖了语言元素。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;#include &lt;stdio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;conio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;string.h&gt;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 20:28:49 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我来尝试解释：TomasMao (毛豆)的方法：
+1.首先反转串的后半部分。
+2.把反转后的后半子串平移到前半部分来。这样以后就把结果串的前半部分弄好了。
+  此时，原来串的前半部分已经被移动到了后面。对它的移动已经完成了，它现在需
+  要被反转。
+3.反转它。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 20:39:52 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;呵呵,谢谢啊&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我来尝试解释：TomasMao (毛豆)的方法：&lt;/dd&gt;
+&lt;dd&gt;1.首先反转串的后半部分。&lt;/dd&gt;
+&lt;dd&gt;2.把反转后的后半子串平移到前半部分来。这样以后就把结果串的前半部分弄好了。&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;Superren (西门飘雪) 于  (Fri Dec  1 22:57:12 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;#include &lt;stdio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;conio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;string.h&gt;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;TomasMao (毛豆)方法不错,但是&amp;rdquo;if else&amp;rdquo;代码段还可精简&lt;code&gt;add = (len+1)/2;&lt;/code&gt;
+该语句把奇偶情况全包含了.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;ray (小平) 于  (Fri Dec  1 23:13:41 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;阅，
+抄送家宝！&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;Superren (西门飘雪) 于  (Sat Dec  2 00:16:43 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;大家方法都不错
+不过对比一下
+还是算&amp;rdquo;毛豆&amp;rdquo;先生是真正的为了解决问题而递归的.
+其它的递归都是为了递归而递归的,与其这样,直接整个翻转就OK了,还费那么大劲
+哈哈,不过都有收获&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Sat Dec  2 14:10:19 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 Superren (西门飘雪) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;大家方法都不错&lt;/dd&gt;
+&lt;dd&gt;不过对比一下&lt;/dd&gt;
+&lt;dd&gt;还是算&amp;rdquo;毛豆&amp;rdquo;先生是真正的为了解决问题而递归的.&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;递归代价比较大，一般不能不用递归就不要使用递归。
+递归花费了大量的内存空间（系统栈空间和应用堆参数表空间）和函数调用时环境切换的
+时间。&lt;/p&gt;
+
+&lt;p&gt;从理论上来说，递归可以使用递推来完成，相比之下，递推代码书写量要大些，但代码的
+可控制性更高！&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Sat Dec  2 14:19:09 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 C9456 (C9456) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;递归代价比较大，一般不能不用递归就不要使用递归。&lt;/dd&gt;
+&lt;dd&gt;递归花费了大量的内存空间（系统栈空间和应用堆参数表空间）和函数调用时环境切..&lt;/dd&gt;
+&lt;dd&gt;时间。&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;我也发个：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+#include &amp;lt;malloc.h&amp;gt;
+#include &amp;lt;windows.h&amp;gt;
+#include &amp;lt;winbase.h&amp;gt;
+
+char* reverse(char *str)
+{
+    static char* rev_buf = NULL;
+    static char* Str_Error =&amp;quot;ERROR&amp;quot;;
+    char* ret_buf;
+    int str_len;
+    static int str_count = 0;
+
+    str_len = (int)strlen(str) - str_count;
+    if(str_len &amp;lt; 0)        //递归出口判断条件
+        goto End;
+
+    //分配全局静态空间
+    if(rev_buf == NULL){
+        if((rev_buf = (char*)malloc( sizeof(char)*strlen(str))) != NULL)
+            ZeroMemory(rev_buf, strlen(rev_buf));
+        else
+            return Str_Error;
+    }
+
+    //将返回值，拷贝到全局静态空间中
+    str_count++ ;
+    sprintf(rev_buf,&amp;quot;%s%c&amp;quot;, rev_buf, *reverse(str));
+    str_count --;
+
+End:
+    if(str_count == 0){
+        sprintf(rev_buf,&amp;quot;%s%c&amp;quot;, rev_buf, *(str));        //最后返回，差一个字节，此处补上
+        if((ret_buf = malloc(sizeof(char)*strlen(str))) != NULL){
+            strcpy(ret_buf, rev_buf);                    //静态缓冲空间不便作返回值
+        //    ZeroMemory(rev_buf, strlen(rev_buf));      //清空内存数据，再次使用不用malloc
+            rev_buf = NULL;                              //清空指针，以便下次该函数使用，之后使用要malloc
+            return ret_buf;                              //返回字符串
+        }
+        return Str_Error;                                //返回出错信息
+    }
+    else
+        return str + str_count;
+}
+
+void main(void)
+{
+    char* str = &amp;quot;123456&amp;quot;;
+    char* str1 = &amp;quot;123456789&amp;quot;;
+    char str2[20];
+    strcpy(str2, reverse(str1));
+    printf(&amp;quot;%s\n%s\n&amp;quot;, reverse(str), reverse(str1));
+    printf(&amp;quot;%s\n&amp;quot;, str2);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;steam (少上bbs,多读书) 于  (Sat Dec  2 14:31:05 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;也原创一下&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *buf)
+{
+    static char *pBuf=buf;
+
+    char ch=*buf;
+    if(*(++buf)!=&#39;\0&#39;)
+        reverse(buf);
+    *(pBuf++)=ch;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sat Dec  2 15:02:33 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;逻辑好像不对.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 steam (少上bbs,多读书) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;也原创一下&lt;/dd&gt;
+&lt;dd&gt;void reverse(char *buf)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;steam (javaing) 于  (Sat Dec  2 15:10:56 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;为啥不对？
+你试了没&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;逻辑好像不对.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sat Dec  2 15:15:22 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;steam的算法也很简单.但只是忘记考虑static初始化只能执行一次的问题.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;逻辑好像不对.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sat Dec  2 15:35:30 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;好复杂啊.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 C9456 (C9456) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我也发个：&lt;/dd&gt;
+&lt;dd&gt;#include &lt;stdio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;string.h&gt;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sat Dec  2 15:36:55 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我试了.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 steam (javaing) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;为啥不对？&lt;/dd&gt;
+&lt;dd&gt;你试了没&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;steam (javaing) 于  (Sat Dec  2 15:38:10 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *buf)
+{
+    static char *pBuf=0;
+    static int n=0;
+    if(n==0)
+        pBuf=buf;
+    n++;
+    char ch=*buf;
+    if(*(++buf)!=&#39;\0&#39;)
+        reverse(buf);
+    *(pBuf++)=ch;
+    n--;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;好复杂啊.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Sun Dec  3 09:58:17 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;一天没看，已经回了这么多拉，哈哈&lt;/p&gt;
+
+&lt;p&gt;想必大家都对reverse有了较深入的了解，&lt;/p&gt;
+
+&lt;p&gt;现在让我们再回到原点&amp;hellip;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;开始我给了一个逆序十进制数的程序&lt;/p&gt;
+
+&lt;p&gt;int fx(int n, int k)
+{
+    return (n)? fx(n/10, k*10+(n%10)): k;
+}&lt;/p&gt;
+
+&lt;p&gt;main()
+{
+    printf(&amp;ldquo;%d\n&amp;rdquo;, fx(119, 0));
+}&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;fx也是设置了一个辅助参数k。参考reverse的方法，
+我们也可以把k去掉。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int fx(int n)
+{
+    static int stk;
+    static int k;
+
+    if(!stk) k = 0;
+
+    stk++;
+    if(n) { k = k*10 + n%10; fx(n/10); }
+    stk--;
+
+    return k;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然这种修改没什么特别之处。我的目的是要进一步考察它们的联系&amp;hellip;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;fx把十进制119逆序为911，reverse则是把字符串逆序。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;那么我们是否可以把reverse要逆序的字符串也看作是一个数呢？&lt;/p&gt;
+
+&lt;p&gt;当然可以了，一个char占一个字节8个二进制位，因此权值为256&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;从这个角度看的话，fx的方法同样也可以用于实现reverse。&lt;/p&gt;
+
+&lt;p&gt;和二进制相似，&lt;code&gt;reverse&lt;/code&gt;的&lt;code&gt;str/256&lt;/code&gt;和&lt;code&gt;str%256&lt;/code&gt;我们可以利用左移来实现。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char *str)
+{
+    static int stk;
+    static char *s;
+
+    if(!stk) s = str + strlen(str) - 1;
+
+    stk++;
+    if(str &amp;lt; s)
+    {
+        char *p = s - 1;
+        char c = *p;
+
+        while(*(p+1))
+        {
+            *p = *(p+1); p++;
+        }
+        *p = c;
+
+        s--; reverse(str);
+    }
+    stk--;
+
+    return str;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中&lt;code&gt;str-s&lt;/code&gt;对应fx中当前的n，s到末尾对应fx中的k。&lt;/p&gt;
+
+&lt;p&gt;今天还有事情，先写这些了&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sun Dec  3 10:44:03 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;确实精巧,深刻.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一天没看，已经回了这么多拉，哈哈&lt;/dd&gt;
+&lt;dd&gt;想必大家都对reverse有了较深入的了解，&lt;/dd&gt;
+&lt;dd&gt;现在让我们再回到原点&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Mon Dec  4 08:49:44 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一天没看，已经回了这么多拉，哈哈&lt;/dd&gt;
+&lt;dd&gt;想必大家都对reverse有了较深入的了解，&lt;/dd&gt;
+&lt;dd&gt;现在让我们再回到原点&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;现在再把算法左右对称一下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char *str)
+{
+    static int stk;
+    static char *s;
+
+    if(!stk) s = str;
+
+    stk++;
+    if(*str)
+    {
+        char *p = str, t = *p;
+        while(p &amp;gt; s) { *p = *(p-1); p--; }
+        *p = t;
+
+        reverse(str+1);
+    }
+    stk--;
+
+    return str;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样我们就得到另一种完整的方法&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 09:21:09 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;恩.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Mon Dec  4 09:32:27 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一天没看，已经回了这么多拉，哈哈&lt;/dd&gt;
+&lt;dd&gt;想必大家都对reverse有了较深入的了解，&lt;/dd&gt;
+&lt;dd&gt;现在让我们再回到原点&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;呵呵，
+思想不错，可惜我没有完全看懂！&lt;/p&gt;
+
+&lt;p&gt;不知道你分析了下其空间复杂度和时间复杂度没有？&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 09:35:15 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我想,如果从你的思路出发,继续向前,还是有路可走的.&lt;/p&gt;
+
+&lt;p&gt;那就是TomasMao(毛豆)的思路.&lt;/p&gt;
+
+&lt;p&gt;他的算法思想如果非要找到一个和你一样的思路的话,到是可以这样解释:&lt;/p&gt;
+
+&lt;p&gt;每次不是除以256,然后取余.而是动态的除以当前串长的一半所代表的权值,然后把另
+一半(也就是余数),赋给K.和你的思想的最大的不同还有一点,就是他的算法就此没有迭代
+得使用算术思想,而是每个递归都仅此一步算术.我想表达的意思是他的算法中的算术不具
+有连续性,不知道说清楚没&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;steam的算法好像是迄今效率最高的.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Mon Dec  4 09:49:52 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想,如果从你的思路出发,继续向前,还是有路可走的.&lt;/dd&gt;
+&lt;dd&gt;那就是TomasMao(毛豆)的思路.&lt;/dd&gt;
+&lt;dd&gt;他的算法思想如果非要找到一个和你一样的思路的话,到是可以这样解释:&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;哈哈，现在问题终于被展开了&lt;em&gt;_&lt;/em&gt;
+看来我开始的目的已经达到了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 10:12:43 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我发现一规律:就是knuth用三个点(&amp;hellip;)的时候一定是笑里藏刀,绵里藏针&amp;hellip;醉翁之意
+不在酒&amp;hellip;更大的还在后头&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;哈哈&amp;hellip;^_^&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Mon Dec  4 10:44:22 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;递归问题没必要弄得这么复杂吧？
+我觉得递归就是将一个问题和子问题的相似性利用起来
+这样使程序看起来非常简洁&lt;/p&gt;
+
+&lt;p&gt;我想当初那些做编译器的人支持递归也是发现了很多程序问题，子问题跟原问题有相似性
+如果让人为的实现这些相似性比如自己构造堆栈来实现递归非常麻烦
+那么我们就让编译器帮我们实现，于是开始支持递归
+我是这么想的，反正就是为了方便程序员处理问题
+像算法里面的动态规划和分治这两个最常用最重要的算法都用到了递归，可见递归的重要性。&lt;/p&gt;
+
+&lt;p&gt;还有一点就是程序就是为了帮助程序员解决问题
+所以我觉得还是把精力放到解决问题上比较好
+不用拿一些解决问题方法例如递归，或者一些语言的特性研究半天
+其实语言为什么有那么多种？就是因为要解决不同的问题，写脚步用脚本语言perl python shell
+开发大规模现实应用程序需要接近人类思维需要面向对象c++ java，底层开发要接近硬件思维c语言，汇编语言。
+还有数据库查询也需要自己的SQL语言。总之一句话什么方便用什么，什么让程序员能快速解决问题用什么。
+任何语言都有它存在的道理。大家不但要学习这些语言还要明白为什么要学习使用这些语言
+不要只学习知识而忘记学习知识的目的
+其实递归好像也没什么好研究的&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;哈哈，现在问题终于被展开了&lt;em&gt;_&lt;/em&gt;&lt;/dd&gt;
+&lt;dd&gt;看来我开始的目的已经达到了&amp;hellip;&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Mon Dec  4 12:00:21 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;递归问题没必要弄得这么复杂吧？&lt;/dd&gt;
+&lt;dd&gt;我觉得递归就是将一个问题和子问题的相似性利用起来&lt;/dd&gt;
+&lt;dd&gt;这样使程序看起来非常简洁&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;说得极是！&lt;/p&gt;
+
+&lt;p&gt;能不用递归就不要用递归！
+空间复杂度问题始终是递归使用者忽略的问题。&lt;/p&gt;
+
+&lt;p&gt;对于程序员来说，递归是简单了编程的过程，但对计算机来说是个挑战！&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;kusa (时代青年) 于  (Mon Dec  4 13:30:43 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;递归问题没必要弄得这么复杂吧？&lt;/dd&gt;
+&lt;dd&gt;我觉得递归就是将一个问题和子问题的相似性利用起来&lt;/dd&gt;
+&lt;dd&gt;这样使程序看起来非常简洁&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;递归遍历的效率一般是比较低的!&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;steam (javaing) 于  (Mon Dec  4 15:42:23 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;效率暂时不谈，考虑堆栈可能溢出的问题，很多时候对递归没安全感,虽然用它来描述思想
+和编写程序比较简单。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;递归问题没必要弄得这么复杂吧？&lt;/dd&gt;
+&lt;dd&gt;我觉得递归就是将一个问题和子问题的相似性利用起来&lt;/dd&gt;
+&lt;dd&gt;这样使程序看起来非常简洁&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 16:03:15 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我同意的你部分观点,但不同意另外一部分.&lt;/p&gt;
+
+&lt;p&gt;首先,一个小概念的澄清.编译器设计和程序设计语言的设计不是等同的.语言递归特征
+的出现我想当初是人的求解思路的直接要求.像菲波那楔数列的定义和其他某些事物的定义
+本身就引导我们使用一种叫递归的东西去求解,所以在&amp;rdquo;语言设计&amp;rdquo;中加入了这个特征.我印
+象中是有语言不支持函数直接调用自身的的,但我们可以用两个函数互相调用来解决这个问
+题,我想.&lt;/p&gt;
+
+&lt;p&gt;其次,每个人研究的层次不同,这个层次有高低之分,但没有贵贱之分.这个贵贱不是人
+的,而是问题的&amp;mdash;-没有.我的意思是说不论是对语言特征应用的讨论还是问题建模的讨论
+还是对思路的讨论都很重要.不同的语言对思维有不一样的反作用,&amp;ldquo;解决问题&amp;rdquo;总要使用语
+言,总要被它的特征所拓展和限制&amp;mdash;-无论是自然语言,数学语言,亦或计算机程序设计语言
+.(关于语言与思维的关系的讨论详见我发在数学工具版的&lt;My Perspective of Programmi
+ng Language&gt;).&lt;/p&gt;
+
+&lt;p&gt;最后,这次讨论我受到很多启发.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Mon Dec  4 16:19:07 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我同意的你部分观点,但不同意另外一部分.&lt;/dd&gt;
+&lt;dd&gt;首先,一个小概念的澄清.编译器设计和程序设计语言的设计不是等同的.语言递?..&lt;/dd&gt;
+&lt;dd&gt;的出现我想当初是人的求解思路的直接要求.像菲波那楔数列的定义和其他某些事物?..&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;呵呵，
+多搞这样的讨论才好啊！
+讨论是个让我们进步很快的方法！&lt;/p&gt;
+
+&lt;p&gt;强烈建议大家多讨论。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Mon Dec  4 18:52:13 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 C9456 (C9456) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;呵呵，&lt;/dd&gt;
+&lt;dd&gt;多搞这样的讨论才好啊！&lt;/dd&gt;
+&lt;dd&gt;讨论是个让我们进步很快的方法！&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;看来大家讨论的还是很激烈啊&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;本来还想继续深入的，
+但刚才看了帖子已经到60楼了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;因此，就先告一段落吧。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdlib.h&amp;gt;
+
+void main(void)
+{
+    unsigned n = 1;
+    while(malloc(n &amp;lt;&amp;lt;= 1));
+    main();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不过不知道这个程序是否能停止得了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 19:16:05 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;三个点,注意到没?&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Mon Dec  4 19:17:36 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;三个点,注意到没?&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;哈哈，觉得magicGG兄很幽默啊。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Mon Dec  4 20:28:24 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;看来大家讨论的还是很激烈啊&lt;em&gt;_&lt;/em&gt;&lt;/dd&gt;
+&lt;dd&gt;本来还想继续深入的，&lt;/dd&gt;
+&lt;dd&gt;但刚才看了帖子已经到60楼了&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;内存完了就会异常结束！&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

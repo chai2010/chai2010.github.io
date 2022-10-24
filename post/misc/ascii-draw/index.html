@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>用ASCII画图 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="作为一个严肃的码农，用ASCII画图是一门艺术。 MonoDraw - ASCII 画图界的PS 当然，我们并不是要像用小刀刻硬盘那样一个一个字符来画图，在ASCII画图领" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/misc/ascii-draw/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="用ASCII画图" />
+<meta property="og:description" content="作为一个严肃的码农，用ASCII画图是一门艺术。 MonoDraw - ASCII 画图界的PS 当然，我们并不是要像用小刀刻硬盘那样一个一个字符来画图，在ASCII画图领" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/misc/ascii-draw/" />
+
+
+
+<meta property="article:published_time" content="2017-11-15T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2017-11-15T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="用ASCII画图">
+<meta itemprop="description" content="作为一个严肃的码农，用ASCII画图是一门艺术。 MonoDraw - ASCII 画图界的PS 当然，我们并不是要像用小刀刻硬盘那样一个一个字符来画图，在ASCII画图领">
+
+
+<meta itemprop="datePublished" content="2017-11-15T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-11-15T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="327">
+
+
+
+<meta itemprop="keywords" content="graphviz,plantuml,monodraw,misc," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="用ASCII画图"/>
+<meta name="twitter:description" content="作为一个严肃的码农，用ASCII画图是一门艺术。 MonoDraw - ASCII 画图界的PS 当然，我们并不是要像用小刀刻硬盘那样一个一个字符来画图，在ASCII画图领"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">用ASCII画图</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-11-15 </span>
+        <div class="post-category">
+            
+              <a href="/categories/misc/"> misc </a>
+            
+          </div>
+        <span class="more-meta"> 约 327 字 </span>
+        <span class="more-meta"> 预计阅读 1 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#monodraw-https-monodraw-helftone-com-ascii-画图界的ps"><a href="https://monodraw.helftone.com/">MonoDraw</a> - ASCII 画图界的PS</a></li>
+<li><a href="#ditaa-http-ditaa-sourceforge-net-ascii-图像打印机"><a href="http://ditaa.sourceforge.net/">Ditaa</a> - ASCII 图像打印机</a></li>
+<li><a href="#其它工具">其它工具</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>作为一个严肃的码农，用ASCII画图是一门艺术。</p>
+
+<h2 id="monodraw-https-monodraw-helftone-com-ascii-画图界的ps"><a href="https://monodraw.helftone.com/">MonoDraw</a> - ASCII 画图界的PS</h2>
+
+<p>当然，我们并不是要像用小刀刻硬盘那样一个一个字符来画图，在ASCII画图领用也有类似PhotoShop那样的软件，那就是大名鼎鼎的 MonoDraw ！</p>
+
+<p><img src="/images/ascii-draw-01.png" alt="" /></p>
+
+<p>要注意的是这个软件只有 macOS 版本，而且是收费软件(100+RMB)。</p>
+
+<p>比如我们用 <a href="https://monodraw.helftone.com/">MonoDraw</a>  画一个 iPhone, 然后在窗口显示一个文本:</p>
+
+<p><img src="/images/ascii-draw-02.png" alt="" /></p>
+
+<h2 id="ditaa-http-ditaa-sourceforge-net-ascii-图像打印机"><a href="http://ditaa.sourceforge.net/">Ditaa</a> - ASCII 图像打印机</h2>
+
+<p>Ditaa 是 Java 写的一个开源小工具，它可以将ASCII码图打印为漂亮的png格式图片。</p>
+
+<p>比如有以下样式的ASCII码图：</p>
+
+<p><img src="/images/ascii-draw-03.png" alt="" /></p>
+
+<p>渲染后的效果是这样的:</p>
+
+<p><img src="/images/ascii-draw-04.png" alt="" /></p>
+
+<p>这里是打包好的 Docker 镜像(也有很多例子)： <a href="https://github.com/chai2010/ditaa-docker">https://github.com/chai2010/ditaa-docker</a></p>
+
+<h2 id="其它工具">其它工具</h2>
+
+<p>还有很多其它知名度很高小工具，这里只是简单列举几个：</p>
+
+<ul>
+<li><a href="http://www.graphviz.org/">Graphviz</a>: 通过自定义的DOT语言脚本描述图形，然后渲染为图像文件</li>
+<li><a href="http://plantuml.com/">PlantUML</a>: 通过自定义的脚本语言描述UML图，然后渲染为图像文件</li>
+<li><a href="http://www.gnuplot.info/">Gnuplot</a>: 一个生成图标的小工具(它和GNU项目没关系)</li>
+</ul>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2017-11-15</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/graphviz/">graphviz</a>
+          
+          <a href="/tags/plantuml/">plantuml</a>
+          
+          <a href="/tags/monodraw/">monodraw</a>
+          
+          <a href="/tags/misc/">misc</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/lua/gopherlua-strings/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">lua中也能用上Go语言的strings包</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/js/angular2-electron-app/">
+            <span class="next-text nav-default">极简的Angular2示例, Electron环境运行</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

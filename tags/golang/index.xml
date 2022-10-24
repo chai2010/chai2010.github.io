@@ -1,0 +1,3952 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/golang/</link>
+    <description>Recent content in Golang on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Go 语言十年而立，Go2 蓄势待发</title>
+      <link>https://chai2010.cn/post/2019/go-10year/</link>
+      <pubDate>Sun, 10 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2019/go-10year/</guid>
+      
+        <description>
+
+&lt;blockquote&gt;
+&lt;p&gt;Go语言十年，第一代Gopher也到了下岗到年龄，感谢各种福报&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+&lt;li&gt;作者 | 柴树杉&lt;/li&gt;
+&lt;li&gt;责编 | 郭   芮&lt;/li&gt;
+&lt;li&gt;出品 | CSDN（ID：CSDNnews）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/00.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在21世纪的第一个十年，计算机在中国大陆才逐渐开始普及，高校的计算机相关专业也逐渐变得热门。当时学校主要以C/C++和Java语言学习为主，而这些语言大多是上个世纪90年代或更早诞生的，因此这些计算机领域的理论知识或编程语言仿佛是上帝创世纪时的产物，作为计算机相关专业的学生只能仰望这些成果。&lt;/p&gt;
+
+&lt;p&gt;Go语言诞生在21世纪新一波工业编程语言即将爆发的时期。在2010年前后诞生了编译型语言Rust、Kotlin和Swift语言，前端诞生了Dart、TypeScript等工业型语言，最新出现的V语言更甚至尝试站在Go和Rust语言肩膀之上创新。而这些变化都发生在我们身边，让中国的计算机爱好者在学习的过程中见证历史的发展，甚至有机会参与其中。&lt;/p&gt;
+
+&lt;p&gt;2019年是CSDN的二十周年，也是Go语言面世十周年。感谢CSDN平台提供的机会，让笔者可以跟大家分享十年来中国Go语言社区的一些故事。&lt;/p&gt;
+
+&lt;h2 id=&#34;1-go语言诞生&#34;&gt;1. Go语言诞生&lt;/h2&gt;
+
+&lt;p&gt;Go语言最初由Google公司的Robert Griesemer、Ken Thompson和Rob Pike三位大牛于2007年开始设计发明的。其设计最初的洪荒之力来自于对超级复杂的C++11特性的吹捧报告的鄙视，最终目标是设计网络和多核时代的C语言。到2008年中期，语言的大部分特性设计已经完成，并开始着手实现编译器和运行，大约在这一年Russ Cox作为主力开发者加入。到了2009年，Go语言已经逐步趋于稳定。同年9月，Go语言正式发布并开源了代码。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/10.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;以上是《Go语言高级编程》一书中第一章第一节的内容。Go语言刚刚开源的时候，大家对它的编译速度印象异常深刻：秒级编译完成，几乎像脚本一样可以马上编译并执行。同时Go语言的隐式接口让一个编译型语言有了鸭子类型的能力，笔者也第一次认识到原来C++的虚表vtab也可以动态生成！至于大家最愿意讨论的并非特性，其实并不是Go语言新发明的基石，早在上个世纪的八九十年代就有诸多语言开始陆续尝试将CSP理论引入编程语言（Rob Pike是其中坚定的实践者）。只不过早期的CSP实践的语言没有进入主流开发领域，导致大家对这种并发模式比较陌生。&lt;/p&gt;
+
+&lt;p&gt;除了语言特性的创新之外，Go语言还自带了一套编译和构建工具，同时小巧的标准库携带了完备的Web编程基础构建，我们可以用Go语言轻松编写一个支持高并发访问的Web服务。&lt;/p&gt;
+
+&lt;p&gt;作为互联网时代的C语言，Go语言终于强势进入主流的编程领域。&lt;/p&gt;
+
+&lt;h2 id=&#34;2-go语言十年奋进&#34;&gt;2. Go语言十年奋进&lt;/h2&gt;
+
+&lt;p&gt;Go从2007年开始设计，在2009年正式对外公布，至今刚好十年。十年来Go语言以稳定著称，Go1.0的代码在2019年依然可以不用修改直接被编译运行。但是在保持语言稳定的同时，Go语言也在逐步夯实基础，十年来一直向着完美的极限逼近。让我们看看这十年来Go语言有哪些变化。&lt;/p&gt;
+
+&lt;h3 id=&#34;界面变化&#34;&gt;界面变化&lt;/h3&gt;
+
+&lt;p&gt;首先是看看界面的变化。第一次是在2009刚开源的时候，这时候可以说是Go语言的上古时代。Go语言的主页如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/20.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;那个年代的Gopher们，使用的是hg工具下载代码（而不是Git），Go代码是在Google Code托管（而不是GitHub）。随着代码的发展，hg已经慢慢淡出Gopher视野，Google Code网站也早已经关闭，而Go1之前的上古时代的Go老代码已经开始慢慢腐化了。&lt;/p&gt;
+
+&lt;p&gt;首页中心是Go语言最开始的口号：Go语言是富有表现力的、并发的编程语言，并且是简洁的。同时给了一个“Hello, 世界”的例子（注意，这里的“世界”是日文）。&lt;/p&gt;
+
+&lt;p&gt;然后右上角是初学者的乐园：首先是安装环境，然后可能是早期的三日教程，第三个是标准库的使用。右上角的图片是Russ Cox的一个视频，在Youtube应该还能找到。&lt;/p&gt;
+
+&lt;p&gt;左上角是Go实战的那个经典文档。此外FAQ、语言规范、内存模型是非常重要的核心温度。左下角还有cmd等文档链接，子页面的内容应该没有什么变化。&lt;/p&gt;
+
+&lt;p&gt;然后在2012年准备发布第一个正式版本Go1，在Go1之前语言、标准库和godoc都进行了大量的改进。Go1风格的页面效果如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/21.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;新页面刚出来的时候有眼睛一亮的感觉，这个是目前存在时间最长久的页面布局。但是不仅仅是笔者我，甚至Go语言官方也慢慢对中国页面有点审美疲劳了。因此，从2018年开始Go语言开始新的Logo和网站的重新设计工作。&lt;/p&gt;
+
+&lt;p&gt;下面的是Go语言新的Logo：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/22.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;2019年是对Go语言发展极其重要的一年，今年8月将发布Go1.13，而这个版本将正式重启Go语言语法的进化，向着Go2前进。而新的网站已经在Go1.13正式发布之前的7月份就已经上线：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/23.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;头部的按钮风格的菜单变成了平铺的风格，显得更加高大上。同时页面的颜色做了调整，保持和新Logo颜色一致。页面的布局也做了调整，将下载左右两列做了调换。同时地鼠的脑袋歪到一边，估计是颈椎病复发了。&lt;/p&gt;
+
+&lt;p&gt;总的来说，Go语言官网主页经历了Go1前、Go1（1.0～1.10）、Go1后（或者叫Go2前）三个阶段，分别对应3种风格的页面。新的布局或许会成为下个十年Go2的主力页面。&lt;/p&gt;
+
+&lt;h3 id=&#34;语法变化&#34;&gt;语法变化&lt;/h3&gt;
+
+&lt;p&gt;Go语言虽然从2009年诞生，但是到了2012年才发布第一个正式的版本Go1。其实在Go1诞生之前Go语言就已经足够稳定了，国内的七牛云从Go1之前就开始大力转向Go语言开发，是国内第一家广泛采用Go语言开发的互联网公司。Go1的目标是梳理语法和标准库阴暗的角落，为后续的10年打下坚实的基础。&lt;/p&gt;
+
+&lt;p&gt;从目前的结果看，Go1无疑是取得了极大的成果，Go1时代的代码依然可以不用修改就可以用最新的Go语言工具编译构建（不包含CGO或汇编语言部分，因为这些外延的工具并不在Go1的承诺范围）。但是Go1之后依然有一些语法的更新，在Go1.10前的Go1时代语法和标准库部分的重大变化主要有三个：&lt;/p&gt;
+
+&lt;p&gt;第一个重大的语法变化是在2012年发布的Go1.2中，给切片语法增加了容量的控制，这样可以避免不同的切片不小心越界访问有着相同底层数组的其它切片的内存。&lt;/p&gt;
+
+&lt;p&gt;第二个重大的变化是2016年发布的Go1.7标准库引入了context包。context包是Go语言官方对Go进行并发编程的实践成果，用来简化对于处理单个请求的多个Goroutine之间与请求域的数据、超时和退出等操作。context包推出后就被社区快速吸收使用，例如gRPC以及很多Web框架都通过context来控制Goroutine的生命周期。&lt;/p&gt;
+
+&lt;p&gt;第三个重大的语法变化是2017年发布的Go1.9 ，引入了类型别名的特性：type T1 = T2。其中类型别名T1是通过=符号从T2定义，这里的T1和T2是完全相同的类型。之所以引入类型别名，很大的原因是为了解决Go1.7将context扩展库移动到标准库带来的问题。因为标准库和扩展库中分别定义了context.Context类型，而不同包中的类型是不相容的。而gRPC等很多开源的库使用的是最开始以来的扩展库中的context.Context类型，结果导致其无法和Go1.7标准库中的context.Context类型兼容。这个问题最终通过类型别名解决了：扩展库中的context.Context类型是标准库中context.Context的别名类型，从而实现了和标准库的兼容。&lt;/p&gt;
+
+&lt;p&gt;此外还有一些语法细节的变化，比如Go1.4对for循环语法进行了增强、Go1.8放开对有着相同内存布局的结构体强制转型限制。读者可以根据自己新需要查看相关发布日志的文档说明。&lt;/p&gt;
+
+&lt;h3 id=&#34;运行时的变化&#34;&gt;运行时的变化&lt;/h3&gt;
+
+&lt;p&gt;运行时部分最大的变化是动态栈部分。在Go1.2之前Go语言采用分段栈的方式实现栈的动态伸缩。但是分段式动态栈有个性能问题，因为栈内存不连续会导致CPU缓存命中率下降，从而导致热点的函数调用性能受到影响。因此从Go1.3开始该有连续式的动态栈。连续式的动态栈虽然部分缓解了CPU 缓存命中率问题（依然存在栈的切换问题，这可能导致CPU缓存失效），但同时也带来了更大的实现问题：栈上变量的地址可能会随着栈的移动而发生变化。这直接带来了CGO编程中，Go语言内存对象无法直接传递给C语言空间使用，因此后来Go语言官方针对CGO问题制定了复杂的内存使用规范。&lt;/p&gt;
+
+&lt;p&gt;总体来说，动态栈如何实现是一个如何取舍的问题，因为没有银弹、鱼和熊掌不可兼得，目前的选择是第一保证纯Go程序的性能。&lt;/p&gt;
+
+&lt;h3 id=&#34;gc性能改进&#34;&gt;GC性能改进&lt;/h3&gt;
+
+&lt;p&gt;Go语言是一个带自动垃圾回收的语言（Garbage Collection ），简称GC（注意这是大写的GC，小写的gc表示Go语言的编译器）。从Go语言诞生开始，GC的回收性能就是大家关注的热点话题。&lt;/p&gt;
+
+&lt;p&gt;Go语言之所以能够支持GC特性，是因为Go语言中每个变量都有完备的元信息，通过这些元信息可以很容易跟踪全部指针的声明周期。在Go1.4之前，GC采用的是STW停止世界的方式回收内存，停顿的时间经常是几秒甚至达到几十秒。因此早期社区有很多如何规避或降低GC操作的技巧文章。&lt;/p&gt;
+
+&lt;p&gt;第一次GC性能变革发生在Go1.5时期，这个时候Go语言的运行时和工具链已经全部从C语言改用Go语言实现，为GC代码的重构和优化提供了便利。Go1.5首次改用并行和增量的方式回收内存，这将GC挺短时间缩短到几百毫秒。下图是官网“Go GC: Latency Problem Solved”一文给出的数据：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/24.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Go1.5并发和增量的改进效果明显，但是最重要的是为未来的改进奠定了基础。在Go1.5之后的Go1.6版本中GC性能终于开始得到了彻底的提升：从Go1.6.0停顿时间降低到几十毫秒，到Go1.6.3降低到了十毫秒以内。而Go1.6取得的成果在Go1.8的官方日志得到证实：Go语言的GC通常低于100毫秒，甚至低于10毫秒！&lt;/p&gt;
+
+&lt;p&gt;当然，Go的GC优化的脚步不会停止，但是想再现Go1.5和Go1.6时那种激动人心的成果估计比较难了。在Go1.8之后的几个版本中，官方的发布日志已经很少再出现量化的GC性能提升数据了。&lt;/p&gt;
+
+&lt;h3 id=&#34;go语言自举历程&#34;&gt;Go语言自举历程&lt;/h3&gt;
+
+&lt;p&gt;据说Go语言刚开始实现时是基于汤普森的C语言编译改造而成，并且最开始输出的是C语言代码（还没有对外公开之前）。在开源之后到Go1.4之前，Go语言的编译器和运行时都是采用C语言实现的。以至于早期可以用C语言实现一个Go语言函数！因为强烈依赖C语言工具链，因此Go1.4之前Go语言是完全不能自举的。&lt;/p&gt;
+
+&lt;p&gt;从Go1.4开始，Go语言的运行时采用Go语言实现。具体实施的方式是Go团队的rsc首先实现了一个简化的C代码到Go代码的转换工具，这个工具主要用于将之前C语言实现的Go语言运行时转换为Go语言代码。因为是自动转换的代码，因此可以得到比较可靠的Go代码。运行时转换为Go语言实现之后，带来的第一个好处就是GC可以精确知道每个内存指针的状态（因为Go语言的变量有详细的类型信息），这也为Go1.5重写GC提供了运行时基础。&lt;/p&gt;
+
+&lt;p&gt;然后到了Go1.5，将编译器也转为Go语言实现。但是转换到代码性能有一定的下降。很多程序的编译时间甚至缓慢到几十秒，这个时期网上出现了很多吐槽Go1.5编译速度慢的问题。Go1.5采用Go语言编写编译器的同时，对工具链和目标代码都做了大量的重构工作。从Go1.5之后，交叉编译变得异常简单，只要GOOS=linux GOARCH=amd64 go build命令就可以从任何Go语言环境生成Linux/amd64的目标代码。&lt;/p&gt;
+
+&lt;p&gt;Go语言从Go1.4到Go1.5，经历了两个版本的演化终于实现了自举的支持。当然自举也会带来一个哲学问题：Go语言的编译器是否有后门？如果有后门的编译器编译出来的Go程序是否有后门？有后门的编译器编译出来的Go编译器程序是否有后门？&lt;/p&gt;
+
+&lt;h3 id=&#34;失败的尝试&#34;&gt;失败的尝试&lt;/h3&gt;
+
+&lt;p&gt;Go语言发展过程中也并不全是成功的案例，同时也存在一些失败的尝试。失败乃成功之母，这些尝试虽然最终失败了，但是在尝试的过程之中积累的经验为新的方向提供了前进的动力。&lt;/p&gt;
+
+&lt;p&gt;因为Go语言的常量只支持数值和字符串等少数几个类型，早期的社区中一直呼吁为切片增加只读类型。为此rsc在开发分支首先试验性地实现了该特性，但是在之后的实践过程中又发现了和Go编程特性冲突的诸多问题，以至于在短暂的尝试之后就放弃了只读切片的特性。当然，初始化之后不能修改的变量特性依然是大家期望的一个特性（类似其它语言的final特性），希望在未来的Go2中能有一定的改善。&lt;/p&gt;
+
+&lt;p&gt;另一个尝试是早期基于vendor的版本管理。在Go1.5中首次引入vendor和internal特性，vendor用于打包外部第三方包，internal用户保护内部的包。后来vendor被开源社区的各种版本管理工具所滥用，导致Go语言代码经常会出现一些不可构建的诡异问题。滥用vendor导致了vendor嵌套的问题，这和nodejs社区中node_modules目录嵌套的问题类似。嵌套的vendor中最终会出现同一个包的不同版本，这根最后的稻草终于彻底击溃了vendor机制，以至于Go语言官方团队从头开发了模块特性来彻底解决版本管理的问题。等到Go1.13模块化特性转正之中，GOPATH和vendor等机制将被彻底淘汰。&lt;/p&gt;
+
+&lt;p&gt;Go语言作为一个开源项目，所有导入的包必须有源代码。一些号称是商业用户，呼吁Go语言支持二进制包的导入，这样可以最大限度地保护商业代码。为了响应社区的需求，Go1.7增加了导入二进制包的功能。但是比较戏剧化的是，Go语言支持二进制包导入之后并没有多少人在使用，甚至当初呼吁二进制包的人也没有使用（所以说很多社区的声音未必能够反映真实的需求）。为了一个没有人使用的二进制包特性，需要Go语言团队投入相当的人力进行维护代码。为了减少这种不需要的特性，Go1.13将彻底关闭二进制包的特性，从新轻装上阵解决真实的需求。当然，Go语言也已经支持了生成静态库、共享库和插件的特性，也可以通过这些机制来保护代码。&lt;/p&gt;
+
+&lt;p&gt;失败的尝试可能还有一些，比如最近Go语言之父之一Robert Griesemer提交的通过try内置函数来简化错误处理就被否决了。失败的尝试是一个好的现象，它表示Go语言依然在一些新兴领域的尝试——Go语言依然处于活跃期。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-go2的发展方向&#34;&gt;3. Go2的发展方向&lt;/h2&gt;
+
+&lt;p&gt;Go语言原本就是短小精悍的语言，经过多年的发展Go1已经逼近稳定的极限。查看官网的Talk页面的报告数量可以发现，2015年之前是各种报告的巅峰，2016到2017年分享数量已经开始急剧下降，2018年至今已经没有新的报告被收录，这是因为该讲的Go1语言特性早就被讲过多次了。对于第一波Go语言爱好者来说也是如此，Go语言已经没有什么新的特性可以挖掘和学习了，或者说它已经不够酷了。我们想Go语言官方团队也是这样的感觉，因此从2018年开始首先开始解决模块化的问题，然后开始正式讨论Go2的新特性，并且从Go1.13重新启动语言的进化。&lt;/p&gt;
+
+&lt;p&gt;模块化和构建管理有关系。在Go语言刚刚诞生之初，其实是通过一个Makefile目标进行构建。然后官方提供了go build命令构建，实现了零配置文件构建，极大地简化了构建的流程。再后来出现了go get命令，支持从互联网上自动下载hg或git仓库的代码进行构建，并同时引入GOPATH环境变量来防止非标准库的代码。此后，第一波的版本管理工具也开始出现，通过动态调整GOPATH实现导入特定版本的代码。随后各种开源模仿、克隆的版本管理工具如雨后春笋般冒出来，基本都是模仿godeps的设计思路，基于GOPATH和后来的vendor来管理依赖包的版本，这也最终导致了vendor被过度滥用（前文已经讲过vendor滥用带来的问题）。最终在2018年，由rsc亲自操刀从头发明了基于最小化版本依赖算法的版本管理特性。模块化特性从Go1.11开始引入，将在Go1.13版本正式转正，以后GOAPATH将彻底退出历史舞台。&lt;/p&gt;
+
+&lt;p&gt;因为rsc的工作直接宣判了开源社区的各种版本管理工具的死亡，这也导致了Go语言官方团队和开源社区的诸多冲突和矛盾。在此需要补充说明下，Go语言的开发并不完全是开源陌生，Go语言的开源仅仅限于Issue的提交或BUG的修改，真正的语言设计始终走的是教堂元老会的模式。笔者以为这是最好的开源方式，很多开源社区的例子也说明了需要独裁者的角色，而元老会正是这种角色。&lt;/p&gt;
+
+&lt;p&gt;在Go1.13中，除了模块化特性转正之外，还有诸多语法的改进：比如十六进制的浮点数、大的数字可以通过下划线进行分隔、二进制和八进制的面值常量等。但是Go1.13还有一个重大的改进发生在errors标准库中。errors库增加了Is/As/Unwrap三个函数，这将用于支持错误的再次包装和识别处理，是为了Go2中新的错误处理改进提前做准备。后续改进方向就是错误处理的控制流，之前已经出现用try/check关键字和try内置函数改进错误处理流程的提案，目前还没有确定采用什么方案。&lt;/p&gt;
+
+&lt;p&gt;Go2最期待的特性是泛型。从开始Go语言官方明显抵制泛型，到2018年开始公开讨论泛型，让泛型的爱好者看到了希望。很多人包括早期的Go官方都会说用接口模拟泛型，这其实只是一个借口。泛型最大的问题不在于性能，而是只有泛型才能够为泛型容器或算法提供一个类型安全的接口。比如一个Add(a, b T) T泛型函数是无法通过接口来实现对返回值类型的检查的。如果Go语言支持了泛型，再结合Go语言汇编语言支持的AVX512指令，可以期待Go语言将在CPU运算密集型领域占有一席之地，甚至以后会出现纯Go语言的机器学习算法库的实现。&lt;/p&gt;
+
+&lt;p&gt;最后一个值得关注的是Go语言对WebAssembly平台的支持。根据Ending定律：一切可编译为WebAssembly的，终将会被编译为WebAssembly。2018年，Fabrice Bellard大神基于WebAssembly技术，将Windows 2000操作系统搬到了浏览器环境运行。2019年出现了WebAssembly System Interface技术，这很可能是一个更轻量化的Docker替代技术。而Go语言也出现了一个变异版本TinyGo，目标就是为了更好地在WebAssembly或其它单片机等受限环境运行Go程序。&lt;/p&gt;
+
+&lt;h2 id=&#34;4-go语言在中国&#34;&gt;4. Go语言在中国&lt;/h2&gt;
+
+&lt;p&gt;回想Go语言刚面世时的第一个例子，是打印&amp;rdquo;Hello, 世界&amp;rdquo;。只可惜这里的“世界”并不是中文的“Hello, 世界”，而是日文的“Hello, 世界”。而日文还是基于中文汉字改造而来，这是整个中文世界的悲哀！&lt;/p&gt;
+
+&lt;p&gt;比较庆幸的是中国程序员比较给力，目前中国不仅仅是世界上Go语言关注度最高的国家，也是贡献排名第二的国家。根据谷歌趋势的数据，Go语言在中国的关注度占全球的90%以上：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/40.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;不仅仅是Go语言用户，中国的Gopher对Go语言的贡献也稳居美国之后。其中韦京光早在2010年就深度参与Go语言开发，将Go语言移植到Windows系统并实现了CGO支持。之后来自中国的Minux实现了iOS等诸多平台的移植，并已经正式加入Go语言开发团队。而目前Go语言中国贡献者排名第一的是来自天津的史斌（benshi001），他的很多工作集中在编译的优化方面，在全球Go语言贡献者排名第39位。&lt;/p&gt;
+
+&lt;p&gt;最早Go语言中文爱好者都是通过谷歌讨论组golang-china讨论，目前该讨论组还陆续会有新的文章发布。然后到了2012年前后，因为诸多因素国内的讨论开始集中到QQ群中（笔者在2010年建立了国内第一个Go语言QQ讨论群）。再往后就是微信各种论坛遍地开花了。十年来，Go语言中文社区也一直非常活跃，社区人数稳步增长。这里简单回顾一下我知道的Go社区中的一些人和事。&lt;/p&gt;
+
+&lt;h3 id=&#34;fango&#34;&gt;Fango&lt;/h3&gt;
+
+&lt;p&gt;如果在2010年关注Go语言，肯定会听到Fango的名字。Fango是来自新加坡的Go语言爱好者，在Go语言刚面世不久他就写了第一本（很可能是唯一一本）以Go语言为题材的小说《胡文·Go》，然后他还出版了第一本Go语言中文教材《Go语言·云动力》。感谢Fango给大家带来的精彩的Go语言故事。&lt;/p&gt;
+
+&lt;h3 id=&#34;许式伟和七牛云&#34;&gt;许式伟和七牛云&lt;/h3&gt;
+
+&lt;p&gt;七牛是国内第一家大面积采用Go语言开发的公司，时间还在Go1.0正式发布之前。许式伟也是大中华第一个知名的Go语言布道师。许式伟和七牛云在2012年也出版了一本《Go语言编程》教程，和Fango的图书可能只差了一个多月的时间，编辑都是杨海铃老师。其后七牛还有多本Go语言相关的专著或译著，可以说在2015年之前，许式伟和七牛云团队绝对是国内Go语言社区推广的主力。&lt;/p&gt;
+
+&lt;p&gt;笔者也在第一时间拜读了《Go语言编程》一书，对其中如何实现接口和Goroutine调度的模拟依然印象深刻。感谢许式伟当时赠送的签名版本《Go语言编程》，同时也感谢为我新出的《Go语言高级编程》写序，谢谢许大！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-10year/41.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;astaxie和gopherchina大会&#34;&gt;Astaxie和GopherChina大会&lt;/h3&gt;
+
+&lt;p&gt;对谢大最早的印象是在2012年前后，当时他开了一个免费的《Go Web编程》图书，当前QQ群中很多小伙伴都参与审校（比如四月份平民、边江和Oling Cat等）。Go Web编程是大家比较关注的方向，书中不仅仅讲到了ORM的实现，还讲到了beedb等组件。而beedb等这些组件最早演化成了Beego框架。根据前一段时间JetBrains展开的一个调查，Beego是Go语言三大流行的Web框架之一。&lt;/p&gt;
+
+&lt;p&gt;然后到了2015年，谢大正式开启GopherChina大会的历程。我虽然因为其它事情没有现场参与，但是也预定了第一节GopherChina大会的会衫。然后在2018年终于以讲师身份参加了上海的GopherChina大会，跟大家分享了CGO方向的技术，同时第一次见到谢大本尊。感谢谢大的GopherChina大会和《Go Web编程》！&lt;/p&gt;
+
+&lt;h3 id=&#34;其他人和项目&#34;&gt;其他人和项目&lt;/h3&gt;
+
+&lt;p&gt;此外还有很多大家耳熟能详的Go爱好者，比如《Learning Go》和Go Tour的中文翻译者星星，创建了gogs的无闻，一种在翻译Go官方文档的Oling Cat，雨痕的《Go语言学习笔记》对Go源码深度的解读，创建了GoHackers的郝林等等。此外由国内的PingCAP公司主导开发的开源TiDB分布式数据库也是一个极为著名的项目。感谢Go中国社区这些朋友和项目，是大家的努力带来了Go语言在国内的繁荣。&lt;/p&gt;
+
+&lt;h2 id=&#34;5-向go语言学习&#34;&gt;5. 向Go语言学习&lt;/h2&gt;
+
+&lt;p&gt;候杰老师曾经说过：勿在浮沙筑高台。而中国互联网公司的繁荣更多是在业务层面，底层的基石软件几乎没有一个是中国所创造。作为一个严肃的软件开发人员，我们需要向Go语言学习，继续扎实掌握底层的理论基础，不能只聚焦于业务层面，否则下次中美贸易战的时候依然要被西方卡脖子。&lt;/p&gt;
+
+&lt;p&gt;经过这么多年发展，中国的软件行业已经非常繁荣和成熟，同时很多软件开发人员也开始进入35岁的中年门槛。其实35岁正是软件开发人员第二次职业生涯的开始，是开始形成自我创造力的时候。但是某些资本家短视的996或007等急功近利的福报观点正导致中国软件人员过早进入未创新而衰的阶段。中国的软件工程师不应该是码农、更不是码畜牧，我们虽然不会喊口号但是始终在默默前行。&lt;/p&gt;
+
+&lt;p&gt;目前中国已经有大量的软件开发人员有能力参与基础软件的设计和开发，正因为这一波脚踏实地程序开发人员的努力，我相信在下个十年我们可以Go得更远。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>谈谈Go语言字符串</title>
+      <link>https://chai2010.cn/post/2019/learn-string/</link>
+      <pubDate>Fri, 17 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2019/learn-string/</guid>
+      
+        <description>
+
+&lt;p&gt;字符串是一种特别重要的类型, 可以说整个世界都是建立在字符串处理基础之上的, 甚至有很多专门针对字符串处理设计的编程语言(比如perl). 因为字符串处理非常重要, Go语言将字符串作为值以简化使用, 同时标准库提供了strings/fmt/strconv/regexp/template等诸多包用于协助处理字符串.&lt;/p&gt;
+
+&lt;h2 id=&#34;1-基本用法&#34;&gt;1. 基本用法&lt;/h2&gt;
+
+&lt;p&gt;Go语言中字符串是一个不可修改的字节序列, 如果要做类比的话可以看作是一个只读的byte数组类型. 字符串有两种方式构建: 第一种是在代码中通过双引号包括起来的字符串字面值, 这是编译前就知道了字符串的内容; 另一种是在运行时通过代码运行动态产生的字符串.&lt;/p&gt;
+
+&lt;p&gt;因为Go语言源代码要求是UTF8编码, 因此字符串面值的内容也是UTF8编码的. 为了方便面值字符串的遍历, Go语言的for range内置了对UTF8的支持:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;for i, c := range &amp;quot;hello, 世界&amp;quot; {
+    // ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中i是字符所在的索引下标,  c表示Unicode字符的值(对应int32类型). 因为UTF8是一种变长的编码, 因此每次i的步进长度是变化的, 每次步进的是前当前字符串对应UTF8编码的长度.&lt;/p&gt;
+
+&lt;p&gt;此外字符串语法还支持切片、链接和获取某个下标字节值的功能, 比如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = &amp;quot;光谷码农 - https://guanggu-coder.cn/&amp;quot;
+var c = s[0] // 获取字节值, 而不是字符对应的Unicode值
+var x = s[:len(s)-1] + &amp;quot;abc&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;字符串不仅仅可以作为字面值, 还可以当做二进制数组使用, 这时候可以用于保存任意类型的数据:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = &amp;quot;\xe4\xb8\x96&amp;quot; // 世
+var x = []byte{0xE4, 0xB8, 0x96}
+var s = string(x)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;字符串的基本用法大家都是熟悉的, 我们这里不再向西展开.&lt;/p&gt;
+
+&lt;h2 id=&#34;2-内部表示&#34;&gt;2. 内部表示&lt;/h2&gt;
+
+&lt;p&gt;Go语言字符串的底层结构在reflect.StringHeader中定义：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type StringHeader struct {
+    Data uintptr
+    Len  int
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;字符串结构由两个信息组成：第一个是字符串指向的底层字节数组，第二个是字符串的字节的长度。字符串其实是一个结构体，因此字符串的赋值操作也就是reflect.StringHeader结构体的复制过程，并不会涉及底层字节数组的复制。&lt;/p&gt;
+
+&lt;p&gt;需要注意的是字符串的头部结构是切片头部结构的前缀(只是缺少了cap表示的容量部分), 这是为了便于[]byte类型的切片和字符串相互之间的转化.&lt;/p&gt;
+
+&lt;h2 id=&#34;3-其它类型转换&#34;&gt;3. 其它类型转换&lt;/h2&gt;
+
+&lt;p&gt;这里讨论是底层有着不同数据布局的类型和字符串的相互转换. 如果是基于字符串重新定义的类型不在讨论之列.&lt;/p&gt;
+
+&lt;p&gt;Go语言中和字符串相关的内置转换主要有三种类型: 首先是字符转为字符串, 其次是字符串和字节切片的转换, 最后是字符串和rune切片的转换.&lt;/p&gt;
+
+&lt;p&gt;字符到字符串的转换时单向操作(无法从字符串反向转为字符), 下面的例子中是从“a”这个字符的ASCII值转为字符串“a”:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;fmt.Println(string(97))       // a
+fmt.Println(string(rune(97))) // a
+fmt.Println(string(&#39;a&#39;))      // a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在第一行语句中, 97是一个无具体类型的数值类型的字面值常量. 在遇到string强制转型时, 只有rune类型可以和无具体类型的数值类型建立关系, 因此97被捕获为rune类型的常量, 也就是第二个语句的方法. 第三个语句中&amp;rsquo;a&amp;rsquo;是rune(97)对应字符的字面值写法.&lt;/p&gt;
+
+&lt;p&gt;然后是字符串和字节切片的相互转换:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = string([]byte{97, 98, 99}) // abc
+var x = []byte(&amp;quot;abc&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为字节切片和字符串底层的数据布局是相融的, 因此这种转换一般有着较高的优化空间(前提是不能破坏字符串只读的语义).&lt;/p&gt;
+
+&lt;p&gt;内置转换的语法中最特殊的是字符串和rune切片的转换:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = string([]rune{97, 98, 99}) // abc
+var x = []rune(&amp;quot;abc&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;rune其实是int32类型的别名, 因此换成以下写法会发现其特殊之处:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = string([]int32{97, 98, 99}) // abc
+var x = []int32(&amp;quot;abc&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Go语言居然内置了字符串和int32切片的转型操作, 而这个操作是有相当的复杂度的(具体要涉及内存分配和UTF8字符串编码解码, 时间复杂度和长度相关)! 很多人如果看到上面代码可行, 自然会下意识将int32推广为其它整数类型的切片. 但是这只是字符串为int32开的一个特例(所以说Go语言也不是完全正交的设计, 有不是补丁特性).&lt;/p&gt;
+
+&lt;p&gt;除了内置的转换之外, 字符串还进程需要和其它bool/int等类型的转换. 这里大部分也是双向的转换, 不过我们重点讨论其他类型到字符串的转换. strconv包提供了很多这类转换操作:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;s := strconv.Itoa(-42)
+
+s10 := strconv.FormatInt(v, 10)
+s16 := strconv.FormatInt(v, 16)
+
+s := strconv.FormatBool(true)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中Itoa是Int-to-ASCII的缩写, 表示整数到字符串转换, 采用十进制模式转换.  而FormatInt则可以用于指定进制进行转换. 此外FormatBool等用于其他数值类型的转换.&lt;/p&gt;
+
+&lt;p&gt;strconv的转换实现性能较好. 如果不在意这转换操作这一点点的性能损耗, 可以通过fmt.Sprintf来实现到字符串的转换(fmt.Sscanf可解析, 但是打破了链式操作的便捷性):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;i := fmt.Srpintf(&amp;quot;%v&amp;quot;, -42)
+b := fmt.Srpintf(&amp;quot;%v&amp;quot;, true)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;fmt包会通过反射识别输入参数的类型, 然后以默认的方式转换为字符串.&lt;/p&gt;
+
+&lt;p&gt;此外, 对于字符串本身也提供了一种转换, 就是字符串和字符串面值格式. 比如以下代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;q := strconv.Quote(`&amp;quot;hello&amp;quot;`)     // &amp;quot;\&amp;quot;hello\&amp;quot;&amp;quot;
+q := fmt.Sprintf(&amp;quot;%q&amp;quot;, `&amp;quot;hello&amp;quot;`) // &amp;quot;\&amp;quot;hello\&amp;quot;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出的字符串会有一个双引号包裹, 内部的特殊符号会采用转义语法表示, 它对应fmt包中%q格式的输出.&lt;/p&gt;
+
+&lt;p&gt;更进一步, 为了方便不支持中文的环境也能处理, 还可以选择完全用ASCII方式表示字符串面值:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;q := strconv.Quote(`&amp;quot;世&amp;quot;`)      // &amp;quot;\&amp;quot;\u4e16\&amp;quot;&amp;quot;
+q := fmt.Sprintf(&amp;quot;%+q&amp;quot;, `&amp;quot;世&amp;quot;`) // &amp;quot;\&amp;quot;\u4e16\&amp;quot;&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中“世”已经超出ASCII值域, 因此通过\u???语法通过Unicode码点值表示, , 它对应fmt包中%+q格式的输出.&lt;/p&gt;
+
+&lt;h2 id=&#34;4-字符串替换&#34;&gt;4. 字符串替换&lt;/h2&gt;
+
+&lt;p&gt;字符串处理中除了涉及其他类型和字符串之间相互转换, 另一种经常遇到的是将一个字符串处理为另一个字符串. 标准库中strings包提供了诸多字符串处理函数.&lt;/p&gt;
+
+&lt;p&gt;比如, 将字符串改成大写字符串:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var s = strings.ToUpper(&amp;quot;Gopher&amp;quot;) // GOPHER
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这其实是将字符串中某些子串根据某种指定的规则替换成新的字符串.&lt;/p&gt;
+
+&lt;p&gt;我们可以通过strings.Map来重新实现ToUpper的功能:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;strings.Map(func(r rune) rune { return r &amp;amp;^ &#39; &#39; }, &amp;quot;Gopher&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;strings.Map会遍历字符串中的每个字符, 然后通过第一参数传入的函数转换为新的字符, 最后构造出新的字符串. 而字符转换函数只有一个语句r &amp;amp;^ &amp;lsquo; &amp;lsquo;, 作用是将小写字母转为大写字母.&lt;/p&gt;
+
+&lt;p&gt;strings.Map函数的输出是根据输入字符动态生成输出的字符, 但是这种替换是一个字符对应一个字符, 因此输出的字符串长度输入的字符串是一样的.&lt;/p&gt;
+
+&lt;p&gt;字符层面的替换是比较简单的需求. 更多时候我们需要将一个子串替换为一个新的子串. 子串的替换虽然看似功能强大, 但是因为没有统一的遍历子串的规则, 因此标准库并没有类似strings.Map这样方便的函数.&lt;/p&gt;
+
+&lt;p&gt;简单的替换可以通过strings. Replace完成:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;fmt.Println(strings.Replace(&amp;quot;oink oink oink&amp;quot;, &amp;quot;k&amp;quot;, &amp;quot;ky&amp;quot;, 2))
+fmt.Println(strings.Replace(&amp;quot;oink oink oink&amp;quot;, &amp;quot;oink&amp;quot;, &amp;quot;moo&amp;quot;, -1))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面是strings自带的例子. strings.Replace的第一个参数是输入的字符串, 第二个是要替换的子串, 第三个是用了替换的子串, 最后一个参数表示要替换几个子串.
+如果替换规则稍微复杂一点, strings.Replace就比较难以实现了.&lt;/p&gt;
+
+&lt;p&gt;复杂的替换可以通过regexp的包完成:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;regexp.MustCompile(`a(x*)b`).ReplaceAllString(&amp;quot;-ab-axxb-&amp;quot;, &amp;quot;T&amp;quot;)
+// -T-T-
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果满足a(x*)b模式的子串将被替换为新的子串.&lt;/p&gt;
+
+&lt;h2 id=&#34;5-模板输出&#34;&gt;5. 模板输出&lt;/h2&gt;
+
+&lt;p&gt;字符串替换其实是模板的雏形. 我们可以通过字符串替换来构造一个简单的模板:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func ReplaceMap(s string, m map[string]string) string {
+    for old, new := m {
+        s = strings.Replace(s, old, new, -1)
+    }
+    return s
+}
+
+func main() {
+    var s = ReplaceMap(`{a}+{b} = {c}`, map[string]string{
+        &amp;quot;a&amp;quot;: 1, &amp;quot;b&amp;quot;: 2, &amp;quot;c&amp;quot;: 3,
+    })
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过{name}来表示要替换的子串, 然后通过map来定一个子串替换表格.&lt;/p&gt;
+
+&lt;p&gt;基于类型的技巧, 我们可以将{name}定义为子串的查找规则, 这样我们将得到一个子串列表:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func MapString(s string,
+    mapping func(x string) string,
+) string {
+    re := regexp.MustCompile(`\{\w+\}`)
+    for _, old := range re.FindAllString(&amp;quot;{name}{age}&amp;quot;, -1) {
+        s = strings.Replace(s, old, mapping(old), -1)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;既然能够得到子串列表, 那么就可以仿造strings.Map的接口, 通过一个转换函数来实现子串的替换(函数比表格更加灵活).&lt;/p&gt;
+
+&lt;p&gt;如果结合反射机制, 完全可以基于一个接口类型输出转换表格:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func RenderTemplate(s string, data interface{}) string {
+    return MapString(s, func(filedName string) string {
+        // 通过反射, 根据 filedName 从 data 获取数据
+    })
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然, 这种模板比较粗糙, 没有实现结构化编程中分支和循环等语句的支持. 完整的模板可以查看标准库的template包实现. template包是一个较大的话题, 有机会的话会在新的文章中专门讨论.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>io.EOF设计的缺陷和改进</title>
+      <link>https://chai2010.cn/post/2019/io-eof-mistake/</link>
+      <pubDate>Tue, 14 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2019/io-eof-mistake/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;1-认识io-eof&#34;&gt;1. 认识io.EOF&lt;/h2&gt;
+
+&lt;p&gt;io.EOF是io包中的变量, 表示文件结束的错误:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package io
+
+var EOF = errors.New(&amp;quot;EOF&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;也通过以下命令查看详细文档:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go doc io.EOF
+var EOF = errors.New(&amp;quot;EOF&amp;quot;)
+
+EOF is the error returned by Read when no more input is available. Functions
+should return EOF only to signal a graceful end of input. If the EOF occurs
+unexpectedly in a structured data stream, the appropriate error is either
+ErrUnexpectedEOF or some other error giving more detail.
+$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;io.EOF大约可以算是Go语言中最重要的错误变量了,  它用于表示输入流的结尾. 因为每个文件都有一个结尾, 所以io.EOF很多时候并不能算是一个错误, 它更重要的是一个表示输入流结束了.&lt;/p&gt;
+
+&lt;h2 id=&#34;2-io-eof设计的缺陷&#34;&gt;2. io.EOF设计的缺陷&lt;/h2&gt;
+
+&lt;p&gt;可惜标准库中的io.EOF的设计是有问题的. 首先EOF是End-Of-File的缩写, 根据Go语言的习惯大写字母缩写一般表示常量. 可惜io.EOF被错误地定义成了变量, 这导致了API权限的扩散. 而最小化API权限是任何一个模块或函数设计的最高要求. 通过最小化的权限, 可以尽早发现代码中不必要的错误.&lt;/p&gt;
+
+&lt;p&gt;比如Go语言一个重要的安全设计就是禁止隐式的类型转换. 因此这个设计我们就可以很容易发现程序的BUG. 此外Go语言禁止定义没有被使用到的局部变量(函数参数除外, 因此函数参数是函数接口的一个部分)和禁止导入没有用到的包都是最小化权限的最佳实践. 这些最小API权限的设计不仅仅改进了程序的质量, 也提高了编译工具的性能和输出的目标文件.&lt;/p&gt;
+
+&lt;p&gt;因为EOF被定义成一个变量, 这导致了该变量可能会被恶意改变. 下面的代码就是一种优雅的埋坑方式:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func init() {
+    io.EOF = nil
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这虽然是一个段子, 但是却真实地暴漏了EOF接口的设计缺陷: 它存在严重的安全隐患. 变量的类型似乎也在暗示用户可以放心地修改变量的值. 因此说EOF是一个不安全也不优雅的设计.&lt;/p&gt;
+
+&lt;h2 id=&#34;3-io-eof改为常量&#34;&gt;3. io.EOF改为常量&lt;/h2&gt;
+
+&lt;p&gt;一个显然的改进思路是将io.EOF定义为常量. 但是因为EOF对应一个表示error接口类型, 而Go语言目前的常量语法并不支持定义常量类型的接口. 但是我们可以通过一些技巧绕过这个限制.&lt;/p&gt;
+
+&lt;p&gt;Go语言的常量有bool/int/float/string/nil这几种主要类型. 常量不仅仅不包含接口等复杂类型, 甚至连常量的数组或结构体都不支持! 不过常量有一个重要的扩展规则: 以bool/int/float/string/nil为基础类型定义的新类型也支持常量.&lt;/p&gt;
+
+&lt;p&gt;比如, 我们重新定义一个字符串类型, 它也可以支持常量的:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type MyString string
+
+const name MyString = &amp;quot;chai2010&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个例子中MyString是一个新定义的类型, 可以定义这种类型的常量, 因为它的底层的string类型是支持常量的.&lt;/p&gt;
+
+&lt;p&gt;那么io.EOF的底层类型是什么呢? EOF是通过errors.New(&amp;ldquo;EOF&amp;rdquo;)定义的, 下面是这个函数的实现:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package errors
+
+// New returns an error that formats as the given text.
+func New(text string) error {
+    return &amp;amp;errorString{text}
+}
+
+// errorString is a trivial implementation of error.
+type errorString struct {
+    s string
+}
+
+func (e *errorString) Error() string {
+    return e.s
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因此io.EOF底层的类型是errors.errorString结构体. 而结构体类型是不支持定义常量的. 不过errors.errorString结构体中只有一个字符串类型, io.EOF对应的错误字符串正是&amp;rdquo;EOF&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;我们可以为EOF重新实现一个以字符串为底层类型的新错误类型:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package io
+
+type errorString string
+
+func (e errorString) Error() string {
+    return string(e)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个新的io.errorString实现了两个特性: 首先是满足了error接口; 其次它是基于string类型重新定义, 因此支持定义常量. 因此我们可以基于errorString重新将io.EOF定义为常量:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;const EOF = errorString(&amp;quot;EOF&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样EOF就变成了编译时可以确定的常量类型, 常量的值依然是“EOF”字符串. 但是也带来了新的问题: EOF已经不再是一个接口类型, 它会破坏旧代码的兼容性吗?&lt;/p&gt;
+
+&lt;h2 id=&#34;4-eof常量到error接口的隐式转换&#34;&gt;4. EOF常量到error接口的隐式转换&lt;/h2&gt;
+
+&lt;p&gt;重新将EOF从error类型的变量改定义为errorString类型的常量并不会带来兼容问题!&lt;/p&gt;
+
+&lt;p&gt;首先io.EOF虽然被定义为变量, 但是从语义角度看它其实是常量, 换言之我们只会读取这个值. 其次读取到io.EOF之后, 我们是将其作为error接口类型使用, 唯一的用处是和用户返回的错误进行相等性比较.&lt;/p&gt;
+
+&lt;p&gt;比如有以下的代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func Foo(r io.Reader) {
+    var p []byte
+    if _, err := r.Read(p); err != io.EOF {
+        // ...
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里和io.EOF进行比较的err变量必然是error类型, 或者是满足error接口的其他类型. 如果err是接口类型, 那么将io.EOF换成errorString(&amp;ldquo;EOF&amp;rdquo;)常量也是可以工作的:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func Foo(r io.Reader) {
+    var p []byte
+    if _, err := r.Read(p); err != errorString(&amp;quot;EOF&amp;quot;) {
+        // ...
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是因为Go语言中一个普通类型的值在和接口类型的值进行比较运算时, 会被隐式转会为接口类型(开这个后门的原因时为了方便接口代码的编写). 或则说在进行比较的时刻, errorString(&amp;ldquo;EOF&amp;rdquo;)已经被替换成error(errorString(&amp;ldquo;EOF&amp;rdquo;)).&lt;/p&gt;
+
+&lt;p&gt;普通类型到接口的隐式转会虽然方便, 但是也带来了很多坑. 比如以下的例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func Foo() error {
+    var p *SomeError = nil
+    return p
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以上代码的nil其实是&lt;code&gt;*SomeError(nil)&lt;/code&gt;. 而&lt;code&gt;if err != nil&lt;/code&gt; 中的nil其实是error(nil).&lt;/p&gt;
+
+&lt;p&gt;而定义为常量的io.EOF常量在和error接口类型的值比较时, io.EOF常量会被转化为对应的接口类型. 这样新的io.EOF错误常量就可以和以前的代码无缝兼容了.&lt;/p&gt;
+
+&lt;h2 id=&#34;5-总结&#34;&gt;5. 总结&lt;/h2&gt;
+
+&lt;p&gt;普通类型到接口类型的隐式转换、常量的默认类型和基础类型是Go语言中比较隐晦的特性, 很多人虽然在使用这些规则但是并没有意识到它们的细节. 本文从分析io.EOF设计缺陷为起点, 讨论了将常量用于接口值定义的一种思路.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言实现WebDAV文件系统</title>
+      <link>https://chai2010.cn/post/2018/webdav/</link>
+      <pubDate>Wed, 24 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/webdav/</guid>
+      
+        <description>&lt;p&gt;WebDAV （Web-based Distributed Authoring and Versioning） 是一种基于 HTTP 1.1协议的通信协议。它扩展了HTTP 1.1，在GET、POST、HEAD等几个HTTP标准方法以外添加了一些新的方法，使应用程序可对Web Server直接读写，并支持写文件锁定(Locking)及解锁(Unlock)，还可以支持文件的版本控制。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;使用WebDAV可以完成的工作包括：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;特性（元数据）处理。可以使用WebDAV中的PROPFIND和PROPPATCH方法可创建、删除和查询有关文件的信息，例如作者和创建日期。&lt;/li&gt;
+&lt;li&gt;集合和资源的管理。可以使用GET、PUT、DELETE和MKCOL方法创建文档集合并检索分层结构成员列表（类似于文件系统中的目录）。&lt;/li&gt;
+&lt;li&gt;锁定。可以禁止多人同时对一个文档进行操作。这将有助于防止出现“丢失更新”（更改被覆盖）的问题。&lt;/li&gt;
+&lt;li&gt;名称空间操作。您可以使用COPY和MOVE方法让服务器复制和删除相关资源。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;目前常见的NAS都提供WebDAV服务功能，很多手机应用也是通过WebDAV协议来实现应用间的文件共享。要提供自己的WebDAV服务首先要安装相应的软件。macOS下可以从App Store中安装免费的WebDAVNav Server软件。WebDAVNav Server服务启动界面如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/webdav/webdavnav-server.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;本节我们尝试用Go语言实现自己的WebDAV服务。&lt;/p&gt;
+
+&lt;h2 id=&#34;webdav对http的扩展&#34;&gt;WebDAV对HTTP的扩展&lt;/h2&gt;
+
+&lt;p&gt;WebDAV扩展了HTTP/1.1协议。它定义了新的HTTP标头，客户机可以通过这些新标头传递WebDAV特有的资源请求。这些标头为：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Destination:&lt;/li&gt;
+&lt;li&gt;Lock-Token:&lt;/li&gt;
+&lt;li&gt;Timeout:&lt;/li&gt;
+&lt;li&gt;DAV:&lt;/li&gt;
+&lt;li&gt;If:&lt;/li&gt;
+&lt;li&gt;Depth:&lt;/li&gt;
+&lt;li&gt;Overwrite:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;同时，WebDAV标准还引入了若干新HTTP方法，用于告知启用了WebDAV的服务器如何处理请求。这些方法是对现有方法（例如 GET、PUT和DELETE）的补充，可用来执行WebDAV事务。下面是这些新HTTP方法的介绍：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;LOCK。锁定资源，使用 Lock-Token: 标头。&lt;/li&gt;
+&lt;li&gt;UNLOCK。解除锁定，使用 Lock-Token: 标头。&lt;/li&gt;
+&lt;li&gt;PROPPATCH。设置、更改或删除单个资源的特性。&lt;/li&gt;
+&lt;li&gt;PROPFIND。用于获取一个或多个资源的一个或多个特性信息。该请求可能会包含一个值为 0、1或infinity的Depth: 标头。其中，0表示指定将获取指定URI处的集合的特性（也就是该文件或目录）；1表示指定将获取该集合以及位于该指定URI之下与其紧邻的资源的特性（非嵌套的子目录或子文件）；infinity表示指定将获取全部子目录或子文件（深度过大会加重对服务器的负担）。&lt;/li&gt;
+&lt;li&gt;COPY。复制资源，可以使用 Depth: 标头移动资源，使用 Destination: 标头指定目标。如果需要，COPY 方法也使用 Overwrite: 标头。&lt;/li&gt;
+&lt;li&gt;MOVE。移动资源，可以使用 Depth: 标头移动资源，使用 Destination: 标头指定目标。如果需要，MOVE 方法也使用 Overwrite: 标头。&lt;/li&gt;
+&lt;li&gt;MKCOL。用于创建新集合（对应目录）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;最简的webdav服务&#34;&gt;最简的WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;Go语言扩展包 &lt;code&gt;golang.org/x/net/webdav&lt;/code&gt; 提供了WebDAV服务的支持。其中webdav.Handler实现了http.Handle接口，用处理WebDAV特有的http请求。要构造webdav.Handler对象的话，我们至少需要指定一个文件系统和锁服务。其中webdav.Dir将本地的文件系统映射为WebDAV的文件系统，webdav.NewMemLS则是基于本机内存构造一个锁服务。&lt;/p&gt;
+
+&lt;p&gt;下面是最简单的WebDAV服务实现：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;net/http&amp;quot;
+
+	&amp;quot;golang.org/x/net/webdav&amp;quot;
+)
+
+func main() {
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	})
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行之后，当前目录就可以通过WebDAV方式访问了。&lt;/p&gt;
+
+&lt;h2 id=&#34;只读的webdav服务&#34;&gt;只读的WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;前面实现的WebDAV服务默认不需要任何密码就可以访问文件系统，任何匿名的用户可以添加、修改、删除文件，这对于网络服务来说太不安全了。&lt;/p&gt;
+
+&lt;p&gt;为了防止被用户无意或恶意修改，我们可以关闭WebDAV的修改功能。参考WebDAV协议规范可知，修改相关的操作主要涉及PUT/DELETE/PROPPATCH/MKCOL/COPY/MOVE等几个方法。我们只要将这几个方法屏蔽了就可以实现一个只读的WebDAV服务。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		switch req.Method {
+		case &amp;quot;PUT&amp;quot;, &amp;quot;DELETE&amp;quot;, &amp;quot;PROPPATCH&amp;quot;, &amp;quot;MKCOL&amp;quot;, &amp;quot;COPY&amp;quot;, &amp;quot;MOVE&amp;quot;:
+			http.Error(w, &amp;quot;WebDAV: Read Only!!!&amp;quot;, http.StatusForbidden)
+			return
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们通过http.HandleFunc重新包装了fs.ServeHTTP方法，然后将和更新相关的操作屏蔽掉。这样我们就实现了一个只读的WebDAV服务。&lt;/p&gt;
+
+&lt;h2 id=&#34;密码认证webdav服务&#34;&gt;密码认证WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;WebDAV是基于HTTP协议扩展的标准，我们可以通过HTTP的基本认证机制设置用户名和密码。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		// 获取用户名/密码
+		username, password, ok := req.BasicAuth()
+		if !ok {
+			w.Header().Set(&amp;quot;WWW-Authenticate&amp;quot;, `Basic realm=&amp;quot;Restricted&amp;quot;`)
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		// 验证用户名/密码
+		if username != &amp;quot;user&amp;quot; || password != &amp;quot;123456&amp;quot; {
+			http.Error(w, &amp;quot;WebDAV: need authorized!&amp;quot;, http.StatusUnauthorized)
+			return
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们通过req.BasicAuth来获取用户名和密码，然后进行验证。如果没有设置用户名和密码，则返回一个http.StatusUnauthorized状态，HTTP客户端会弹出让用户输入密码的窗口。&lt;/p&gt;
+
+&lt;p&gt;由于HTTP协议并没有加密，因此用户名和密码也是明文传输。为了更安全，我们可以选择用HTTPS协议提供WebDAV服务。为此，我们需要准备一个证书文件（crypto/tls包中的generate_cert.go程序可以生成证书），然后用http.ListenAndServeTLS来启动https服务。&lt;/p&gt;
+
+&lt;p&gt;同时需要注意的是，从Windows Vista起，微软就禁用了http形式的基本WebDAV验证形式(KB841215)，默认必须使用https连接。可以在Windows Vista/7/8中，改注册表:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;HKEY_LOCAL_MACHINE&amp;gt;&amp;gt;SYSTEM&amp;gt;&amp;gt;CurrentControlSet&amp;gt;&amp;gt;Services&amp;gt;&amp;gt;WebClient&amp;gt;&amp;gt;Parameters&amp;gt;&amp;gt;BasicAuthLevel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;把这个值从1改为2，然后进控制面板/服务，把WebClient服务重启。&lt;/p&gt;
+
+&lt;h2 id=&#34;浏览器视图&#34;&gt;浏览器视图&lt;/h2&gt;
+
+&lt;p&gt;WebDAV是基于HTTP协议，理论上从浏览器访问WebDAV服务器会更简单。但是，当我们在浏览器中访问WebDAV服务的根目录之后，收到了“Method Not Allowed”错误信息。&lt;/p&gt;
+
+&lt;p&gt;这是因为，根据WebDAV协议规范，http的GET方法只能用于获取文件。在Go语言实现的webdav库中，如果用GET访问一个目录，会返回一个http.StatusMethodNotAllowed状态码，对应“Method Not Allowed”错误信息。&lt;/p&gt;
+
+&lt;p&gt;为了支持浏览器删除目录列表，我们对针对目录的GET操作单独生成html页面：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(&amp;quot;.&amp;quot;),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		if req.Method == &amp;quot;GET&amp;quot; &amp;amp;&amp;amp; handleDirList(fs.FileSystem, w, req) {
+			return
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	http.ListenAndServe(&amp;quot;:8080&amp;quot;, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，handleDirList函数用于处理目录列表，然后返回ture。handleDirList的实现如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func handleDirList(fs webdav.FileSystem, w http.ResponseWriter, req *http.Request) bool {
+	ctx := context.Background()
+
+	f, err := fs.OpenFile(ctx, req.URL.Path, os.O_RDONLY, 0)
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+
+	if fi, _ := f.Stat(); fi != nil &amp;amp;&amp;amp; !fi.IsDir() {
+		return false
+	}
+
+	dirs, err := f.Readdir(-1)
+	if err != nil {
+		log.Print(w, &amp;quot;Error reading directory&amp;quot;, http.StatusInternalServerError)
+		return false
+	}
+
+	w.Header().Set(&amp;quot;Content-Type&amp;quot;, &amp;quot;text/html; charset=utf-8&amp;quot;)
+	fmt.Fprintf(w, &amp;quot;&amp;lt;pre&amp;gt;\n&amp;quot;)
+	for _, d := range dirs {
+		name := d.Name()
+		if d.IsDir() {
+			name += &amp;quot;/&amp;quot;
+		}
+		fmt.Fprintf(w, &amp;quot;&amp;lt;a href=\&amp;quot;%s\&amp;quot;&amp;gt;%s&amp;lt;/a&amp;gt;\n&amp;quot;, name, name)
+	}
+	fmt.Fprintf(w, &amp;quot;&amp;lt;/pre&amp;gt;\n&amp;quot;)
+	return true
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在可以通过浏览器来访问WebDAV目录列表了。&lt;/p&gt;
+
+&lt;h2 id=&#34;实用的webdav服务&#34;&gt;实用的WebDAV服务&lt;/h2&gt;
+
+&lt;p&gt;为了构造实用的WebDAV服务，我们通过命令行参数设置相关信息，同时将前面的功能整合起来。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;flag&amp;quot;
+	&amp;quot;fmt&amp;quot;
+	&amp;quot;log&amp;quot;
+	&amp;quot;net/http&amp;quot;
+	&amp;quot;os&amp;quot;
+
+	&amp;quot;golang.org/x/net/context&amp;quot;
+	&amp;quot;golang.org/x/net/webdav&amp;quot;
+)
+
+var (
+	flagRootDir   = flag.String(&amp;quot;dir&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;webdav root dir&amp;quot;)
+	flagHttpAddr  = flag.String(&amp;quot;http&amp;quot;, &amp;quot;:80&amp;quot;, &amp;quot;http or https address&amp;quot;)
+	flagHttpsMode = flag.Bool(&amp;quot;https-mode&amp;quot;, false, &amp;quot;use https mode&amp;quot;)
+	flagCertFile  = flag.String(&amp;quot;https-cert-file&amp;quot;, &amp;quot;cert.pem&amp;quot;, &amp;quot;https cert file&amp;quot;)
+	flagKeyFile   = flag.String(&amp;quot;https-key-file&amp;quot;, &amp;quot;key.pem&amp;quot;, &amp;quot;https key file&amp;quot;)
+	flagUserName  = flag.String(&amp;quot;user&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;user name&amp;quot;)
+	flagPassword  = flag.String(&amp;quot;password&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;user password&amp;quot;)
+	flagReadonly  = flag.Bool(&amp;quot;read-only&amp;quot;, false, &amp;quot;read only&amp;quot;)
+)
+
+func init() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, &amp;quot;Usage of WebDAV Server\n&amp;quot;)
+		flag.PrintDefaults()
+		fmt.Fprintf(os.Stderr, &amp;quot;\nReport bugs to &amp;lt;chaishushan{AT}gmail.com&amp;gt;.\n&amp;quot;)
+	}
+}
+
+func main() {
+	flag.Parse()
+
+	fs := &amp;amp;webdav.Handler{
+		FileSystem: webdav.Dir(*flagRootDir),
+		LockSystem: webdav.NewMemLS(),
+	}
+
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, req *http.Request) {
+		if *flagUserName != &amp;quot;&amp;quot; &amp;amp;&amp;amp; *flagPassword != &amp;quot;&amp;quot; {
+			username, password, ok := req.BasicAuth()
+			if !ok {
+				w.Header().Set(&amp;quot;WWW-Authenticate&amp;quot;, `Basic realm=&amp;quot;Restricted&amp;quot;`)
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			if username != *flagUserName || password != *flagPassword {
+				http.Error(w, &amp;quot;WebDAV: need authorized!&amp;quot;, http.StatusUnauthorized)
+				return
+			}
+		}
+
+		if req.Method == &amp;quot;GET&amp;quot; &amp;amp;&amp;amp; handleDirList(fs.FileSystem, w, req) {
+			return
+		}
+
+		if *flagReadonly {
+			switch req.Method {
+			case &amp;quot;PUT&amp;quot;, &amp;quot;DELETE&amp;quot;, &amp;quot;PROPPATCH&amp;quot;, &amp;quot;MKCOL&amp;quot;, &amp;quot;COPY&amp;quot;, &amp;quot;MOVE&amp;quot;:
+				http.Error(w, &amp;quot;WebDAV: Read Only!!!&amp;quot;, http.StatusForbidden)
+				return
+			}
+		}
+
+		fs.ServeHTTP(w, req)
+	})
+
+	if *flagHttpsMode {
+		http.ListenAndServeTLS(*flagHttpAddr, *flagCertFile, *flagKeyFile, nil)
+	} else {
+		http.ListenAndServe(*flagHttpAddr, nil)
+	}
+}
+
+func handleDirList(fs webdav.FileSystem, w http.ResponseWriter, req *http.Request) bool {
+	// 参考前面的代码
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;显示帮助信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go run main.go -h
+Usage of WebDAV Server
+  -dir string
+    	webdav root dir
+  -http string
+    	http or https address (default &amp;quot;:80&amp;quot;)
+  -https-cert-file string
+    	https cert file (default &amp;quot;cert.pem&amp;quot;)
+  -https-key-file string
+    	https key file (default &amp;quot;key.pem&amp;quot;)
+  -https-mode
+    	use https mode
+  -password string
+    	user password
+  -read-only
+    	read only
+  -user string
+    	user name
+
+Report bugs to &amp;lt;chaishushan{AT}gmail.com&amp;gt;.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下命令以Https启动一个WebDAV服务，对应本机的Go语言安装目录，同时设置用户名和密码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go run main.go -https-mode -user=user -password=123456 -dir=/usr/local/go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面是在iPod上通过WebDANNav+应用通过WebDAV协议访问/usr/local/go的预览图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/webdav/ios-webdav-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言和Windows服务</title>
+      <link>https://chai2010.cn/post/2018/window-service/</link>
+      <pubDate>Sun, 21 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/window-service/</guid>
+      
+        <description>&lt;p&gt;Windows服务使您能够创建在后台Windows会话中可长时间运行的可执行应用程序。Windows服务可以在计算机启动时自动启动，管理员也可以临时暂停和重新启动服务。Windows服务非常适合运行一些需要长时间在后台运行的服务器程序，例如Web服务器等应用。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Go语言的官方扩展包&lt;code&gt;&amp;quot;golang.org/x/sys/windows&amp;quot;&lt;/code&gt;以及其子包对Windows服务提供了必要的支持。不过这个扩展包比较偏向底层使用比较繁琐，为了简化Windows服务的开发作者在此基础上封装了一个简化的&lt;code&gt;&amp;quot;github.com/chai2010/winsvc&amp;quot;&lt;/code&gt;包。通过封装的&lt;code&gt;winsvc&lt;/code&gt;包我们可以很容易构造一个windows服务。&lt;/p&gt;
+
+&lt;h2 id=&#34;简单的web服务&#34;&gt;简单的web服务&lt;/h2&gt;
+
+&lt;p&gt;因为Windows服务一般是在后台长时间运行的程序，为了便于演示我们先构造一个简单的现实当前服务器时间的http服务程序。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;context&amp;quot;
+	&amp;quot;net&amp;quot;
+	&amp;quot;net/http&amp;quot;
+	&amp;quot;time&amp;quot;
+)
+
+var (
+	server *http.Server
+)
+
+func main() {
+	StartServer()
+}
+
+func StartServer() {
+	log.Println(&amp;quot;StartServer, port = 8080&amp;quot;)
+	http.HandleFunc(&amp;quot;/&amp;quot;, func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, &amp;quot;winsrv server&amp;quot;, time.Now())
+	})
+
+	server = &amp;amp;http.Server{Addr: &amp;quot;:8080&amp;quot;}
+	server.ListenAndServe()
+}
+
+func StopServer() {
+	if server != nil {
+		server.Shutdown(context.Background()) // Go 1.8+
+	}
+	log.Println(&amp;quot;StopServer&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，&lt;code&gt;StartServer&lt;/code&gt;和&lt;code&gt;StopServer&lt;/code&gt;函数分别对应服务的启动和停止操作。在这个程序中，&lt;code&gt;StopServer&lt;/code&gt;函数并没有用到，我们只需要通过&lt;code&gt;CTRL+C&lt;/code&gt;强制停止服务就可以了。但是对于Windows服务程序，我们不能用暴力的方式强制终止程序，因此需要封装一个程序可以主动停止的函数。&lt;/p&gt;
+
+&lt;h2 id=&#34;windows服务的运行环境&#34;&gt;Windows服务的运行环境&lt;/h2&gt;
+
+&lt;p&gt;因为普通的程序无法处理Windows服务特有的消息，普通的Go程序也无法在服务模式运行。我们通过&lt;code&gt;&amp;quot;github.com/chai2010/winsvc&amp;quot;&lt;/code&gt;包启动的服务可以吹Windows服务特有的消息，因此也就可以支持服务模式运行。同时Windows服务程序需要在后台长时间运行不能随意退出，普通的小程序是不能作为Windows服务来运行的。&lt;/p&gt;
+
+&lt;p&gt;如果要提供Windows服务模式的支持, main需要做适当调整:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;import (
+	&amp;quot;github.com/chai2010/winsvc&amp;quot;
+)
+
+func main() {
+	// run as service
+	if !winsvc.IsAnInteractiveSession() {
+		log.Println(&amp;quot;main:&amp;quot;, &amp;quot;runService&amp;quot;)
+		if err := winsvc.RunAsService(&amp;quot;myserver&amp;quot;, StartServer, StopServer, false); err != nil {
+			log.Fatalf(&amp;quot;svc.Run: %v\n&amp;quot;, err)
+		}
+		return
+	}
+
+	// run as normal
+	StartServer()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;程序中通过&lt;code&gt;winsvc.IsAnInteractiveSession&lt;/code&gt;来判断是否运行在交互模式，普通程序运行一般都是交互模式，windows服务则是运行在非交互模式。当程序处在非交互模式时，我们通过&lt;code&gt;winsvc.RunAsService&lt;/code&gt;来运行服务，也就是以Windows服务的模式运行。同时该程序依然可以在普通模式下运行。&lt;/p&gt;
+
+&lt;p&gt;当程序运行在名为&lt;code&gt;myserver&lt;/code&gt;服务模式时，提供对Windows服务相关消息的处理支持。可以通过管理员手工注册Windows服务，这时需要指定服务名称和服务程序的绝对路径。下面四个命令分别是注册服务、启动服务、停止服务、删除服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sc  create myserver binPath= &amp;quot;C:\path\to\myserver.exe -data-dir=C:\path\myserver.data&amp;quot;
+net start  myserver
+net stop   myserver
+sc  delete myserver
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为Windows服务启动时并不需要登录用户帐号，因此程序不能引用普通帐号的环境变量，同时要尽量避免通过相对路径依赖当前目录。&lt;/p&gt;
+
+&lt;h2 id=&#34;自动注册服务&#34;&gt;自动注册服务&lt;/h2&gt;
+
+&lt;p&gt;手工注释Windows服务比较繁琐，我们可以在程序的命令行参赛中增加自动注册服务的支持。&lt;/p&gt;
+
+&lt;p&gt;要在程序中将程序本身注册为服务，首先需要获取当前程序的绝对路径。我们可以通过&lt;code&gt;winsvc.GetAppPath()&lt;/code&gt;来获取当前程序的绝对路径。同时，为了让服务程序在运行时有一个固定的当前目录，我们一般可以在启动的时候将当前目录切换到进程所在目录，这些工作可以在&lt;code&gt;init&lt;/code&gt;函数中完成：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var (
+	appPath string // 程序的绝对路径
+)
+
+func init() {
+	var err error
+	if appPath, err = winsvc.GetAppPath(); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Chdir(filepath.Dir(appPath)); err != nil {
+		log.Fatal(err)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注册服务可以通过&lt;code&gt;winsvc.InstallService&lt;/code&gt;实现，注册服务是需要指定服务程序的路径和唯一服务的名称：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.InstallService(appPath, &amp;quot;myserver&amp;quot;, &amp;quot;myserver service&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;和注册服务相对应的是取消注册服务，取消注册服务可以通过&lt;code&gt;winsvc.RemoveService&lt;/code&gt;实现，直接通过服务的名称就可以删除服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.RemoveService(&amp;quot;myserver&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Windows服务在成功注册之后就可以以服务模式运行了，可以通过&lt;code&gt;winsvc.StartService&lt;/code&gt;向服务发送启动消息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.StartService(&amp;quot;myserver&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对于已经在运行的Windows服务，可以通过&lt;code&gt;winsvc.StopService&lt;/code&gt;向服务发送停止运行的命令。Windows服务在收到停止运行的命令后，会在程序退出之前调用&lt;code&gt;StopServer&lt;/code&gt;函数，&lt;code&gt;StopServer&lt;/code&gt;函数是在启动Windows服务时由&lt;code&gt;winsvc.RunAsService&lt;/code&gt;函数参数指定。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+	if err := winsvc.StopService(&amp;quot;myserver&amp;quot;); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf(&amp;quot;Done\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在我们可以将这些功能整合在一起，然后通过命令行参数来选择具体的命令。下面是完整的例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var (
+	appPath string
+
+	flagServiceName = flag.String(&amp;quot;service-name&amp;quot;, &amp;quot;myserver&amp;quot;, &amp;quot;Set service name&amp;quot;)
+	flagServiceDesc = flag.String(&amp;quot;service-desc&amp;quot;, &amp;quot;myserver service&amp;quot;, &amp;quot;Set service description&amp;quot;)
+
+	flagServiceInstall   = flag.Bool(&amp;quot;service-install&amp;quot;, false, &amp;quot;Install service&amp;quot;)
+	flagServiceUninstall = flag.Bool(&amp;quot;service-remove&amp;quot;, false, &amp;quot;Remove service&amp;quot;)
+	flagServiceStart     = flag.Bool(&amp;quot;service-start&amp;quot;, false, &amp;quot;Start service&amp;quot;)
+	flagServiceStop      = flag.Bool(&amp;quot;service-stop&amp;quot;, false, &amp;quot;Stop service&amp;quot;)
+)
+
+func init() {
+	// change to current dir
+	var err error
+	if appPath, err = winsvc.GetAppPath(); err != nil {
+		log.Fatal(err)
+	}
+	if err := os.Chdir(filepath.Dir(appPath)); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func main() {
+	flag.Parse()
+
+	// install service
+	if *flagServiceInstall {
+		if err := winsvc.InstallService(appPath, *flagServiceName, *flagServiceDesc); err != nil {
+			log.Fatalf(&amp;quot;installService(%s, %s): %v\n&amp;quot;, *flagServiceName, *flagServiceDesc, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// remove service
+	if *flagServiceUninstall {
+		if err := winsvc.RemoveService(*flagServiceName); err != nil {
+			log.Fatalln(&amp;quot;removeService:&amp;quot;, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// start service
+	if *flagServiceStart {
+		if err := winsvc.StartService(*flagServiceName); err != nil {
+			log.Fatalln(&amp;quot;startService:&amp;quot;, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// stop service
+	if *flagServiceStop {
+		if err := winsvc.StopService(*flagServiceName); err != nil {
+			log.Fatalln(&amp;quot;stopService:&amp;quot;, err)
+		}
+		fmt.Printf(&amp;quot;Done\n&amp;quot;)
+		return
+	}
+
+	// run as service
+	if !winsvc.InServiceMode() {
+		log.Println(&amp;quot;main:&amp;quot;, &amp;quot;runService&amp;quot;)
+		if err := winsvc.RunAsService(*flagServiceName, StartServer, StopServer, false); err != nil {
+			log.Fatalf(&amp;quot;svc.Run: %v\n&amp;quot;, err)
+		}
+		return
+	}
+
+	// run as normal
+	StartServer()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;假设程序构成的目标文件为&lt;code&gt;myserver.exe&lt;/code&gt;，那么我们现在可以通过以下命令来分别注册服务、启动和停止服务、删除服务：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# 普通模式运行
+$ go build -o myserver.exe myserver.go
+$ myserver.exe
+
+# 注册为Windows服务
+$ myserver.exe -service-install
+
+# 启动和停止Windows服务
+$ myserver.exe -service-start
+$ myserver.exe -service-stop
+
+# 删除服务
+# 删除之前需要先停止服务
+$ myserver.exe -service-remove
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在前面的章节中，我们演示过一个WebDAV的服务。读者可以尝试实现一个支持Windows后台服务模式运行的WebDAV的服务器。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go中的wasm汇编语言</title>
+      <link>https://chai2010.cn/post/2018/go-wasm-asm/</link>
+      <pubDate>Wed, 03 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-wasm-asm/</guid>
+      
+        <description>&lt;p&gt;Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;runtime-memclrnoheappointers-函数&#34;&gt;runtime·memclrNoHeapPointers 函数&lt;/h2&gt;
+
+&lt;p&gt;改函数源文件在：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s&#34;&gt;https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;函数的实现如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;// func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+TEXT runtime·memclrNoHeapPointers(SB), NOSPLIT, $0-16
+	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;函数签名&#34;&gt;函数签名&lt;/h2&gt;
+
+&lt;p&gt;函数的签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对应C语言的签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;void memclrNoHeapPointers(int32_t ptr, int32_t n);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对应WebAssembly的函数签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	...
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;读取函数参数&#34;&gt;读取函数参数&lt;/h2&gt;
+
+&lt;p&gt;因为Go语言是动态栈，和WebAssembly的内存模型并不一样。我们先忽略这些问题的细节，看看如何读取参数的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;熟悉Go汇编语言的同学肯定很容易理解上述代码。其中第一行指令是将Go函数的第一个参数加载到R0寄存器，第二行指令是将第二个参数加载到R1寄存器。FP是伪寄存器，表示当前函数调用的帧寄存器，每个参数分别使用参数名作为前缀+参数相对于FP的地址偏移量确定。&lt;/p&gt;
+
+&lt;p&gt;不过WebAssembly是基于栈式的虚拟机结构，并不存在寄存器的概念。不过我们可以将R0和R1看作是函数的局部变量。因此在memclrNoHeapPointers函数的定义中再增加2个局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+	...
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;webassembly汇编语言&#34;&gt;WebAssembly汇编语言&lt;/h2&gt;
+
+&lt;p&gt;现在将函数的主体指令改为WebAssembly汇编语言，大概是如下的写法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;具体的算法类似以下的Go语言代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func memclrNoHeapPointers(ptr, n int32) {
+	R0 := ptr
+	R1 := n
+
+	loop: for {
+		if R1 == 0 {
+			return
+		}
+
+		Memort[R0] = 0
+		R0++
+		R1--
+
+		continue loop
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在循环中，第一组指令是R1表示的未清0的元素个数是否未0，如果未0则返回。对应代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R1
+		I64Eqz
+		If
+			RET
+		End
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中Get对应WebAssembly的get_local指令，用于根据局部变量的索引标号获取一个值，放到栈中。I64Eqz对应i64.eqz指令，从栈中取出一个值，判断是否为0，并将结果从新放入栈中。而If则对应br_if控制流指令，首先从栈取出一个值，如果非0则执行分支内的指令。RET返回函数，和WebAssembly的return指令不一定完全等价。&lt;/p&gt;
+
+&lt;p&gt;第二组指令是强R0表示的内存地址对应的空间清0：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Get对应get_local指令，取出一个i64类型的值。I32WrapI64对应i32.wrap/i64指令，将i64类型强制转型为i32类型，重新入栈。I64Const则是生成一个常数0，入栈。I64Store8对应i32.store8指令，从栈取出内存地址，第二个参数是0表示地址采用默认的对其方式。简而言之就是将R0对应的地址设置为0。&lt;/p&gt;
+
+&lt;p&gt;第三组是将R0加一后存回R0局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;第四组是将R1减一后存回R1局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;循环内的最后一个&lt;code&gt;Br loop&lt;/code&gt;指令是继续从loop标号开始的循环。&lt;/p&gt;
+
+&lt;p&gt;函数最后的UNDEF并不是WebAssembly汇编指令。&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;因为Go语言序言支持栈的分裂，Go语言对WebAssembly的汇编语言是一个变异的版本。Go语言使用局部或者是全局变量来模拟寄存器，在函数的内部在依然基于WebAssembly栈虚拟机的方式工作。&lt;/p&gt;
+
+&lt;p&gt;因为WebAssembly也是刚刚支持的平台，很多技术细节还需要进一步确认。想深入了解WebAssembly汇编语言的同学，本人写的 &lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md&#34;&gt;《WebAssembly标准入门
+》&lt;/a&gt; 中的汇编语言章节部分的内容。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go实现Python模块</title>
+      <link>https://chai2010.cn/post/2018/go-python/</link>
+      <pubDate>Mon, 01 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-python/</guid>
+      
+        <description>
+
+&lt;p&gt;Go语言和Python语言作为当下最红的语言，使用Go语言来为Python语言编写模块是很多用户梦寐以求的方式。这里我们将演示如何通过Go语言来为Python脚本语言编写扩展模块。&lt;/p&gt;
+
+&lt;p&gt;Python的本地模块采用C语言接口规范，因此Go语言编写的函数也需要以C语言接口规范导出。Go语言的CGO特性很早就实现了将Go语言编写为C语言的静态库或动态库。关于CGO的使用细节请参考作者编写的《Go语言高级编程》的第二章CGO编程部分。&lt;/p&gt;
+
+&lt;h2 id=&#34;基于ctypes&#34;&gt;基于ctypes&lt;/h2&gt;
+
+&lt;p&gt;Python内置了非常丰富的模块，其中ctypes支持直接从C动态库调用函数。为了演示如何基于ctypes技术来扩展模块，我们需要先用Go语言创建一个C动态库。&lt;/p&gt;
+
+&lt;p&gt;我们使用的是之前出现过的例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// main.go
+
+package main
+
+import &amp;quot;C&amp;quot;
+import &amp;quot;fmt&amp;quot;
+
+func main() {}
+
+//export SayHello
+func SayHello(name *C.char) {
+    fmt.Printf(&amp;quot;hello %s!\n&amp;quot;, C.GoString(name))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中只导出了一个SayHello函数，用于打印字符串。通过以下命令基于上述Go代码创建say-hello.so动态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go build -buildmode=c-shared -o say-hello.so main.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在我们就可以通过ctypes模块调用say-hello.so动态库中的SayHello函数了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# hello.py
+import ctypes
+
+libso = ctypes.CDLL(&amp;quot;./say-hello.so&amp;quot;)
+
+SayHello = libso.SayHello
+SayHello.argtypes = [ctypes.c_char_p]
+SayHello.restype = None
+
+SayHello(ctypes.c_char_p(b&amp;quot;hello&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们首先通过ctypes.CDLL加载动态库到libso，并通过libso.SayHello来获取SayHello函数。获取到SayHello函数之后设置函数的输入参数为一个C语言类型的字符串，该函数没有返回值。然后我们通过&lt;code&gt;ctypes.c_char_p(b&amp;quot;hello&amp;quot;)&lt;/code&gt;将Python字节串转为C语言格式的字符串作为参数调用SayHello。如果一切正常的话就可以输出字符串了。&lt;/p&gt;
+
+&lt;p&gt;从这个例子可以看出，给予ctypes构造Python扩展模块非常简单，本质上只是在构建一个纯C语言规格的动态库。比较复杂的部分在ctypes的具体使用，关于ctypes的具体细节就不详细展开的，用户可以自行参考Python自带的官方文档。&lt;/p&gt;
+
+&lt;h2 id=&#34;基于python-c接口创建&#34;&gt;基于Python C接口创建&lt;/h2&gt;
+
+&lt;p&gt;在前面的例子中，通过ctypes创建的模块必须要用Python再包装一层，否则就要直接面对C语言风格的接口。如果基于基于Python C接口，我们可以完全再Go和C语言层面创建灵活强大的模块，重点是不再需要在Python中重新包装。&lt;/p&gt;
+
+&lt;p&gt;基于Python C接口创建模块和使用C语言的静态库的流程类似：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+/*
+// macOS:
+#cgo darwin pkg-config: python3
+
+// linux
+#cgo linux pkg-config: python3
+
+// windows
+// should generate libpython3.a from python3.lib
+
+#define Py_LIMITED_API
+
+#include &amp;lt;Python.h&amp;gt;
+
+extern PyObject* PyInit_gopkg();
+extern PyObject* Py_gopkg_sum(PyObject *, PyObject *);
+
+static int cgo_PyArg_ParseTuple_ii(PyObject *arg, int *a, int *b) {
+    return PyArg_ParseTuple(arg, &amp;quot;ii&amp;quot;, a, b);
+}
+
+static PyObject* cgo_PyInit_gopkg(void) {
+    static PyMethodDef methods[] = {
+        {&amp;quot;sum&amp;quot;, Py_gopkg_sum, METH_VARARGS, &amp;quot;Add two numbers.&amp;quot;},
+        {NULL, NULL, 0, NULL},
+    };
+    static struct PyModuleDef module = {
+        PyModuleDef_HEAD_INIT, &amp;quot;gopkg&amp;quot;, NULL, -1, methods,
+    };
+
+    return PyModule_Create(&amp;amp;module);
+}
+*/
+
+import &amp;quot;C&amp;quot;
+
+func main() {}
+
+//export PyInit_gopkg
+func PyInit_gopkg() *C.PyObject {
+    return C.cgo_PyInit_gopkg()
+}
+
+//export Py_gopkg_sum
+func Py_gopkg_sum(self, args *C.PyObject) *C.PyObject {
+    var a, b C.int
+    if C.cgo_PyArg_ParseTuple_ii(args, &amp;amp;a, &amp;amp;b) == 0 {
+        return nil
+    }
+
+    return C.PyLong_FromLong(C.long(a + b))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为Python的链接参数要复杂了很多，我们借助pkg-config工具来获取编译参数和链接参数。然后我们在Go语言中分别导出了PyInit_gopkg和Py_gopkg_sum函数，其中PyInit_gopkg函数用于初始化名为gopkg的Python模块，而Py_gopkg_sum函数则是模块中sum方法的实现。&lt;/p&gt;
+
+&lt;p&gt;因此PyArg_ParseTuple是可变参数类型，CGO中无法使用可变参数的C函数，因此我们通过增加一个cgo_PyArg_ParseTuple_ii辅助函数小消除可变参数的影响。同样，模块的方法列表必须在C语言内存空间创建，因为CGO是禁止将Go语言内存直接返回到C语言空间的。&lt;/p&gt;
+
+&lt;p&gt;然后通过以下命令创建gopkg.so动态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go build -buildmode=c-shared -o gopkg.so main.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里需要注意几个出现gopkg名字的地方。gopkg是我们创建的Python模块的名字，因此它对应一个gopkg.so动态库。再gopkg.so动态库中必须有一个PyInit_gopkg函数，该函数是模块的初始化函数。在PyInit_gopkg函数初始化模块时，同样需要指定模块的名字时gopkg。模块中的方法函数是通过函数指针访问，具体的名字没有影响。&lt;/p&gt;
+
+&lt;h3 id=&#34;macos环境构建&#34;&gt;macOS环境构建&lt;/h3&gt;
+
+&lt;p&gt;因为在macOS中，pkg-config不支持Python3版本。不过macOS有一个python3-config的命令可以实现pkg-config类似的功能。不过python3-config生成的编译参数无法直接用于CGO编译选项（因为GCC不能识别部分参数会导致错误构建）。&lt;/p&gt;
+
+&lt;p&gt;我们在python3-config的基础只是又包装了一个工具，在通过python3-config获取到编译参数之后将GCC不支持的参数剔除掉。&lt;/p&gt;
+
+&lt;p&gt;创建py3-config.go文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    for _, s := range os.Args {
+        if s == &amp;quot;--cflags&amp;quot; {
+            out, _ := exec.Command(
+                &amp;quot;python3-config&amp;quot;, &amp;quot;--cflags&amp;quot;,
+            ).CombinedOutput()
+
+            out = bytes.Replace(out, []byte(&amp;quot;-arch&amp;quot;), []byte{}, -1)
+            out = bytes.Replace(out, []byte(&amp;quot;i386&amp;quot;), []byte{}, -1)
+            out = bytes.Replace(out, []byte(&amp;quot;x86_64&amp;quot;), []byte{}, -1)
+
+            fmt.Print(string(out))
+            return
+        }
+        if s == &amp;quot;--libs&amp;quot; {
+            out, _ := exec.Command(
+                &amp;quot;python3-config&amp;quot;, &amp;quot;--ldflags&amp;quot;,
+            ).CombinedOutput()
+
+            fmt.Print(string(out))
+            return
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;cgo中的pkg-config只需要两个参数&lt;code&gt;--cflags&lt;/code&gt;和&lt;code&gt;--libs&lt;/code&gt;。其中&lt;code&gt;--libs&lt;/code&gt;选项的输出我们采用的是&lt;code&gt;python3-config --ldflags&lt;/code&gt;的输出，因为&lt;code&gt;--libs&lt;/code&gt;选项没有包含库的检索路径，而&lt;code&gt;--ldflags&lt;/code&gt;选项则是在指定链接库参数的基础上增加了库的检索路径。&lt;/p&gt;
+
+&lt;p&gt;基于py3-config.go可以创建一个py3-config命令。然后通过PKG_CONFIG环境变量将cgo使用的pkg-config命令指定为我们订制的命令：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PKG_CONFIG=./py3-config go build -buildmode=c-shared -o gopkg.so main.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对于不支持pkg-config的平台我们都可以基于类似的方法处理。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言并发编程03 - 并发的内存模型</title>
+      <link>https://chai2010.cn/post/2018/go-concurrency-03/</link>
+      <pubDate>Mon, 24 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-concurrency-03/</guid>
+      
+        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
+
+&lt;p&gt;本次整理并发的内存模型部分的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;原子操作&#34;&gt;原子操作&lt;/h2&gt;
+
+&lt;p&gt;在早期，CPU都是以单核的形式顺序执行机器指令。在单核CPU时代只有一个核在读或写数据，因此数据读写不需要额外的保护。但是进入多核时代之后，同一个数据可能被运行在不同CPU上的多个线程同时读写，因此需要额外的手段保证数据的完整性。原子操作则可以保证数据在被原子读或写的操作时不会被其它线程打断，因此可以保证读写数据状态的完整性。&lt;/p&gt;
+
+&lt;p&gt;Go语言的&lt;code&gt;sync/atomic&lt;/code&gt;包提供了对原子操作的支持。&lt;code&gt;sync/atomic&lt;/code&gt;包主要针对四字节或八字节大小并且地址对齐的内存进行原子读写，可以用于整型数或指针等基础数据类型。还有针对更复杂的&lt;code&gt;atomic.Value&lt;/code&gt;类型，可以用于存储结构体对象。&lt;/p&gt;
+
+&lt;p&gt;在Go语言中，其实不使用&lt;code&gt;sync/atomic&lt;/code&gt;包也可以编程。但是&lt;code&gt;sync/atomic&lt;/code&gt;包在某些底层的代码中，可以为性能优化提供更多的灵活性。比如标准库中的sync.Once对象的Do函数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Once struct {
+    m    Mutex
+    done uint32
+}
+
+func (o *Once) Do(f func()) {
+    if atomic.LoadUint32(&amp;amp;o.done) == 1 {
+        return
+    }
+    // Slow-path.
+    o.m.Lock()
+    defer o.m.Unlock()
+    if o.done == 0 {
+        defer atomic.StoreUint32(&amp;amp;o.done, 1)
+        f()
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中&lt;code&gt;atomic.LoadUint32(&amp;amp;o.done)&lt;/code&gt;在开始先以极小的运算代价（院子操作是sync.Mutex等高级元语的代价更低）判断Once对象是否已经运行过了，如果没有则通过sync.Muyex.Lock进行加锁后在运行once对象。如果是第一次运行，则在退出前通过&lt;code&gt;defer atomic.StoreUint32(&amp;amp;o.done, 1)&lt;/code&gt;设置已经运行过的状态标志。&lt;/p&gt;
+
+&lt;p&gt;基于原子包提供的函数可以构造更高级的sync.Mutex等并发编程的工具。不过Go语言的并发哲学是：不要通过共享内存来通信，而是通过通信来共享内存！因此我们需要尽量避免直接使用sync/atomic包提供的原子操作来进行并发编程。&lt;/p&gt;
+
+&lt;h2 id=&#34;同一个goroutine内-满足顺序一致性内存模型&#34;&gt;同一个Goroutine内: 满足顺序一致性内存模型&lt;/h2&gt;
+
+&lt;p&gt;所谓的内存一致性内存模型就是代码的书写的顺序和执行的顺序是否是一致的。对于单线程的程序来说，代码一般是以书写的顺序执行的。更准确地说，顺序一致性内存模型一般是针对代码块中的语句。&lt;/p&gt;
+
+&lt;p&gt;比如以下的代码就是满足顺序一致性内存模型的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done bool = false
+
+func main() {
+    msg = &amp;quot;hello, world&amp;quot;
+    done = true
+
+    for {
+        if done {
+            println(msg)
+            break
+        }
+        println(&amp;quot;retry...&amp;quot;)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中先初始化msg字符串变量，然后将done设置为true表示字符串初始化工作已经完成。因此我们可以通过判断done的状态来间接地推导msg字符串是否已经完成初始化。在Go语言中，同一个Goroutine内满足顺序一致性内存模型。因此上述代码可以正确工作。&lt;/p&gt;
+
+&lt;h2 id=&#34;不同goroutine之间-不满足顺序一致性&#34;&gt;不同Goroutine之间: 不满足顺序一致性!&lt;/h2&gt;
+
+&lt;p&gt;如果我们将初始化msg和done的代码放到另一个Goroutine中，情况就完成不一样了！下面的并发代码将是错误的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done bool = false
+
+func main() {
+    go func() {
+        msg = &amp;quot;hello, world&amp;quot;
+        done = true
+    }()
+
+    for {
+        if done {
+            println(msg); break
+        }
+        println(&amp;quot;retry...&amp;quot;)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行时，大概有几种错误类型：一是main函数无法看到被修改后的done，因此main的for循环无法正常结束；二是main函数虽然看到了done被修改为true，但是msg依然没有初始化，这将导致错误的输出。&lt;/p&gt;
+
+&lt;p&gt;出现上述错误的原因是因为，Go语言的内存模型明确说明不同Goroutine之间不满足顺序一致性！同时编译器为了优化代码，进行初始化的Goroutine可能调整msg和done的执行顺序。main函数并不能从done状态的变化推导msg的初始化状态。&lt;/p&gt;
+
+&lt;h2 id=&#34;通过channel对齐时间参考系&#34;&gt;通过Channel对齐时间参考系&lt;/h2&gt;
+
+&lt;p&gt;每个Goroutine类似一个个独立的宇宙，有着自己的时间系统。当一个Goroutine中的某些操作不可被观察的时候，那么他们的执行状态和执行顺序是未知的。只有当一个Goroutine的某些事件被另一个Goroutine观察的时候，这些事件的状态才会变得确定。观察的手段有很多，通过Channel对齐不同Goroutine的时间参考系是常用的方式。&lt;/p&gt;
+
+&lt;p&gt;下面的代码中，通过将done改为管道类型修复前面的错误：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done = make(chan struct{})
+
+func main() {
+    go func() {
+        msg = &amp;quot;hello, world&amp;quot;
+        done &amp;lt;- struct{}{}
+    }()
+
+    &amp;lt;-done
+    println(msg)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;done管道的发送和接收会强制进行一次同步main函数的主Gorotuine和后台进行初始化工作的Goroutine。在main函数执行&lt;code&gt;&amp;lt;-done&lt;/code&gt;语句完成时，那么后台Goroutine比如也已经执行到了&lt;code&gt;done &amp;lt;- struct{}{}&lt;/code&gt;语句，此时后台Goroutine的msg初始化工作必然已经完成了。因为后台Goroutine的msg初始化工作被main函数通过done管道观察了，因此编译器必须要保证msg在这个时刻完成初始化。因此最后main函数可以正常打印msg字符串。&lt;/p&gt;
+
+&lt;h2 id=&#34;通过sync-mutex对齐时间参考系&#34;&gt;通过sync.Mutex对齐时间参考系&lt;/h2&gt;
+
+&lt;p&gt;对齐时间参考系的方式很多，除了通过管道来同步，还可以通过sync包的Mutex来实现同步：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
+var done sync.Mutex
+
+func main() {
+    done.Lock()
+    go func() {
+        msg = &amp;quot;hello, world&amp;quot;
+        done.Unlock()
+    }()
+
+    done.Lock()
+    println(msg)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;代码中，sync.Mutex必须先Lock然后再Unlock，因为直接Unlock一个Mutex对象会导致panic。代码中，done.Unlock()和第二个done.Lock()分别在不同的Goroutine，它们会强制做一次时间同步。因此最后main函数也可以正常打印msg字符串。&lt;/p&gt;
+
+&lt;h2 id=&#34;带缓存的管道&#34;&gt;带缓存的管道&lt;/h2&gt;
+
+&lt;p&gt;管道是Go语言内置的并发原语。在刚学习Go语言，一般使用的是没有缓存的管道，它是缓存长度为0的管道。对于带缓冲的Channel，对于Channel的第K个接收完成操作发生在第K+C个发送操作完成之前，其中C是Channel的缓存大小。 如果将C设置为0自然就对应无缓存的Channel，也即使第K个接收完成在第K个发送完成之前。因为无缓存的Channel只能同步发1个，也就简化为前面无缓存Channel的规则：对于从无缓冲Channel进行的接收，发生在对该Channel进行的发送完成之前。&lt;/p&gt;
+
+&lt;p&gt;基于带缓存的管道可以实现对并发数量的控制：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    var wg sync.WaitGroup
+    var limit = make(chan struct{}, 3)
+    for i := 0; i &amp;lt; 10; i++ {
+        wg.Add(1)
+        go func(id int) {
+            defer wg.Done()
+
+            limit &amp;lt;- struct{}{}       // len(limit) 小于 cap(limit) 才能进入
+            defer func(){ &amp;lt;-limit }() // 退出时 len(limit) 减 1
+
+            println(id)
+        }(i)
+    }
+    wg.Wait()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为limit管道的长度为3个，因此for循环内部创建的Goroutine在执行println语句时，在同一个时刻最多只能有3个Goroutine在并发执行。&lt;/p&gt;
+
+&lt;h2 id=&#34;初始化顺序&#34;&gt;初始化顺序&lt;/h2&gt;
+
+&lt;p&gt;Go语言中每个包被导入时都会执行包的初始化操作，包括全局包变量的初始化和init初始化函数的执行。如果在包的初始化解决启动了新的Goroutine，那么这些新启动的Goroutine将不能马上被执行，它们只有在所有的包初始化都完成之后才能被创建。在初始化阶段创建的新Goroutine将和main函数是并发执行状态。&lt;/p&gt;
+
+&lt;p&gt;包的初始化示意图如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/init.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;初始化是由runtime.main启动，伪代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func runtime.main() {
+    for pkg := range impported_pkg_list {
+        pkg.init()
+    }
+    go goroutines_from_init()
+    main()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;首先顺序执行导入包的初始化工作，然后并发启动包初始化阶段启动的新Goroutine，同时并发启动main函数。&lt;/p&gt;
+
+&lt;h2 id=&#34;goroutine特点&#34;&gt;Goroutine特点&lt;/h2&gt;
+
+&lt;p&gt;Goroutine是每个并发执行代码的容器，和传统操作系统中线程和进程有点类似。但是Go语言的Goroutine也有自己的特点，理解这些特色是写好并发程序的前提。&lt;/p&gt;
+
+&lt;p&gt;Goroutine特点：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;由go关键字启动, 是一种轻量级的线程&lt;/li&gt;
+&lt;li&gt;以一个很小的栈启动(可能是2KB/4KB), 可以启动很多&lt;/li&gt;
+&lt;li&gt;Goroutine栈的大小会根据需要动态地伸缩, 不用担心栈溢出&lt;/li&gt;
+&lt;li&gt;m个goroutine运行在n个操作系统线程上, n默认对应CPU核数&lt;/li&gt;
+&lt;li&gt;runtime.GOMAXPROCS用于控制当前运行运行正常非阻塞Goroutine的系统线程数目&lt;/li&gt;
+&lt;li&gt;发生在用户态, 切换的代价要比系统线程低(切换时只需要保存必要的寄存器)&lt;/li&gt;
+&lt;li&gt;Goroutine采用的是半抢占式的协作调度(在函数入口处插入协作代码)&lt;/li&gt;
+&lt;li&gt;IO/sleep/runtime.Gosched 均会导致调度&lt;/li&gt;
+&lt;li&gt;Goroutine故意设计为没有ID&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;注意：Goroutine是一种资源，也有泄露的风险！&lt;/p&gt;
+
+&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
+
+&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;幻灯片源文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言并发编程02 - 你好，并发</title>
+      <link>https://chai2010.cn/post/2018/go-concurrency-02/</link>
+      <pubDate>Fri, 21 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-concurrency-02/</guid>
+      
+        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
+
+&lt;p&gt;本次整理“你好，并发”部分的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;并发很简单也很强大&#34;&gt;并发很简单也很强大&lt;/h2&gt;
+
+&lt;p&gt;Go语言通过&lt;code&gt;go&lt;/code&gt;关键字可以将调用的函数直接在新的Goroutine上启动：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// 普通版本
+func main() {
+    println(&amp;quot;你好, 并发!&amp;quot;)
+}
+
+// 并发版本
+func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;相比于传统的通过库的方式启动进程、线程等，&lt;code&gt;go&lt;/code&gt;关键字丢弃了很多心智包袱，降低了并发入门等门槛。当一个新技术随手可得，随便一个按钮开关或一个指令就可以尝试使用等时候，用户总会在下意识中就掌握了改技术。&lt;/p&gt;
+
+&lt;p&gt;Go的并发不仅仅启动简单，而且功能确实很强大。首先是每个 Goroutine 栈很小，切换代价很低，很容易就可以实现海量并发。其次，每个 Goroutine 栈又可以动态扩展到很大，基本可以近似做到无限递归了。Go语言的并发从横向和纵向都可以无限扩展，用户在编写并发程序时不在需要时刻关心栈够不够用、并发数量是否太多等非核心逻辑等问题，极大地释放了并发编程等自由度：&lt;/p&gt;
+
+&lt;p&gt;我们看看如何编写一个海量并发，并且深度递归等程序：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    for i := 0; i &amp;lt; 10000*100; i++ {
+        go printsum(i)
+    }
+}
+
+func printsum(n int) {
+    fmt.Println(&amp;quot;sum(%[1]d): %[1]d\n&amp;quot;, n)
+}
+
+func sum(n int) int {
+    return sum(n-1) + n
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述代码中，printsum函数通过递归计算1到n的和，基本不用太考虑爆栈的问题。同时在main函数中，在for循环内部通过go关键字启动了海量的并发来打印sum的结果。&lt;/p&gt;
+
+&lt;h2 id=&#34;并发中的小问题&#34;&gt;并发中的小问题&lt;/h2&gt;
+
+&lt;p&gt;GO语言并发很简单其实是一个表象，是为了忽悠不懂并发的新手的口号。随便运行下程序就可以戳穿这个纸做的口号：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面等程序需要有中彩票特大奖的运气才能有机会执行成功。大部分普通用户将无法看到输出信息！&lt;/p&gt;
+
+&lt;p&gt;针对这个代码，网上有很多不负责任的Go语言教程教你如何通过调用&lt;code&gt;time.Sleep&lt;/code&gt;或&lt;code&gt;runtime.Gosched&lt;/code&gt;假装解决这个问题：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    time.Sleep(time.Second) // or runtime.Gosched()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每一个严肃的码农在看到这种解决方案的时候，首先需要弄明白time.Sleep为何只休眠了1秒钟？如果换一种极限的思维来问这个问题就是，休眠1万年、1微妙、1纳秒、0纳秒可以吗？&lt;/p&gt;
+
+&lt;p&gt;没有人能够回答为何刚好需要休眠1秒钟就看似能工作了，其实这只是他们常识测试的一个经验值。我们把这种尝试通过调整某些随机的经验值来写代码的方式叫 &lt;strong&gt;“撞大运编程模式”&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;打败这个“撞大运编程模式”写的并发程序很简单，只需要一个或一次反例即可：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    time.Sleep(time.Second)
+}
+
+func println(s string) {
+    time.Sleep(time.Second*2)
+    print(s+&amp;quot;\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的反例中，我们在不改变println函数输出的前提下，休眠了2秒钟（一定要大于前面的1秒钟）。另一种反面的证明是假设，输出的字符串足够大，输出的设备足够慢。因此println很可能需要1万年才能完成工作。因为main函数作为println的使用者，不能也无法要求println函数在几个时钟周期内完成任务（毕竟Go语言无法做到实时编程），因此当println函数执行的时间稍微出现波动时就将影响上述代码的正确性！&lt;/p&gt;
+
+&lt;p&gt;Go语言并发编程的学习一般要经过2个阶段：第一阶段是这个并发程序终于可以产生正确的输出了；第二个阶段是这个并发程序不会产生错误的输出！通过撞大运编程模式编写的代码一般至少处于第一个阶段。&lt;/p&gt;
+
+&lt;p&gt;每一个严禁的并发编程码农，我们的并发程序不仅仅要可以产生正确的输出，而且要保证不会产生错误的输出！&lt;/p&gt;
+
+&lt;h2 id=&#34;并发小问题的解决思路&#34;&gt;并发小问题的解决思路&lt;/h2&gt;
+
+&lt;p&gt;前面代码运行有一定的随机性，无法保证并发程序的正确运行。导致可能产生错误结果的原因有2个：第一个是go启动Goroutine时无法保证新线程马上运行（它的启动是并发的）；第二个是main函数代表的主Goroutine退出将直接退出进程。&lt;/p&gt;
+
+&lt;p&gt;在了解了原因之后，并发小问题的解决思路也就清晰了：在后台Goroutine完成任务之前，main函数代表的主Goroutine不能退出！&lt;/p&gt;
+
+&lt;p&gt;阻止main函数退出的方式有很多：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+
+    for {}
+    select {}
+    &amp;lt;-make(chan bool)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在这个代码中，for、select或管道，任何一个方式都可以阻止在完成任务前退出（其实main函数根本无法退出），因此这个程序好像是可以完成输出任务的（虽然解决方案不太完美）！&lt;/p&gt;
+
+&lt;p&gt;在上述的方案中，for循环阻止main退出是比较特色的一个方案。for其实执行的是一个死循环、忙等待，它会消耗大量的CPU资源。特别是，当只有一个系统线程资源时，main 将独占活跃的 系统线程，其它线程将有被饿死风险！&lt;/p&gt;
+
+&lt;p&gt;因此for循环的方案在单核系统中依然是有问题的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    runtime.GOMAXPROCS(1)
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    for {}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过&lt;code&gt;runtime.GOMAXPROCS(1)&lt;/code&gt;将系统线程限制为一个。然后println函数还没有启动前如果进入了for循环的话，后台的println函数将没有机会再次被执行（被饿死）！&lt;/p&gt;
+
+&lt;p&gt;其实每个已经获取CPU资源的Goroutine都可以霸占CPU：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    runtime.GOMAXPROCS(1)
+    go func() { for {} }()
+    time.Sleep(time.Second)
+
+    fmt.Println(&amp;quot;the answer to life:&amp;quot;, 42)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在这个例子中，Goroutine霸占了CPU，main函数可能被饿死在&lt;code&gt;time.Sleep&lt;/code&gt;行代码，因此宇宙的秘密也就永远无法揭晓！&lt;/p&gt;
+
+&lt;p&gt;既然for循环霸占CPU，那我们换个不占用CPU的方式好了。select和管道都可以：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    runtime.GOMAXPROCS(1)
+    go println(&amp;quot;你好, 并发!&amp;quot;)
+    select {}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;目前的代码确实更改进了一步，单核心也可以保证输出结果了！不过这个暴力的解决方法依然有点问题，这个程序退出前出现了异常：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;你好, 并发!
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [select (no cases)]:
+main.main()
+        /path/to/main.go:8 +0x5c
+exit status 2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我首先要强调的是，这个异常其实不是问题。我们的首要目标是输出字符串，而且这个目标我们已经顺利完成了。出现异常的原因只是程序退出的善后工作处理不太完美（和C语言程序退出前并不需要释放全部的内存资源类似）。&lt;/p&gt;
+
+&lt;p&gt;异常的提示是，系统中没有其它可运行的goroutine，这就是一种死锁状态。其实如果换会for死循环的话是不会提示死锁的（因为runtime会将for循环当作一个正常执行的goroutine看待）。&lt;/p&gt;
+
+&lt;p&gt;理解的解决方案是：main函数在println完成输出任务前不退出，但是在println完成任务后可以正确退出。改进代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
+    done := make(chan bool)
+    go func() {
+        println(&amp;quot;你好, 并发!&amp;quot;)
+        done &amp;lt;- true
+    }()
+
+    &amp;lt;-done
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;main函数在退出前需要从done管道取一个消息，后台任务在将消息放入done管道前必须先完成自己的输出任务。因此，main函数成功取到消息时，后台的输出任务确定已经完成了，main函数也就可以放心退出了。&lt;/p&gt;
+
+&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
+
+&lt;p&gt;猫友会：Go语言并发编程01 - 并发的演化历史&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://mp.weixin.qq.com/s/UaY9gJU85dq-dXlOhLYY1Q&#34;&gt;https://mp.weixin.qq.com/s/UaY9gJU85dq-dXlOhLYY1Q&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;幻灯片源文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言并发编程01 - 并发的演化历史</title>
+      <link>https://chai2010.cn/post/2018/go-concurrency-01/</link>
+      <pubDate>Thu, 20 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-concurrency-01/</guid>
+      
+        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
+
+&lt;p&gt;本次整理并发的演化历史部分的内容。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;go语言并发哲学&#34;&gt;Go语言并发哲学&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Do not communicate by sharing memory, instead, share memory by communicating!&lt;/p&gt;
+
+&lt;p&gt;不要通过共享内存来通信, 而是通过通信来共享内存!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;不要逆行!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;并发的演化历史&#34;&gt;并发的演化历史&lt;/h2&gt;
+
+&lt;p&gt;Go语言最早从UNIX系统的B语言和C语言演化而来，其中的并发特性是从Newsqueak、Alef和Limbo等语言演化而来。其中Newsqueak是Go之父Rob Pike于989年设计的语言，Alef则是Phil Winterbottom于1993年对C语言扩展了并发特性的语言，Limbo也是Rob Pike参与设计的支持并发的语言。由此可见，Rob Pike在并发编程语言领域已经积累了几十年的设计经验，Go语言正是站在这些前辈的基础上涅槃重生的。&lt;/p&gt;
+
+&lt;p&gt;Go语言并发的理论基础是来自Hoare于1978年发表的CSP论文（Hoare就是发明快速排序的大牛）。更通俗的类比，CSP对应的编程模型和UNIX中的管道非常相似，而管道更是在1964年就已经发明了。因此，从理论上看，Go语言的并发并非什么新发明的特性，它只不过是将CSP代表的通过消息同步的编程模型带入了工业开发领域。&lt;/p&gt;
+
+&lt;h3 id=&#34;newsqueak素数筛-rob-pike-1989&#34;&gt;Newsqueak素数筛 - Rob Pike, 1989&lt;/h3&gt;
+
+&lt;p&gt;先看看素数筛的原理图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/prime-sieve.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后是Newsqueak素数筛代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;counter := prog(c:chan of int) {
+    i:=2;
+    for(;;)
+        c &amp;lt;-= i++;
+};
+
+filter := prog(prime:int, listen, send:chan of int) {
+    i:int;
+    for(;;)
+        if((i = &amp;lt;-listen)%prime)
+            send &amp;lt;-= i;
+};
+
+sieve := prog() of chan of int {
+    c := mk(chan of int);
+    begin counter(c);
+    prime := mk(chan of int);
+    begin prog(){
+        p:int;
+        newc:chan of int;
+        for(;;){
+            prime &amp;lt;-= p =&amp;lt;- c;
+            newc = mk();
+            begin filter(p, c, newc);
+            c = newc;
+        }
+    }();
+    become prime;
+};
+
+prime:=sieve();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中begin关键字启动一个并发，类似Go语言的go关键字。而become关键字表示返回值，类似return语句。因此说Newsqueak和Go语言的并发有很多相似之处。&lt;/p&gt;
+
+&lt;h3 id=&#34;alef-phil-winterbottom-1993&#34;&gt;Alef - Phil Winterbottom, 1993&lt;/h3&gt;
+
+&lt;p&gt;然后是Alef语言。据说这个语言是C语言之父Ritchie所钟爱的语言。不过Alef只是短暂地出现在Plan9系统中。目前传世的官方文档只有入门指南和参考手册。&lt;/p&gt;
+
+&lt;p&gt;下面的代码是Alef文档中摘取的片段：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;alef.h&amp;gt;
+
+void receive(chan(byte*) c) {
+    byte *s;
+    s = &amp;lt;- c;
+    print(&amp;quot;%s\n&amp;quot;, s);
+    terminate(nil);
+}
+
+void main(void) {
+    chan(byte*) c;
+    alloc c;
+    proc receive(c);
+    task receive(c);
+    c &amp;lt;- = &amp;quot;hello proc or task&amp;quot;;
+    c &amp;lt;- = &amp;quot;hello proc or task&amp;quot;;
+    print(&amp;quot;done\n&amp;quot;);
+    terminate(nil);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以将Alef看作是类似C++的语言，基础的语法完善和C语言保存一致，但是在并发编程方向做了扩展。其中proc是启动一个进程，task是启动一个线程。&lt;/p&gt;
+
+&lt;p&gt;因为C语言没有GC特性，因此Alef并发所创建或分享的资源管理将会是一个极大的调整。并发的语法虽然看着很美，但是进行真正的并发编程可能没有那么容易。&lt;/p&gt;
+
+&lt;p&gt;Alef产生的并发体可能异常复杂，下图是Alef文档中摘取的图片：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/alef.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;总共有6个线程分布在3个进程中，现场并发体相互之间通过管道进行通信。因为Alef同时支持进程和线程，可以说它其实是伪装成编程语言的操作系统!&lt;/p&gt;
+
+&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
+
+&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;幻灯片源文件：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go1.11和WebAssembly</title>
+      <link>https://chai2010.cn/post/2018/go1.11-and-wasm/</link>
+      <pubDate>Sat, 25 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go1.11-and-wasm/</guid>
+      
+        <description>&lt;p&gt;Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/win2k-on-wasm.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在上一周，qemu的作者bellard大神将Windows 2000搬到浏览器到新闻彻底引爆了WebAssembly技术，这也证明了WebAssembly的强大的性能优势。&lt;/p&gt;
+
+&lt;p&gt;感兴趣的同学可以查看bellard大神到网站，网站提供了在浏览器Linux和Windows等多种系统等运行链接：&lt;a href=&#34;https://bellard.org/jslinux/&#34;&gt;https://bellard.org/jslinux/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;不过本文我们将重点和大家分享如何在Go语言中使用WebAssembly。先安装好Go1.11+版本的Go语言环境。然后创建hello.go文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import &amp;quot;fmt&amp;quot;
+
+func main() {
+	fmt.Println(&amp;quot;你好，WebAssembly！&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;为了不了解Go语言的同学便于理解，让我们简单介绍一下程序。第一句表示当前的包名字为main，同时包中有一个main函数，而main包的main函数就是Go语言程序的入口。在main函数中通过导入的fmt包内的Println方法输出了一个字符串。然后在命令行中直接输入go run hello.go来运行程序。如果一切正常的话。应该可以在命令行看到输出&amp;rdquo;你好，WebAssembly！&amp;rdquo;的结果。&lt;/p&gt;
+
+&lt;p&gt;Go1.11开始支持WebAssembly，对应的操作系统名为js，对应的CPU类型为wasm。目前还无法通过go run的方式直接运行输出的wasm文件，因此我们需要通过go build的方式生成wasm目标文件，然后通过Node环境执行。需要注意的是更新的Node版本对wasm的支持会更好，作者推进使用v10以上的版本。&lt;/p&gt;
+
+&lt;p&gt;通过以下命令将hello.go编译为a.out.wasm：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ GOARCH=wasm GOOS=js go build -o a.out.wasm hello.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成的a.out.wasm文件体积可能超过2MB大小。而且生成等a.out.wasm还无法直接运行，需要初始化Go语言必须的运行时环境。&lt;/p&gt;
+
+&lt;p&gt;对运行时初始化是一个相对复杂的工作，因此Go语言提供了一个$(GOROOT)/misc/wasm/wasm_exec.js文件用于初始化和运行的工作。同时提供了一个基于node包装的$(GOROOT)/misc/wasm/go_js_wasm_exec脚本文件，用于执行Go语言生成的wasm文件。&lt;/p&gt;
+
+&lt;p&gt;参考go_js_wasm_exec脚本的实现，我们可以直接使用wasm_exec.js来运行wasm模块。我们可以先将wasm_exec.js文件复制到当前目录，然后通过以下命令运行wasm模块：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ node wasm_exec.js a.out.wasm
+你好，WebAssembly
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在终于可以正常运行Go语言生成wasm程序了。因此以后可以使用Go语言来开发Web应用了。&lt;/p&gt;
+
+&lt;p&gt;如果对WebAssembly技术感兴趣，可以关注Github上的WebAssembly(wasm)资源精选项目：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh&#34;&gt;https://github.com/chai2010/awesome-wasm-zh&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>《Go高级编程》初稿完成</title>
+      <link>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</link>
+      <pubDate>Wed, 08 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</guid>
+      
+        <description>&lt;p&gt;《Go高级编程》从2016年就开始计划写作。2016年底因为开始学习《Go语言圣经》临时搁置了《Go高级编程》的写作。到了2018年决定重启项目，为了回馈Go语言中国社区，我们尝试以开源的模式进行创作。项目开源后，在不到半年的时间内就已经获得近3k个star，有几十个贡献者帮忙改进内容和代码。感谢中国广大的Go语言爱好者，感谢开源的创作模式，让我们在半年多的时间内成功完成了写作任务。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/advanced-go-programming-book/master/cover.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;《Go高级编程》一书涵盖了CGO、Go汇编语言、RPC实现、Web框架实现、分布式系统等高阶主题，主要针对Go语言有一定经验想深入了解Go语言各种高级用法的开发人员。&lt;/p&gt;
+
+&lt;p&gt;为了便于和大家交流和分享，我们新创建了“Go高级编程”公众号。公众号的ID为golang-china，保持和Go语言中国社区名字一致。公众号重点和大家分享《Go高级编程》、《Go语言圣经》以及Go语言中诸多高级编程问题。大家有任何Go语言相关的问题都可以给我们留言。&lt;/p&gt;
+
+&lt;p&gt;项目地址：&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;https://github.com/chai2010/advanced-go-programming-book&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;最后感谢各位同学的鼓励和支持，谢谢大家🙏&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Gopher China 2018 讲师专访: 柴树杉</title>
+      <link>https://chai2010.cn/post/gopherchina/gopherchina2018-chai2010/</link>
+      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/gopherchina/gopherchina2018-chai2010/</guid>
+      
+        <description>&lt;h2 id=&#34;自我介绍&#34;&gt;自我介绍&lt;/h2&gt;
+
+&lt;p&gt;Go 语言代码的贡献者，《Go 语言圣经》翻译者，《Go 语言高级编程》开源免费图书作者，非主流Go语言码农。2010年入坑 Go 语言，因此我的网络 ID 是 chai2010（其实是王小波的一个的小说的名字）。其实我想说的是，即使当歌曲和传说都已经哑巴的时候，Go 语言代码也不会消失。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/gopherchina2018-chai2010.jpg&#34; alt=&#34;Gopher China 2018 讲师专访－柴树杉&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;什么原因-什么时候与-go-结缘&#34;&gt;什么原因，什么时候与 Go 结缘？&lt;/h2&gt;
+
+&lt;p&gt;绝大部分人第一次听说 Go 语言都是因为它是 Google 发明的语言。但是我更感兴趣的是 Go 语言背后的故事：汤普森、派克、Plan9、UTF8、Alef 等等。2010年在深圳参与了一个可能是国内第一个 Go 语言交流会，聆听了韦京光大牛的分享（独立实现 cgo 对 windows 平台的支持）。2010年网上看到边疆同学号召翻译 Go 语言文档正式入坑。现在还记得叫《胡文 Go.ogle》的 Go 语言小说，感谢 fango。&lt;/p&gt;
+
+&lt;h2 id=&#34;在工作中遇到哪些挑战&#34;&gt;在工作中遇到哪些挑战？&lt;/h2&gt;
+
+&lt;p&gt;Go 还是比较新的语言，深度使用时会发现轮子严重不足。比如，如何解码一个视频，如何最大压缩比保持一个TIFF格式的图像？用 Go 语言实现重新全部显然是不切实际的，而通过 CGO 技术就可以轻松利用 C/C++ 已有的解决方案。因此，CGO 虽然不能解决全部问题，但是绝对是一个值得拥有的后备技术。&lt;/p&gt;
+
+&lt;h2 id=&#34;有什么想对-gopher-说的话和建议&#34;&gt;有什么想对 Gopher 说的话和建议？&lt;/h2&gt;
+
+&lt;p&gt;Go 语言是一门短小精悍的语言，它只有25个关键字，整个语言规范也就50来页，我们完全可以像 C/Lua 语言那样完整掌握它的一切，甚至包括 CGO 和 Go 汇编语言等非主流的特性。作为一件工业级的软件艺术品，你值得拥有。&lt;/p&gt;
+
+&lt;h2 id=&#34;有什么学习-go-的方法和书籍推荐&#34;&gt;有什么学习 Go 的方法和书籍推荐？&lt;/h2&gt;
+
+&lt;p&gt;先走马观花快速浏览一遍《Go 语言圣经》，这是为了快速简历对 Go 语言的总体框架，不需要背诵，以后遇到问题有影响慢慢回头查阅。然后是深入挖掘Go语言的相关八卦（比如 issue9 到底是什么，creat 怎么改的名字，是谁什么时候提交了第一次提交代码），这是为了培养对技术持续的热情感受 Go 语言的文化。同时尝试使用 Go 语言解决一切问题，这不仅仅是为了实践语言本身，也是为了探索 Go 语言的边界和不足。多参与 Gopher China 大会，营造全方位的 Go 语言环境，这样不知不觉中你就已经是一个 Gopher 了。&lt;/p&gt;
+
+&lt;h2 id=&#34;如何看待-go-在中国的发展-预计未来是什么样&#34;&gt;如何看待 Go 在中国的发展，预计未来是什么样？&lt;/h2&gt;
+
+&lt;p&gt;中国有着世界上最大的 Go 语言社区，同时也为 Go 语言的发展作出了巨大贡献（cgo/ios/beego 等），因此 Go 在中国的发展也完全可以代表在世界的发展趋势。目前是21世纪云计算百家争鸣的时期，而 Go 语言正是21世纪的互联网时代的 C 语言，其中 Go 语言实现的 Docker 和 K8s 平台均已成员云计算时代事实上的标准。虽然如某些网红所言，Docker 完全也可以用 shell 等任何语言实现，但是为何就选择了 Go 语言呢？大家都不是傻瓜，群众的眼睛是雪亮的，目前云计算时代新出现的很多基础系统软件都已首选 Go 语言实现。Go 语言不是银弹，但是它已经是互联网时代的 C 语言，这就足够了。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/gopherchina2018-chai2010-cgo.jpg&#34; alt=&#34;深入CGO编程&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;提示：报告内容将会在大会前一天公开，敬请关注！&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;第四届 Gopher China 大会4月将在上海举办，今年也是第一次增加了会前的 培训 。本届的大会无论从规模，内容都将有更多值得大家期待的！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://2018.gopherchina.org/&#34;&gt;http://2018.gopherchina.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mp.weixin.qq.com/s?__biz=MjM5OTcxMzE0MQ==&amp;amp;mid=2653370698&amp;amp;idx=1&amp;amp;sn=478c53ece8a715d96aeb0027e7ad772f&amp;amp;chksm=bce4d9508b935046d25532c0ce65d2ebcfa9158ddd6ad5a04a49c2a8f29a7c8662e6842f6d16&amp;amp;scene=38#wechat_redirect&#34;&gt;原文在这里&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>使用Go语言开发iOS应用(Swift版)</title>
+      <link>https://chai2010.cn/post/golang/go-ios-app/</link>
+      <pubDate>Wed, 25 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-ios-app/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;使用go语言开发ios应用-swift版&#34;&gt;使用Go语言开发iOS应用(Swift版)&lt;/h1&gt;
+
+&lt;p&gt;本文加上读者对Go语言和Swift语言都有一定了解, 但是对二者混合使用不了解的同学.&lt;/p&gt;
+
+&lt;p&gt;本教程是基于一个真实上架的iOS应用做的简单的总结。&lt;/p&gt;
+
+&lt;p&gt;我们先看看运行效果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/go-ios-yjyy-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;背景&#34;&gt;背景&lt;/h2&gt;
+
+&lt;p&gt;Go语言是Google公司于2010年开源的一个面向网络服务和多并发环境的编程语言，特点是简单。
+但是因为简单，也就只能实现90%的性能，这是Go语言的最大优点，因为 少即是多 的道理不是每个人都能领悟的。&lt;/p&gt;
+
+&lt;p&gt;Swift是Apple公司于2014年发布的用来替代ObjectiveC的语言，主要面向iOS和OS X上的界面程序开发。
+当然用swift来开发服务器也是大家关注的一个领域，作者看好在不远的将来Swift将逐步替代C++和Rust语言。&lt;/p&gt;
+
+&lt;p&gt;Go语言和Swift语言本来是风马牛不相及的两个语言，为何非一定要整到一起呢？
+原因很简单，因为作者是一个Go粉，同时也算是半个Swift粉；想试水iOS开发，但是实在是受不了ObjectiveC的裹脚布语法。&lt;/p&gt;
+
+&lt;p&gt;补充下：本人虽然不喜欢ObjectiveC的语法，但是觉得ObjectiveC的runtime还是很强悍的。
+理论上，基于ObjectiveC的runtime，可以用任何流行的编程语言来开发iOS应用，RubyMotion就是一个例子。&lt;/p&gt;
+
+&lt;p&gt;其实，现在流行的绝大部分语言都有一个交集，就是c语言兼容的二进制接口。
+所以说，C++流行并不是C++多厉害，而是它选择几本无缝兼容了C语言的规范。&lt;/p&gt;
+
+&lt;p&gt;但是，完全兼容C语言的规范也有缺点，就是语言本身无法自由地发展，因为很多地方会受到C语言编程模型的限制。
+C++和ObjectiveC是两个比较有代表的例子。&lt;/p&gt;
+
+&lt;p&gt;所以说，Swift一出世就兼容C语言的二进制接口规范，同时抱紧了ObjectiveC的runtime大腿，而去自己确实有很大优秀的特性。&lt;/p&gt;
+
+&lt;p&gt;但是，我们这里暂时不关心Swift和ObjectiveC的混合编程，我们只关注作为ObjectiveC子集的C语言如何与Swift混合编程。&lt;/p&gt;
+
+&lt;h2 id=&#34;swift调用c函数&#34;&gt;Swift调用C函数&lt;/h2&gt;
+
+&lt;p&gt;Swift调用C函数的方法有多种：通过ObjectiveC桥接调用和直接调用。其实两者的原理是一样的，我个人跟喜欢选择最直接也最暴力的直接调用C函数的方式。&lt;/p&gt;
+
+&lt;p&gt;比如有一个C函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+
+void getInput(int *output) {
+    scanf(&amp;quot;%i&amp;quot;, output);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成一个桥接的头文件&lt;code&gt;xxx-Bridging-Header.h&lt;/code&gt;，里面包含c函数规格说明：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void getInput(int *output);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;swift就可以直接使用了:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import Foundation
+
+var output: CInt = 0
+getInput(&amp;amp;output)
+
+println(output)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果不用桥接文件，可以在swift中声明一个Swift函数，对应C函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@_silgen_name(&amp;quot;getInput&amp;quot;) func getInput_swift(query:UnsafePointer&amp;lt;CInt&amp;gt;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;为了明确区分C函数和swift函数，我们将&lt;code&gt;getInput&lt;/code&gt;重新声明为&lt;code&gt;getInput_swift&lt;/code&gt;，使用方法和前面一样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import Foundation
+
+var output: CInt = 0
+getInput_swift(&amp;amp;output)
+
+println(output)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;swift中如何管理c返回的内存&#34;&gt;Swift中如何管理c返回的内存&lt;/h2&gt;
+
+&lt;p&gt;Swift语言本身是自带ARC的，用户很少直接关注内存问题。但是C函数如果返回内存到Swift空间，
+Swift的ARC是无效的，需要手工释放C内存。&lt;/p&gt;
+
+&lt;p&gt;假设我们自己用C语言实现了一个字符串克隆的函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char* MyStrDup(char* s) {
+    return strdup(s);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在swift中可以这样使用：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@_silgen_name(&amp;quot;MyStrDup&amp;quot;)
+func MyStrDup_swift(query:UnsafePointer&amp;lt;CChar&amp;gt;) -&amp;gt; UnsafeMutablePointer&amp;lt;CChar&amp;gt;
+
+let p = MyStrDup_swift(&amp;quot;hello swift-c!&amp;quot;)
+let s = String.fromCString(p)!
+p.dealloc(1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用&lt;code&gt;String.fromCString(p)!&lt;/code&gt;从C字符串构建一个swift字符串，然后手工调用&lt;code&gt;p.dealloc(1)&lt;/code&gt;释放c字符串内存空间。&lt;/p&gt;
+
+&lt;p&gt;函数调用和内存管理是跨语言编程中最重要的两个基础问题，目前已久初步可以工作了。&lt;/p&gt;
+
+&lt;h2 id=&#34;go语言导出c静态库&#34;&gt;Go语言导出C静态库&lt;/h2&gt;
+
+&lt;p&gt;Go语言提供了一个cgo的工具，用于Go语言和C语言交互。这是Go语言使用C语言的一个例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+//#include &amp;lt;stdio.h&amp;gt;
+import &amp;quot;C&amp;quot;
+
+func main() {
+    C.puts(C.CString(&amp;quot;abc&amp;quot;))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;既然要交互，自然会涉及到C语言回调Go语言函数的情形。为此，cgo提供了一个&lt;code&gt;export&lt;/code&gt;注释命令，
+用于生成Go语言函数对应的C语言函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//export MyStrDup
+func MyStrDup(s *C.char) *C.char {
+    return C.strdup(s)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;MyStrDup&lt;/code&gt;指定的名字必须和Go函数名字一致，函数的参数最后是C语言支持的类型。&lt;/p&gt;
+
+&lt;p&gt;现在，我们就得到了用Go语言实现的&lt;code&gt;MyStrDup&lt;/code&gt;函数，使用方法和前面的C语言实现的&lt;code&gt;MyStrDup&lt;/code&gt;是一样的。&lt;/p&gt;
+
+&lt;p&gt;和引用C语言函数库遇到的问题一样，我们如何在工程中引用这些C代码或Go代码实现的函数呢？&lt;/p&gt;
+
+&lt;p&gt;答案还是来自C语言：将代码构建为C静态库或者C动态库，然后将静态库或动态库导入Swift工程。&lt;/p&gt;
+
+&lt;p&gt;但是，对于iOS来说，构建C静态库或者C动态库的过程要麻烦（使用xcode也只是隐藏了构建的具体步骤）。&lt;/p&gt;
+
+&lt;p&gt;因为，iOS涉及到多种CPU架构：模拟器的x86、4s的32位arm、5s以后的64位arm，64位arm中还有不同当版本&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;这是C静态库或者C动态库构建始终都要面对的问题。&lt;/p&gt;
+
+&lt;h2 id=&#34;交叉构建的参数&#34;&gt;交叉构建的参数&lt;/h2&gt;
+
+&lt;p&gt;Go1.6之后增加了构建C静态库的支持，交叉编译也非常简单，只需要设置好&lt;code&gt;GOARCH&lt;/code&gt;和&lt;code&gt;GOOS&lt;/code&gt;就行。&lt;/p&gt;
+
+&lt;p&gt;因为，iOS的&lt;code&gt;GOOS&lt;/code&gt;只有&lt;code&gt;Darwin&lt;/code&gt;一种类型，我们只需要设置&lt;code&gt;GOARCH&lt;/code&gt;就可以了。&lt;/p&gt;
+
+&lt;p&gt;要构建C静态库，我们需要将上面的&lt;code&gt;MyStrDup&lt;/code&gt;实现放到一个&lt;code&gt;main&lt;/code&gt;包中:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+//#include &amp;lt;string.h&amp;gt;
+import &amp;quot;C&amp;quot;
+
+func main() {
+    //
+}
+
+//export MyStrDup
+func MyStrDup(s *C.char) *C.char {
+    return C.strdup(s)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;main&lt;/code&gt;包中的&lt;code&gt;main&lt;/code&gt;函数不会被执行，但是&lt;code&gt;init&lt;/code&gt;函数依然有效。&lt;/p&gt;
+
+&lt;p&gt;使用下面的命令就可以构建当前系统的c静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go build -buildmode=c-archive
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要交叉编译iOS可用的c静态库，我们需要先设置&lt;code&gt;GOARCH&lt;/code&gt;，同时打开cgo特性（交叉编译时，cgo默认是关闭的）。&lt;/p&gt;
+
+&lt;p&gt;下面是构建针对模拟器的x86/amd64类型的C静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export CGO_ENABLED=1
+export GOARCH=amd64
+
+go build -buildmode=c-archive -o libmystrdup_amd64.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们使用&lt;code&gt;-o&lt;/code&gt;参数指定了输出的静态库文件名。构建命令同时还会生成一个头文件（可能叫&lt;code&gt;libmystrdup_386.h&lt;/code&gt;），
+我们没有用到这个头文件，直接删除掉就可以。&lt;/p&gt;
+
+&lt;p&gt;下面是构建针对模拟器的x86/386类型的C静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export CGO_ENABLED=1
+export GOARCH=386
+
+go build -buildmode=c-archive -o libmystrdup_386.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在构建x86/386类型的C静态库时可能会有一些link错误，我们暂时先用以下方法回避。&lt;/p&gt;
+
+&lt;p&gt;创建一个&lt;code&gt;patch_386.go&lt;/code&gt;文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Copyright 2016 &amp;lt;chaishushan{AT}gmail.com&amp;gt;. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// 针对iOS模拟器link时缺少的函数
+// 属于临时解决方案
+
+package main
+
+/*
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+#include &amp;lt;stdlib.h&amp;gt;
+#include &amp;lt;time.h&amp;gt;
+
+size_t fwrite$UNIX2003(const void* a, size_t b, size_t c, FILE* d) {
+    return fwrite(a, b, c, d);
+}
+
+char* strerror$UNIX2003(int errnum) {
+    return strerror(errnum);
+}
+
+time_t mktime$UNIX2003(struct tm * a) {
+    return mktime(a);
+}
+double strtod$UNIX2003(const char * a, char ** b) {
+    return strtod(a, b);
+}
+
+int setenv$UNIX2003(const char* envname, const char* envval, int overwrite) {
+    return setenv(envname, envval, overwrite);
+}
+int unsetenv$UNIX2003(const char* name) {
+    return unsetenv(name);
+}
+
+*/
+import &amp;quot;C&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然，还是会有一些警告出现，暂时忽略它们。&lt;/p&gt;
+
+&lt;h2 id=&#34;构建多cpu类型的静态库&#34;&gt;构建多cpu类型的静态库&lt;/h2&gt;
+
+&lt;p&gt;然后，将C静态库加入到ios的xcode工程文件就可以了。&lt;/p&gt;
+
+&lt;p&gt;x86构建是比较简单的，因为我们可以默认使用本地的构建命令。
+但是，如果要构建arm的静态库，则需要先配置好构建环境。&lt;/p&gt;
+
+&lt;p&gt;我从Go代码中扣出了一个&lt;code&gt;clangwrap.sh&lt;/code&gt;脚本（好像是在&lt;code&gt;$GOROOT/misci/ios&lt;/code&gt;目录）:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/sh
+# This uses the latest available iOS SDK, which is recommended.
+# To select a specific SDK, run &#39;xcodebuild -showsdks&#39;
+# to see the available SDKs and replace iphoneos with one of them.
+SDK=iphoneos
+SDK_PATH=`xcrun --sdk $SDK --show-sdk-path`
+export IPHONEOS_DEPLOYMENT_TARGET=7.0
+# cmd/cgo doesn&#39;t support llvm-gcc-4.2, so we have to use clang.
+CLANG=`xcrun --sdk $SDK --find clang`
+
+if [ &amp;quot;$GOARCH&amp;quot; == &amp;quot;arm&amp;quot; ]; then
+    CLANGARCH=&amp;quot;armv7&amp;quot;
+elif [ &amp;quot;$GOARCH&amp;quot; == &amp;quot;arm64&amp;quot; ]; then
+    CLANGARCH=&amp;quot;arm64&amp;quot;
+else
+    echo &amp;quot;unknown GOARCH=$GOARCH&amp;quot; &amp;gt;&amp;amp;2
+    exit 1
+fi
+
+exec $CLANG -arch $CLANGARCH -isysroot $SDK_PATH &amp;quot;$@&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;里面比较重要的是&lt;code&gt;IPHONEOS_DEPLOYMENT_TARGET&lt;/code&gt;环境变量，这里意思是目标最低支持ios7.0系统。&lt;/p&gt;
+
+&lt;p&gt;构建arm64环境的静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export CGO_ENABLED=1
+export GOARCH=arm64
+export CC=$PWD/clangwrap.sh
+export CXX=$PWD/clangwrap.sh
+
+go build -buildmode=c-archive -o libmystrdup_arm64.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;构建armv7环境的静态库：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export CGO_ENABLED=1
+export GOARCH=arm
+export GOARM=7
+export CC=$PWD/clangwrap.sh
+export CXX=$PWD/clangwrap.sh
+
+go build -buildmode=c-archive -o libmystrdup_armv7.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后我们用&lt;code&gt;lipo&lt;/code&gt;命令将以上这些不同的静态库打包到一个静态库中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;lipo libmystrdup_386.a libmystrdup_adm64.a libmystrdup_arm64.a libmystrdup_armv7.a -create -output libmystrdup.a
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样的话，只要引入一个静态库就可以支持不同cpu类型的目标了。&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;毛主席教导我们：要在战争中学习战争。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://appsto.re/cn/QH8ocb.i&#34;&gt;野鸡医院&lt;/a&gt;&lt;/strong&gt; 这个app是作者第一个iOS应用，这篇教程也是在iOS开发过程逐步学习总结的结果。&lt;/p&gt;
+
+&lt;p&gt;完整的例子：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;AppStore安装: &lt;a href=&#34;https://appsto.re/cn/QH8ocb.i&#34;&gt;https://appsto.re/cn/QH8ocb.i&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Swift工程: &lt;a href=&#34;https://github.com/chai2010/ptyy/tree/master/ios-app/yjyy-swift&#34;&gt;https://github.com/chai2010/ptyy/tree/master/ios-app/yjyy-swift&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Go静态库工程: &lt;a href=&#34;https://github.com/chai2010/ptyy/tree/master/cmd/yjyy&#34;&gt;https://github.com/chai2010/ptyy/tree/master/cmd/yjyy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;静态库构建脚本: &lt;a href=&#34;https://github.com/chai2010/ptyy/tree/master/ios-app/yjyy-swift/vendor/gopkg&#34;&gt;https://github.com/chai2010/ptyy/tree/master/ios-app/yjyy-swift/vendor/gopkg&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;所有的代码均可以免费获取(BSD协议): &lt;a href=&#34;https://github.com/chai2010/ptyy&#34;&gt;https://github.com/chai2010/ptyy&lt;/a&gt;&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>驳狗屎文 &#39;我为什么放弃Go语言&#39;</title>
+      <link>https://chai2010.cn/post/golang/go-rust-fans-pk/</link>
+      <pubDate>Tue, 30 Jun 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-rust-fans-pk/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;驳狗屎文-我为什么放弃go语言&#34;&gt;驳狗屎文 &amp;ldquo;我为什么放弃Go语言&amp;rdquo;&lt;/h1&gt;
+
+&lt;p&gt;此篇文章流传甚广, 其实里面没啥干货， 而且里面很多观点是有问题的. 这个文章在 &lt;a href=&#34;https://groups.google.com/d/msg/golang-china/v8c_xjjM-Pg/XSa3RjJbNCUJ&#34;&gt;golang-china&lt;/a&gt; 很早就讨论过了.
+最近因为 Rust 1.0 和 1.1 的发布, 导致这个文章又出来毒害读者.
+所以写了这篇反驳文章, 指出其中的问题.&lt;/p&gt;
+
+&lt;p&gt;原文链接：&lt;a href=&#34;http://blog.csdn.net/liigo/article/details/23699459&#34;&gt;http://blog.csdn.net/liigo/article/details/23699459&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;有好几次，当我想起来的时候，总是会问自己：我为什么要放弃Go语言？这个决定是正确的吗？是明智和理性的吗？其实我一直在认真思考这个问题。&lt;/p&gt;
+
+&lt;p&gt;开门见山地说，我当初放弃Go语言（golang），就是因为两个“不爽”：第一，对Go语言本身不爽；第二，对Go语言社区里的某些人不爽。毫无疑问，这是非常主观的结论。但是我有足够详实的客观的论据，用以支撑这个看似主观的结论。&lt;/p&gt;
+
+&lt;p&gt;文末附有本文更新日志。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;确实是非常主观的结论, 因为里面有不少有问题的观点(用来忽悠Go小白还行).&lt;/p&gt;
+
+&lt;h2 id=&#34;第0节-我的go语言经历&#34;&gt;第0节：我的Go语言经历&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;先说说我的经历吧，以避免被无缘无故地当作Go语言的低级黑。&lt;/p&gt;
+
+&lt;p&gt;2009年底，Go语言（golang）第一个公开版本发布，笼罩着“Google公司制造”的光环，吸引了许多慕名而来的尝鲜者，我（Liigo）也身居其中，笼统的看了一些Go语言的资料，学习了基础的教程，因对其语法中的分号和花括号不满，很快就遗忘掉了，没拿它当一回事。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在2009年Go刚发布时, 确实是因为“Google公司制造”的光环而吸引了(包括文章作者和诸多IT记者)很多低级的尝鲜者.
+还好, 经过5年的发展, 这些纯粹因为光环来的投机者所剩已经不多了(&lt;a href=&#34;https://www.google.com/trends/explore#q=golang&#34;&gt;Google趋势&lt;/a&gt;).
+目前, 真正的Go用户早就将Go用于实际的生产了.&lt;/p&gt;
+
+&lt;p&gt;说到 &lt;strong&gt;其语法中的分号和花括号不满&lt;/strong&gt;, 我想说这只是你的 &lt;strong&gt;个人主观感受&lt;/strong&gt;, 还有很多人对Go的分号和花括号很满意,
+包括水果公司的的 Swift 的语言设计者也很满意这种风格(Swift中的分号和花括号和Go基本相同).&lt;/p&gt;
+
+&lt;p&gt;如果只谈 &lt;strong&gt;个人主观感受&lt;/strong&gt;, 我也可以说 Rust 的 &lt;code&gt;fn&lt;/code&gt; 缩写也很蛋疼!&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;两年之后，2011年底，Go语言发布1.0的计划被提上日程，相关的报道又多起来，我再次关注它，[重新评估][1]之后决定深入参与Go语言。我订阅了其users、nuts、dev、commits等官方邮件组，坚持每天阅读其中的电子邮件，以及开发者提交的每一次源代码更新，给Go提交了许多改进意见，甚至包括[修改Go语言编译器源代码][2]直接参与开发任务。如此持续了数月时间。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这个到是事实, 在 &lt;a href=&#34;https://groups.google.com/d/forum/golang-china&#34;&gt;golang-china&lt;/a&gt; 有不少吵架的帖子, 感兴趣的可以去挖下, 我就不展开说了.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;到2012年初，Go 1.0发布，语言和标准库都已经基本定型，不可能再有大幅改进，我对Go语言未能在1.0定型之前更上一个台阶、实现自我突破，甚至带着诸多明显缺陷走向1.0，感到非常失望，因而逐渐疏远了它（所以Go 1.0之后的事情我很少关心）。后来看到即将发布的Go 1.1的Release Note，发现语言层面没有太大改变，只是在库和工具层面有所修补和改进，感到它尚在幼年就失去成长的动力，越发失望。外加Go语言社区里的某些人，其中也包括Google公司负责开发Go语言的某些人，其态度、言行，让我极度厌恶，促使我决绝地离弃Go语言。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;真的不清楚楼主说的可以在 Go1.0 之前短时间内能实现的 &lt;strong&gt;重大改进和诸多明显缺陷&lt;/strong&gt; 是什么.&lt;/p&gt;
+
+&lt;p&gt;如果是楼主说前面的 &lt;strong&gt;其语法中的分号和花括号不满&lt;/strong&gt; 之类的重大改进, 我只能说这只是你的 &lt;strong&gt;个人主观感受&lt;/strong&gt; 而已,
+你的很多想法只能说服你自己, 没办法说服其他绝大部分人(不要以为像C++或Rust那样什么特性都有就NB了, 各种NB特性加到一起只能是 &lt;strong&gt;要你命3000&lt;/strong&gt;, 而绝对不会是什么 &lt;strong&gt;银弹&lt;/strong&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Go 1.1的Release Note，发现语言层面没有太大改变&lt;/strong&gt;. 语言层没有改变是是因为 &lt;a href=&#34;http://golang.org/doc/go1compat&#34;&gt;Go1&lt;/a&gt; 作出的向后兼容的承诺. 对于工业级的语言来说,  &lt;a href=&#34;http://golang.org/doc/go1compat&#34;&gt;Go1&lt;/a&gt; 这个只能是优点. 如果连语言层在每个版本都会出现诸多大幅改进, 那谁还敢用Go语言来做生产开发呢(我承认Rust的改动很大胆, 但也说明了Rust还处于比较幼稚和任性的阶段)?&lt;/p&gt;
+
+&lt;p&gt;说 &lt;strong&gt;Go语言社区里的某些人固执&lt;/strong&gt; 的观点我是同意的. 但是这些 &lt;strong&gt;固执&lt;/strong&gt; 的人是可以讲道理的, 但是他们对很多东西的要求很高(特别是关于Go的设计哲学部分).
+只要你给的建议有依据(语言的设计哲学是另外一回事情), 他们绝对不会盲目的拒绝(只是讨论的周期会比较长).&lt;/p&gt;
+
+&lt;p&gt;关于楼主提交的&lt;a href=&#34;http://blog.csdn.net/liigo/article/details/7467309&#34;&gt;给Go文件添加BOM的文章&lt;/a&gt;, 需要补充说明下.&lt;/p&gt;
+
+&lt;p&gt;在Go1.0发布的时候, Go语言的源文件(&lt;code&gt;.go&lt;/code&gt;)明确要求必须是UTF8编码的, 而且是无BOM的UTF8编码的(G公司的Protobuf也不支持带BOM的UTF8编码).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意:&lt;/strong&gt; 这个 &lt;strong&gt;无BOM的UTF8编码&lt;/strong&gt; 的限制仅仅是 针对  Go语言的源文件(&lt;code&gt;.go&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;这个限制并不是说不允许用户处理带BOM的UTF8的txt文件!&lt;/p&gt;
+
+&lt;p&gt;我觉得对于写Go程序来说, 这个限制是没有任何问题的, 到目前为止, 我还从来没有使用过带BOM的&lt;code&gt;.go&lt;/code&gt;文件.&lt;/p&gt;
+
+&lt;p&gt;不仅是因为带BOM的&lt;code&gt;.go&lt;/code&gt;文件没有太多的意义, 而且有很多的缺陷.&lt;/p&gt;
+
+&lt;p&gt;BOM的原意是用来表示编码是大端还是小端的, 主要用于UTF16和UTF32. 对于 UTF8 来说, BOM 没有任何存在的意义(正是Go的2个作者发明了UTF8, 彻底解决了全球的编码问题).&lt;/p&gt;
+
+&lt;p&gt;但是, 在现实中, 因为MS的txt记事本, 对于中文环境会将txt(甚至是C/C++源文件)当作GBK编码(GBK是个烂编码),
+为了区别到底是GBK还是UTF8, MS的记事本在前面加了BOM这个垃圾(被GBK占了茅坑), 这里的bom已经不是表示字节序本意了. 不知道有没有人用ms的记事本写网页, 然后生成一个带bom的utf8网页肯定很有意思.
+&lt;strong&gt;这是MS的记事本的BUG: 它不支持生成无BOM的UTF8编码的文本文件!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;这些是现实存在的带BOM的UTF8编码的文本文件, 但是它们肯定都不是Go语言源文件!&lt;/p&gt;
+
+&lt;p&gt;所以说, Go语言的源文件即使强制限制了无BOM的UTF8编码要求, 也是没有任何问题的(而且我还希望有这个限制).&lt;/p&gt;
+
+&lt;p&gt;虽然后来Go源文件接受带BOM的UTF8了, 但是运行 &lt;code&gt;go fmt&lt;/code&gt; 之后, 还是会删除掉BOM的(因为BOM就是然并卵). 也就是说 带 BOM 的 Go 源文件是不符合 Go语言的编码风格的, &lt;code&gt;go fmt&lt;/code&gt; 会强制删除 BOM 头.&lt;/p&gt;
+
+&lt;p&gt;前面说了BOM是MS带来的垃圾, 但是BOM的UTF8除了然并卵之外还有很多问题, 因为BOM在string的开头嵌入了垃圾,
+导致正则表达式, string的链接运算等操作都被会被BOM这个垃圾所污染. 对于&lt;code&gt;.go&lt;/code&gt;语言, 即使代码完全一样, 有BOM和无BOM会导致文件的MD5之类的校验码不同.&lt;/p&gt;
+
+&lt;p&gt;所以, 我觉得Go用户不用纠结BOM这个无关紧要的东西(语言源文件不是文本编辑器, 没必要支持各种文件格式).&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;在上一个10年，我（Liigo）在我所属的公司里，深度参与了两个编程语言项目的开发。我想，对于如何判断某个编程语言的优劣，或者说至少对于如何判断某个编程语言是否适合于我自己，我应该还是有一点发言权的。&lt;/p&gt;
+
+&lt;p&gt;[1]: &lt;a href=&#34;https://plus.google.com/+LiigoZhuang/posts/CpRNPeDXUDW&#34;&gt;https://plus.google.com/+LiigoZhuang/posts/CpRNPeDXUDW&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;[2]: &lt;a href=&#34;http://blog.csdn.net/liigo/article/details/7467309&#34;&gt;http://blog.csdn.net/liigo/article/details/7467309&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;第1节-我为什么对go语言不爽&#34;&gt;第1节：我为什么对Go语言不爽？&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Go语言有很多让我不爽之处，这里列出我现在还能记起的其中一部分，排名基本上不分先后。读者们耐心地看完之后，还能淡定地说一句“我不在乎”吗？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&#34;1-1-不允许左花括号另起一行&#34;&gt;1.1 不允许左花括号另起一行&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;关于对花括号的摆放，在C语言、C++、Java、C#等社区中，十余年来存在持续争议，从未形成一致意见。在我看来，这本来就是主观倾向很重的抉择，不违反原则不涉及是非的情况下，不应该搞一刀切，让程序员或团队自己选择就足够了。编程语言本身强行限制，把自己的喜好强加给别人，得不偿失。无论倾向于其中任意一种，必然得罪与其对立的一群人。虽然我现在已经习惯了把左花括号放在行尾，但一想到被禁止其他选择，就感到十分不爽。Go语言这这个问题上，没有做到“团结一切可以团结的力量”不说，还有意给自己树敌，太失败了。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;我觉得Go最伟大的发明是 &lt;code&gt;go fmt&lt;/code&gt;, 从此Go用户不会再有花括弧的位置这种无聊争论了(当然也少了不少灌水和上tiobe排名的机会).&lt;/p&gt;
+
+&lt;p&gt;是这优点, Swift 语言也使用和 Go 类似的风格(当然楼主也可能鄙视swift的作者).&lt;/p&gt;
+
+&lt;h3 id=&#34;1-2-编译器莫名其妙地给行尾加上分号&#34;&gt;1.2 编译器莫名其妙地给行尾加上分号&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;对Go语言本身而言，行尾的分号是可以省略的。但是在其编译器（gc）的实现中，为了方便编译器开发者，却在词法分析阶段强行添加了行尾的分号，反过来又影响到语言规范，对“怎样添加分号”做出特殊规定。这种变态做法前无古人。在左花括号被意外放到下一行行首的情况下，它自动在上一行行尾添加的分号，会导致莫名其妙的编译错误（Go 1.0之前），连它自己都解释不明白。如果实在处理不好分号，干脆不要省略分号得了；或者，Scala和JavaScript的编译器是开源的，跟它们学学怎么处理省略行尾分号可以吗？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;又是楼主的 &lt;strong&gt;个人主观感受&lt;/strong&gt;, 不过我很喜欢这个特性. Swift 语言也是类似.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-3-极度强调编译速度-不惜放弃本应提供的功能&#34;&gt;1.3 极度强调编译速度，不惜放弃本应提供的功能&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;程序员是人不是神，编码过程中免不了因为大意或疏忽犯一些错。其中有一些，是大家集体性的很容易就中招的错误（Go语言里的例子我暂时想不起来，C++里的例子有“基类析构函数不是虚函数”）。这时候编译器应该站出来，多做一些检查、约束、核对性工作，尽量阻止常规错误的发生，尽量不让有潜在错误的代码编译通过，必要时给出一些警告或提示，让程序员留意。编译器不就是机器么，不就是应该多做脏活累活杂活、减少人的心智负担么？编译器多做一项检查，可能会避免数十万程序员今后多年内无数次犯同样的错误，节省的时间不计其数，这是功德无量的好事。但是Go编译器的作者们可不这么想，他们不愿意自己多花几个小时给编译器增加新功能，觉得那是亏本，反而减慢了编译速度。他们以影响编译速度为由，拒绝了很多对编译器改进的要求。典型的因噎废食。强调编译速度固然值得赞赏，但如果因此放弃应有的功能，我不赞成。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;编译速度是很重要的, 如果编译速度够慢, 语言再好也不会有人使用的.
+比如C/C++的增量编译/预编译头文件/并发编译都是为了提高编译速度.
+Rust1.1 也号称 比 1.0 的编译时间减少了32% (注意: 不是运行速度).&lt;/p&gt;
+
+&lt;p&gt;当然, Go刚面世的时候, 编译速度是其中的一个设计目标.&lt;/p&gt;
+
+&lt;p&gt;不过我想楼主, 可能想说的是因为编译器自己添加分号而导致的编译错误的问题.
+我觉得Go中 &lt;code&gt;{&lt;/code&gt; 不能另起一行是语言特性, 如果修复这个就是引入了新的错误.&lt;/p&gt;
+
+&lt;p&gt;其他的我真想不起来还有哪些 &lt;strong&gt;调编译速度，不惜放弃本应提供的功能&lt;/strong&gt; (不要提泛型, 那是因为还没有好的设计).&lt;/p&gt;
+
+&lt;h3 id=&#34;1-4-错误处理机制太原始&#34;&gt;1.4 错误处理机制太原始&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;在Go语言中处理错误的基本模式是：函数通常返回多个值，其中最后一个值是error类型，用于表示错误类型极其描述；调用者每次调用完一个函数，都需要检查这个error并进行相应的错误处理：if err != nil { /&lt;em&gt;这种代码写多了不想吐么&lt;/em&gt;/ }。此模式跟C语言那种很原始的错误处理相比如出一辙，并无实质性改进。实际应用中很容易形成多层嵌套的if else语句，可以想一想这个编码场景：先判断文件是否存在，如果存在则打开文件，如果打开成功则读取文件，如果读取成功再写入一段数据，最后关闭文件，别忘了还要处理每一步骤中出现错误的情况，这代码写出来得有多变态、多丑陋？实践中普遍的做法是，判断操作出错后提前return，以避免多层花括号嵌套，但这么做的后果是，许多错误处理代码被放在前面突出的位置，常规的处理逻辑反而被掩埋到后面去了，代码可读性极差。而且，error对象的标准接口只能返回一个错误文本，有时候调用者为了区分不同的错误类型，甚至需要解析该文本。除此之外，你只能手工强制转换error类型到特定子类型（静态类型的优势没了）。至于panic - recover机制，致命的缺陷是不能跨越库的边界使用，注定是一个半成品，最多只能在自己的pkg里面玩一玩。Java的异常处理虽然也有自身的问题（比如Checked Exceptions），但总体上还是比Go的错误处理高明很多。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;话说, 软件开发都发展了半个世纪, 还是无实质性改进. 不要以为弄一个异常的语法糖就是革命了.&lt;/p&gt;
+
+&lt;p&gt;我只能说错误和异常是2个不同的东西, 将所有错误当作异常那是SB行为.&lt;/p&gt;
+
+&lt;p&gt;正因为有异常这个所谓的银弹, 导致很多等着别人帮忙擦屁股的行为(注意 &lt;code&gt;shit&lt;/code&gt; 函数抛出的绝对不会是一种类型的 &lt;code&gt;shit&lt;/code&gt;, 而被其间接调用的各种 &lt;code&gt;xxx_shit&lt;/code&gt; 也可能抛出各种类型的异常, 这就导致 &lt;code&gt;catch&lt;/code&gt; 失控了):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int main() {
+	try {
+		shit();
+	} catch( /* 到底有几千种 shit ? */) {
+		...
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Go的建议是 panic - recover 不跨越边界, 也就是要求正常的错误要由pkg的处理掉.
+这是负责任的行为.&lt;/p&gt;
+
+&lt;p&gt;再说Go是面向并发的编程语言, 在海量的 goroutine 中使用 &lt;code&gt;try/catch&lt;/code&gt; 是不是有一种不伦不类的感觉呢?&lt;/p&gt;
+
+&lt;h3 id=&#34;1-5-垃圾回收器-gc-不完善-有重大缺陷&#34;&gt;1.5 垃圾回收器（GC）不完善、有重大缺陷&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;在Go 1.0前夕，其垃圾回收器在32位环境下有内存泄漏，一直拖着不肯改进，这且不说。Go语言垃圾回收器真正致命的缺陷是，会导致整个进程不可预知的间歇性停顿。像某些大型后台服务程序，如游戏服务器、APP容器等，由于占用内存巨大，其内存对象数量极多，GC完成一次回收周期，可能需要数秒甚至更长时间，这段时间内，整个服务进程是阻塞的、停顿的，在外界看来就是服务中断、无响应，再牛逼的并发机制到了这里统统失效。垃圾回收器定期启动，每次启动就导致短暂的服务中断，这样下去，还有人敢用吗？这可是后台服务器进程，是Go语言的重点应用领域。以上现象可不是我假设出来的，而是事实存在的现实问题，受其严重困扰的也不是一家两家了（2013年底ECUG Con 2013，京东的刘奇提到了Go语言的GC、defer、标准库实现是性能杀手，最大的痛苦是GC；美团的沈锋也提到Go语言的GC导致后台服务间隔性停顿是最大的问题。更早的网络游戏仙侠道开发团队也曾受Go垃圾回收的沉重打击）。在实践中，你必须努力减少进程中的对象数量，以便把GC导致的间歇性停顿控制在可接受范围内。除此之外你别无选择（难道你还想自己更换GC算法、甚至砍掉GC？那还是Go语言吗？）。跳出圈外，我近期一直在思考，一定需要垃圾回收器吗？没有垃圾回收器就一定是历史的倒退吗？（可能会新写一篇博客文章专题探讨。）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这是说的是32位系统, 这绝对不是Go语言的重点应用领域!! 我可以说Go出生就是面向64位系统和多核心CPU环境设计的. (再说 Rust 目前好像还不支持 XP 吧, 这可不可以算是影响巨大?)&lt;/p&gt;
+
+&lt;p&gt;32位当时是有问题, 但是对实际生产影响并不大(请问楼主还是在用32位系统吗, 还只安装4GB的内存吗). 如果是8位单片机环境, 建议就不要用Go语言了, 直接C语言好了.&lt;/p&gt;
+
+&lt;p&gt;而且这个问题早就不存在了(大家可以去看Go的发布日志).&lt;/p&gt;
+
+&lt;p&gt;Go的出生也就5年时间, GC的完善和改进是一个持续的工作, 2015年8月将发布的 &lt;a href=&#34;http://dotgo.sourcegraph.com/post/99652962343/brad-fitzpatrick-on-the-future-of-the-go&#34;&gt;Go1.5将采用并行GC&lt;/a&gt;, 每次 &lt;a href=&#34;http://tip.golang.org/doc/go1.5#gc&#34;&gt;&amp;ldquo;stop the world&amp;rdquo; 时间低于 10 毫秒&lt;/a&gt;, 具体请参考 &lt;a href=&#34;https://sourcegraph.com/blog/live/gophercon2015/123574706480&#34;&gt;GopherCon2015: Go GC: Solving the Latency Problem in Go 1.5&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;关于GC的被人诟病的地方是会导致卡顿, 但是我以为这个主要是因为GC的实现还不够完美而导致的.
+如果是完美的并发和增量的GC, 那应该不会出现大的卡顿问题的.&lt;/p&gt;
+
+&lt;p&gt;当然, 如果非要实时性, 那用C好了(实时并不表示性能高, 只是响应时间可控).&lt;/p&gt;
+
+&lt;p&gt;对于Rust之类没有GC的语言来说, 想很方便的开发并发的后台程序那几乎是不可能的.&lt;/p&gt;
+
+&lt;p&gt;不要总是吹Rust能代替底层/中层/上层的开发, 我们要看有谁用Rust真的做了什么.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-6-禁止未使用变量和多余import&#34;&gt;1.6 禁止未使用变量和多余import&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Go编译器不允许存在被未被使用的变量和多余的import，如果存在，必然导致编译错误。但是现实情况是，在代码编写、重构、调试过程中，例如，临时性的注释掉一行代码，很容易就会导致同时出现未使用的变量和多余的import，直接编译错误了，你必须相应的把变量定义注释掉，再翻页回到文件首部把多余的import也注释掉，……等事情办完了，想把刚才注释的代码找回来，又要好几个麻烦的步骤。还有一个让人蛋疼的问题，编写数据库相关的代码时，如果你import某数据库驱动的pkg，它编译给你报错，说不需要import这个未被使用的pkg；但如果你听信编译器的话删掉该import，编译是通过了，运行时必然报错，说找不到数据库驱动；你看看程序员被折腾的两边不是人，最后不得不请出大神：&lt;code&gt;import _&lt;/code&gt;。对待这种问题，一个比较好的解决方案是，视其为编译警告而非编译错误。但是Go语言开发者很固执，不容许这种折中方案。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这个问题我只能说楼主的吐槽真的是没水平.&lt;/p&gt;
+
+&lt;p&gt;为何不使用的是错误而不是警告? 这是为了将低级的bug消灭在编译阶段(大家可以想下C/C++的那么多警告有什么卵用).&lt;/p&gt;
+
+&lt;p&gt;而且, &lt;code&gt;import&lt;/code&gt; 即使没有使用的话, 也是用副作用的, 因为 &lt;code&gt;import&lt;/code&gt; 会导致 &lt;code&gt;init&lt;/code&gt; 和全局变量的初始化.
+如果某些代码没有使用, 为何要执行 &lt;code&gt;init&lt;/code&gt; 这些初始化呢?&lt;/p&gt;
+
+&lt;p&gt;如果是因为调试而添加的变量, 那么调试完删除不是很正常的要求吗?&lt;/p&gt;
+
+&lt;p&gt;如果是因为调试而要导入&lt;code&gt;fmt&lt;/code&gt;或&lt;code&gt;log&lt;/code&gt;之类的包, 删除调试代码后又导致 &lt;code&gt;import&lt;/code&gt; 错误的花,
+楼主难道不知道在一个独立的文件包装下类似的辅助调试的函数吗?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import (
+	&amp;quot;fmt&amp;quot;
+	&amp;quot;log&amp;quot;
+)
+
+func logf(format string, a ...interface{}) {
+	file, line := callerFileLine()
+	fmt.Fprintf(os.Stderr, &amp;quot;%s:%d: &amp;quot;, file, line)
+	fmt.Fprintf(os.Stderr, format, a...)
+}
+
+func fatalf(format string, a ...interface{}) {
+	file, line := callerFileLine()
+	fmt.Fprintf(os.Stderr, &amp;quot;%s:%d: &amp;quot;, file, line)
+	fmt.Fprintf(os.Stderr, format, a...)
+	os.Exit(1)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;import _&lt;/code&gt; 是有明确行为的用法, 就是为了执行包中的 &lt;code&gt;init&lt;/code&gt; 等函数(可以做某些注册操作).&lt;/p&gt;
+
+&lt;p&gt;将警告当作错误是Go的一个哲学, 当然在楼主看来这是白痴做法.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-7-创建对象的方式太多令人纠结&#34;&gt;1.7 创建对象的方式太多令人纠结&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;创建对象的方式，调用new函数、调用make函数、调用New方法、使用花括号语法直接初始化结构体，你选哪一种？不好选择，因为没有一个固定的模式。从实践中看，如果要创建一个语言内置类型（如channel、map）的对象，通常用make函数创建；如果要创建标准库或第三方库定义的类型的对象，首先要去文档里找一下有没有New方法，如果有就最好调用New方法创建对象，如果没有New方法，则退而求其次，用初始化结构体的方式创建其对象。这个过程颇为周折，不像C++、Java、C#那样直接new就行了。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;C++的&lt;code&gt;new&lt;/code&gt;是狗屎. &lt;code&gt;new&lt;/code&gt;导致的问题是构造函数和普通函数的行为不一致, 这个补丁特性真的没啥优越的.&lt;/p&gt;
+
+&lt;p&gt;我还是喜欢C语言的 &lt;code&gt;fopen&lt;/code&gt; 和 &lt;code&gt;malloc&lt;/code&gt; 之类构造函数, 构造函数就是普通函数, Go语言中也是这样.&lt;/p&gt;
+
+&lt;p&gt;C++中, 除了构造不兼容普通函数, 析构函数也是不兼容普通函数. 这个而引入的坑有很多吧.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-8-对象没有构造函数和析构函数&#34;&gt;1.8 对象没有构造函数和析构函数&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;没有构造函数还好说，毕竟还有自定义的New方法，大致也算是构造函数了。没有析构函数就比较难受了，没法实现RAII。额外的人工处理资源清理工作，无疑加重了程序员的心智负担。没人性啊，还嫌我们程序员加班还少吗？C++里有析构函数，Java里虽然没有析构函数但是有人家finally语句啊，Go呢，什么都没有。没错，你有个defer，可是那个defer问题更大，详见下文吧。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code&gt;defer&lt;/code&gt; 可以覆盖析构函数的行为, 当然 &lt;code&gt;defer&lt;/code&gt; 还有其他的任务. Swift2.0 也引入了一个简化版的 &lt;code&gt;defer&lt;/code&gt; 特性.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-9-defer语句的语义设定不甚合理&#34;&gt;1.9 defer语句的语义设定不甚合理&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Go语言设计defer语句的出发点是好的，把释放资源的“代码”放在靠近创建资源的地方，但把释放资源的“动作”推迟（defer）到函数返回前执行。遗憾的是其执行时机的设置似乎有些不甚合理。设想有一个需要长期运行的函数，其中有无限循环语句，在循环体内不断的创建资源（或分配内存），并用defer语句确保释放。由于函数一直运行没有返回，所有defer语句都得不到执行，循环过程中创建的大量短暂性资源一直积累着，得不到回收。而且，系统为了存储defer列表还要额外占用资源，也是持续增加的。这样下去，过不了多久，整个系统就要因为资源耗尽而崩溃。像这类长期运行的函数，http.ListenAndServe()就是典型的例子。在Go语言重点应用领域，可以说几乎每一个后台服务程序都必然有这么一类函数，往往还都是程序的核心部分。如果程序员不小心在这些函数中使用了defer语句，可以说后患无穷。如果语言设计者把defer的语义设定为在所属代码块结束时（而非函数返回时）执行，是不是更好一点呢？可是Go 1.0早已发布定型，为了保持向后兼容性，已经不可能改变了。小心使用defer语句！一不小心就中招。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;前面说到 &lt;code&gt;defer&lt;/code&gt; 还有其他的任务, 也就是 &lt;code&gt;defer&lt;/code&gt; 中执行的 &lt;code&gt;recover&lt;/code&gt; 可以捕获 &lt;code&gt;panic&lt;/code&gt; 抛出的异常.
+还有 &lt;code&gt;defer&lt;/code&gt; 可以在 &lt;code&gt;return&lt;/code&gt; 之后修改命名的返回值.&lt;/p&gt;
+
+&lt;p&gt;上面2个工作要求 &lt;code&gt;defer&lt;/code&gt; 只能在函数退出时来执行.&lt;/p&gt;
+
+&lt;p&gt;楼主说的 &lt;code&gt;defer&lt;/code&gt; 是类似 Swift2.0 中 &lt;code&gt;defer&lt;/code&gt; 的行为, 但是 Swift2.0 中 &lt;code&gt;defer&lt;/code&gt; 是没有前面2个特性的.&lt;/p&gt;
+
+&lt;p&gt;Go中的&lt;code&gt;defer&lt;/code&gt;是以函数作用域作为触发的条件的, 是会导致楼主说的在 &lt;code&gt;for&lt;/code&gt; 中执行的错误用法(哪个语言没有坑呢?).&lt;/p&gt;
+
+&lt;p&gt;不过 &lt;code&gt;for&lt;/code&gt; 中 局部 &lt;code&gt;defer&lt;/code&gt; 也是有办法的 (Go中的&lt;code&gt;defer&lt;/code&gt;是以函数作用域):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for {
+	func(){
+		f, err := os.Open(...)
+		defer f.Close()
+	}()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在 &lt;code&gt;for&lt;/code&gt; 中做一个闭包函数就可以了. 自己不会用不要怪别人没告诉你.&lt;/p&gt;
+
+&lt;p&gt;Swift 的块级 &lt;code&gt;defer&lt;/code&gt; 也不方便实现以下的场景:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func (t *T) Serve() {
+    if debug {
+        log.Println(t, &amp;quot;starting&amp;quot;)
+        defer log.Println(t, &amp;quot;exiting&amp;quot;)
+    }
+    // stuff
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nigel Tao 给的 &lt;a href=&#34;https://groups.google.com/d/msg/golang-nuts/uSKodjFJDf4/wsZhh1Lk7swJ&#34;&gt;解释&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;The longer answer is that while there&#39;s benefit of a scope-scoped
+defer, there&#39;s also benefit in a function-scoped defer. This code:
+
+func foo(filename string) error {
+  var r io.Reader
+  if filename != &amp;quot;&amp;quot; {
+    f, err := os.Open(filename)
+    if err != nil {
+      return err
+    }
+    defer f.Close()
+    r = f
+  } else {
+    r = strings.NewReader(fakeInput)
+  }
+  // More code that reads from r.
+  etc
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;1-10-许多语言内置设施不支持用户定义的类型&#34;&gt;1.10 许多语言内置设施不支持用户定义的类型&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;for in、make、range、channel、map等都仅支持语言内置类型，不支持用户定义的类型(?)。用户定义的类型没法支持for in循环，用户不能编写像make、range那样“参数类型和个数”甚至“返回值类型和个数”都可变的函数，不能编写像channel、map那样类似泛型的数据类型。语言内置的那些东西，处处充斥着斧凿的痕迹。这体现了语言设计的局限性、封闭性、不完善，可扩展性差，像是新手作品——且不论其设计者和实现者如何权威。延伸阅读：Go语言是30年前的陈旧设计思想，用户定义的东西几乎都是二等公民（Tikhon Jelvis）。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;说到底, 这个是因为对泛型支持的不完备导致的.&lt;/p&gt;
+
+&lt;p&gt;Go语言是没啥NB的特性, 但是Go的特性和工具组合在一起就是好用.&lt;/p&gt;
+
+&lt;p&gt;这就是Go语言NB的地方.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-11-没有泛型支持-常见数据类型接口丑陋&#34;&gt;1.11 没有泛型支持，常见数据类型接口丑陋&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;没有泛型的话，List、Set、Tree这些常见的基础性数据类型的接口就只能很丑陋：放进去的对象是一个具体的类型，取出来之后成了无类型的interface{}（可以视为所有类型的基础类型），还得强制类型转换之后才能继续使用，令人无语。Go语言缺少min、max这类函数，求数值绝对值的函数abs只接收/返回双精度小数类型，排序接口只能借助sort.Interface无奈的回避了被比较对象的类型，等等等等，都是没有泛型导致的结果。没有泛型，接口很难优雅起来。Go开发者没有明确拒绝泛型，只是说还没有找到很好的方法实现泛型（能不能学学已经开源的语言呀）。现实是，Go 1.0已经定型，泛型还没有，那些丑陋的接口为了保持向后兼容必须长期存在着。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Go有自己的哲学, 如果能有和目前哲学不冲突的泛型实现, 他们是不会反对的.&lt;/p&gt;
+
+&lt;p&gt;如果只是简单学学(或者叫抄袭)已经开源的语言的语法, 那是C++的设计风格(或者说C++从来都是这样设计的, 有什么特性就抄什么), 导致了各种脑裂的编程风格.&lt;/p&gt;
+
+&lt;p&gt;编译时泛型和运行时泛型可能是无法完全兼容的, 看这个例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type Adder&amp;lt;T&amp;gt; interface {
+	Add(a, b T) T
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;请问 &lt;code&gt;Adder&amp;lt;int&amp;gt;&lt;/code&gt; 和 &lt;code&gt;Adder&amp;lt;float&amp;gt;&lt;/code&gt; 是一个接口吗?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type Adder interface {
+	Add(a, b interface{}) interface{}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对于这种场景, &lt;code&gt;interface{}&lt;/code&gt; 虽然性能不是最好, 但是接口却是一致的:&lt;/p&gt;
+
+&lt;p&gt;而且, 目前已经有 &lt;code&gt;go generate&lt;/code&gt; 可以弥补范型和宏部分的不足.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://groups.google.com/d/msg/golang-china/v8c_xjjM-Pg/XSa3RjJbNCUJ&#34;&gt;golang-china&lt;/a&gt; 关于该文的讨论中有涉及到泛型的讨论.&lt;/p&gt;
+
+&lt;p&gt;感觉Go即使真有泛型, 也得等到Go2.0了(猜测Go2.0能在2020年诞生10周年发布).&lt;/p&gt;
+
+&lt;h3 id=&#34;1-12-实现接口不需要明确声明&#34;&gt;1.12 实现接口不需要明确声明&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;这一条通常是被当作Go语言的优点来宣传的。但是也有人不赞同，比如我。如果一个类型用Go语言的方式默默的实现了某个接口，使用者和代码维护者都很难发现这一点（除非仔细核对该类型的每一个方法的函数签名，并跟所有可能的接口定义相互对照），自然也想不到与该接口有关的应用，显得十分隐晦，不直观。支持者可能会辩解说，我可以在文档中注明它实现了哪些接口。问题是，写在文档中，还不如直接写到类型定义上呢，至少还能得到编译器的静态类型检查。缺少了编译器的支持，当接口类型的函数签名被改变时，当实现该接口的类型方法被无意中改变时，实现者可能很难意识到，该类型实现该接口的隐含约束事实上已经被打破了。又有人辩解说，我可以通过单元测试确保类型正确实现了接口呀。我想说的是，明明可以通过明确声明实现接口，享受编译器提供的类型检查，你却要自己找麻烦，去写原本多余的单元测试，找虐很爽吗？Go语言的这种做法，除了减少一些对接口所在库的依赖之外，没有其他好处，得不偿失。延伸阅读：为什么我不喜欢Go语言式的接口（老赵）。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Go是面向组合的, 和UNIX的哲学类似. 使用Go你要知道 &lt;code&gt;io&lt;/code&gt; 放的是什么, &lt;code&gt;fmt&lt;/code&gt; 包放的是什么, 习惯之后会很方便.&lt;/p&gt;
+
+&lt;p&gt;你不能说UNIX的命令行工具&lt;code&gt;sort&lt;/code&gt;没有实现强的接口依赖检测会有很多问题.
+如果你非要乱用&lt;code&gt;sort&lt;/code&gt;的捣蛋话当然有很多问题.&lt;/p&gt;
+
+&lt;p&gt;但是Go和&lt;code&gt;sort&lt;/code&gt;之类的工具是给想组合和合作的人使用的.&lt;/p&gt;
+
+&lt;p&gt;不要提 老赵 那个文章了, 我发了反驳文章后他已经闭嘴了: &lt;a href=&#34;http://my.oschina.net/chai2010/blog/122400&#34;&gt;http://my.oschina.net/chai2010/blog/122400&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;对于IDE环境, Go的工具 &lt;code&gt;go oracle&lt;/code&gt;可以回答某类型实现了哪些接口这类问题.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-13-省掉小括号却省不掉花括号&#34;&gt;1.13 省掉小括号却省不掉花括号&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Go语言里面的if语句，其条件表达式不需要用小括号扩起来，这被作为“代码比较简洁”的证据来宣传。可是，你省掉了小括号，却不能省掉大括号啊，一条完整的if语句至少还得三行吧，人家C、C++、Java都可以在一行之内搞定的（可以省掉花括号）。人家还有x?a:b表达式呢，也是一行搞定，你Go语言用if else写至少得五行吧？哪里简洁了？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;“代码比较简洁”, 谁告诉你是这个原因了? 不懂别瞎说!&lt;/p&gt;
+
+&lt;p&gt;必须花括弧的原因是C语言中 &lt;code&gt;if else&lt;/code&gt; 的悬挂问题:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if(1)
+	....;
+	if(2)
+		...;
+else
+	...;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;请问上面的 &lt;code&gt;else&lt;/code&gt; 是属于哪个 &lt;code&gt;if&lt;/code&gt; 的?&lt;/p&gt;
+
+&lt;p&gt;必须加花括弧可以避免上面的问题.&lt;/p&gt;
+
+&lt;p&gt;而小括弧又不是必须的因此就去掉了(Swift同样用了Go的设计).&lt;/p&gt;
+
+&lt;p&gt;至于 &lt;code&gt;x?a:b&lt;/code&gt; 虽然是简洁, 但是容易泛滥 &lt;code&gt;(x?a:b)?(x?a:b):(x?a:(x?a:(...)))&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Go不是因为 简洁 的 &lt;code&gt;x?a:b&lt;/code&gt; 而禁止三元操作符, 而是为了防止泛滥使用而禁止三元操作符.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-14-编译生成的可执行文件尺寸非常大&#34;&gt;1.14 编译生成的可执行文件尺寸非常大&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;记得当年我写了一个很简单的程序，把所有系统环境变量的名称和值输出到控制台，核心代码也就那么三五行，结果编译出来把我吓坏了：EXE文件的大小超过4MB。如果是C语言写的同样功能的程序，0.04MB都是多的。我把这个信息反馈到官方社区，结果人家不在乎。是，我知道现在的硬盘容量都数百GB、上TB了……可您这种优化程度……怎么让我相信您在其他地方也能做到不错呢。（再次强调一遍，我所有的经验和数据都来自Go 1.0发布前夕。）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;C语言的0.04MB程序如果崩了(Windows64环境TDM-GCC生成128KB), 你就只能知道它崩了.&lt;/p&gt;
+
+&lt;p&gt;而Go1.0的4MB程序如果崩了, 你可以知道在哪个文件的哪行代码崩了, 这就是差别!&lt;/p&gt;
+
+&lt;p&gt;对于Go1.5, Windows64环境, 使用 &lt;code&gt;fmt.Println&lt;/code&gt;, &lt;code&gt;Hello world&lt;/code&gt; 生成的 exe 有 2.4 MB.&lt;/p&gt;
+
+&lt;p&gt;对于 Rust1.1, Windows64环境, 生成的 exe 有 2.3 MB.&lt;/p&gt;
+
+&lt;p&gt;做了一个数组越界导致崩溃的测试, Go生成的2.4MB的程序可以输出导致崩溃的文件名和行号:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;panic: runtime error: index out of range
+
+goroutine 1 [running]:
+main.main()
+	D:/path/to/main.go:7 +0x1b9
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Rust 生成的exe只能输出以下没啥用的信息:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;thread &#39;&amp;lt;main&amp;gt;&#39; panicked at &#39;index out of bounds: the len is 2 but the index is
+100&#39;, C:/bot/slave/stable-dist-rustc-win-gnu-64/build/src/libcollections\vec.rs:
+1359
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;关于exe大小的问题可以关注 &lt;a href=&#34;https://github.com/golang/go/issues/6853&#34;&gt;Issue6853&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-15-不支持动态加载类库&#34;&gt;1.15 不支持动态加载类库&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;静态编译的程序当然是很好的，没有额外的运行时依赖，部署时很方便。但是之前我们说了，静态编译的文件尺寸很大。如果一个软件系统由多个可执行程序构成，累加起来就很可观。如果用动态编译，发布时带同一套动态库，可以节省很多容量。更关键的是，动态库可以运行时加载和卸载，这是静态库做不到的。还有那些LGPL等协议的第三方C库受版权限制是不允许静态编译的。至于动态库的版本管理难题，可以通过给动态库内的所有符号添加版本号解决。无论如何，应该给予程序员选择权，让他们自己决定使用静态库还是动态库。一刀切的拒绝动态编译是不合适的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;假设系统由100多个exe组成了, 那总共也就是不超过1GB的磁盘空间, 没觉得有多大.&lt;/p&gt;
+
+&lt;p&gt;而且DLL依赖的地狱难道忘记了吗.&lt;/p&gt;
+
+&lt;p&gt;如果非要DLL动态加载, 自己 &lt;code&gt;cgo&lt;/code&gt; 或 &lt;code&gt;syscall&lt;/code&gt; 动态加载吧.&lt;/p&gt;
+
+&lt;h3 id=&#34;1-16-其他&#34;&gt;1.16 其他&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;不支持方法和函数重载（overload）&lt;/li&gt;
+&lt;li&gt;导入pkg的import语句后边部分竟然是文本（import ”fmt”）&lt;/li&gt;
+&lt;li&gt;没有enum类型，全局性常量难以分类，iota把简单的事情复杂化&lt;/li&gt;
+&lt;li&gt;定义对象方法时，receiver类型应该选用指针还是非指针让人纠结&lt;/li&gt;
+&lt;li&gt;定义结构体和接口的语法稍繁，interface XXX{} struct YYY{} 不是更简洁吗？前面加上type关键字显得罗嗦。&lt;/li&gt;
+&lt;li&gt;测试类库testing里面没有AssertEqual函数，标准库的单元测试代码中充斥着if a != b { t.Fatal(&amp;hellip;) }。&lt;/li&gt;
+&lt;li&gt;语言太简单，以至于不得不放弃很多有用的特性，“保持语言简单”往往成为拒绝改进的理由。&lt;/li&gt;
+&lt;li&gt;标准库的实现总体来说不甚理想，其代码质量大概处于“基本可用”的程度，真正到企业级应用领域，往往就会暴露出诸多不足之处。&lt;/li&gt;
+&lt;li&gt;版本都发展到1.2了，goroutine调度器依旧默认仅使用一个系统线程。GOMAXPROCS的长期存在似乎暗示着官方从来没有足够的信心，让调度器正确安全地运行在多核环境中。这跟Go语言自身以并发为核心的定位有致命的矛盾。（直到2015年下半年1.5发布后才有改观）&lt;/li&gt;
+&lt;li&gt;官方发行版中包含了一个叫oracle的辅助程序，与Oracle数据库毫无关系，却完全无视两者之间的名称混淆。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+&lt;li&gt;不支持函数重载减轻了读代码的负担, 是好事情. 可变的&lt;code&gt;a+b&lt;/code&gt;行为比可变的&lt;code&gt;Add(a,b)&lt;/code&gt;难发现多了&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;import&lt;/code&gt;导入文本绝对是优点, 因为可以支持很多以特殊字符命名的路径: &lt;code&gt;import &amp;quot;_-aa/bb~/dd/xx&amp;quot;&lt;/code&gt;, 只有包名满足ID命名规则就可以了, 前缀部分可以很随意&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;receiver&lt;/code&gt; 就是普通函数: &lt;code&gt;func(self T, ...)&lt;/code&gt; 和 &lt;code&gt;func(self *T, ...)&lt;/code&gt; 的差别不是很明显吗&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;type&lt;/code&gt; 开始规则更统一, 和 &lt;code&gt;var x int&lt;/code&gt; 和 &lt;code&gt;func Add(a, b int) int&lt;/code&gt; 类型后缀的规则是一致的(Rust中的变量和函数也是类型后置吧), 比如 &lt;code&gt;type MyInt int&lt;/code&gt;, &lt;code&gt;type MyFunc func(...)&lt;/code&gt;, 而且也非常便于解析和查找(正则&lt;code&gt;^type&lt;/code&gt;就可以定位了)&lt;/li&gt;
+&lt;li&gt;如果要加 &lt;code&gt;AssertEqual&lt;/code&gt; 的话, 那么什么叫 &lt;code&gt;equal&lt;/code&gt; 呢? 2个map或struct如何才是叫相等, chan成员呢? 别总是想着增加功能, 增加功能的同时带来的问题和复杂性难道不需要考虑吗?&lt;/li&gt;
+&lt;li&gt;语言太简单难道不是优点吗? C++语言够复杂, 建议楼主深入学习&lt;/li&gt;
+&lt;li&gt;标准库的一大原则就是基本可用, 标准库不是一个大杂烩, 我想&amp;rdquo;少即是多&amp;rdquo;的哲学你是不会理解的&lt;/li&gt;
+&lt;li&gt;Go1.5默认N个系统线程, N为CPU核心数目. 默认值并不是没有信心, 而是对于不同的程序, 需要几个线程最好是一个比较困难的事情(比如gui程序为何不用多线程呢).&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oracle&lt;/code&gt; 就是一个普通的单词, 为何不能使用? 楼主会不会因为买了水果的手机, 以后就不认识 &lt;code&gt;apple&lt;/code&gt; 这个单词了?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;上面列出的是我目前还能想到的对Go语言的不爽之处，毕竟时间过去两年多，还有一些早就遗忘了。其中一部分固然是小不爽，可能忍一忍就过去了，但是很多不爽积累起来，总会时不时地让人难受，时间久了有自虐的感觉。程序员的工作生活本来就够枯燥的，何必呢。&lt;/p&gt;
+
+&lt;p&gt;必须要说的是，对于其中大多数不爽之处，我（Liigo）都曾经试图改变过它们：在Go 1.0版本发布之前，我在其官方邮件组提过很多意见和建议（甚至包括提交代码CL），极力据理力争，可以说付出很大努力，目的就是希望定型后的Go语言是一个相对完善的、没有明显缺陷的编程语言。结果是令人失望的，我人微言轻、势单力薄，不可能影响整个语言的发展走向。1.0之前，最佳的否定自我、超越自我的机会，就这么遗憾地错过了。我最终发现，很多时候不是技术问题，而是技术人员的问题。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;给Go提交的CL的要求是非常高, 楼主的BOM提法我觉得可以讨论, 但是不要以为CL增加了特性就必须得通过.&lt;/p&gt;
+
+&lt;p&gt;还好, Go团队没有接受你上面的诸多建议, 要不然我估计我现在已经放弃Go了.&lt;/p&gt;
+
+&lt;h2 id=&#34;第2节-我为什么对go语言的某些人不爽&#34;&gt;第2节：我为什么对Go语言的某些人不爽？&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;这里提到的“某些人”主要是两类：一、负责专职开发Go语言的Google公司员工；二、Go语言的推崇者和脑残粉丝。我跟这两类人打过很多交道，不胜其烦。再次强调一遍，我指的是“某些”人，而不是所有人，请不要对号入座。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;对于一, 固执的G员工, 你要通过逻辑来说服他们, 如果自己都没有干货, 别人凭什么要采纳你的建议(上面的绝大部分建议我就反对)?&lt;/p&gt;
+
+&lt;p&gt;对于二, 脑残粉丝谁都烦, 希望楼主下次吐槽能给点干货, 别把自己也整成了脑残粉.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Google公司内部负责专职开发Go语言的核心开发组某些成员，他们倾向于闭门造车，固执己见，对第三方提出的建议不重视。他们常常挂在嘴边的口头禅是：现有的做法很好、不需要那个功能、我们开发Go语言是给Google自己用的、Google不需要那个功能、如果你一定要改请fork之后自己改、别干提意见请提交代码。很多言行都是“反开源”的。通过一些具体的例子，还能更形象的看清这一层。就留下作为课后作业吧。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;对于技术而言, 我更喜欢独裁者. 所谓的开源烂民主那是活稀泥的.&lt;/p&gt;
+
+&lt;p&gt;你可以尝试去提一个Linux内核也增加GUI模块的建议试试.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我最不能接受的就是他们对1.0版本的散漫处理。那时候Go还没到1.0，初出茅庐的小学生，有很大的改进空间，是全面翻新的最佳时机，彼时不改更待何时？1.0是打地基的版本，基础不牢靠，等1.0定型之后，处处受到向后兼容性的牵制，束手缚脚，每前进一步都阻力重重。急于发布1.0，过早定型，留下诸多遗憾，彰显了开发者的功利性强，在技术上不追求尽善尽美。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Go1.5的地基已经非常的牢固, 这个你不用担心.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Go语言的核心开发成员，他们日常的开发工作是使用C语言——Go语言的编译器和运行时库，包括语言核心数据结构和算法map、channel、scheduler，都是C开发的——真正用自己开发的Go语言进行实际的大型应用开发的机会并不多。虽然标准库是用Go语言自己写的，但他们却没有大范围使用标准库的经历。实际上，他们缺少使用Go语言的实战开发经验，往往不知道处于开发第一线的用户真正需要什么，无法做到设身处地为程序员着想。缺少使用Go语言的亲身经历，也意味着他们不能在日常开发中，及时发现和改进Go语言的不足。这也是他们往往自我感觉良好的原因。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;缺少使用Go语言的亲身经历&lt;/strong&gt;, 楼主也真的敢信口开河. 你不是以为G公司开发Go真的是用来玩的吧.&lt;/p&gt;
+
+&lt;p&gt;再说Go1.5已经完全没有C代码了, 这下你该闭口了吧.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Go语言社区里，有一大批Go语言的推崇者和脑残粉丝，他们满足于现状，不思进取，处处维护心中的“神”，容不得批评意见，不支持对语言的改进要求。当年我对Go语言的很多批评和改进意见，极少得到他们的支持，他们不但不支持还给予打击，我就纳闷了，他们难道不希望Go语言更完善、更优秀吗？我后来才意识到，他们跟乔帮主的苹果脑残粉丝们，言行一脉相承，具有极端宗教倾向，神化主子、打击异己真是不遗余力呀。简简单单的技术问题，就能被他们上升到意识形态之争。现实的例子是蛮多的，有兴趣的到网上去找吧。正是因为他们的存在，导致更多理智、清醒的Go语言用户无法真正融入整个社区。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;你的很多批评和改进意见都是狗屎(包括BOM那个). 你这样的用户没有融入社区时好事情, Go语言只要在生产环境好用就可以了.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;如果一个项目、团队、社区，到处充斥着赞美、孤芳自赏、自我满足、不思进取，排斥不同意见，拒绝接纳新方案，我想不到它还有什么前进的动力。逆水行舟，是不进反退的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;可惜世界不是以你的意志改变的, Go还将继续快速发展, 你是很难受吧?&lt;/p&gt;
+
+&lt;h2 id=&#34;第3节-还有比go语言更好的选择吗&#34;&gt;第3节：还有比Go语言更好的选择吗？&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我始终坚持一个颇有辩证法意味的哲学观点：在更好的替代品出现之前，现有的就是最好的。失望是没有用的，抱怨是没有用的，要么接受，要么逃离。我曾经努力尝试过接受Go语言，失败之后，注定要逃离。发现更好的替代品之后，无疑加速了逃离过程。还有比Go语言更好的替代品吗？当然有。作为一个屌丝程序员，我应该告诉你它是什么，但是我不说。现在还不是时候。我现在不想把这两门编程语言对立起来，引发另一场潜在的语言战争。这不是此文的本意。如果你非要从现有信息中推测它是什么，那完全是你自己的事。如果你原意等，它或许很快会浮出水面，也未可知。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;不就是号称银弹的 Rust 吗, 但是 然并卵. 我也断言一句: Rust 最终只能是小众语言, 想代替 Go语言/C语言 根本是没戏的(Swift开源后基本可以秒杀Rust).&lt;/p&gt;
+
+&lt;h2 id=&#34;第4节-写在最后&#34;&gt;第4节：写在最后&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;我不原意被别人代表，也不愿意代表别人。这篇文章写的是我，一个叫Liigo的80后屌丝程序员，自己的观点。你完全可以主观地认为它是主观的，也完全可以客观地以为它是客观的，无论如何，那是你的观点。&lt;/p&gt;
+
+&lt;p&gt;这篇文字是从记忆里收拾出来的。有些细节虽可考，而不值得考。——我早已逃离，不愿再回到当年的场景。文中涉及的某些细节，可能会因为些许偏差，影响其准确性；也可能会因为缺少出处，影响其客观性。如果有人较真，非要去核实，我相信那些东西应该还在那里。&lt;/p&gt;
+
+&lt;p&gt;Go语言也非上文所述一无是处，它当然有它的优势和特色。读者们判断一件事物，应该是优劣并陈，做综合分析，不能单听我一家负面之言。但是它的那些不爽之处，始终让我不爽，且不能从其优秀处得以完全中和，这是我不得不放弃它的原因。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;走好, 不送!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&#34;liigo-2014-4-29-补记1&#34;&gt;Liigo 2014-4-29 补记1：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Go语言社区还有一个很奇特的现象，就是中国社区独大，国外社区要小的多。有外国网友还专门写了一篇文章研究《为什么Golang中国社区独大》这个问题（文中也提到了我这篇博文）。通常来说，在IT和软件领域，向来都是国外先进国家引领技术潮流，然后国内缓慢跟进。而到了Go语言这里，恰恰反过来了，似乎暗示着在国外的主流软件开发技术人员并不怎么待见Go语言，Go只是在国内受到一帮人的盲目推崇而已，至于这帮人的眼光如何，反正我不看好。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在工作中都已经用上了, 你还在想象别人是在盲目推崇, 是你自己在梦游吧.&lt;/p&gt;
+
+&lt;h3 id=&#34;liigo-2014-4-29-补记2&#34;&gt;Liigo 2014-4-29 补记2：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;著名的编程语言研究专家王垠写了一篇《对 Go 语言的综合评价》（晚于本博文发表约三五天），也是总体上持批判态度，看衰Go语言。读者们可以对照阅读。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;王的垠语言出来了吗? 等着10年后他再次扇自己的脸(参考Windows无用那篇).&lt;/p&gt;
+
+&lt;h3 id=&#34;liigo-2014-4-29-补记3&#34;&gt;Liigo 2014-4-29 补记3：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Go语言的拥护者们，似乎连Go语言的“核心优势”都说不出几条。知乎上很有人气的一条问答《为什么要使用 Go 语言，Go 语言的优势在哪里》，连静态编译、GC、跨平台都拿出来说了（无视C/C++/Java），甚至连简单易学（无视Python/易语言）、“丰富的”标准库（跟谁比?敢跟Java/C#/Python比么?）、好用的工具链（gofmt）都扯出来了，可见除了“并发、网络”之外，他们也讲不出另外的什么核心优势了，只能靠一些周边的东西凑数。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;不需要NB的特性, 只需要简单/好用/实用就行.&lt;/p&gt;
+
+&lt;h3 id=&#34;liigo-2015-1-31-补记4&#34;&gt;Liigo 2015-1-31 补记4：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;全世界认为Go语言不好的可不只是我Liigo一个人。国外著名的问答网站Quora上面有个人气很高的提问，“为什么不要用Go语言”（英文网页），看看那排名最前的两个答案，以及广大程序员们给这两个答案的数百个“赞”，都足以说明Go语言自身的问题是客观存在的。人民群众的眼睛是雪亮的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;就是数万个“赞”又怎么样? 关键是很多地方Go已经用起来了.&lt;/p&gt;
+
+&lt;h3 id=&#34;liigo-2015-4-1-补记5&#34;&gt;Liigo 2015-4-1 补记5：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;文中1.10（黑魔法）和1.12（接口）章节增加了两处“延伸阅读”链接，被引用的链接后面均有大量网友评论。此举主要是为了说明本文观点并非一家之言。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&#34;liigo-2015-5-29-补记6&#34;&gt;Liigo 2015-5-29 补记6：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;补充说明Go语言直到2015年下半年1.5发布后才将GOMAXPROCS设置为大于1的默认值(HN)，他们文中承认之前一直默认设置为1是因为调度器不完善（与我此文最初发表时的猜测一致）。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;原来这是你的功劳!&lt;/p&gt;
+
+&lt;h3 id=&#34;liigo-2015-6-2-补记7&#34;&gt;Liigo 2015-6-2 补记7：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;补充两篇英文：Why Go Is Not Good（作者Will Yager重点批评了Go语言的设计不佳甚至是倒退），Leaving Go（作者Danny Gratzer放弃Go语言的原因主要是：没有泛型，充满黑魔法）。这两篇文章都是针对具体问题做具体分析的，与本文写作精神一致，务实不务虚。其中提到的对Go语言不满的地方，本文也多有涉及，结论类似。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;放弃Go语言很正常, 也有很多放弃X语言投奔Go语言的例子.&lt;/p&gt;
+
+&lt;h3 id=&#34;关于对作者倾向性质疑的声明&#34;&gt;关于对作者倾向性质疑的声明：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;读者看到本文全都是Go语言负面性的内容，没有涉及一点Go语言好的地方，因而质疑作者的盲目倾向。出现这种结果完全是因为文章主题所限。此前本文末尾也简单提到过，评估一件事物，应当优劣并陈，优势项加分，劣势项减分，做综合评估分析。如果有突出的重大优势，则可以容忍一些较大的劣势；但如果有致命的劣势或多项大劣势，则再大的优势也无法与之中和。中国乒乓球界讲领军人物必须做到“技术全面，特长突出，没有明显弱点”，我甚为赞同。用这句话套用Go语言，可以说“技术不全面（人家自己说成简洁），有一点特长（并发），有明显的弱点（包括但不限于本文列出的这些）”。如此一来，优势都被劣势中和了，劣势还是那么突出，自然是得负分，自然是弃用，自然是没有好印象。我在这里可以说观点鲜明、态度明确，不和稀泥。与其看那些盲目推崇Go语言的人和文章，笼统的说“好”，不如也顺便看看本文，具体到细节地说“不好”。凡是具体到细节的东西，都是容易证实或证伪的，比笼统的东西（无论是&amp;rdquo;黑&amp;rdquo;还是&amp;rdquo;粉&amp;rdquo;）可信性更高一些。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;不需要NB的特性, 只需要简单/好用/实用就行.&lt;/p&gt;
+
+&lt;h3 id=&#34;关于对作者阴谋论的声明&#34;&gt;关于对作者阴谋论的声明：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;有某些阴谋论者（例如谢某），说我因一个Pull Request被Go开发者拒绝而“怀恨至今”，暗示此文是故意报复、抹黑Go语言。我对Golang有恨吗？当然是有的，那是一个不爽接一个不爽（如本文一一罗列的那些），逐步累积，由量变形成质变的结果，是我对Golang综合客观评估之后的主观态度，并非由哪一个单独的事件所主导。要说Pull Request被拒绝，Rust开发者拒绝我的PR次数还少吗？比如 &lt;a href=&#34;https://github.com/mozilla/rust/pull/13014&#34;&gt;https://github.com/mozilla/rust/pull/13014&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/liigo/rust/tree/xp&#34;&gt;https://github.com/liigo/rust/tree/xp&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/rust-lang/rust/issues/12842&#34;&gt;https://github.com/rust-lang/rust/issues/12842&lt;/a&gt;，要是再算上被拒的Issues，那就多的数不清了。我显然不可能因为某些个别的事件，影响到我对某个事物的综合评估（参见前文）。那本文是“故意抹黑”Go语言吗？我觉得不是，理由有二：1、这是作者的主观感受，2、这些感受是以许多客观事实为基础的。如果本文一一列出的那些现象，是不存在的，是虚构出来的，是凭空生成的，那么作者一定是“低级黑”。问题是，那些都是客观存在的事实。把事实说出来，怎么能叫“黑”呢？欢迎读者客观而详细的指正本文中的所有错误。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;CL被据而怀恨至今真的是没冤枉楼主, 希望下次抹黑Go能来点干货.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;当然Go语言也不是完美的, 作为Windows下的Go用户, 说下我比较希望的改进.&lt;/p&gt;
+
+&lt;p&gt;首先在下面的bug修复前，我并不十分关心Go的性能改进。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;修复 &lt;a href=&#34;https://github.com/golang/go/issues/11058&#34;&gt;Issue11058&lt;/a&gt;, 让 Go 可以生成 dll, 这样我就可以基本抛弃 C++ 了&lt;/li&gt;
+&lt;li&gt;修复 &lt;a href=&#34;https://github.com/golang/go/issues/9510&#34;&gt;Issue9510&lt;/a&gt;, 这样 cgo 才可以放心地静态链接 c++ 库&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上面2个bug是支持go和c库双向合作的关键(Linux和Darwin已经支持生成动态库). 然后就是 cgo 调用 c 函数的参数传递的性能能改善下.&lt;/p&gt;
+
+&lt;p&gt;在go1.5中, 新引入了 vendor 的试验性的特性, 因此go的包依赖管理算是基本解决.&lt;/p&gt;
+
+&lt;p&gt;长远看希望语言方面能有以下的特性:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;范型支持, 可以简陋些, 但是不要破坏go已有的风格&lt;/li&gt;
+&lt;li&gt;希望能有不支持嵌套的三元表达式的支持&lt;/li&gt;
+&lt;li&gt;大小写的导出规则对中文能友好一些&lt;/li&gt;
+&lt;li&gt;接口瘾式转换导致的一些坑(&lt;code&gt;error&lt;/code&gt;和&lt;code&gt;nil&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;官方的leveldb库和基于其封装的sql数据库&lt;/li&gt;
+&lt;li&gt;os 的文件系统做成接口, 提共自定义文件系统的挂载功能&lt;/li&gt;
+&lt;li&gt;image 包能增加 GrayA/GrayA32/RGB/RGB48 之类的类型支持&lt;/li&gt;
+&lt;li&gt;性能改进&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;可有可无的：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;GUI支持&lt;/li&gt;
+&lt;li&gt;IDE支持&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言中隐式接口的冲突问题</title>
+      <link>https://chai2010.cn/post/golang/go-safe-interface/</link>
+      <pubDate>Tue, 19 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-safe-interface/</guid>
+      
+        <description>&lt;p&gt;Go语言中采用的是隐式接口, 只要满足的接口的定义, 就可以当作接口使用.&lt;/p&gt;
+
+&lt;p&gt;比如内置的 &lt;code&gt;error&lt;/code&gt; 接口:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type error struct {
+	Error() string
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;隐式接口的好处有很多. 但我个人觉得最主要的一点就是不需要再去画祖宗八代的继承关系图了(松耦合).&lt;/p&gt;
+
+&lt;p&gt;但是隐式接口会带来冲突问题.&lt;/p&gt;
+
+&lt;p&gt;简单来说, 我也想定义一个自己的 &lt;code&gt;MyError&lt;/code&gt; 接口, 里面也有一个 &lt;code&gt;Error() string&lt;/code&gt; 方法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type MyError struct {
+	Error() string
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是我希望 &lt;code&gt;MyError&lt;/code&gt; 接口 和 &lt;code&gt;error&lt;/code&gt; 接口 是不同的类型 (不能相互转换).&lt;/p&gt;
+
+&lt;p&gt;当然, 在 Go语言中 &lt;code&gt;MyError&lt;/code&gt; 接口 和 &lt;code&gt;error&lt;/code&gt; 接口 是等价的, 禁止 相互转换 比较困难.&lt;/p&gt;
+
+&lt;p&gt;我们一般可以在 &lt;code&gt;MyError&lt;/code&gt; 接口 中增加一个唯一的空方法 来回避这个问题:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type MyError struct {
+	Error() string
+	AssertMyError()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;方法 &lt;code&gt;AssertMyError&lt;/code&gt; 只是为了区别 &lt;code&gt;error&lt;/code&gt; 接口, 没有其他用处.&lt;/p&gt;
+
+&lt;p&gt;这是 Protobuf 中 &lt;a href=&#34;http://godoc.org/github.com/golang/protobuf/proto#Message&#34;&gt;proto.Message&lt;/a&gt; 采用的方法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Message is implemented by generated protocol buffer messages.
+type Message interface {
+	Reset()
+	String() string
+	ProtoMessage()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成的每个 &lt;code&gt;Message&lt;/code&gt; 类型有个特殊的 &lt;code&gt;ProtoMessage&lt;/code&gt; 空方法, 特别对应 &lt;code&gt;proto.Message&lt;/code&gt; 接口.&lt;/p&gt;
+
+&lt;p&gt;当然, 如果有另一个接口刚好也有 &lt;code&gt;ProtoMessage&lt;/code&gt; 方法, 还是有冲突的危险.&lt;/p&gt;
+
+&lt;p&gt;极端的做法是随机生成一个 特别的 方法名, 比如用 UUID 做唯一名字.&lt;/p&gt;
+
+&lt;p&gt;但是, 公开的名字依然有被别人恶意覆盖的危险(实际中不大可能).&lt;/p&gt;
+
+&lt;p&gt;更严格的做法是将这个用于区别接口的方法名定义为私有的方法. 比如 &lt;a href=&#34;http://godoc.org/testing#TB&#34;&gt;&lt;code&gt;testing.TB&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type TB interface {
+	Error(args ...interface{})
+	Errorf(format string, args ...interface{})
+	Fail()
+	FailNow()
+	Failed() bool
+	Fatal(args ...interface{})
+	Fatalf(format string, args ...interface{})
+	Log(args ...interface{})
+	Logf(format string, args ...interface{})
+	Skip(args ...interface{})
+	SkipNow()
+	Skipf(format string, args ...interface{})
+	Skipped() bool
+
+	// A private method to prevent users implementing the
+	// interface and so future additions to it will not
+	// violate Go 1 compatibility.
+	private()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;private&lt;/code&gt; 不仅仅是私有方法, 而且必须是 &lt;code&gt;testing&lt;/code&gt; 包内部定义的 &lt;code&gt;private()&lt;/code&gt; 方法的类型才能匹配这个接口!&lt;/p&gt;
+
+&lt;p&gt;因此 &lt;a href=&#34;http://godoc.org/testing#TB&#34;&gt;&lt;code&gt;testing.TB&lt;/code&gt;&lt;/a&gt; 接口是全局唯一的, 不会出现等价可互换的接口.&lt;/p&gt;
+
+&lt;p&gt;现在 &lt;a href=&#34;http://godoc.org/testing#TB&#34;&gt;&lt;code&gt;testing.TB&lt;/code&gt;&lt;/a&gt; 保证了接口的唯一性, 但是如何在外部实现 这个接口呢(&lt;code&gt;private()&lt;/code&gt;是&lt;code&gt;testing&lt;/code&gt; 包内部定义的)?&lt;/p&gt;
+
+&lt;p&gt;我们可以从 &lt;a href=&#34;http://godoc.org/testing#TB&#34;&gt;&lt;code&gt;testing.TB&lt;/code&gt;&lt;/a&gt; 接口继承这个 &lt;code&gt;private()&lt;/code&gt; 方法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+	&amp;quot;fmt&amp;quot;
+	&amp;quot;testing&amp;quot;
+)
+
+type TB struct {
+	testing.TB
+}
+
+func (p *TB) Fatal(args ...interface{}) {
+	fmt.Println(&amp;quot;TB.Fatal disabled!&amp;quot;)
+}
+
+func main() {
+	var tb testing.TB = new(TB)
+	tb.Fatal(&amp;quot;Hello, playground&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;play 地址: &lt;a href=&#34;http://play.golang.org/p/tFB0fLwq9q&#34;&gt;http://play.golang.org/p/tFB0fLwq9q&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;上面的代码模拟了显式接口, 而且 &lt;a href=&#34;http://godoc.org/testing#TB&#34;&gt;&lt;code&gt;testing.TB&lt;/code&gt;&lt;/a&gt; 接口永远不用担心有冲突的危险.&lt;/p&gt;
+
+&lt;p&gt;当然, 上面的代码有过度使用技巧的问题, 这和Go语言简单的编程哲学是矛盾的.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言中不同类型切片之间的相互转换</title>
+      <link>https://chai2010.cn/post/golang/go-xslice-to-yslice/</link>
+      <pubDate>Tue, 20 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-xslice-to-yslice/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;将-t-切片转换为-byte&#34;&gt;将 &lt;code&gt;[]T&lt;/code&gt; 切片转换为 &lt;code&gt;[]byte&lt;/code&gt;&lt;/h1&gt;
+
+&lt;p&gt;类似C语言中将其他类型的数组转换为&lt;code&gt;char&lt;/code&gt;数组：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func ByteSlice(slice interface{}) (data []byte) {
+    sv := reflect.ValueOf(slice)
+    if sv.Kind() != reflect.Slice {
+        panic(fmt.Sprintf(&amp;quot;ByteSlice called with non-slice value of type %T&amp;quot;, slice))
+    }
+    h := (*reflect.SliceHeader)((unsafe.Pointer(&amp;amp;data)))
+    h.Cap = sv.Cap() * int(sv.Type().Elem().Size())
+    h.Len = sv.Len() * int(sv.Type().Elem().Size())
+    h.Data = sv.Pointer()
+    return
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;基于该函数，我们可以方便调用 &lt;code&gt;[]byte&lt;/code&gt; 类型参数的函数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func SaveImageData(name string, data []color.RGBA) error {
+    return ioutil.WriteFile(name, ByteSlice(data), 0666)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;将-x-转换为-y-切片&#34;&gt;将 &lt;code&gt;[]X&lt;/code&gt; 转换为 &lt;code&gt;[]Y&lt;/code&gt; 切片&lt;/h1&gt;
+
+&lt;p&gt;类似C语言中将不同类型的数组转之间的相互转换：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func Slice(slice interface{}, newSliceType reflect.Type) interface{} {
+    sv := reflect.ValueOf(slice)
+    if sv.Kind() != reflect.Slice {
+        panic(fmt.Sprintf(&amp;quot;Slice called with non-slice value of type %T&amp;quot;, slice))
+    }
+    if newSliceType.Kind() != reflect.Slice {
+        panic(fmt.Sprintf(&amp;quot;Slice called with non-slice type of type %T&amp;quot;, newSliceType))
+    }
+    newSlice := reflect.New(newSliceType)
+    hdr := (*reflect.SliceHeader)(unsafe.Pointer(newSlice.Pointer()))
+    hdr.Cap = sv.Cap() * int(sv.Type().Elem().Size()) / int(newSliceType.Elem().Size())
+    hdr.Len = sv.Len() * int(sv.Type().Elem().Size()) / int(newSliceType.Elem().Size())
+    hdr.Data = uintptr(sv.Pointer())
+    return newSlice.Elem().Interface()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;转换时需要传入一个期望的目标切片类型，以 &lt;code&gt;interface{}&lt;/code&gt; 形式返回转换后的切片。&lt;/p&gt;
+
+&lt;p&gt;比如，在图像处理中，转换 RGB 格式为 BGR 格式：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type RGB struct {
+    R, G, B uint8
+}
+type BGR struct {
+    B, G, R uint8
+}
+
+func RGB2BGR(data []RGB) []BGR {
+    d := Slice(data, reflect.TypeOf([]BGR(nil)))
+    return d.([]BGR)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;类似于C语言中，将&lt;code&gt;RGB&lt;/code&gt;指针转换为&lt;code&gt;BGR&lt;/code&gt;指针的思路。 数据的底层结构并没有变化。&lt;/p&gt;
+
+&lt;h1 id=&#34;注意事项&#34;&gt;注意事项&lt;/h1&gt;
+
+&lt;p&gt;该转换操作有一定的风险，用户需要自己保证安全。主要涉及以下几种类型：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;当结构体中含有指针时，转换会导致垃圾回收的问题。&lt;/li&gt;
+&lt;li&gt;如果是 &lt;code&gt;[]byte&lt;/code&gt; 转 &lt;code&gt;[]T&lt;/code&gt; 可能会导致起始地址未对齐的问题 （&lt;code&gt;[]byte&lt;/code&gt; 有可能从奇数位置切片）。&lt;/li&gt;
+&lt;li&gt;该转换操作可能依赖当前系统，不同类型的处理器之间有差异。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;该转换操作的优势是性能和类似&lt;code&gt;void*&lt;/code&gt;的泛型，与&lt;code&gt;cgo&lt;/code&gt;接口配合使用会更加理想。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言的三元表达式</title>
+      <link>https://chai2010.cn/post/golang/go-tenary/</link>
+      <pubDate>Tue, 25 Feb 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-tenary/</guid>
+      
+        <description>&lt;p&gt;三元表达式的介绍在这里:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/%3F:&#34;&gt;http://en.wikipedia.org/wiki/%3F:&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/IIf&#34;&gt;http://en.wikipedia.org/wiki/IIf&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Go语言明确不支持三元表达式，这里是相关的讨论：
+&lt;a href=&#34;https://groups.google.com/d/msg/golang-nuts/dbyqx_LGUxM/tLFFSXSfOdQJ&#34;&gt;https://groups.google.com/d/msg/golang-nuts/dbyqx_LGUxM/tLFFSXSfOdQJ&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;官方FAQ的说明在这里：
+&lt;a href=&#34;http://golang.org/doc/faq#Does_Go_have_a_ternary_form&#34;&gt;http://golang.org/doc/faq#Does_Go_have_a_ternary_form&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;官方FAQ推荐的做法是用 &lt;code&gt;if&lt;/code&gt; 代替：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if expr {
+    n = trueVal
+} else {
+    n = falseVal
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不过用 &lt;code&gt;if&lt;/code&gt; 的问题是变量 &lt;code&gt;n&lt;/code&gt; 有作用域问题.
+我们需要在 &lt;code&gt;if&lt;/code&gt; 之前先定义变量 &lt;code&gt;n&lt;/code&gt;，这样才可以在 &lt;code&gt;if&lt;/code&gt; 语句之后使用变量 &lt;code&gt;n&lt;/code&gt;。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var n int
+if expr {
+    n = trueVal
+} else {
+    n = falseVal
+}
+println(n)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本来一个简单的 &lt;code&gt;n := expr? trueVal: falseVal&lt;/code&gt; 就能够表达的问题，变的复杂了很多。
+这和Go所追求的简单思路是有冲突的。&lt;/p&gt;
+
+&lt;p&gt;类似的有 &lt;code&gt;max&lt;/code&gt;/&lt;code&gt;min&lt;/code&gt; 等函数。因为这类函数使用频度比较高，在很多pkg的内部都定义了私有的实现。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func max(a, b int) int {
+    if a &amp;lt; b {
+        return b
+    }
+    return a
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;熟悉Go语言的用户应该可以发现，这个 &lt;code&gt;max&lt;/code&gt; 只支持 &lt;code&gt;int&lt;/code&gt; 类型。
+对于支持泛型的C++语言来说，&lt;code&gt;max&lt;/code&gt; 一般被实现为一个模板函数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;template &amp;lt;class T&amp;gt;
+const T&amp;amp; max (const T&amp;amp; a, const T&amp;amp; b) {
+    return (a&amp;lt;b)?b:a;     // or: return comp(a,b)?b:a; for version (2)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在C++版本中，不仅用到的泛型&lt;code&gt;T&lt;/code&gt;，还依赖 &lt;code&gt;a&amp;lt;b&lt;/code&gt; 的运算符重载特性。
+在C语言中，虽然没有泛型和运算符重载，但是三元表达式也具备全部的特性（因为表达式天生就是支持泛型的）。&lt;/p&gt;
+
+&lt;p&gt;而这些都是Go语言中缺少的特性。
+不过在Go语言中可以模拟一个更普通的函数(&lt;code&gt;If&lt;/code&gt; 的首字母大写，是函数名，不是 &lt;code&gt;if&lt;/code&gt; 关键字)：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func If(condition bool, trueVal, falseVal interface{}) interface{} {
+    if condition {
+        return trueVal
+    }
+    return falseVal
+}
+
+a, b := 2, 3
+max := If(a &amp;gt; b, a, b).(int)
+println(max)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有几个关键点：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Go不支持运算符重载，因此需要先将 &lt;code&gt;a&amp;lt;b&lt;/code&gt; 在函数外转换为 &lt;code&gt;bool&lt;/code&gt; 条件&lt;/li&gt;
+&lt;li&gt;Go不支持泛型，只能用 &lt;code&gt;interface{}&lt;/code&gt; 模拟&lt;/li&gt;
+&lt;li&gt;返回的类型安全需要用户自己保证，&lt;code&gt;.(type)&lt;/code&gt; 的类型必须匹配&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;interface{}&lt;/code&gt; 是运行时泛型，性能没有编译时泛型高&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;由此可见，&lt;code&gt;?:&lt;/code&gt; 不仅仅是一个简单的三元表达式。其实它更像一个内置的泛型版的函数（因为表达式天生就是支持泛型的）。&lt;/p&gt;
+
+&lt;p&gt;期望未来的Go版本中，能完善对 &lt;code&gt;?:&lt;/code&gt; 三元表达式 和 编译时的泛型 的支持。&lt;/p&gt;
+
+&lt;p&gt;补充：
+星星 同学的提示：可能会导致深入嵌套的滥用： &lt;code&gt;c?d?e?0:1:2:3&lt;/code&gt; 。
+因为三元表达式是一个表达式，必然是允许嵌套的。&lt;/p&gt;
+
+&lt;p&gt;不过我觉得嵌套不是问题的本质，函数也能导致嵌套的滥用。
+但是不能因为滥用的行为来排斥有存在价值的语法（比如三元表达式）。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言的国际化支持(资源文件翻译)</title>
+      <link>https://chai2010.cn/post/golang/go-gettext-2014/</link>
+      <pubDate>Mon, 27 Jan 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-gettext-2014/</guid>
+      
+        <description>
+
+&lt;p&gt;在之前的 &lt;a href=&#34;http://my.oschina.net/chai2010/blog/190914&#34;&gt;Go语言的国际化支持(基于gettext-go)&lt;/a&gt; 中, 讲到了如何翻译源代码中的字符串.&lt;/p&gt;
+
+&lt;p&gt;项目地址在: &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;http://code.google.com/p/gettext-go&lt;/a&gt;. 文档在 &lt;a href=&#34;http://godoc.org/code.google.com/p/gettext-go/gettext&#34;&gt;godoc.org&lt;/a&gt; 或 &lt;a href=&#34;http://gowalker.org/code.google.com/p/gettext-go/gettext&#34;&gt;gowalker.org&lt;/a&gt; .&lt;/p&gt;
+
+&lt;p&gt;根据评论的反馈(@羊半仙), 之前版本的缺少对资源文件的支持.&lt;/p&gt;
+
+&lt;p&gt;最近对 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 做了一些改进, 主要涉及以下几点:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;支持资源文件的翻译&lt;/li&gt;
+&lt;li&gt;支持zip格式的翻译文件&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;资源文件的翻译&#34;&gt;资源文件的翻译&lt;/h2&gt;
+
+&lt;p&gt;资源文件的翻译比字符串更简单(使用&lt;code&gt;gettext.Getdata&lt;/code&gt;函数):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import (
+    &amp;quot;code.google.com/p/gettext-go/gettext&amp;quot;
+)
+
+func main() {
+    gettext.SetLocale(&amp;quot;zh_CN&amp;quot;)
+    gettext.Textdomain(&amp;quot;hello&amp;quot;)
+
+    // translate resource
+    fmt.Println(string(gettext.Getdata(&amp;quot;poems.txt&amp;quot;)))
+    // Output: ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出的内容是 李白 诗歌 &lt;a href=&#34;http://code.google.com/p/gettext-go/source/browse/examples/local/zh_CN/LC_RESOURCE/hello/poems.txt&#34;&gt;&amp;lt;月下独酌&amp;gt;&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;简体中文版: &lt;a href=&#34;http://code.google.com/p/gettext-go/source/browse/examples/local/zh_CN/LC_RESOURCE/hello/poems.txt&#34;&gt;&amp;lt;月下独酌&amp;gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;繁体中文版: &lt;a href=&#34;http://code.google.com/p/gettext-go/source/browse/examples/local/zh_TW/LC_RESOURCE/hello/poems.txt&#34;&gt;&amp;lt;月下独酌&amp;gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;英文翻译版: &lt;a href=&#34;http://code.google.com/p/gettext-go/source/browse/examples/local/default/LC_RESOURCE/hello/poems.txt&#34;&gt;&amp;lt;月下独酌&amp;gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;zip格式的翻译文件支持&#34;&gt;zip格式的翻译文件支持&lt;/h2&gt;
+
+&lt;p&gt;可以将翻译文件目录打包为zip格式. 如果绑定的翻译文件不是一个目录, 而是一个文件, 则会当作zip文件处理.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import (
+    &amp;quot;code.google.com/p/gettext-go/gettext&amp;quot;
+)
+
+func main() {
+    gettext.SetLocale(&amp;quot;zh_CN&amp;quot;)
+    gettext.Textdomain(&amp;quot;hello&amp;quot;)
+
+    gettext.BindTextdomain(&amp;quot;hello&amp;quot;, &amp;quot;local.zip&amp;quot;, nil)
+
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Zip文件在这里: &lt;a href=&#34;http://gettext-go.googlecode.com/hg/examples/local.zip&#34;&gt;http://gettext-go.googlecode.com/hg/examples/local.zip&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;如果希望将zip文件嵌入到程序中, 可以先用工具将zip文件转换为&lt;code&gt;[]byte&lt;/code&gt;格式的数据, 然后绑定到翻译域中:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import (
+    &amp;quot;code.google.com/p/gettext-go/gettext&amp;quot;
+)
+
+// 根据 local.zip 生成
+var local_zip_data = []byte{
+    0x00, 0x01, 0x02, 0x03, ...
+}
+
+func main() {
+    gettext.SetLocale(&amp;quot;zh_CN&amp;quot;)
+    gettext.Textdomain(&amp;quot;hello&amp;quot;)
+
+    gettext.BindTextdomain(&amp;quot;hello&amp;quot;, &amp;quot;embeded_local&amp;quot;, local_zip_data)
+
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果 &lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 的第三个参数不为 &lt;code&gt;nil&lt;/code&gt;, 则会将该参数传入的数据作为zip数据处理.&lt;/p&gt;
+
+&lt;h2 id=&#34;翻译目录的结构&#34;&gt;翻译目录的结构&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 包的翻译文件涉及以下几个概念:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;local&lt;/strong&gt;: 本地采用的语言. 默认值可以由&lt;code&gt;$(LC_MESSAGES)&lt;/code&gt;或&lt;code&gt;$(LANG)&lt;/code&gt;环境变量指定.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;domain&lt;/strong&gt; : 翻译的名字空间, 类似文本编辑器中的配色风格的概念,  &lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 的第一个参数.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;domain_path&lt;/strong&gt;: &lt;strong&gt;domain&lt;/strong&gt; 对应的目录路径, 也可能是zip文件路径或zip数据名,  &lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 的第二个参数.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;domain_data&lt;/strong&gt;: &lt;strong&gt;domain&lt;/strong&gt; 对应的zip数据(可以为空), &lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 的第二个参数.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;不管是zip还是本地目录, 内部的目录组织结构是一致的:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Root: &amp;quot;path&amp;quot; or &amp;quot;file.zip/zipBaseName&amp;quot;
+ +-default                 # local: $(LC_MESSAGES) or $(LANG) or &amp;quot;default&amp;quot;
+ |  +-LC_MESSAGES            # just for `gettext.Gettext`
+ |  |   +-hello.mo             # $(Root)/$(local)/LC_MESSAGES/$(domain).mo
+ |  |   \-hello.po             # $(Root)/$(local)/LC_MESSAGES/$(domain).mo
+ |  |
+ |  \-LC_RESOURCE            # just for `gettext.Getdata`
+ |      +-hello                # domain map a dir in resource translate
+ |         +-favicon.ico       # $(Root)/$(local)/LC_RESOURCE/$(domain)/$(filename)
+ |         \-poems.txt
+ |
+ \-zh_CN                   # simple chinese translate
+    +-LC_MESSAGES
+    |   +-hello.mo             # try &amp;quot;$(domain).mo&amp;quot; first
+    |   \-hello.po             # try &amp;quot;$(domain).po&amp;quot; second
+    |
+    \-LC_RESOURCE
+        +-hello
+           +-favicon.ico       # try &amp;quot;$(local)/$(domain)/file&amp;quot; first
+           \-poems.txt         # try &amp;quot;default/$(domain)/file&amp;quot; second
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;$(Root)/$(local)/LC_MESSAGES/&lt;/code&gt; 对应 &lt;code&gt;gettext.Gettext&lt;/code&gt; 的翻译字符串, &lt;code&gt;$(Root)/$(local)/LC_RESOURCE/$(domain)/?&lt;/code&gt; 对应 &lt;code&gt;gettext.Getdata&lt;/code&gt; 要翻译的资源文件.&lt;/p&gt;
+
+&lt;p&gt;翻译字符串时, 会先尝试&lt;code&gt;mo&lt;/code&gt;格式的二进制翻译文件, 如果失败则会继续尝试&lt;code&gt;po&lt;/code&gt;格式的原始翻译文件, 如果依然失败则返回原字符串.&lt;/p&gt;
+
+&lt;p&gt;翻译资源文件时, 如果资源文件缺失会继续尝试加载Local为&lt;code&gt;default&lt;/code&gt;的资源文件, 如果依然失败则返回&lt;code&gt;nil&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;展望&#34;&gt;展望&lt;/h2&gt;
+
+&lt;p&gt;目前 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 的运行时已经初步完备, 可以支持字符串和资源文件的翻译. 不过 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 的辅助工具依然不足, 特别是缺少可以从Go程序中自动提取字符串的&lt;code&gt;xgettext&lt;/code&gt;工具. 下一步会考虑实现一个针对Go语言的&lt;code&gt;xgettext&lt;/code&gt;工具.&lt;/p&gt;
+
+&lt;p&gt;在Go语言中还有一类比较特殊的字符串资源: 用于godoc显示的文档信息(类似的还有blog文章等). 如果&lt;code&gt;xgettext&lt;/code&gt;工具能够支持Go语言文档的信息的提取和翻译后文档的合并, 那么文档的翻译将会方便很多.&lt;/p&gt;
+
+&lt;p&gt;如果有感兴趣的同学可以一起完善.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Go语言的RPC介绍(含Protobuf-RPC)</title>
+      <link>https://chai2010.cn/post/golang/go-protorpc-2014/</link>
+      <pubDate>Wed, 08 Jan 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-protorpc-2014/</guid>
+      
+        <description>
+
+&lt;p&gt;本文在 &lt;a href=&#34;http://blog.go-china.org/&#34;&gt;Golang中国博客&lt;/a&gt; 的地址: &lt;a href=&#34;http://blog.go-china.org/09-protorpc&#34;&gt;http://blog.go-china.org/09-protorpc&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;标准库的rpc&#34;&gt;标准库的RPC&lt;/h2&gt;
+
+&lt;p&gt;RPC是远程调用的简称, 简单的说就是要像调用本地函数一样调用服务器的函数.&lt;/p&gt;
+
+&lt;p&gt;Go语言的标准库已经提供了RPC框架和不同的RPC实现.&lt;/p&gt;
+
+&lt;p&gt;下面是一个服务器的例子:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type Echo int
+
+func (t *Echo) Hi(args string, reply *string) error {
+    *reply = &amp;quot;echo:&amp;quot; + args
+    return nil
+}
+
+func main() {
+    rpc.Register(new(Echo))
+    rpc.HandleHTTP()
+    l, e := net.Listen(&amp;quot;tcp&amp;quot;, &amp;quot;:1234&amp;quot;)
+    if e != nil {
+        log.Fatal(&amp;quot;listen error:&amp;quot;, e)
+    }
+    http.Serve(l, nil)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;rpc.Register&lt;/code&gt; 用于注册RPC服务, 默认的名字是对象的类型名字(这里是&lt;code&gt;Echo&lt;/code&gt;). 如果需要指定特殊的名字, 可以用 &lt;code&gt;rpc.RegisterName&lt;/code&gt; 进行注册.&lt;/p&gt;
+
+&lt;p&gt;被注册对象的类型所有满足以下规则的方法会被导出到RPC服务接口:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func (t *T) MethodName(argType T1, replyType *T2) error
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;被注册对应至少要有一个方法满足这个特征, 否则可能会注册失败.&lt;/p&gt;
+
+&lt;p&gt;然后 &lt;code&gt;rpc.HandleHTTP&lt;/code&gt; 用于指定 RPC 的传输协议, 这里是采用 http 协议作为RPC调用的载体. 用户也可以用&lt;code&gt;rpc.ServeConn&lt;/code&gt;接口, 定制自己的传输协议.&lt;/p&gt;
+
+&lt;p&gt;客户端可以这样调用&lt;code&gt;Echo.Hi&lt;/code&gt;接口:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    client, err := rpc.DialHTTP(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1234&amp;quot;)
+    if err != nil {
+        log.Fatal(&amp;quot;dialing:&amp;quot;, err)
+    }
+
+    var args = &amp;quot;hello rpc&amp;quot;
+    var reply string
+    err = client.Call(&amp;quot;Echo.Hi&amp;quot;, args, &amp;amp;reply)
+    if err != nil {
+        log.Fatal(&amp;quot;arith error:&amp;quot;, err)
+    }
+    fmt.Printf(&amp;quot;Arith: %d*%d=%d\n&amp;quot;, args.A, args.B, reply)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;客户端先用&lt;code&gt;rpc.DialHTTP&lt;/code&gt;和RPC服务器进行一个链接(协议必须匹配).&lt;/p&gt;
+
+&lt;p&gt;然后通过返回的&lt;code&gt;client&lt;/code&gt;对象进行远程函数调用. 函数的名字是由&lt;code&gt;client.Call&lt;/code&gt; 第一个参数指定(是一个字符串).&lt;/p&gt;
+
+&lt;p&gt;基于HTTP的RPC调用一般是在调试时使用, 默认可以通过浏览&lt;code&gt;&amp;quot;127.0.0.1:1234/debug/rpc&amp;quot;&lt;/code&gt;页面查看RPC的统计信息.&lt;/p&gt;
+
+&lt;h2 id=&#34;基于-json-的-rpc-调用&#34;&gt;基于 JSON 的 RPC 调用&lt;/h2&gt;
+
+&lt;p&gt;在上面的RPC例子中, 我们采用了默认的HTTP协议作为RPC调用的传输载体.&lt;/p&gt;
+
+&lt;p&gt;因为内置&lt;code&gt;net/rpc&lt;/code&gt;包接口设计的缺陷, 我们无法使用&lt;code&gt;jsonrpc&lt;/code&gt;等定制的编码作为&lt;code&gt;rpc.DialHTTP&lt;/code&gt;的底层协议. 如果需要让&lt;code&gt;jsonrpc&lt;/code&gt;支持&lt;code&gt;rpc.DialHTTP&lt;/code&gt;函数, 需要调整rpc的接口.&lt;/p&gt;
+
+&lt;p&gt;以前有个&lt;a href=&#34;https://code.google.com/p/go/issues/detail?id=2738&#34;&gt;Issue2738&lt;/a&gt;是针对这个问题. 我曾提交的 &lt;a href=&#34;https://codereview.appspot.com/10704046/&#34;&gt;CL10704046&lt;/a&gt; 补丁用于修复这个问题. 不过因为涉及到增加rpc的接口, 官方没有接受(因为自己重写一个&lt;code&gt;DialHTTP&lt;/code&gt;会更简单).&lt;/p&gt;
+
+&lt;p&gt;除了传输协议, 还有可以指定一个RPC编码协议, 用于编码/节目RPC调用的函数参数和返回值. RPC调用不指定编码协议时, 默认采用Go语言特有的&lt;code&gt;gob&lt;/code&gt;编码协议.&lt;/p&gt;
+
+&lt;p&gt;因为, 其他语言一般都不支持Go语言的&lt;code&gt;gob&lt;/code&gt;协议, 因此如果需要跨语言RPC调用就需要
+采用通用的编码协议.&lt;/p&gt;
+
+&lt;p&gt;Go的标准库还提供了一个&lt;code&gt;&amp;quot;net/rpc/jsonrpc&amp;quot;&lt;/code&gt;包, 用于提供基于JSON编码的RPC支持.&lt;/p&gt;
+
+&lt;p&gt;服务器部分只需要用&lt;code&gt;rpc.ServeCodec&lt;/code&gt;指定json编码协议就可以了:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    lis, err := net.Listen(&amp;quot;tcp&amp;quot;, &amp;quot;:1234&amp;quot;)
+    if err != nil {
+        return err
+    }
+    defer lis.Close()
+
+    srv := rpc.NewServer()
+    if err := srv.RegisterName(&amp;quot;Echo&amp;quot;, new(Echo)); err != nil {
+        return err
+    }
+
+    for {
+        conn, err := lis.Accept()
+        if err != nil {
+            log.Fatalf(&amp;quot;lis.Accept(): %v\n&amp;quot;, err)
+        }
+        go srv.ServeCodec(jsonrpc.NewServerCodec(conn))
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;客户端部分值需要用 &lt;code&gt;jsonrpc.Dial&lt;/code&gt; 代替 &lt;code&gt;rpc.Dial&lt;/code&gt; 就可以了:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    client, err := jsonrpc.DialHTTP(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1234&amp;quot;)
+    if err != nil {
+        log.Fatal(&amp;quot;dialing:&amp;quot;, err)
+    }
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果需要在其他语言中使用&lt;code&gt;jsonrpc&lt;/code&gt;和Go语言进行通讯, 需要封装一个和&lt;code&gt;jsonrpc&lt;/code&gt;
+匹配的库.&lt;/p&gt;
+
+&lt;p&gt;关于&lt;code&gt;jsonrpc&lt;/code&gt;的实现细节这里就不展开讲了, 感兴趣的话可以参考这篇文章: &lt;a href=&#34;http://blog.golang.org/json-rpc-tale-of-interfaces&#34;&gt;JSON-RPC: a tale of interfaces&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;基于-protobuf-的-rpc-调用&#34;&gt;基于 Protobuf 的 RPC 调用&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://code.google.com/p/protobuf/;&#34;&gt;Protobuf&lt;/a&gt; 是 Google 公司开发的编码协议. 它的优势是编码后的数据体积比较小(并不是压缩算法), 比较适合用于命令的传输编码.&lt;/p&gt;
+
+&lt;p&gt;Protobuf 官方团队提供 Java/C++/Python 几个语言的支持, Go语言的版本由Go团队提供支持, 其他语言由第三方支持.&lt;/p&gt;
+
+&lt;p&gt;Protobuf 的语言规范中可以定义RPC接口. 但是在Go语言和C++版本的Protobuf中都没有生成RPC的实现.&lt;/p&gt;
+
+&lt;p&gt;不过作者在 Go语言版本的Protobuf基础上开发了 RPC 的实现 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt;, 同时提供的 &lt;code&gt;protoc-gen-go&lt;/code&gt;命令可以生成相应的RPC代码. 项目地址: &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;https://code.google.com/p/protorpc/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;该实现支持Go语言和C++语言, 在Protobuf官方wiki的第三方RPC实现列表中有介绍: &lt;a href=&#34;https://code.google.com/p/protobuf/wiki/ThirdPartyAddOns#RPC_Implementations&#34;&gt;https://code.google.com/p/protobuf/wiki/ThirdPartyAddOns#RPC_Implementations&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;要使用 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt;, 需要先在proto文件定义接口(&lt;code&gt;arith.pb/arith.proto&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package arith;
+
+// go use cc_generic_services option
+option cc_generic_services = true;
+
+message ArithRequest {
+    optional int32 a = 1;
+    optional int32 b = 2;
+}
+
+message ArithResponse {
+    optional int32 val = 1;
+    optional int32 quo = 2;
+    optional int32 rem = 3;
+}
+
+service ArithService {
+    rpc multiply (ArithRequest) returns (ArithResponse);
+    rpc divide (ArithRequest) returns (ArithResponse);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt;使用&lt;code&gt;cc_generic_services&lt;/code&gt;选择控制是否输出RPC代码. 因此, 需要设置&lt;code&gt;cc_generic_services&lt;/code&gt;为&lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;然后下载 &lt;a href=&#34;https://code.google.com/p/protobuf/downloads/list&#34;&gt;protoc-2.5.0-win32.zip&lt;/a&gt;, 解压后可以得到一个 &lt;code&gt;protoc.exe&lt;/code&gt; 的编译命令.&lt;/p&gt;
+
+&lt;p&gt;然后使用下面的命令获取 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 和对应的 &lt;code&gt;protoc-gen-go&lt;/code&gt; 插件.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go get code.google.com/p/protorpc
+go get code.google.com/p/protorpc/protoc-gen-go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要确保 &lt;code&gt;protoc.exe&lt;/code&gt; 和 &lt;code&gt;protoc-gen-go.exe&lt;/code&gt; 都在 &lt;code&gt;$PATH&lt;/code&gt; 中. 然后运行以下命令将前面的接口文件转换为Go代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd arith.pb &amp;amp;&amp;amp; protoc --go_out=. arith.proto
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;新生成的文件为&lt;code&gt;arith.pb/arith.pb.go&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;下面是基于 Protobuf-RPC 的服务器:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+    &amp;quot;errors&amp;quot;
+
+    &amp;quot;code.google.com/p/goprotobuf/proto&amp;quot;
+
+    &amp;quot;./arith.pb&amp;quot;
+)
+
+type Arith int
+
+func (t *Arith) Multiply(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    reply.Val = proto.Int32(args.GetA() * args.GetB())
+    return nil
+}
+
+func (t *Arith) Divide(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    if args.GetB() == 0 {
+        return errors.New(&amp;quot;divide by zero&amp;quot;)
+    }
+    reply.Quo = proto.Int32(args.GetA() / args.GetB())
+    reply.Rem = proto.Int32(args.GetA() % args.GetB())
+    return nil
+}
+
+func main() {
+    arith.ListenAndServeArithService(&amp;quot;tcp&amp;quot;, &amp;quot;:1984&amp;quot;, new(Arith))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中导入的 &lt;code&gt;&amp;quot;./arith.pb&amp;quot;&lt;/code&gt; 的名字为 &lt;code&gt;arith&lt;/code&gt;, 在 &lt;code&gt;arith.pb/arith.proto&lt;/code&gt; 文件中定义(这2个可能不同名, 导入时要小心).&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;arith.ArithRequest&lt;/code&gt;和&lt;code&gt;arith.ArithResponse&lt;/code&gt;是RPC接口的输入和输出参数, 也是在在 &lt;code&gt;arith.pb/arith.proto&lt;/code&gt; 文件中定义的.&lt;/p&gt;
+
+&lt;p&gt;同时生成的还有一个&lt;code&gt;arith.ListenAndServeArithService&lt;/code&gt;函数, 用于启动RPC服务. 该函数的第三个参数是RPC的服务对象, 必须要满足 &lt;code&gt;arith.EchoService&lt;/code&gt; 接口的定义.&lt;/p&gt;
+
+&lt;p&gt;客户端的使用也很简单, 只要一个 &lt;code&gt;arith.DialArithService&lt;/code&gt; 就可以链接了:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;stub, client, err := arith.DialArithService(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1984&amp;quot;)
+if err != nil {
+    log.Fatal(`arith.DialArithService(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1984&amp;quot;):`, err)
+}
+defer client.Close()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;arith.DialArithService&lt;/code&gt; 返回了一个 &lt;code&gt;stub&lt;/code&gt; 对象, 该对象已经绑定了RPC的各种方法, 可以直接调用(不需要用字符串指定方法名字):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var args ArithRequest
+var reply ArithResponse
+
+args.A = proto.Int32(7)
+args.B = proto.Int32(8)
+if err = stub.Multiply(&amp;amp;args, &amp;amp;reply); err != nil {
+    log.Fatal(&amp;quot;arith error:&amp;quot;, err)
+}
+fmt.Printf(&amp;quot;Arith: %d*%d=%d&amp;quot;, args.GetA(), args.GetB(), reply.GetVal())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;相比标准的RPC的库, &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 由以下几个优点:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;采用标准的Protobuf协议, 便于和其他语言交互&lt;/li&gt;
+&lt;li&gt;自带的 &lt;code&gt;protoc-gen-go&lt;/code&gt; 插件可以生成RPC的代码, 简化使用&lt;/li&gt;
+&lt;li&gt;服务器注册和调用客户端都是具体类型而不是字符串和&lt;code&gt;interface{}&lt;/code&gt;, 这样可以由编译器保证安全&lt;/li&gt;
+&lt;li&gt;底层采用了&lt;code&gt;snappy&lt;/code&gt;压缩传输的数据, 提高效率&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;不足之处是使用流程比标准RPC要繁复(需要将proto转换为Go代码).&lt;/p&gt;
+
+&lt;h2 id=&#34;c-调用-go-提供的-protobuf-rpc-服务&#34;&gt;C++ 调用 Go 提供的 Protobuf-RPC 服务&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 同时也提供了 C++ 语言的实现.&lt;/p&gt;
+
+&lt;p&gt;C++版本的安装如下:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;hg clone https://code.google.com/p/protorpc.cxx/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cd protorpc.cxx&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;build with cmake&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;C++ 版本 的 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 对 &lt;code&gt;protoc.exe&lt;/code&gt; 扩展了一个
+&lt;code&gt;--cxx_out&lt;/code&gt; 选项, 用于生成RPC的代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;${protorpc_root}/protobuf/bin/protoc --cxx_out=. arith.proto
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;注:&lt;code&gt;--cxx_out&lt;/code&gt; 选项生成的代码除了RPC支持外, 还有xml的序列化和反序列化支持.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;下面是 C++ 的客户端链接 Go 语言版本的 服务器:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;quot;arith.pb.h&amp;quot;
+
+#include &amp;lt;google/protobuf/rpc/rpc_server.h&amp;gt;
+#include &amp;lt;google/protobuf/rpc/rpc_client.h&amp;gt;
+
+int main() {
+  ::google::protobuf::rpc::Client client(&amp;quot;127.0.0.1&amp;quot;, 1234);
+
+  service::ArithService::Stub arithStub(&amp;amp;client);
+
+  ::service::ArithRequest arithArgs;
+  ::service::ArithResponse arithReply;
+  ::google::protobuf::rpc::Error err;
+
+  // EchoService.mul
+  arithArgs.set_a(3);
+  arithArgs.set_b(4);
+  err = arithStub.multiply(&amp;amp;arithArgs, &amp;amp;arithReply);
+  if(!err.IsNil()) {
+    fprintf(stderr, &amp;quot;arithStub.multiply: %s\n&amp;quot;, err.String().c_str());
+    return -1;
+  }
+  if(arithReply.c() != 12) {
+    fprintf(stderr, &amp;quot;arithStub.multiply: expected = %d, got = %d\n&amp;quot;, 12, arithReply.c());
+    return -1;
+  }
+
+  printf(&amp;quot;Done.\n&amp;quot;);
+  return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;详细的使用说明请参考: &lt;a href=&#34;https://code.google.com/p/protorpc/source/browse/README.md?repo=cxx&#34;&gt;README.md&lt;/a&gt; .
+更多的例子请参考: &lt;a href=&#34;http://code.google.com/p/protorpc/source/browse/tests/rpctest/rpcserver.cc?repo=cxx&#34;&gt;rpcserver.cc&lt;/a&gt;
+和 &lt;a href=&#34;http://code.google.com/p/protorpc/source/browse/tests/rpctest/rpcclient.cc?repo=cxx&#34;&gt;rpcclient.cc&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;Go语言的RPC客户端是一个使用简单, 而且功能强大的RPC库. 基于标准的RPC库我们可以方便的定制自己的RPC实现(传输协议和串行化协议都可以定制).&lt;/p&gt;
+
+&lt;p&gt;不过在开发 &lt;a href=&#34;https://code.google.com/p/protorpc/&#34;&gt;protorpc&lt;/a&gt; 的过程中也发现了&lt;code&gt;net/rpc&lt;/code&gt;包的一些不足之处:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;内置的&lt;code&gt;HTTP&lt;/code&gt;协议的RPC的串行化协议和传输协议耦合过于紧密, 用户扩展的协议无法支持内置的&lt;code&gt;HTTP&lt;/code&gt;传输协议(因为&lt;code&gt;rpc.Server&lt;/code&gt;和&lt;code&gt;rpc.Client&lt;/code&gt;接口缺陷导致的问题)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rpc.Server&lt;/code&gt; 只能注册 &lt;code&gt;rpc.ServerCodec&lt;/code&gt;, 而不能注册工厂函数. 而&lt;code&gt;jsonrpc.NewServerCodec&lt;/code&gt;需要依赖先建立链接(&lt;code&gt;conn&lt;/code&gt;参数), 这样导致了&lt;code&gt;HTTP&lt;/code&gt;协议只能支持内置的&lt;code&gt;gob&lt;/code&gt;协议&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rpc.Client&lt;/code&gt; 的问题和 &lt;code&gt;rpc.Server&lt;/code&gt; 类似&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;因为Go1需要保证API的兼容性, 因此上述的问题只能希望在未来的Go2能得到改善.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

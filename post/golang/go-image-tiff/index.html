@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>go.image/tiff 的一些问题 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="最近给 go.image/tiff 增加了 Tile/Gray/Gray16/RGB16bit 等格式的支持. 还有一些特性以后会陆续完善. Go语言图像库的基本思路是能尽量提供完善的解码功能(当然只支持文件的第一个图像)." />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-image-tiff/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="go.image/tiff 的一些问题" />
+<meta property="og:description" content="最近给 go.image/tiff 增加了 Tile/Gray/Gray16/RGB16bit 等格式的支持. 还有一些特性以后会陆续完善. Go语言图像库的基本思路是能尽量提供完善的解码功能(当然只支持文件的第一个图像)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-image-tiff/" />
+
+
+
+<meta property="article:published_time" content="2013-09-20T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2013-09-20T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="go.image/tiff 的一些问题">
+<meta itemprop="description" content="最近给 go.image/tiff 增加了 Tile/Gray/Gray16/RGB16bit 等格式的支持. 还有一些特性以后会陆续完善. Go语言图像库的基本思路是能尽量提供完善的解码功能(当然只支持文件的第一个图像).">
+
+
+<meta itemprop="datePublished" content="2013-09-20T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-09-20T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="616">
+
+
+
+<meta itemprop="keywords" content="golang,tiff," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="go.image/tiff 的一些问题"/>
+<meta name="twitter:description" content="最近给 go.image/tiff 增加了 Tile/Gray/Gray16/RGB16bit 等格式的支持. 还有一些特性以后会陆续完善. Go语言图像库的基本思路是能尽量提供完善的解码功能(当然只支持文件的第一个图像)."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">go.image/tiff 的一些问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-09-20 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 616 字 </span>
+        <span class="more-meta"> 预计阅读 2 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>最近给 <a href="https://code.google.com/p/go/source/list?repo=image">go.image/tiff</a>
+增加了 Tile/Gray/Gray16/RGB16bit 等格式的支持.
+还有一些特性以后会陆续完善.</p>
+
+<p>Go语言图像库的基本思路是能尽量提供完善的解码功能(当然只支持文件的第一个图像).
+而编码功能则比较有限, 主要是支持基本的不同颜色模型, TIFF特有的特性应该不会完整支持.</p>
+
+<p>最近有用户反馈生成的tiff在Mac系统不能正常浏览(<a href="https://code.google.com/p/go/issues/detail?id=6421">Issue6421</a>).
+而我自己的Win7/64可以正常打开有问题的图像. 用 <code>tiffinfo</code> 也没有看到什么异常的Tag(有问题的已经修改之后).</p>
+
+<p>之后无意中用GIMP也不能打开Mac有问题的tiff影像.
+既然问题已经重现, 查找原因就容易多了.</p>
+
+<p>初步分析之后, 发现问题主要是针对非RGB的图像(灰度和调色板).
+然后发现, go.image/tiff的Encode函数对非RGB的影像都写了ExtraSamples标签,
+而这个函数只有对波段数大于RGB的3的时候才会起作用(具体看TIFF Spec的介绍).</p>
+
+<p>当然, 有些容错性较好的程序可以忽略无效的ExtraSamples标签(比如Windows下的很多程序).
+但是, 如果严格按照TIFF规范的话, 包含ExtraSamples标签的灰度和调色板格式确实是有问题的.
+修复这个问题之后(<a href="https://codereview.appspot.com/13779043/">CL13779043</a>), GIMP就可以正常工作了(Mac部分还在等待用户反馈).</p>
+
+<p>经过这个BUG发现, 还是要非常了解TIFF格式规范, 不然实现中很容易带入一些错误的理解.
+当然, <code>go.image/tiff</code> 的测试也需要继续完善.</p>
+
+<p>关于TIFF的介绍请参考: <a href="http://my.oschina.net/chai2010/blog/158550">TIFF6.0格式简介</a></p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2013-09-20</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+          <a href="/tags/tiff/">tiff</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go13-cgo/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go和C如何共享内存资源</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go-gc-2013/">
+            <span class="next-text nav-default">Go语言资源自动回收技术</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

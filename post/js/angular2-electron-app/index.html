@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>极简的Angular2示例, Electron环境运行 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="Angular2本身提供了cli命令行工具, 可以生成完整的工程.
+但是命令行生成的工程太过复杂, 对于新学习Angular的用户会有太多的干扰.
+我们尝试完全脱离cli工具, 只是通过TypeScript提供的tsc命令, 纯手工构造一个极简的Angular2示例.
+完整代码: http://git.oschina.net/chai2010/hello-ng2
+
+" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/js/angular2-electron-app/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="极简的Angular2示例, Electron环境运行" />
+<meta property="og:description" content="Angular2本身提供了cli命令行工具, 可以生成完整的工程.
+
+但是命令行生成的工程太过复杂, 对于新学习Angular的用户会有太多的干扰.
+
+我们尝试完全脱离cli工具, 只是通过TypeScript提供的tsc命令, 纯手工构造一个极简的Angular2示例.
+
+完整代码: http://git.oschina.net/chai2010/hello-ng2
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/js/angular2-electron-app/" />
+
+
+
+<meta property="article:published_time" content="2017-07-06T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2017-07-06T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="极简的Angular2示例, Electron环境运行">
+<meta itemprop="description" content="Angular2本身提供了cli命令行工具, 可以生成完整的工程.
+
+但是命令行生成的工程太过复杂, 对于新学习Angular的用户会有太多的干扰.
+
+我们尝试完全脱离cli工具, 只是通过TypeScript提供的tsc命令, 纯手工构造一个极简的Angular2示例.
+
+完整代码: http://git.oschina.net/chai2010/hello-ng2
+
+">
+
+
+<meta itemprop="datePublished" content="2017-07-06T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2017-07-06T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1795">
+
+
+
+<meta itemprop="keywords" content="js,electron," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="极简的Angular2示例, Electron环境运行"/>
+<meta name="twitter:description" content="Angular2本身提供了cli命令行工具, 可以生成完整的工程.
+
+但是命令行生成的工程太过复杂, 对于新学习Angular的用户会有太多的干扰.
+
+我们尝试完全脱离cli工具, 只是通过TypeScript提供的tsc命令, 纯手工构造一个极简的Angular2示例.
+
+完整代码: http://git.oschina.net/chai2010/hello-ng2
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">极简的Angular2示例, Electron环境运行</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2017-07-06 </span>
+        <div class="post-category">
+            
+              <a href="/categories/js/"> js </a>
+            
+          </div>
+        <span class="more-meta"> 约 1795 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#配置淘宝的镜像">配置淘宝的镜像</a></li>
+<li><a href="#html启动页面">HTML启动页面</a></li>
+<li><a href="#angular组件">Angular组件</a></li>
+<li><a href="#angular模块">Angular模块</a></li>
+<li><a href="#启动angular模块">启动Angular模块</a></li>
+<li><a href="#electron环境">Electron环境</a></li>
+<li><a href="#其他配置文件">其他配置文件</a></li>
+<li><a href="#运行">运行</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>Angular2本身提供了cli命令行工具, 可以生成完整的工程.</p>
+
+<p>但是命令行生成的工程太过复杂, 对于新学习Angular的用户会有太多的干扰.</p>
+
+<p>我们尝试完全脱离cli工具, 只是通过TypeScript提供的tsc命令, 纯手工构造一个极简的Angular2示例.</p>
+
+<p>完整代码: <a href="http://git.oschina.net/chai2010/hello-ng2">http://git.oschina.net/chai2010/hello-ng2</a></p>
+
+<p></p>
+
+<p><img src="/images/ng2-electron.png" alt="" /></p>
+
+<h2 id="配置淘宝的镜像">配置淘宝的镜像</h2>
+
+<p>通过以下命令安装:</p>
+
+<pre><code>npm install -g cnpm --registry=https://registry.npm.taobao.org
+</code></pre>
+
+<p>完成后用 <code>cnpm</code> 代替 <code>npm</code> 命令.</p>
+
+<h2 id="html启动页面">HTML启动页面</h2>
+
+<p>首先构造一个 hello-ng2 目录, 用于存放工程文件.</p>
+
+<p>在目录下创建 demo.html 页面, 内容如下:</p>
+
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+
+&lt;head&gt;
+	&lt;title&gt;Angular2应用&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+	&lt;my-app&gt;加载UI组件&lt;/my-app&gt;
+	&lt;script&gt;require('./demo').main()&lt;/script&gt;
+&lt;/body&gt;
+</code></pre>
+
+<p>我们采用的是HTML5语法, 完全省略了最外层没有任何意义的<code>&lt;html&gt;&lt;/html&gt;</code>标签.</p>
+
+<p>其中包含了一个我们自定义的<code>&lt;my-app&gt;</code>标签, 对应我们要创建的 Angular 窗口组件.</p>
+
+<p>然后通过<code>require</code>加载当前目录下的<code>demo</code>模块(对应demo.js文件), 然后运行其中的<code>main</code>函数启动Angular程序.</p>
+
+<h2 id="angular组件">Angular组件</h2>
+
+<p>Angular严重依赖ES7中的注解语法, 如果要在JS中使用该特性, 将需要一个转码工具将ES7注解语法转为ES2015或更早的格式,
+因为只有这样才能在浏览器中正常运行.</p>
+
+<p>虽然JS社区中已经存在了很多类似的转码工具(我本人将这个看作是一个编译过程, 和将C/C++代码转为exe类似), 但是依赖太多.</p>
+
+<p>既然必需要引入一个转码工具, 强烈推荐使用TypeScript语言提供的tsc工具. 因为TypeScript语言本身是Angular官方采用的语言,
+同时也提供了注解等特性, 而且其提供的tsc工具没有任何外部依赖(失控的依赖绝对是一个灾难).</p>
+
+<p>创建 demo.ts 文件, 并针对<code>&lt;my-app&gt;</code>标签创建一个 Angular 窗口组件:</p>
+
+<pre><code class="language-typescript">import * as ngCore from '@angular/core'
+
+@ngCore.Component({
+	selector: 'my-app',
+	template: `
+		&lt;h1&gt;你好, {{name}}! - V1&lt;/h1&gt;
+	`,
+	styles: [
+		`h1 {
+			color: #369;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 250%;
+		}`,
+	],
+})
+export class MainComponent {
+	name = '世界'
+}
+</code></pre>
+
+<h2 id="angular模块">Angular模块</h2>
+
+<p>为了使用该窗口部件, 我们需要将其组织到一个 Angular 模块中:</p>
+
+<pre><code>import * as ngPlatformBrowser from '@angular/platform-browser'
+
+@ngCore.NgModule({
+	imports: [ ngPlatformBrowser.BrowserModule ],
+	declarations: [ MainComponent ],
+	bootstrap: [ MainComponent ],
+})
+export class MainModule {
+	//
+}
+</code></pre>
+
+<p>同样, 我们通过 <code>@ngCore.NgModule</code> 注解将 Angular 的运行时模块和 MainModule 类进行了关联.</p>
+
+<p>在模块中, 我们导入了 <code>ngPlatformBrowser.BrowserModule</code> 浏览器模块.</p>
+
+<p>同时, <code>declarations</code> 部分声明了我们自己创建的Angular组件.</p>
+
+<p>最后, <code>bootstrap</code> 部分将 MainComponent 指定为该模块的引导组件.</p>
+
+<p>需要说明的是, NgModule 修饰的模块是一种运行时模块, 同时用于其中各种组件名字空间的管理.</p>
+
+<h2 id="启动angular模块">启动Angular模块</h2>
+
+<p>一个应用中可以有多个Angular 模块, 同样要指定一个引导模块, 通过以下代码完成:</p>
+
+<pre><code class="language-typescript">import * as ngPlatformBrowserDynamic from '@angular/platform-browser-dynamic'
+
+export function main() {
+	ngPlatformBrowserDynamic.platformBrowserDynamic().bootstrapModule(MainModule)
+}
+</code></pre>
+
+<p>到此, 一个极简的Angular2示例已经完成了. 但是还不能运行!</p>
+
+<p>不能运行的原因主要有2个:</p>
+
+<ul>
+<li>浏览器环境不支持模块方式启动页面, 同样需要通过外部js库辅助.</li>
+<li>Angular 依赖一些高级的特性, 很多浏览器环境并不支持, 需要通过外部js库模拟.</li>
+</ul>
+
+<p>为了简化, 我们采用了Electron环境运行应用, 因为在Electron环境我们可以直接使用NodeJS中的模块.
+对于第二点, 我们可以通过以下外部js库模拟缺少的特性:</p>
+
+<pre><code class="language-typescript">import 'core-js/es6/reflect'
+import 'core-js/es7/reflect'
+import 'zone.js/dist/zone'
+</code></pre>
+
+<h2 id="electron环境">Electron环境</h2>
+
+<p>现在 Angular2 部分的代码已经完整. 我们还需要给 Electron 创建一个启动脚本.</p>
+
+<p>新建一个 index.ts 文件, 用于启动Angular2程序:</p>
+
+<pre><code class="language-typescript">import * as fs from 'fs'
+import * as electron from 'electron'
+
+let win: Electron.BrowserWindow = null
+
+function createWindow() {
+	win = new electron.BrowserWindow({width: 800, height: 600})
+	win.loadURL(`file://${__dirname}/demo.html`)
+	win.webContents.openDevTools()
+
+	win.on('closed', () =&gt; { win = null })
+}
+
+function main() {
+	electron.app.on('ready', () =&gt; {
+		createWindow()
+	})
+	electron.app.on('activate', () =&gt; {
+		createWindow()
+	})
+	electron.app.on('window-all-closed', () =&gt; {
+		if(process.platform !== 'darwin') {
+			electron.app.quit()
+		}
+	})
+}
+
+if(require.main === module) {
+	main()
+}
+</code></pre>
+
+<p>其中 <code>BrowserWindow</code> 对应一个 Electron 窗口, 创建窗口后通过 <code>win.loadURL</code> 加载了 <code>demo.html</code> 页面.</p>
+
+<h2 id="其他配置文件">其他配置文件</h2>
+
+<p>为了运行应用, 我们还需要package.json和tsconfig.json文件, 分别对应NodeJS包和TypeScript的配置信息.</p>
+
+<p>其中 package.json 文件千篇一律, 并没有什么特别之处. tsconfig.json文件则有一些需要定制的特性.</p>
+
+<p>tsconfig.json 内容如下:</p>
+
+<pre><code class="language-json">{
+	&quot;include&quot;: [
+		&quot;./**/*&quot;
+	],
+	&quot;exclude&quot;: [
+		&quot;node_modules&quot;,
+		&quot;**/*.spec.ts&quot;
+	],
+
+	&quot;compilerOptions&quot;: {
+		&quot;module&quot;: &quot;commonjs&quot;,
+		&quot;moduleResolution&quot;: &quot;node&quot;,
+		&quot;lib&quot;: [&quot;dom&quot;, &quot;es2016&quot;],
+		&quot;emitDecoratorMetadata&quot;: true,
+		&quot;experimentalDecorators&quot;: true,
+		&quot;suppressImplicitAnyIndexErrors&quot;:true,
+		&quot;noStrictGenericChecks&quot;: true,
+		&quot;noImplicitAny&quot;: false,
+		&quot;target&quot;: &quot;es5&quot;
+	}
+}
+</code></pre>
+
+<p>其中 <code>include</code> 表示用通配符选择文件, <code>exclude</code> 表示排除的文件, <code>compilerOptions</code> 对应编译选项.</p>
+
+<p>在编译选项中, 我们需要指定依赖的dom和es2016库, experimentalDecorators表示注解功能也必须打开,
+emitDecoratorMetadata表示生成元信息也必须打开(元信息是反射特性所需要的).</p>
+
+<p>其它的编译参数用于可以根据需要自行调整.</p>
+
+<h2 id="运行">运行</h2>
+
+<p>克隆完整代码, 进入到对应目录的命令行, 然后安装依赖并运行:</p>
+
+<pre><code>cnpm install
+node_modules\.bin\tsc
+node_modules\.bin\electron .
+</code></pre>
+
+<p>运行效果图:</p>
+
+<p><img src="/images/ng2-electron-demo.png" alt="" /></p>
+
+<p>OK!</p>
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2017-07-06</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/js/">js</a>
+          
+          <a href="/tags/electron/">electron</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/misc/ascii-draw/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">用ASCII画图</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/js/js-tmpl-engine/">
+            <span class="next-text nav-default">一个极简的JavaScript模板引擎</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

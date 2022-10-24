@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go程序如何安全退出(CTRL&#43;C) - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="如果是命令行程序需要退出, CTRL&#43;C是最直接的方法. C语言如何处理CTRL&#43;C CTRL&#43;C会向命令行进程发送中断信号, 在C语言的&amp;lt;s" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-safe-exit-2013/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go程序如何安全退出(CTRL&#43;C)" />
+<meta property="og:description" content="如果是命令行程序需要退出, CTRL&#43;C是最直接的方法. C语言如何处理CTRL&#43;C CTRL&#43;C会向命令行进程发送中断信号, 在C语言的&lt;s" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-safe-exit-2013/" />
+
+
+
+<meta property="article:published_time" content="2013-04-27T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2013-04-27T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go程序如何安全退出(CTRL&#43;C)">
+<meta itemprop="description" content="如果是命令行程序需要退出, CTRL&#43;C是最直接的方法. C语言如何处理CTRL&#43;C CTRL&#43;C会向命令行进程发送中断信号, 在C语言的&lt;s">
+
+
+<meta itemprop="datePublished" content="2013-04-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-04-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="884">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go程序如何安全退出(CTRL&#43;C)"/>
+<meta name="twitter:description" content="如果是命令行程序需要退出, CTRL&#43;C是最直接的方法. C语言如何处理CTRL&#43;C CTRL&#43;C会向命令行进程发送中断信号, 在C语言的&lt;s"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go程序如何安全退出(CTRL&#43;C)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-04-27 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 884 字 </span>
+        <span class="more-meta"> 预计阅读 2 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#c语言如何处理-ctrl-c">C语言如何处理<code>CTRL+C</code></a></li>
+<li><a href="#go语言如何处理-ctrl-c">Go语言如何处理<code>CTRL+C</code></a></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>如果是命令行程序需要退出, <code>CTRL+C</code>是最直接的方法.</p>
+
+<h1 id="c语言如何处理-ctrl-c">C语言如何处理<code>CTRL+C</code></h1>
+
+<p><code>CTRL+C</code>会向命令行进程发送中断信号, 在C语言的<code>&lt;signal.h&gt;</code>中的<code>signal</code>函数可以注册信号的处理函数.</p>
+
+<p><code>signal</code>函数的签名如下:</p>
+
+<pre><code>void (*signal(int sig, void (*func)(int)))(int);
+</code></pre>
+
+<p>比如, 我们要处理<code>CTRL+C</code>对应的<code>SIGINT</code>信号:</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;signal.h&gt;
+
+void sigHandle(int sig) {
+    switch(sig) {
+    case SIGINT:
+        printf(&quot;sigHandle: %d, SIGINT\n&quot;, sig);
+        break;
+    default:
+        printf(&quot;sigHandle: %d, OTHER\n&quot;, sig);
+        break;
+    }
+    exit(1);
+}
+
+int main() {
+    signal(SIGINT, sigHandle);
+    for(;;) {}
+    return 0;
+}
+</code></pre>
+
+<p>编译并运行程序后会进入死循环, 按<code>CTRL+C</code>强制退出会看到以下的输出:</p>
+
+<pre><code>sigHandle: 2, SIGINT
+</code></pre>
+
+<p>当然, 直接从进程管理杀死程序就没办法收到信号的.</p>
+
+<p><code>&lt;signal.h&gt;</code>中除了<code>signal</code>函数, 还有一个<code>raise</code>函数用于生成信号:</p>
+
+<pre><code>int raise(int sig);
+</code></pre>
+
+<p>我们在<code>sigHandle</code>截获信号之后如果想重新恢复信号, 可以使用<code>raise</code>函数. 但是, 要注意不要导致无穷递归<code>signal/raise</code>调用.</p>
+
+<h1 id="go语言如何处理-ctrl-c">Go语言如何处理<code>CTRL+C</code></h1>
+
+<p>Go语言也有类似的函数<code>signal.Notify</code>(在<code>os/signal</code>包中), 可以过滤信号.</p>
+
+<p>这是<code>signal.Notify</code>自带的例子:</p>
+
+<pre><code>// Set up channel on which to send signal notifications.
+// We must use a buffered channel or risk missing the signal
+// if we're not ready to receive when the signal is sent.
+c := make(chan os.Signal, 1)
+signal.Notify(c, os.Interrupt, os.Kill)
+
+// Block until a signal is received.
+s := &lt;-c
+fmt.Println(&quot;Got signal:&quot;, s)
+</code></pre>
+
+<p><code>signal.Notify</code>会将用户关注的信号转发到信道<code>c</code>, 信道<code>c</code>不能是阻塞的. 如果信道是缓冲不足的话, 可能会丢失信号. 如果我们不再次转发信号, 设置为1个缓冲大小就可以了.</p>
+
+<p><code>signal.Notify</code>从第二个参数起是可变参数的, 用于指定要过滤的信号.
+如果不指定第二个参数, 则默认是过滤全部的信号.</p>
+
+<p>信号的定义一般在<code>syscall</code>. <code>syscall</code>包是系统相关的,
+不同的操作系统信号可能有差异. 不过<code>syscall.SIGINT</code>和<code>syscall.SIGKILL</code>各个系统是一致的, 分别对应<code>os.Interrupt</code>和<code>os.Kill</code>.</p>
+
+<p>下面是Go语言版完整的例子:</p>
+
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;os&quot;
+    &quot;os/signal&quot;
+)
+
+func main() {
+    c := make(chan os.Signal, 1)
+    signal.Notify(c, os.Interrupt, os.Kill)
+
+    s := &lt;-c
+    fmt.Println(&quot;Got signal:&quot;, s)
+}
+</code></pre>
+
+<p><code>go run signal.go</code>运行后会进入死循环, 按<code>CTRL+C</code>强制退出会看到以下的输出:</p>
+
+<pre><code>Got signal: interrupt
+</code></pre>
+
+<p>当然, 直接从进程管理杀死程序就没办法收到信号的.</p>
+
+<p>如果要恢复信号, 调用<code>s.Signal()</code>. 如果要停止信号的过滤, 调用<code>signal.Stop(c)</code>.</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2013-04-27</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/misc/ascii-upper-lower/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">ASCII码中大小写字母转换</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go-protorpc-2013/">
+            <span class="next-text nav-default">在Go语言中使用 Protobuf-RPC</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

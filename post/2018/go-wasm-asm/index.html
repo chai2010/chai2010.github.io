@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go中的wasm汇编语言 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。
+
+" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2018/go-wasm-asm/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go中的wasm汇编语言" />
+<meta property="og:description" content="Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2018/go-wasm-asm/" />
+
+
+
+<meta property="article:published_time" content="2018-10-03T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2018-10-03T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go中的wasm汇编语言">
+<meta itemprop="description" content="Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。
+
+">
+
+
+<meta itemprop="datePublished" content="2018-10-03T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-10-03T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1526">
+
+
+
+<meta itemprop="keywords" content="golang,wasm," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go中的wasm汇编语言"/>
+<meta name="twitter:description" content="Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go中的wasm汇编语言</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-10-03 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+              <a href="/categories/wasm/"> wasm </a>
+            
+          </div>
+        <span class="more-meta"> 约 1526 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#runtime-memclrnoheappointers-函数">runtime·memclrNoHeapPointers 函数</a></li>
+<li><a href="#函数签名">函数签名</a></li>
+<li><a href="#读取函数参数">读取函数参数</a></li>
+<li><a href="#webassembly汇编语言">WebAssembly汇编语言</a></li>
+<li><a href="#总结">总结</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。</p>
+
+<p></p>
+
+<h2 id="runtime-memclrnoheappointers-函数">runtime·memclrNoHeapPointers 函数</h2>
+
+<p>改函数源文件在：</p>
+
+<p><a href="https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s">https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s</a></p>
+
+<p>函数的实现如下：</p>
+
+<pre><code class="language-s">// func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+TEXT runtime·memclrNoHeapPointers(SB), NOSPLIT, $0-16
+	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+</code></pre>
+
+<h2 id="函数签名">函数签名</h2>
+
+<p>函数的签名如下：</p>
+
+<pre><code class="language-go">func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+</code></pre>
+
+<p>对应C语言的签名如下：</p>
+
+<pre><code class="language-c">void memclrNoHeapPointers(int32_t ptr, int32_t n);
+</code></pre>
+
+<p>对应WebAssembly的函数签名如下：</p>
+
+<pre><code class="language-lisp">(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	...
+)
+</code></pre>
+
+<h2 id="读取函数参数">读取函数参数</h2>
+
+<p>因为Go语言是动态栈，和WebAssembly的内存模型并不一样。我们先忽略这些问题的细节，看看如何读取参数的：</p>
+
+<pre><code class="language-s">	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+</code></pre>
+
+<p>熟悉Go汇编语言的同学肯定很容易理解上述代码。其中第一行指令是将Go函数的第一个参数加载到R0寄存器，第二行指令是将第二个参数加载到R1寄存器。FP是伪寄存器，表示当前函数调用的帧寄存器，每个参数分别使用参数名作为前缀+参数相对于FP的地址偏移量确定。</p>
+
+<p>不过WebAssembly是基于栈式的虚拟机结构，并不存在寄存器的概念。不过我们可以将R0和R1看作是函数的局部变量。因此在memclrNoHeapPointers函数的定义中再增加2个局部变量：</p>
+
+<pre><code class="language-lisp">(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+	...
+)
+</code></pre>
+
+<h2 id="webassembly汇编语言">WebAssembly汇编语言</h2>
+
+<p>现在将函数的主体指令改为WebAssembly汇编语言，大概是如下的写法：</p>
+
+<pre><code class="language-lisp">(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+)
+</code></pre>
+
+<p>具体的算法类似以下的Go语言代码：</p>
+
+<pre><code class="language-go">func memclrNoHeapPointers(ptr, n int32) {
+	R0 := ptr
+	R1 := n
+
+	loop: for {
+		if R1 == 0 {
+			return
+		}
+
+		Memort[R0] = 0
+		R0++
+		R1--
+
+		continue loop
+	}
+}
+</code></pre>
+
+<p>在循环中，第一组指令是R1表示的未清0的元素个数是否未0，如果未0则返回。对应代码如下：</p>
+
+<pre><code class="language-s">		Get R1
+		I64Eqz
+		If
+			RET
+		End
+</code></pre>
+
+<p>其中Get对应WebAssembly的get_local指令，用于根据局部变量的索引标号获取一个值，放到栈中。I64Eqz对应i64.eqz指令，从栈中取出一个值，判断是否为0，并将结果从新放入栈中。而If则对应br_if控制流指令，首先从栈取出一个值，如果非0则执行分支内的指令。RET返回函数，和WebAssembly的return指令不一定完全等价。</p>
+
+<p>第二组指令是强R0表示的内存地址对应的空间清0：</p>
+
+<pre><code class="language-s">		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+</code></pre>
+
+<p>Get对应get_local指令，取出一个i64类型的值。I32WrapI64对应i32.wrap/i64指令，将i64类型强制转型为i32类型，重新入栈。I64Const则是生成一个常数0，入栈。I64Store8对应i32.store8指令，从栈取出内存地址，第二个参数是0表示地址采用默认的对其方式。简而言之就是将R0对应的地址设置为0。</p>
+
+<p>第三组是将R0加一后存回R0局部变量：</p>
+
+<pre><code class="language-s">		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+</code></pre>
+
+<p>第四组是将R1减一后存回R1局部变量：</p>
+
+<pre><code class="language-s">		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+</code></pre>
+
+<p>循环内的最后一个<code>Br loop</code>指令是继续从loop标号开始的循环。</p>
+
+<p>函数最后的UNDEF并不是WebAssembly汇编指令。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>因为Go语言序言支持栈的分裂，Go语言对WebAssembly的汇编语言是一个变异的版本。Go语言使用局部或者是全局变量来模拟寄存器，在函数的内部在依然基于WebAssembly栈虚拟机的方式工作。</p>
+
+<p>因为WebAssembly也是刚刚支持的平台，很多技术细节还需要进一步确认。想深入了解WebAssembly汇编语言的同学，本人写的 <a href="https://github.com/chai2010/advanced-go-programming-book">《Go语言高级编程》</a> 和 <a href="https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md">《WebAssembly标准入门
+》</a> 中的汇编语言章节部分的内容。</p>
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2018-10-03</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+          <a href="/tags/wasm/">wasm</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2018/window-service/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go语言和Windows服务</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2018/go-python/">
+            <span class="next-text nav-default">Go实现Python模块</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>评: 为什么我不喜欢Go语言式的接口 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="最近在Go语言的QQ群里看到关于图灵社区有牛人老赵吐槽许式伟《Go语言编程》的各种争论. 我之前也看了老赵吐槽许式伟《Go语言编程》的文章, 当" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-interface-pk/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="评: 为什么我不喜欢Go语言式的接口" />
+<meta property="og:description" content="最近在Go语言的QQ群里看到关于图灵社区有牛人老赵吐槽许式伟《Go语言编程》的各种争论. 我之前也看了老赵吐槽许式伟《Go语言编程》的文章, 当" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-interface-pk/" />
+
+
+
+<meta property="article:published_time" content="2013-04-12T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2013-04-12T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="评: 为什么我不喜欢Go语言式的接口">
+<meta itemprop="description" content="最近在Go语言的QQ群里看到关于图灵社区有牛人老赵吐槽许式伟《Go语言编程》的各种争论. 我之前也看了老赵吐槽许式伟《Go语言编程》的文章, 当">
+
+
+<meta itemprop="datePublished" content="2013-04-12T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-04-12T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="6501">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="评: 为什么我不喜欢Go语言式的接口"/>
+<meta name="twitter:description" content="最近在Go语言的QQ群里看到关于图灵社区有牛人老赵吐槽许式伟《Go语言编程》的各种争论. 我之前也看了老赵吐槽许式伟《Go语言编程》的文章, 当"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">评: 为什么我不喜欢Go语言式的接口</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-04-12 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 6501 字 </span>
+        <span class="more-meta"> 预计阅读 13 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <!-- 为什么我不喜欢Go语言式的接口(评) -->
+
+<p>最近在Go语言的QQ群里看到关于图灵社区有牛人老赵吐槽许式伟《Go语言编程》的各种争论.</p>
+
+<p>我之前也看了老赵吐槽许式伟《Go语言编程》的文章, 当时想老赵如果能将许大书中不足部分补充完善了也是一个好事情. 因此, 对老赵的后续文章甚是期待.</p>
+
+<p>谁知道看了老赵之后的两篇吐槽Go语言的文章, 发现完全不是那回事情, 吐槽内容偏差太远.
+本来没想掺和进来, 但是看到QQ群里和图灵社区有很多人甚至把老赵的文章当作真理一样.
+实在忍不住, 昨天注册了帐号, 进来也说下我的观点.</p>
+
+<p>这是老赵的几篇文章:</p>
+
+<ul>
+<li><a href="http://www.ituring.com.cn/article/37015">Go是一门有亮点的语言，老许是牛人，但这本书着实一般</a></li>
+<li><a href="http://www.ituring.com.cn/article/37181">为什么我认为goroutine和channel是把别的平台上类库的功能内置在语言里</a></li>
+<li><a href="http://www.ituring.com.cn/article/37554">为什么我不喜欢Go语言式的接口（即Structural Typing）</a></li>
+</ul>
+
+<p>本文在图灵社区的网址:</p>
+
+<ul>
+<li><a href="http://www.ituring.com.cn/article/37642">http://www.ituring.com.cn/article/37642</a></li>
+</ul>
+
+<p><strong>补充说明:</strong></p>
+
+<p>因为当前这篇文章主要是针对老赵的<a href="http://www.ituring.com.cn/article/37554">不喜欢Go语言式的接口</a>做
+评论. 因为标题的原因, 也造成了很大的争议性(因为很多人说我理解的很多观点和老赵的原文不相符).</p>
+
+<p>后面我会对Go语言的一些特性一些简单的介绍, 但是不会是现在这种方式.</p>
+
+<hr />
+
+<blockquote>
+<p>所谓Go语言式的接口，就是不用显示声明类型T实现了接口I，只要类型T的公开方法完全满足接口I的要求，就可以把类型T的对象用在需要接口I的地方。这种做法的学名叫做Structural Typing，有人也把它看作是一种静态的Duck Typing。除了Go的接口以外，类似的东西也有比如Scala里的Traits等等。有人觉得这个特性很好，但我个人并不喜欢这种做法，所以在这里谈谈它的缺点。当然这跟动态语言静态语言的讨论类似，不能简单粗暴的下一个“好”或“不好”的结论。</p>
+</blockquote>
+
+<p><strong>原文观点:</strong><br></p>
+
+<ul>
+<li>Go的隐式接口其实就是静态的Duck Typing. 很多语言(主要是动态语言)早就有.</li>
+<li>静态类型和动态类型没有绝对的好和不好.</li>
+</ul>
+
+<p><strong>我的观点:</strong><br></p>
+
+<ul>
+<li>Go的隐式接口Duck Typing确实不是新技术, 但是在主流静态编程语言中支持Duck Typing应该是很少的(不清楚目前是否只有Go语言支持).</li>
+<li>静态类型和动态类型虽然没有绝对的好和不好, 但是每个都是有自己的优势的, 没有哪一个可以包办一切. 而Go是试图结合静态类型和动态类型(<code>interface</code>)各自的优势.</li>
+</ul>
+
+<blockquote>
+<p>那么就从头谈起：什么是接口。其实通俗的讲，接口就是一个协议，规定了一组成员，例如.NET里的<code>ICollection</code>接口：</p>
+
+<pre><code>public interface ICollection {
+   int Count { get; }
+   object SyncRoot { get; }
+   bool IsSynchronized { get; }
+   void CopyTo(Array array, int index);
+}
+</code></pre>
+
+<p>这就是一个协议的全部了吗？事实并非如此，其实接口还规定了每个行为的“特征”。打个比方，这个接口的<code>Count</code>除了需要返回集合内元素的数目以外，还隐含了它需要在O(1)时间内返回这个要求。这样一个使用了<code>ICollection</code>接口的方法才能放心地使用<code>Count</code>属性来获取集合大小，才能在知道这些特征的情况下选用正确的算法来编写程序，而不用担心带来性能问题，这才能实现所谓的“面向接口编程”。当然这种“特征”并不但指“性能”上的，例如<code>Count</code>还包含了例如“不修改集合内容”这种看似十分自然的隐藏要求，这都是<code>ICollection</code>协议的一部分。</p>
+</blockquote>
+
+<p><strong>原文观点:</strong><br></p>
+
+<ul>
+<li>接口就是一个协议, 规定了一组成员.</li>
+<li>接口还规定了每个行为对应时间复杂度的&rdquo;特征&rdquo;.</li>
+<li>接口还规定了每个行为还包含是否会修改集合的隐藏要求.</li>
+</ul>
+
+<p><strong>我的观点:</strong><br></p>
+
+<ul>
+<li>第一条: 没什么可解释的, 应该是接口的通俗含义.</li>
+<li>第二条: 但是接口还包含时间复杂度的&rdquo;特征&rdquo;就比较扯了. 请问这个特征是由语言特性来约束(语言如何约束?), 还只是由接口的文档作补充说明(这是语言的特性吗)?</li>
+<li>第三条: 这个还算是吐槽到了点子上. Go的接口确实不支持C++类似的<code>const</code>修饰, 除了接口外的method也不支持(Go的<code>const</code>关键字是另一个语义).</li>
+</ul>
+
+<p>但是, C++中有了<code>const</code>就真的安全了吗?</p>
+
+<pre><code>class Foo {
+    private: mutable Mutex mutex_;
+
+    public: void doSomething()const {
+        MutexLocker locker(&amp;mutex_);
+        // const 已经被绕过了
+    }
+};
+</code></pre>
+
+<p>C++中方法<code>const</code>修饰唯一的用处就是增加各种编译麻烦, 对使用者无法作出任何承诺. 使用者更关心的是<code>doSomething</code>的要做什么, 上面的方法其实和<code>void doSomethingConst()</code>要表达的是类似的意思.</p>
+
+<p>不管是静态库还是动态库, 哪个能从库一级保证某个函数是不能干什么的? 如果C++的<code>const</code>关键字并不能
+真正的保证<code>const</code>, 而类似的实现细节(也包括前面提到的和时间复杂度相关的性能特征)必须有文档来补充.
+那文档应该以什么形式提供(代码注释?Word文档?其他格式文档?)? 这些文档真多能保证每个都会有人看吗?
+文档说到底还只是人直接的口头约定, 如果文档真的那么好使(还有实现), 那么汇编语言也可以解决一切问题.</p>
+
+<p><strong>那在Go语言是如何解决<code>const</code>和性能问题?</strong></p>
+
+<p>首先, 对于C语言的函数参数传值的语义, <code>const</code>是必然的结果.
+但是, 如果参数太大要考虑性能的话, 就会考虑传指针(还是传值的语义), 通过传指针就不能保证<code>const</code>的语义了. 如果连使用的库函数都不能相信, 那怎么就能相信它对于的头文件所提供的<code>const</code>信息呢?</p>
+
+<p>因为, <code>const</code>和性能是相互矛盾的. Go语言中如果想绝对安全, 那就传值. 如果想要性能(或者是返回副作用),
+那就传指针:</p>
+
+<pre><code>type Foo int
+
+// 要性能
+func (self *Foo)Get() int {
+    return *self
+}
+// 要安全
+func (self Foo)GetConst() int {
+    return self
+}
+</code></pre>
+
+<p>Go语言怎么对待性能问题(还有单元测试问题)? 答案是集成<code>go test</code>测试工具. 在Go语言中测试代码是pkg(包含<code>package main</code>)的一个组成部分. 不仅是普通的pkg可以<code>go test</code>, <code>package main</code>也可以用<code>go test</code>进行测试.</p>
+
+<p>我们给前面的代码加上单元测试和性能测试.</p>
+
+<pre><code>// foo_test.go
+
+func TestGet(t *testing.T) {
+    var foo Foo = 0
+    if v := foo.Get(); v != 0 {
+        t.Errorf(&quot;Bad Get. Need=%v, Got=%v&quot;, 0, v)
+    }
+}
+func TestGetConst(t *testing.T) {
+    var foo Foo = 0
+    if v := foo.GetConst(); v != 0 {
+        t.Errorf(&quot;Bad GetConst. Need=%v, Got=%v&quot;, 0, v)
+    }
+}
+
+func BenchmarkGet(b *testing.B) {
+    var foo Foo = 0
+    for i := 0; i &lt; b.N; i++ {
+        _ = foo.Get()
+    }
+}
+func BenchmarkGetConst(b *testing.B) {
+    var foo Foo = 0
+    for i := 0; i &lt; b.N; i++ {
+        _ = foo.GetConst()
+    }
+}
+</code></pre>
+
+<p>当然, 最终的测试结果还是给人来看的. 如果实现者/使用者故意搞破坏, 再好的工具也是没办法的.</p>
+
+<blockquote>
+<p>由此我们还可以解释另外一些问题，例如为什么.NET里的List<T>不叫做ArrayList<T>，当然这些都只是我的推测。我的想法是，由于List<T>与IList<T>接口是配套出现的，而像IList<T>的某些方法，例如索引器要求能够快速获取元素，这样使用IList<T>接口的方法才能放心地使用下标进行访问，而满足这种特征的数据结构就基本与数组难以割舍了，于是名字里的Array就显得有些多余。</p>
+
+<p>假如List<T>改名为ArrayList<T>，那么似乎就暗示着IList<T>可以有其他实现，难道是LinkedList<T>吗？事实上，LinkedList<T>根本与IList<T>没有任何关系，因为它的特征和List<T>相差太多，它有的尽是些AddFirst、InsertBefore方法等等。当然，LinkedList<T>与List<T>都是ICollection<T>，所以我们可以放心地使用其中一小部分成员，它们的行为特征是明确的。</p>
+</blockquote>
+
+<p><strong>原文观点:</strong><br></p>
+
+<ul>
+<li>推测: 因为为了和<code>IList&lt;T&gt;</code>接口配套出现的原因, 才没有将<code>List&lt;T&gt;</code>命名为<code>ArrayList&lt;T&gt;</code>.</li>
+<li>因为<code>IList&lt;T&gt;</code>(这个应该是笔误, 我觉得作者是说<code>List&lt;T&gt;</code>)索引器要求能够快速获取元素, 这样使用IList<T>接口的方法才能放心地使用下标进行访问(实现的算法复杂度特征向接口方向传递了).</li>
+<li>不能将<code>List&lt;T&gt;</code>改为<code>ArrayList&lt;T&gt;</code>的另一个原因是<code>LinkedList&lt;T&gt;</code>. 因为<code>List&lt;T&gt;</code>和<code>LinkedList&lt;T&gt;</code>的时间复杂度不一样, 所以不能是一个接口(大概是一个算法复杂度一个接口的意思?).</li>
+<li><code>LinkedList&lt;T&gt;</code>与<code>List&lt;T&gt;</code>都属于<code>ICollection&lt;T&gt;</code>这个祖宗接口.</li>
+</ul>
+
+<p><strong>我的观点:</strong><br></p>
+
+<ul>
+<li>第一条: 我不知道原作者是怎么推测的. 接口的本意就是要和实现分离. 现在却完全绑定到一起了, 那这样还要接口做什么(一个<code>Xxx&lt;T&gt;</code>对应一个<code>IXxx&lt;T&gt;</code>接口)?</li>
+<li>第二条: 因为运行时向接口传递了某个时间复杂度的实现, 就推导出接口的都符合某种时间复杂度, 逻辑上根本就不通!</li>
+<li>第三条: 和前两个差不多的意思, 没什么可说的.</li>
+<li>第四条: 这个应该是Go非入侵接口的优点. C++/Java就是因为接口的入侵性, 才导致了接口和实现无法完全分离. 因为, C++/Java大部分时间都在整理接口间/实现间的祖宗八代之间的关系了(重要的不是如何分类, 而是能做什么). 可以参考许式伟给的Java的例子(了解祖宗八代之间的关系真的很重要吗): <a href="http://docs.oracle.com/javase/1.4.2/docs/api/overview-tree.html">http://docs.oracle.com/javase/1.4.2/docs/api/overview-tree.html</a>.</li>
+</ul>
+
+<blockquote>
+<p>这方面的反面案例之一便是Java了。在Java类库中，ArrayList和LinkedList都实现了List接口，它们都有get方法，传入一个下标，返回那个位置的元素，但是这两种实现中前者耗时O(1)后者耗时O(N)，两者大相近庭。那么好，我现在要实现一个方法，它要求从第一个元素开始，返回每隔P个位置的元素，我们还能面向List接口编程么？假如我们依赖下标访问，则外部一不小心传入LinkedList的时候，算法的时间复杂度就从期望的O(N/P)变成了O(N2/P)。假如我们选择遍历整个列表，则即便是ArrayList我们也只能得到O(N)的效率。话说回来，Java类库的List接口就是个笑话，连Stack类都实现了List，真不知道当年的设计者是怎么想的。</p>
+
+<p>简单地说，假如接口不能保证行为特征，则“面向接口编程”没有意义。</p>
+</blockquote>
+
+<p><strong>原文观点:</strong><br></p>
+
+<ul>
+<li>Java的<code>ArrayList</code>和<code>LinkedList</code>都实现了<code>List</code>接口, 但是<code>get</code>方法的时间复杂度不同.</li>
+<li>假如接口不能保证行为特征，则“面向接口编程”没有意义。</li>
+</ul>
+
+<p><strong>我的观点:</strong><br></p>
+
+<ul>
+<li>第一条: 这其实是原作者列的一个前提, 是为了推出第二条的结论. 但是, 我觉得这里的逻辑同样是有问题的. 有这个例子只能说明接口有它的不足, 但是怎么就证明了 <strong>则“面向接口编程”没有意义</strong>?</li>
+<li>第二条: 我要反问一句, 为什么非要在这里使用接口(难道是被C++/Java的面向对象洗脑了)? 接口有它合适的地方(面向逻辑层面), 也有它不合适的地方(面向底层算法层面). 在这里为什么不直接使用<code>ArrayList</code>或<code>LinkedList</code>?</li>
+</ul>
+
+<blockquote>
+<p>而Go语言式的接口也有类似的问题，因为Structural Typing都只是从表面（成员名，参数数量和类型等等）去理解一个接口，并不关注接口的规则和含义，也没法检查。忘了是Coursera里哪个课程中提到这么一个例子：</p>
+
+<pre><code>nterface IPainter {
+    void Draw();
+}
+
+nterface ICowBoy {
+     void Draw();
+}
+</code></pre>
+
+<p>在英语中Draw同时具有“画画”和“拔枪”的含义，因此对于画家（Painter）和牛仔（Cow Boy）都可以有Draw这个行为，但是两者的含义截然不同。假如我们实现了一个“小明”类型，他明明只是一个画家，但是我们却让他去跟其他牛仔决斗，这样就等于让他去送死嘛。另一方面，“小王”也可以既是一个“画家”也是个“牛仔”，他两种Draw都会，在C#里面我们就可以把他实现为：</p>
+
+<pre><code>class XiaoWang : IPainter, ICowBoy {
+    void IPainter.Draw() {
+         // 画画
+    }
+
+    void ICowBoy.Draw() {
+         // 掏枪
+    }
+}
+</code></pre>
+
+<p>因此我也一直不理解Java的取舍标准。你说这样一门强调面向对象强调接口强调设计的语言，还要求强制异常，怎么就不支持接口的显示实现呢？</p>
+</blockquote>
+
+<p><strong>原文观点:</strong><br></p>
+
+<ul>
+<li>不同实现的<code>Draw</code>含义不同, 因此接口最好也能支持不同的实现.</li>
+<li>Java/Go之类的接口都没有C#的接口强大.</li>
+</ul>
+
+<p><strong>我的观点:</strong><br></p>
+
+<ul>
+<li>第一条: 不要因为自己有个锤子, 就把什么东西都当作钉子! 你这个是C#的例子(我不懂C#), 但是请不要往Go语言上套! 之前是C++搞出了个函数重载(语义还是相似的, 但是签名不同), 没想到C#还搞了个支持同一个单词不同含义的特性.</li>
+<li>第二条: 只能说原作者真的不懂Go语言.</li>
+</ul>
+
+<p>Go语言为什么不支持这些花哨的特性? 因为, 它们太复杂且没多大用处, 写出的代码不好理解(如果原作者不提示, 谁能发现<code>Darw</code>的不同含义这个坑?). Go语言的哲学是: &ldquo;Less is more!&rdquo;.</p>
+
+<p>看看Go语言该怎么做:</p>
+
+<pre><code>type Painter interface {
+    Draw()
+}
+type CowBoyer interface {
+    DrawTheGun()
+}
+
+type XiaoWang struct {
+    // ...
+}
+
+func (self *XiaoWang)Draw() {
+    // ...
+}
+func (self *XiaoWang)DrawTheGun() {
+    // ...
+}
+</code></pre>
+
+<p><code>XiaoWang</code>需要关心的只是自己有哪些功能(<code>method</code>), 至于祖宗关系开始根本不用关心.
+等到<code>XiaoWang</code>各种特性逐渐成熟稳定之后, 发现新来的<code>XiaoMing</code>也有类似的功能特征,
+这个时候才会考虑如何用接口来描述<code>XiaoWang</code>和<code>XiaoMing</code>共同特征.</p>
+
+<blockquote>
+<p>这就是我更倾向于Java和C#中显式标注异常的原因。因为程序是人写的，完全不会因为一个类只是因为存在某些成员，就会被当做某些接口去使用，一切都是经过“设计”而不是自然发生的。就好像我们<del>在泰国</del>不会因为一个人看上去是美女就把它当做女人，这年头的化妆和PS技术太可怕了。</p>
+</blockquote>
+
+<p><strong>原文观点:</strong><br></p>
+
+<ul>
+<li>接口是经过“设计”而不是自然发生的.</li>
+<li>接口有不足, 因为在泰国不能根据<code>美女</code>这个接口来推断这个人是<code>女人</code>这个类型.</li>
+</ul>
+
+<p><strong>我的观点:</strong><br></p>
+
+<ul>
+<li>Go的哲学是先构造具体对象, 然后再根据共性慢慢归纳出接口, 一开始不用关心祖宗八代的关系.</li>
+<li>那请问<code>女人</code>是怎么定义的, 难道这不是一个接口?</li>
+</ul>
+
+<blockquote>
+<p>我这里再小人之心一把：我估计有人看到这里会说我只是酸葡萄心理，因为C#中没有这特性所以说它不好。还真不是这样，早在当年我还没听说Structural Typing这学名的时候就考虑过这个问题。我写了一个辅助方法，它可以将任意类型转化为某种接口，例如：</p>
+
+<pre><code>XiaoMing xm = new XiaoMing();
+ICowBoy cb = StructuralTyping.From(xm).To&lt;ICowBoy&gt;();
+</code></pre>
+
+<p>于是，我们就很快乐地将只懂画画的小明送去决斗了。其内部实现原理很简单，只是使用Emit在运行时动态生成一个封装类而已。此外，我还在编译后使用<code>Mono.Cecil</code>分析程序集，检查<code>From</code>与<code>To</code>的泛型参数是否匹配，这样也等于提供了编译期的静态检查。此外，我还支持了协变逆变，还可以让不需要返回值的接口方法兼容存在返回值的方法，这可比简单通过名称和参数类型判断要强大多了。</p>
+</blockquote>
+
+<p><strong>原文观点:</strong><br></p>
+
+<ul>
+<li>C#接口的这个特性很NB&hellip;</li>
+</ul>
+
+<p><strong>我的观点:</strong><br></p>
+
+<p>我们看看Go是该怎么写(基于前面的Go代码, 没有<code>Draw</code>重载):</p>
+
+<pre><code>var xm interface{} = new(XiaoWang)
+cb := xm.(Painter).(CowBoyer)
+</code></pre>
+
+<p>但是, 我觉得这样写真的很变态. Go语言是为了解决实际的工程问题的,
+不是要像C++那样成为各种NB技术的大杂烩.</p>
+
+<p>我始终认同一个观点: 任何语言都可以写出垃圾代码, 但是不能以这些垃圾代码来证明原语言也垃圾.</p>
+
+<blockquote>
+<p>有了多种选择，我才放心地说我喜欢哪个。JavaScript中只能用回调编写代码，于是很多人说它是JavaScript的优点，说回调多么多么美妙我会深不以为然——只是没法反抗开始享受罢了嘛……</p>
+
+<p>这篇文章好像吐槽有点多？不过这小文章还挺爽的。</p>
+</blockquote>
+
+<p>这段不是接口相关, 懒得整理/吐槽了.</p>
+
+<hr />
+
+<p>最后我只想说一个例子, 从C语言时代就很流行的<code>printf</code>函数.
+我们看看Go语言中是什么样子(<code>fmt.Fprintf</code>):</p>
+
+<pre><code>func Fprintf(w io.Writer, format string, a ...interface{}) (n int, err error)
+</code></pre>
+
+<p>在Go语言中, <code>fmt.Fprintf</code>只关心怎么识别各种<code>a ...interface{}</code>, 怎么format这些参数,
+至于怎么写, 写到哪里去那完全是<code>w io.Writer</code>的事情.</p>
+
+<p>这里第一个参数的<code>w io.Writer</code>就是一个接口, 它不仅可以写到<code>File</code>, 也可以写到<code>net.Conn</code>, 准确的说是可以写到任何实现了<code>io.Writer</code>接口的对象中.</p>
+
+<p>因为, Go语言接口的非入侵性, 我们可以独立实现自己的对象, 只要符合<code>io.Writer</code>接口就行, 然后就可以和<code>fmt.Fprintf</code>配合工作.</p>
+
+<p>后面的可变参数<code>interface{}</code>同样是一个接口, 它代替了C语言的<code>void*</code>, 用于格式化输出各种类型的值. (更准确的讲, 除了基础类型, 参数<code>a</code>必须是一个实现了<code>Stringer</code>接口的扩展类型).</p>
+
+<p>接口是一个完全正交的特性, 可以将<code>Fprintf</code>从各种<code>a ...interface{}</code>, 以及各种<code>w io.Writer</code>完全剥离出来.
+Go语言也是这样, <code>struct</code>等基础类型的内存布局还是和C语言中一样, 只是加了个<code>method</code>(在Go1.1中, <code>method value</code>就是一个普通闭包函数), 接口以及<code>goroutine</code>都是在没有破坏原有的类型语义基础上正交扩展(而不是像C++那样搞个构造函数, 以后又是析构函数的).</p>
+
+<p>我到很想知道, 在C++/C#/Java之类的语言中, 是如何实现<code>fmt.Fprintf</code>的.</p>
+
+<hr />
+
+<p>套用原作者的一句话作为结束: <strong>Go语言虽然有缺点, 即使老赵是牛人, 但是这篇吐槽也着实一般</strong>!</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2013-04-12</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go-pb-service-gen/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go语言: 生成Protobuf的Service接口</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go-preview-2013/">
+            <span class="next-text nav-default">为什么除了Go语言, 其他类C语言都是垃圾[转]</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

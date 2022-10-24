@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>中文乱码 on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/</link>
+    <description>Recent content in 中文乱码 on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 20 Dec 2013 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Go如何处理zip中的中文文件名</title>
+      <link>https://chai2010.cn/post/golang/go-zip-utf8/</link>
+      <pubDate>Fri, 20 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-zip-utf8/</guid>
+      
+        <description>&lt;p&gt;Go的标准库已经自带了zip的库.&lt;/p&gt;
+
+&lt;p&gt;不过zip包在处理内部文件名时, 默认是utf8编码的.
+对于Windows中文用户, 生成和读取zip内部文件名默认是GBK编码的.
+因此, 在处理涉及GBK的文件名时需要做一个转换.&lt;/p&gt;
+
+&lt;p&gt;Go语言官方的 &lt;code&gt;go.text&lt;/code&gt; 子标准库已经支持各种编码, 下面是utf8转GBK的函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import &amp;quot;golang.org/x/text/encoding/simplifiedchinese&amp;quot;
+
+func utf8ToGBK(text string) (string, error) {
+    dst := make([]byte, len(text)*2)
+    tr := simplifiedchinese.GB18030.NewEncoder()
+    nDst, _, err := tr.Transform(dst, []byte(text), true)
+    if err != nil {
+        return text, err
+    }
+    return string(dst[:nDst]), nil
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在生成zip文件时, 用 &lt;code&gt;utf8ToGBK&lt;/code&gt; 处理文件名:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    file, err := os.Create(&amp;quot;中文-测试.zip&amp;quot;)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close()
+
+    wzip := zip.NewWriter(file)
+    defer func() {
+        if err := wzip.Close(); err != nil {
+            log.Fatal(err)
+        }
+    }()
+
+    // 压缩文件
+    var files = []struct{ Name, Body string }{
+        {&amp;quot;11/1/readme.txt&amp;quot;, &amp;quot;UTF8 字符串.&amp;quot;},
+        {&amp;quot;11/1/readme2.txt&amp;quot;, &amp;quot;This archive contains some text files.&amp;quot;},
+        {&amp;quot;汉字/2/gopher.txt&amp;quot;, &amp;quot;Gopher names:\nGeorge\nGeoffrey\nGonzo&amp;quot;},
+        {&amp;quot;11/中文.txt&amp;quot;, &amp;quot;中文Get animal handling licence.\nWrite more examples.&amp;quot;},
+        {&amp;quot;空目录/&amp;quot;, &amp;quot;&amp;quot;},
+    }
+    for _, file := range files {
+        name, _ := utf8ToGBK(file.Name) // 文件名转换为 GBK编码
+        f, err := wzip.Create(name)
+        if err != nil {
+            log.Fatal(err)
+        }
+        _, err = f.Write([]byte(file.Body))
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样就可以生成Windows下带简体中文的文件名压缩文件了.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;2014年补充:&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;其实在新的 &lt;a href=&#34;http://www.pkware.com/documents/casestudies/APPNOTE.TXT&#34;&gt;zip规范&lt;/a&gt; 中,
+已经对UTF8编码的文件名提供了支持.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;File:    APPNOTE.TXT - .ZIP File Format Specification
+Version: 6.3.3
+
+4.4.4 general purpose bit flag: (2 bytes)
+
+Bit 11: Language encoding flag (EFS).  If this bit is set,
+    the filename and comment fields for this file
+    MUST be encoded using UTF-8. (see APPENDIX D)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;具体来说, 在每个文件的头信息的&lt;code&gt;Flags&lt;/code&gt;字段的11bit位.
+如果该bit位为0则表用本地编码(本地编码是GBK吗?), 如果是1则表示用UTF8编码.&lt;/p&gt;
+
+&lt;p&gt;头信息对应zip库的 &lt;a href=&#34;http://godoc.org/archive/zip#FileHeader&#34;&gt;archive/zip.FileHeader&lt;/a&gt; 结构的 &lt;code&gt;Flags&lt;/code&gt; 成员:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type FileHeader struct {
+    // Name is the name of the file.
+    // It must be a relative path: it must not start with a drive
+    // letter (e.g. C:) or leading slash, and only forward slashes
+    // are allowed.
+    Name string
+
+    CreatorVersion     uint16
+    ReaderVersion      uint16
+    Flags              uint16
+    Method             uint16
+    ModifiedTime       uint16 // MS-DOS time
+    ModifiedDate       uint16 // MS-DOS date
+    CRC32              uint32
+    CompressedSize     uint32 // deprecated; use CompressedSize64
+    UncompressedSize   uint32 // deprecated; use UncompressedSize64
+    CompressedSize64   uint64
+    UncompressedSize64 uint64
+    Extra              []byte
+    ExternalAttrs      uint32 // Meaning depends on CreatorVersion
+    Comment            string
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果想生成UTF8编码的文件名, 可以手工指定该字段:&lt;/p&gt;
+
+&lt;p&gt;func main() {
+    file, err := os.Create(&amp;ldquo;中文-测试.zip&amp;rdquo;)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer file.Close()&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wzip := zip.NewWriter(file)
+defer func() {
+    if err := wzip.Close(); err != nil {
+        log.Fatal(err)
+    }
+}()
+
+// 压缩文件
+var files = []struct{ Name, Body string }{
+    {&amp;quot;11/1/readme.txt&amp;quot;, &amp;quot;UTF8 字符串.&amp;quot;},
+    {&amp;quot;11/1/readme2.txt&amp;quot;, &amp;quot;This archive contains some text files.&amp;quot;},
+    {&amp;quot;汉字/2/gopher.txt&amp;quot;, &amp;quot;Gopher names:\nGeorge\nGeoffrey\nGonzo&amp;quot;},
+    {&amp;quot;11/中文.txt&amp;quot;, &amp;quot;中文Get animal handling licence.\nWrite more examples.&amp;quot;},
+    {&amp;quot;空目录/&amp;quot;, &amp;quot;&amp;quot;},
+}
+for _, file := range files {
+    header := &amp;amp;zip.FileHeader{
+        Name:   file.Name,
+        Flags:  1 &amp;lt;&amp;lt; 11, // 使用utf8编码
+        Method: zip.Deflate,
+    }
+    f, err := wzip.CreateHeader(header)
+    if err != nil {
+        log.Fatal(err)
+    }
+    _, err = f.Write([]byte(file.Body))
+    if err != nil {
+        log.Fatal(err)
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}&lt;/p&gt;
+
+&lt;p&gt;其实, &lt;code&gt;zip.Create&lt;/code&gt; 默认应该是假设文件名采用UTF8编码, 这样可以避免不同机器间本地编码不同导致的解码的问题.
+针对该修改已经提交了 &lt;a href=&#34;https://codereview.appspot.com/54360043/&#34;&gt;CL54360043&lt;/a&gt;, 目前还不清楚是否能够被接受.&lt;/p&gt;
+
+&lt;p&gt;不过比较遗憾的是Win7自带的zip浏览器始终是忽略该字段的(始终用本地编码处理).&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

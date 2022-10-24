@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go 语言十年而立，Go2 蓄势待发 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="Go语言十年，第一代Gopher也到了下岗到年龄，感谢各种福报 作者 | 柴树杉 责编 | 郭 芮 出品 | CSDN（ID：CSDNnews） 在21世纪的第一" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2019/go-10year/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go 语言十年而立，Go2 蓄势待发" />
+<meta property="og:description" content="Go语言十年，第一代Gopher也到了下岗到年龄，感谢各种福报 作者 | 柴树杉 责编 | 郭 芮 出品 | CSDN（ID：CSDNnews） 在21世纪的第一" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2019/go-10year/" />
+
+
+
+<meta property="article:published_time" content="2019-11-10T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2019-11-10T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go 语言十年而立，Go2 蓄势待发">
+<meta itemprop="description" content="Go语言十年，第一代Gopher也到了下岗到年龄，感谢各种福报 作者 | 柴树杉 责编 | 郭 芮 出品 | CSDN（ID：CSDNnews） 在21世纪的第一">
+
+
+<meta itemprop="datePublished" content="2019-11-10T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-11-10T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="9176">
+
+
+
+<meta itemprop="keywords" content="golang,10year," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go 语言十年而立，Go2 蓄势待发"/>
+<meta name="twitter:description" content="Go语言十年，第一代Gopher也到了下岗到年龄，感谢各种福报 作者 | 柴树杉 责编 | 郭 芮 出品 | CSDN（ID：CSDNnews） 在21世纪的第一"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go 语言十年而立，Go2 蓄势待发</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-10 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+              <a href="/categories/10year/"> 10year </a>
+            
+          </div>
+        <span class="more-meta"> 约 9176 字 </span>
+        <span class="more-meta"> 预计阅读 19 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-go语言诞生">1. Go语言诞生</a></li>
+<li><a href="#2-go语言十年奋进">2. Go语言十年奋进</a>
+<ul>
+<li><a href="#界面变化">界面变化</a></li>
+<li><a href="#语法变化">语法变化</a></li>
+<li><a href="#运行时的变化">运行时的变化</a></li>
+<li><a href="#gc性能改进">GC性能改进</a></li>
+<li><a href="#go语言自举历程">Go语言自举历程</a></li>
+<li><a href="#失败的尝试">失败的尝试</a></li>
+</ul></li>
+<li><a href="#3-go2的发展方向">3. Go2的发展方向</a></li>
+<li><a href="#4-go语言在中国">4. Go语言在中国</a>
+<ul>
+<li><a href="#fango">Fango</a></li>
+<li><a href="#许式伟和七牛云">许式伟和七牛云</a></li>
+<li><a href="#astaxie和gopherchina大会">Astaxie和GopherChina大会</a></li>
+<li><a href="#其他人和项目">其他人和项目</a></li>
+</ul></li>
+<li><a href="#5-向go语言学习">5. 向Go语言学习</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<blockquote>
+<p>Go语言十年，第一代Gopher也到了下岗到年龄，感谢各种福报</p>
+</blockquote>
+
+<ul>
+<li>作者 | 柴树杉</li>
+<li>责编 | 郭   芮</li>
+<li>出品 | CSDN（ID：CSDNnews）</li>
+</ul>
+
+<p><img src="/images/go-10year/00.jpg" alt="" /></p>
+
+<p>在21世纪的第一个十年，计算机在中国大陆才逐渐开始普及，高校的计算机相关专业也逐渐变得热门。当时学校主要以C/C++和Java语言学习为主，而这些语言大多是上个世纪90年代或更早诞生的，因此这些计算机领域的理论知识或编程语言仿佛是上帝创世纪时的产物，作为计算机相关专业的学生只能仰望这些成果。</p>
+
+<p>Go语言诞生在21世纪新一波工业编程语言即将爆发的时期。在2010年前后诞生了编译型语言Rust、Kotlin和Swift语言，前端诞生了Dart、TypeScript等工业型语言，最新出现的V语言更甚至尝试站在Go和Rust语言肩膀之上创新。而这些变化都发生在我们身边，让中国的计算机爱好者在学习的过程中见证历史的发展，甚至有机会参与其中。</p>
+
+<p>2019年是CSDN的二十周年，也是Go语言面世十周年。感谢CSDN平台提供的机会，让笔者可以跟大家分享十年来中国Go语言社区的一些故事。</p>
+
+<h2 id="1-go语言诞生">1. Go语言诞生</h2>
+
+<p>Go语言最初由Google公司的Robert Griesemer、Ken Thompson和Rob Pike三位大牛于2007年开始设计发明的。其设计最初的洪荒之力来自于对超级复杂的C++11特性的吹捧报告的鄙视，最终目标是设计网络和多核时代的C语言。到2008年中期，语言的大部分特性设计已经完成，并开始着手实现编译器和运行，大约在这一年Russ Cox作为主力开发者加入。到了2009年，Go语言已经逐步趋于稳定。同年9月，Go语言正式发布并开源了代码。</p>
+
+<p><img src="/images/go-10year/10.jpg" alt="" /></p>
+
+<p>以上是《Go语言高级编程》一书中第一章第一节的内容。Go语言刚刚开源的时候，大家对它的编译速度印象异常深刻：秒级编译完成，几乎像脚本一样可以马上编译并执行。同时Go语言的隐式接口让一个编译型语言有了鸭子类型的能力，笔者也第一次认识到原来C++的虚表vtab也可以动态生成！至于大家最愿意讨论的并非特性，其实并不是Go语言新发明的基石，早在上个世纪的八九十年代就有诸多语言开始陆续尝试将CSP理论引入编程语言（Rob Pike是其中坚定的实践者）。只不过早期的CSP实践的语言没有进入主流开发领域，导致大家对这种并发模式比较陌生。</p>
+
+<p>除了语言特性的创新之外，Go语言还自带了一套编译和构建工具，同时小巧的标准库携带了完备的Web编程基础构建，我们可以用Go语言轻松编写一个支持高并发访问的Web服务。</p>
+
+<p>作为互联网时代的C语言，Go语言终于强势进入主流的编程领域。</p>
+
+<h2 id="2-go语言十年奋进">2. Go语言十年奋进</h2>
+
+<p>Go从2007年开始设计，在2009年正式对外公布，至今刚好十年。十年来Go语言以稳定著称，Go1.0的代码在2019年依然可以不用修改直接被编译运行。但是在保持语言稳定的同时，Go语言也在逐步夯实基础，十年来一直向着完美的极限逼近。让我们看看这十年来Go语言有哪些变化。</p>
+
+<h3 id="界面变化">界面变化</h3>
+
+<p>首先是看看界面的变化。第一次是在2009刚开源的时候，这时候可以说是Go语言的上古时代。Go语言的主页如下：</p>
+
+<p><img src="/images/go-10year/20.jpg" alt="" /></p>
+
+<p>那个年代的Gopher们，使用的是hg工具下载代码（而不是Git），Go代码是在Google Code托管（而不是GitHub）。随着代码的发展，hg已经慢慢淡出Gopher视野，Google Code网站也早已经关闭，而Go1之前的上古时代的Go老代码已经开始慢慢腐化了。</p>
+
+<p>首页中心是Go语言最开始的口号：Go语言是富有表现力的、并发的编程语言，并且是简洁的。同时给了一个“Hello, 世界”的例子（注意，这里的“世界”是日文）。</p>
+
+<p>然后右上角是初学者的乐园：首先是安装环境，然后可能是早期的三日教程，第三个是标准库的使用。右上角的图片是Russ Cox的一个视频，在Youtube应该还能找到。</p>
+
+<p>左上角是Go实战的那个经典文档。此外FAQ、语言规范、内存模型是非常重要的核心温度。左下角还有cmd等文档链接，子页面的内容应该没有什么变化。</p>
+
+<p>然后在2012年准备发布第一个正式版本Go1，在Go1之前语言、标准库和godoc都进行了大量的改进。Go1风格的页面效果如下：</p>
+
+<p><img src="/images/go-10year/21.jpg" alt="" /></p>
+
+<p>新页面刚出来的时候有眼睛一亮的感觉，这个是目前存在时间最长久的页面布局。但是不仅仅是笔者我，甚至Go语言官方也慢慢对中国页面有点审美疲劳了。因此，从2018年开始Go语言开始新的Logo和网站的重新设计工作。</p>
+
+<p>下面的是Go语言新的Logo：</p>
+
+<p><img src="/images/go-10year/22.jpg" alt="" /></p>
+
+<p>2019年是对Go语言发展极其重要的一年，今年8月将发布Go1.13，而这个版本将正式重启Go语言语法的进化，向着Go2前进。而新的网站已经在Go1.13正式发布之前的7月份就已经上线：</p>
+
+<p><img src="/images/go-10year/23.jpg" alt="" /></p>
+
+<p>头部的按钮风格的菜单变成了平铺的风格，显得更加高大上。同时页面的颜色做了调整，保持和新Logo颜色一致。页面的布局也做了调整，将下载左右两列做了调换。同时地鼠的脑袋歪到一边，估计是颈椎病复发了。</p>
+
+<p>总的来说，Go语言官网主页经历了Go1前、Go1（1.0～1.10）、Go1后（或者叫Go2前）三个阶段，分别对应3种风格的页面。新的布局或许会成为下个十年Go2的主力页面。</p>
+
+<h3 id="语法变化">语法变化</h3>
+
+<p>Go语言虽然从2009年诞生，但是到了2012年才发布第一个正式的版本Go1。其实在Go1诞生之前Go语言就已经足够稳定了，国内的七牛云从Go1之前就开始大力转向Go语言开发，是国内第一家广泛采用Go语言开发的互联网公司。Go1的目标是梳理语法和标准库阴暗的角落，为后续的10年打下坚实的基础。</p>
+
+<p>从目前的结果看，Go1无疑是取得了极大的成果，Go1时代的代码依然可以不用修改就可以用最新的Go语言工具编译构建（不包含CGO或汇编语言部分，因为这些外延的工具并不在Go1的承诺范围）。但是Go1之后依然有一些语法的更新，在Go1.10前的Go1时代语法和标准库部分的重大变化主要有三个：</p>
+
+<p>第一个重大的语法变化是在2012年发布的Go1.2中，给切片语法增加了容量的控制，这样可以避免不同的切片不小心越界访问有着相同底层数组的其它切片的内存。</p>
+
+<p>第二个重大的变化是2016年发布的Go1.7标准库引入了context包。context包是Go语言官方对Go进行并发编程的实践成果，用来简化对于处理单个请求的多个Goroutine之间与请求域的数据、超时和退出等操作。context包推出后就被社区快速吸收使用，例如gRPC以及很多Web框架都通过context来控制Goroutine的生命周期。</p>
+
+<p>第三个重大的语法变化是2017年发布的Go1.9 ，引入了类型别名的特性：type T1 = T2。其中类型别名T1是通过=符号从T2定义，这里的T1和T2是完全相同的类型。之所以引入类型别名，很大的原因是为了解决Go1.7将context扩展库移动到标准库带来的问题。因为标准库和扩展库中分别定义了context.Context类型，而不同包中的类型是不相容的。而gRPC等很多开源的库使用的是最开始以来的扩展库中的context.Context类型，结果导致其无法和Go1.7标准库中的context.Context类型兼容。这个问题最终通过类型别名解决了：扩展库中的context.Context类型是标准库中context.Context的别名类型，从而实现了和标准库的兼容。</p>
+
+<p>此外还有一些语法细节的变化，比如Go1.4对for循环语法进行了增强、Go1.8放开对有着相同内存布局的结构体强制转型限制。读者可以根据自己新需要查看相关发布日志的文档说明。</p>
+
+<h3 id="运行时的变化">运行时的变化</h3>
+
+<p>运行时部分最大的变化是动态栈部分。在Go1.2之前Go语言采用分段栈的方式实现栈的动态伸缩。但是分段式动态栈有个性能问题，因为栈内存不连续会导致CPU缓存命中率下降，从而导致热点的函数调用性能受到影响。因此从Go1.3开始该有连续式的动态栈。连续式的动态栈虽然部分缓解了CPU 缓存命中率问题（依然存在栈的切换问题，这可能导致CPU缓存失效），但同时也带来了更大的实现问题：栈上变量的地址可能会随着栈的移动而发生变化。这直接带来了CGO编程中，Go语言内存对象无法直接传递给C语言空间使用，因此后来Go语言官方针对CGO问题制定了复杂的内存使用规范。</p>
+
+<p>总体来说，动态栈如何实现是一个如何取舍的问题，因为没有银弹、鱼和熊掌不可兼得，目前的选择是第一保证纯Go程序的性能。</p>
+
+<h3 id="gc性能改进">GC性能改进</h3>
+
+<p>Go语言是一个带自动垃圾回收的语言（Garbage Collection ），简称GC（注意这是大写的GC，小写的gc表示Go语言的编译器）。从Go语言诞生开始，GC的回收性能就是大家关注的热点话题。</p>
+
+<p>Go语言之所以能够支持GC特性，是因为Go语言中每个变量都有完备的元信息，通过这些元信息可以很容易跟踪全部指针的声明周期。在Go1.4之前，GC采用的是STW停止世界的方式回收内存，停顿的时间经常是几秒甚至达到几十秒。因此早期社区有很多如何规避或降低GC操作的技巧文章。</p>
+
+<p>第一次GC性能变革发生在Go1.5时期，这个时候Go语言的运行时和工具链已经全部从C语言改用Go语言实现，为GC代码的重构和优化提供了便利。Go1.5首次改用并行和增量的方式回收内存，这将GC挺短时间缩短到几百毫秒。下图是官网“Go GC: Latency Problem Solved”一文给出的数据：</p>
+
+<p><img src="/images/go-10year/24.jpg" alt="" /></p>
+
+<p>Go1.5并发和增量的改进效果明显，但是最重要的是为未来的改进奠定了基础。在Go1.5之后的Go1.6版本中GC性能终于开始得到了彻底的提升：从Go1.6.0停顿时间降低到几十毫秒，到Go1.6.3降低到了十毫秒以内。而Go1.6取得的成果在Go1.8的官方日志得到证实：Go语言的GC通常低于100毫秒，甚至低于10毫秒！</p>
+
+<p>当然，Go的GC优化的脚步不会停止，但是想再现Go1.5和Go1.6时那种激动人心的成果估计比较难了。在Go1.8之后的几个版本中，官方的发布日志已经很少再出现量化的GC性能提升数据了。</p>
+
+<h3 id="go语言自举历程">Go语言自举历程</h3>
+
+<p>据说Go语言刚开始实现时是基于汤普森的C语言编译改造而成，并且最开始输出的是C语言代码（还没有对外公开之前）。在开源之后到Go1.4之前，Go语言的编译器和运行时都是采用C语言实现的。以至于早期可以用C语言实现一个Go语言函数！因为强烈依赖C语言工具链，因此Go1.4之前Go语言是完全不能自举的。</p>
+
+<p>从Go1.4开始，Go语言的运行时采用Go语言实现。具体实施的方式是Go团队的rsc首先实现了一个简化的C代码到Go代码的转换工具，这个工具主要用于将之前C语言实现的Go语言运行时转换为Go语言代码。因为是自动转换的代码，因此可以得到比较可靠的Go代码。运行时转换为Go语言实现之后，带来的第一个好处就是GC可以精确知道每个内存指针的状态（因为Go语言的变量有详细的类型信息），这也为Go1.5重写GC提供了运行时基础。</p>
+
+<p>然后到了Go1.5，将编译器也转为Go语言实现。但是转换到代码性能有一定的下降。很多程序的编译时间甚至缓慢到几十秒，这个时期网上出现了很多吐槽Go1.5编译速度慢的问题。Go1.5采用Go语言编写编译器的同时，对工具链和目标代码都做了大量的重构工作。从Go1.5之后，交叉编译变得异常简单，只要GOOS=linux GOARCH=amd64 go build命令就可以从任何Go语言环境生成Linux/amd64的目标代码。</p>
+
+<p>Go语言从Go1.4到Go1.5，经历了两个版本的演化终于实现了自举的支持。当然自举也会带来一个哲学问题：Go语言的编译器是否有后门？如果有后门的编译器编译出来的Go程序是否有后门？有后门的编译器编译出来的Go编译器程序是否有后门？</p>
+
+<h3 id="失败的尝试">失败的尝试</h3>
+
+<p>Go语言发展过程中也并不全是成功的案例，同时也存在一些失败的尝试。失败乃成功之母，这些尝试虽然最终失败了，但是在尝试的过程之中积累的经验为新的方向提供了前进的动力。</p>
+
+<p>因为Go语言的常量只支持数值和字符串等少数几个类型，早期的社区中一直呼吁为切片增加只读类型。为此rsc在开发分支首先试验性地实现了该特性，但是在之后的实践过程中又发现了和Go编程特性冲突的诸多问题，以至于在短暂的尝试之后就放弃了只读切片的特性。当然，初始化之后不能修改的变量特性依然是大家期望的一个特性（类似其它语言的final特性），希望在未来的Go2中能有一定的改善。</p>
+
+<p>另一个尝试是早期基于vendor的版本管理。在Go1.5中首次引入vendor和internal特性，vendor用于打包外部第三方包，internal用户保护内部的包。后来vendor被开源社区的各种版本管理工具所滥用，导致Go语言代码经常会出现一些不可构建的诡异问题。滥用vendor导致了vendor嵌套的问题，这和nodejs社区中node_modules目录嵌套的问题类似。嵌套的vendor中最终会出现同一个包的不同版本，这根最后的稻草终于彻底击溃了vendor机制，以至于Go语言官方团队从头开发了模块特性来彻底解决版本管理的问题。等到Go1.13模块化特性转正之中，GOPATH和vendor等机制将被彻底淘汰。</p>
+
+<p>Go语言作为一个开源项目，所有导入的包必须有源代码。一些号称是商业用户，呼吁Go语言支持二进制包的导入，这样可以最大限度地保护商业代码。为了响应社区的需求，Go1.7增加了导入二进制包的功能。但是比较戏剧化的是，Go语言支持二进制包导入之后并没有多少人在使用，甚至当初呼吁二进制包的人也没有使用（所以说很多社区的声音未必能够反映真实的需求）。为了一个没有人使用的二进制包特性，需要Go语言团队投入相当的人力进行维护代码。为了减少这种不需要的特性，Go1.13将彻底关闭二进制包的特性，从新轻装上阵解决真实的需求。当然，Go语言也已经支持了生成静态库、共享库和插件的特性，也可以通过这些机制来保护代码。</p>
+
+<p>失败的尝试可能还有一些，比如最近Go语言之父之一Robert Griesemer提交的通过try内置函数来简化错误处理就被否决了。失败的尝试是一个好的现象，它表示Go语言依然在一些新兴领域的尝试——Go语言依然处于活跃期。</p>
+
+<h2 id="3-go2的发展方向">3. Go2的发展方向</h2>
+
+<p>Go语言原本就是短小精悍的语言，经过多年的发展Go1已经逼近稳定的极限。查看官网的Talk页面的报告数量可以发现，2015年之前是各种报告的巅峰，2016到2017年分享数量已经开始急剧下降，2018年至今已经没有新的报告被收录，这是因为该讲的Go1语言特性早就被讲过多次了。对于第一波Go语言爱好者来说也是如此，Go语言已经没有什么新的特性可以挖掘和学习了，或者说它已经不够酷了。我们想Go语言官方团队也是这样的感觉，因此从2018年开始首先开始解决模块化的问题，然后开始正式讨论Go2的新特性，并且从Go1.13重新启动语言的进化。</p>
+
+<p>模块化和构建管理有关系。在Go语言刚刚诞生之初，其实是通过一个Makefile目标进行构建。然后官方提供了go build命令构建，实现了零配置文件构建，极大地简化了构建的流程。再后来出现了go get命令，支持从互联网上自动下载hg或git仓库的代码进行构建，并同时引入GOPATH环境变量来防止非标准库的代码。此后，第一波的版本管理工具也开始出现，通过动态调整GOPATH实现导入特定版本的代码。随后各种开源模仿、克隆的版本管理工具如雨后春笋般冒出来，基本都是模仿godeps的设计思路，基于GOPATH和后来的vendor来管理依赖包的版本，这也最终导致了vendor被过度滥用（前文已经讲过vendor滥用带来的问题）。最终在2018年，由rsc亲自操刀从头发明了基于最小化版本依赖算法的版本管理特性。模块化特性从Go1.11开始引入，将在Go1.13版本正式转正，以后GOAPATH将彻底退出历史舞台。</p>
+
+<p>因为rsc的工作直接宣判了开源社区的各种版本管理工具的死亡，这也导致了Go语言官方团队和开源社区的诸多冲突和矛盾。在此需要补充说明下，Go语言的开发并不完全是开源陌生，Go语言的开源仅仅限于Issue的提交或BUG的修改，真正的语言设计始终走的是教堂元老会的模式。笔者以为这是最好的开源方式，很多开源社区的例子也说明了需要独裁者的角色，而元老会正是这种角色。</p>
+
+<p>在Go1.13中，除了模块化特性转正之外，还有诸多语法的改进：比如十六进制的浮点数、大的数字可以通过下划线进行分隔、二进制和八进制的面值常量等。但是Go1.13还有一个重大的改进发生在errors标准库中。errors库增加了Is/As/Unwrap三个函数，这将用于支持错误的再次包装和识别处理，是为了Go2中新的错误处理改进提前做准备。后续改进方向就是错误处理的控制流，之前已经出现用try/check关键字和try内置函数改进错误处理流程的提案，目前还没有确定采用什么方案。</p>
+
+<p>Go2最期待的特性是泛型。从开始Go语言官方明显抵制泛型，到2018年开始公开讨论泛型，让泛型的爱好者看到了希望。很多人包括早期的Go官方都会说用接口模拟泛型，这其实只是一个借口。泛型最大的问题不在于性能，而是只有泛型才能够为泛型容器或算法提供一个类型安全的接口。比如一个Add(a, b T) T泛型函数是无法通过接口来实现对返回值类型的检查的。如果Go语言支持了泛型，再结合Go语言汇编语言支持的AVX512指令，可以期待Go语言将在CPU运算密集型领域占有一席之地，甚至以后会出现纯Go语言的机器学习算法库的实现。</p>
+
+<p>最后一个值得关注的是Go语言对WebAssembly平台的支持。根据Ending定律：一切可编译为WebAssembly的，终将会被编译为WebAssembly。2018年，Fabrice Bellard大神基于WebAssembly技术，将Windows 2000操作系统搬到了浏览器环境运行。2019年出现了WebAssembly System Interface技术，这很可能是一个更轻量化的Docker替代技术。而Go语言也出现了一个变异版本TinyGo，目标就是为了更好地在WebAssembly或其它单片机等受限环境运行Go程序。</p>
+
+<h2 id="4-go语言在中国">4. Go语言在中国</h2>
+
+<p>回想Go语言刚面世时的第一个例子，是打印&rdquo;Hello, 世界&rdquo;。只可惜这里的“世界”并不是中文的“Hello, 世界”，而是日文的“Hello, 世界”。而日文还是基于中文汉字改造而来，这是整个中文世界的悲哀！</p>
+
+<p>比较庆幸的是中国程序员比较给力，目前中国不仅仅是世界上Go语言关注度最高的国家，也是贡献排名第二的国家。根据谷歌趋势的数据，Go语言在中国的关注度占全球的90%以上：</p>
+
+<p><img src="/images/go-10year/40.png" alt="" /></p>
+
+<p>不仅仅是Go语言用户，中国的Gopher对Go语言的贡献也稳居美国之后。其中韦京光早在2010年就深度参与Go语言开发，将Go语言移植到Windows系统并实现了CGO支持。之后来自中国的Minux实现了iOS等诸多平台的移植，并已经正式加入Go语言开发团队。而目前Go语言中国贡献者排名第一的是来自天津的史斌（benshi001），他的很多工作集中在编译的优化方面，在全球Go语言贡献者排名第39位。</p>
+
+<p>最早Go语言中文爱好者都是通过谷歌讨论组golang-china讨论，目前该讨论组还陆续会有新的文章发布。然后到了2012年前后，因为诸多因素国内的讨论开始集中到QQ群中（笔者在2010年建立了国内第一个Go语言QQ讨论群）。再往后就是微信各种论坛遍地开花了。十年来，Go语言中文社区也一直非常活跃，社区人数稳步增长。这里简单回顾一下我知道的Go社区中的一些人和事。</p>
+
+<h3 id="fango">Fango</h3>
+
+<p>如果在2010年关注Go语言，肯定会听到Fango的名字。Fango是来自新加坡的Go语言爱好者，在Go语言刚面世不久他就写了第一本（很可能是唯一一本）以Go语言为题材的小说《胡文·Go》，然后他还出版了第一本Go语言中文教材《Go语言·云动力》。感谢Fango给大家带来的精彩的Go语言故事。</p>
+
+<h3 id="许式伟和七牛云">许式伟和七牛云</h3>
+
+<p>七牛是国内第一家大面积采用Go语言开发的公司，时间还在Go1.0正式发布之前。许式伟也是大中华第一个知名的Go语言布道师。许式伟和七牛云在2012年也出版了一本《Go语言编程》教程，和Fango的图书可能只差了一个多月的时间，编辑都是杨海铃老师。其后七牛还有多本Go语言相关的专著或译著，可以说在2015年之前，许式伟和七牛云团队绝对是国内Go语言社区推广的主力。</p>
+
+<p>笔者也在第一时间拜读了《Go语言编程》一书，对其中如何实现接口和Goroutine调度的模拟依然印象深刻。感谢许式伟当时赠送的签名版本《Go语言编程》，同时也感谢为我新出的《Go语言高级编程》写序，谢谢许大！</p>
+
+<p><img src="/images/go-10year/41.jpg" alt="" /></p>
+
+<h3 id="astaxie和gopherchina大会">Astaxie和GopherChina大会</h3>
+
+<p>对谢大最早的印象是在2012年前后，当时他开了一个免费的《Go Web编程》图书，当前QQ群中很多小伙伴都参与审校（比如四月份平民、边江和Oling Cat等）。Go Web编程是大家比较关注的方向，书中不仅仅讲到了ORM的实现，还讲到了beedb等组件。而beedb等这些组件最早演化成了Beego框架。根据前一段时间JetBrains展开的一个调查，Beego是Go语言三大流行的Web框架之一。</p>
+
+<p>然后到了2015年，谢大正式开启GopherChina大会的历程。我虽然因为其它事情没有现场参与，但是也预定了第一节GopherChina大会的会衫。然后在2018年终于以讲师身份参加了上海的GopherChina大会，跟大家分享了CGO方向的技术，同时第一次见到谢大本尊。感谢谢大的GopherChina大会和《Go Web编程》！</p>
+
+<h3 id="其他人和项目">其他人和项目</h3>
+
+<p>此外还有很多大家耳熟能详的Go爱好者，比如《Learning Go》和Go Tour的中文翻译者星星，创建了gogs的无闻，一种在翻译Go官方文档的Oling Cat，雨痕的《Go语言学习笔记》对Go源码深度的解读，创建了GoHackers的郝林等等。此外由国内的PingCAP公司主导开发的开源TiDB分布式数据库也是一个极为著名的项目。感谢Go中国社区这些朋友和项目，是大家的努力带来了Go语言在国内的繁荣。</p>
+
+<h2 id="5-向go语言学习">5. 向Go语言学习</h2>
+
+<p>候杰老师曾经说过：勿在浮沙筑高台。而中国互联网公司的繁荣更多是在业务层面，底层的基石软件几乎没有一个是中国所创造。作为一个严肃的软件开发人员，我们需要向Go语言学习，继续扎实掌握底层的理论基础，不能只聚焦于业务层面，否则下次中美贸易战的时候依然要被西方卡脖子。</p>
+
+<p>经过这么多年发展，中国的软件行业已经非常繁荣和成熟，同时很多软件开发人员也开始进入35岁的中年门槛。其实35岁正是软件开发人员第二次职业生涯的开始，是开始形成自我创造力的时候。但是某些资本家短视的996或007等急功近利的福报观点正导致中国软件人员过早进入未创新而衰的阶段。中国的软件工程师不应该是码农、更不是码畜牧，我们虽然不会喊口号但是始终在默默前行。</p>
+
+<p>目前中国已经有大量的软件开发人员有能力参与基础软件的设计和开发，正因为这一波脚踏实地程序开发人员的努力，我相信在下个十年我们可以Go得更远。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2019-11-10</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+          <a href="/tags/10year/">10year</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2021/kcl-lang/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">KCL：蚂蚁自研的配置策略语言</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2019/learn-string/">
+            <span class="next-text nav-default">谈谈Go语言字符串</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

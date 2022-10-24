@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go语言的类型转换和类型断言 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="类型转换和类型断言是Go语言中比较绕的地方. Go语言要求所有统一表达式的不同的类型之间必须做显示的类型转换. 而作为Go语言鼻祖的C语言是可以" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-type-assert-and-convert/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go语言的类型转换和类型断言" />
+<meta property="og:description" content="类型转换和类型断言是Go语言中比较绕的地方. Go语言要求所有统一表达式的不同的类型之间必须做显示的类型转换. 而作为Go语言鼻祖的C语言是可以" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-type-assert-and-convert/" />
+
+
+
+<meta property="article:published_time" content="2013-09-15T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2013-09-15T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go语言的类型转换和类型断言">
+<meta itemprop="description" content="类型转换和类型断言是Go语言中比较绕的地方. Go语言要求所有统一表达式的不同的类型之间必须做显示的类型转换. 而作为Go语言鼻祖的C语言是可以">
+
+
+<meta itemprop="datePublished" content="2013-09-15T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-09-15T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1261">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go语言的类型转换和类型断言"/>
+<meta name="twitter:description" content="类型转换和类型断言是Go语言中比较绕的地方. Go语言要求所有统一表达式的不同的类型之间必须做显示的类型转换. 而作为Go语言鼻祖的C语言是可以"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go语言的类型转换和类型断言</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-09-15 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 1261 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#类型之间转换的例子">类型之间转换的例子</a></li>
+<li><a href="#接口之间转换的例子">接口之间转换的例子</a></li>
+<li><a href="#接口和类型之间的转换例子">接口和类型之间的转换例子</a></li>
+<li><a href="#总结">总结</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>类型转换和类型断言是Go语言中比较绕的地方.</p>
+
+<p>Go语言要求所有统一表达式的不同的类型之间必须做显示的类型转换.
+而作为Go语言鼻祖的C语言是可以直接做隐式的类型转换的.
+当然作为<code>const</code>类的字面值常量是要灵活很多的.</p>
+
+<p>不过Go语言必须做显示的类型转换的要求也有例外的情况:</p>
+
+<ul>
+<li><strong>当普通<code>T</code>类型变量向<code>I</code>接口类型转换时是隐式的!</strong></li>
+<li><strong>当<code>IX</code>接口变量向<code>I</code>接口类型转换可以在编译期完成时是隐式的!</strong></li>
+</ul>
+
+<h2 id="类型之间转换的例子">类型之间转换的例子</h2>
+
+<p>下面是Go语言规范给出的部分例子:</p>
+
+<pre><code>*Point(p)        // same as *(Point(p))
+(*Point)(p)      // p is converted to *Point
+&lt;-chan int(c)    // same as &lt;-(chan int(c))
+(&lt;-chan int)(c)  // c is converted to &lt;-chan int
+func()(x)        // function signature func() x
+(func())(x)      // x is converted to func()
+(func() int)(x)  // x is converted to func() int
+func() int(x)    // x is converted to func() int (unambiguous)
+</code></pre>
+
+<p>简单的说, <code>x</code>需要转换为<code>T</code>类型的语法是<code>T(x)</code>.
+如果对于某些地方的优先级拿不准可以自己加<code>()</code>约束.</p>
+
+<p>最后一个转换就是一个容易混淆的语句, 因此需要用括号<code>(func() int)(x)</code>提高优先级.</p>
+
+<p>还有一个容易混淆的地方是 只读和只写的通道类型 <code>&lt;-chan int</code>/<code>chan&lt;- int</code> .</p>
+
+<h2 id="接口之间转换的例子">接口之间转换的例子</h2>
+
+<p>Go语言中接口的类型转换有很多奇怪的特性: 有时候是隐式转换, 有时候需要类型断言.</p>
+
+<p>Go语言的接口之间虽然也有强制转换的语法, 但是因为接口间支持隐式转换, 因此接口之间
+的强制转换语法只是一个摆设.</p>
+
+<p>比如有以下2个接口类型:</p>
+
+<pre><code>type IA interface {}
+type IB interface {Foo()}
+</code></pre>
+
+<p><code>IA</code>要向<code>IB</code>转换如何操作呢? 这个操作无法在编译期确定, 因此必然不是类型转换.
+由于2者都是接口类型, 因此肯定是类型断言:</p>
+
+<pre><code>var a A
+var b = a.(B)
+</code></pre>
+
+<p>当然因为上面的代码中的<code>a</code>是<code>nil</code>, 会导致<code>a.(B)</code>错误.
+但是请注意: <strong>这只是运行错误, 并不是编译错误!</strong></p>
+
+<p><code>IB</code>要向<code>IA</code>转换如何操作呢? 这个操作可以在编译期确定, 因此必然是类型转换.</p>
+
+<pre><code>var b B
+var a = A(b)
+</code></pre>
+
+<p>前面我们说过, Go语言的接口是隐式转换的, 因此还可以省略强制转换的语句:</p>
+
+<pre><code>var b B
+var a = b
+</code></pre>
+
+<h2 id="接口和类型之间的转换例子">接口和类型之间的转换例子</h2>
+
+<p>虽然前面看到接口之间偶尔也会有类似普通类型之间的强制强制转换语法,
+但从本意上来说接口是一个特殊的类型(和普通的类型区别).</p>
+
+<p>我们先定义2个和前面的<code>IA</code>/<code>IB</code>匹配的普通类型(底层类型一样):</p>
+
+<pre><code>type TA int
+type TB int
+func (TB) Foo() {}
+</code></pre>
+
+<p>如果是<code>TA</code>和<code>TB</code>之间的转换, 可以参考前面的<strong>类型之间转换的例子</strong>.
+我们这里重点关注 <code>TA</code>/<code>TB</code> 和 <code>IA</code>/<code>IB</code> 之间的转换.</p>
+
+<p>普通类型向接口类型转换是隐式的(可以编译期确定, 接口的隐式转换特权):</p>
+
+<pre><code>var ta TA
+var ia = ta
+var tb TB
+var ib = tb
+</code></pre>
+
+<p>接口类型向普通类型是类型断言(运行期确定):</p>
+
+<pre><code>var ia IA
+var ta = ia.(TA)
+var ib IB
+var tb = ib.(TB)
+</code></pre>
+
+<p>类型断言在编译期是没有任何保障的, 错误的代码也可以编译通过:</p>
+
+<pre><code>var ta = ib.(TA)
+var tb = ia.(TB)
+</code></pre>
+
+<h2 id="总结">总结</h2>
+
+<p>因为Go语言的类型转换和类型断言设计的不够完美, 因此很难简单归纳.</p>
+
+<p>下面是我整理的判断是类型转换还是类型断言的伪代码:</p>
+
+<pre><code>func x 转换为 y
+    if x 是接口吗 ? {
+        if 可以编译期转换吗 ? {
+            这是类型转换 (接口之间可以隐式转换)
+            // 这里也可以用类型断言, 如果编译期不优化的效率可能低一些
+        } else {
+            这是类型断言 (运行时也可能会失败)
+        }
+    } else {
+        if 可以编译期转换 ? {
+            这是类型转换 (显示转换, 必须成功, 但可能会丢失数据)
+        } else {
+            禁止!
+        }
+    }
+}
+</code></pre>
+
+<p>我们可以看到, 当接口之间可以用类型转换的时候, 其实也是可以用类型断言的.</p>
+
+<p>Go语言接口之间的转换是最混乱的特征之一. 期望Go2.0能够有所改善.</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2013-09-15</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go-gc-2013/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go语言资源自动回收技术</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go-passed-by-value/">
+            <span class="next-text nav-default">Go语言的传参和传引用</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

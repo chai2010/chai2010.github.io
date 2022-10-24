@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go语言的传参和传引用 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="传参和传引用的问题 很多非官方的文档和教材(包括一些已经出版的图书), 对Go语言的传参和引用的讲解 都有很多问题. 导致众多Go语言新手对Go的函" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-passed-by-value/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go语言的传参和传引用" />
+<meta property="og:description" content="传参和传引用的问题 很多非官方的文档和教材(包括一些已经出版的图书), 对Go语言的传参和引用的讲解 都有很多问题. 导致众多Go语言新手对Go的函" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-passed-by-value/" />
+
+
+
+<meta property="article:published_time" content="2013-09-14T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2013-09-14T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go语言的传参和传引用">
+<meta itemprop="description" content="传参和传引用的问题 很多非官方的文档和教材(包括一些已经出版的图书), 对Go语言的传参和引用的讲解 都有很多问题. 导致众多Go语言新手对Go的函">
+
+
+<meta itemprop="datePublished" content="2013-09-14T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-09-14T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1931">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go语言的传参和传引用"/>
+<meta name="twitter:description" content="传参和传引用的问题 很多非官方的文档和教材(包括一些已经出版的图书), 对Go语言的传参和引用的讲解 都有很多问题. 导致众多Go语言新手对Go的函"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go语言的传参和传引用</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-09-14 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 1931 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#传参和传引用的问题">传参和传引用的问题</a></li>
+<li><a href="#传slice不是传引用">传slice不是传引用!</a></li>
+<li><a href="#什么叫传引用">什么叫传引用?</a></li>
+<li><a href="#为什么传slice不是传引用">为什么传slice不是传引用?</a></li>
+<li><a href="#为什么很多人误以为slice是传引用呢">为什么很多人误以为slice是传引用呢?</a></li>
+<li><a href="#传指针和传引用是等价的吗">传指针和传引用是等价的吗?</a></li>
+<li><a href="#所有类型的函数参数都是传值的">所有类型的函数参数都是传值的!</a></li>
+<li><a href="#那go语言有传引用的说法吗">那Go语言有传引用的说法吗?</a></li>
+<li><a href="#什么是引用类型-和指针有何区别-联系">什么是引用类型, 和指针有何区别/联系 ?</a></li>
+<li><a href="#总结">总结</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<h2 id="传参和传引用的问题">传参和传引用的问题</h2>
+
+<p>很多非官方的文档和教材(包括一些已经出版的图书), 对Go语言的传参和引用的讲解
+都有很多问题. 导致众多Go语言新手对Go的函数参数传参有很多误解.</p>
+
+<p>而传参和传引用是编程语言的根本问题, 如果这个问题理解错误可能会导致很多问题.</p>
+
+<h2 id="传slice不是传引用">传slice不是传引用!</h2>
+
+<p>首先, Go语言的函数调用参数全部是传值的, 包括 <code>slice</code>/<code>map</code>/<code>chan</code> 在内所有类型, 没有传引用的说法.</p>
+
+<p>具体请看Go语言的规范:</p>
+
+<blockquote>
+<p>After they are evaluated, <strong>the parameters of the call are passed by value</strong> to the function and the called function begins execution.</p>
+
+<p>from: <a href="http://golang.org/ref/spec#Calls">http://golang.org/ref/spec#Calls</a></p>
+</blockquote>
+
+<h2 id="什么叫传引用">什么叫传引用?</h2>
+
+<p>比如有以下代码:</p>
+
+<pre><code>var a Object
+doSomething(a) // 修改a的值
+print(a)
+</code></pre>
+
+<p>如果函数<code>doSomething</code>修改<code>a</code>的值, 然后<code>print</code>打印出来的也是修改后的值,
+那么就可以认为<code>doSomething</code>是通过引用的方式使用了参数<code>a</code>.</p>
+
+<h2 id="为什么传slice不是传引用">为什么传slice不是传引用?</h2>
+
+<p>我们构造以下的代码:</p>
+
+<pre><code>func main() {
+    a := []int{1,2,3}
+    fmt.Println(a)
+    modifySlice(a)
+    fmt.Println(a)
+}
+
+func modifySlice(data []int) {
+    data = nil
+}
+</code></pre>
+
+<p>其中<code>modifySlice</code>修改了切片<code>a</code>, 输出结果如下:</p>
+
+<pre><code>[1 2 3]
+[1 2 3]
+</code></pre>
+
+<p>说明<code>a</code>在调用<code>modifySlice</code>前后并没有任何变化, 因此<code>a</code>必然是传值的!</p>
+
+<h2 id="为什么很多人误以为slice是传引用呢">为什么很多人误以为slice是传引用呢?</h2>
+
+<p>可能是FAQ说slice是引用类型, 但并不是传引用!</p>
+
+<p>下面这个代码可能是错误的根源:</p>
+
+<pre><code>func main() {
+    a := []int{1,2,3}
+    fmt.Println(a)
+    modifySliceData(a)
+    fmt.Println(a)
+}
+
+func modifySliceData(data []int) {
+    data[0] = 0
+}
+</code></pre>
+
+<p>输出为:</p>
+
+<pre><code>[1 2 3]
+[0 2 3]
+</code></pre>
+
+<p>函数<code>modifySliceData</code>确实通过参数修改了切片的内容.</p>
+
+<p>但是请注意: 修改通过函数修改参数内容的机制有很多, 其中传参数的地址就可以修改参数的值(其实是修改参数中指针指向的数据), 并不是只有引用一种方式!</p>
+
+<h2 id="传指针和传引用是等价的吗">传指针和传引用是等价的吗?</h2>
+
+<p>比如有以下代码:</p>
+
+<pre><code>func main() {
+    a := new(int)
+    fmt.Println(a)
+    modify(a)
+    fmt.Println(a)
+}
+
+func modify(a *int) {
+    a = nil
+}
+</code></pre>
+
+<p>输出为:</p>
+
+<pre><code>0xc010000000
+0xc010000000
+</code></pre>
+
+<p>可以看出指针<code>a</code>本身并没有变化. 传指针或传地址也只能修改指针指向的内存的值,
+并不能改变指针本身在值.</p>
+
+<p><strong>因此, 函数参数传传指针也是传值的, 并不是传引用!</strong></p>
+
+<h2 id="所有类型的函数参数都是传值的">所有类型的函数参数都是传值的!</h2>
+
+<p>包括<code>slice</code>/<code>map</code>/<code>chan</code>等基础类型和自定义的类型都是传值的.</p>
+
+<p>但是因为<code>slice</code>和<code>map</code>/<code>chan</code>底层结构的差异, 又导致了它们传值的影响并不完全等同.</p>
+
+<p>重点归纳如下:</p>
+
+<ul>
+<li>GoSpec: the parameters of the call are passed by value!</li>
+<li>map/slice/chan 都是传值, 不是传引用</li>
+<li>map/chan 对应指针, 和引用类似</li>
+
+<li><p>slice 是结构体和指针的混合体</p></li>
+
+<li><p>slice 含 values/count/capacity 等信息, 是按值传递</p></li>
+
+<li><p>slice 中的 values 是指针, 按值传递</p></li>
+
+<li><p>按值传递的 slice 只能修改values指向的数据, 其他都不能修改</p></li>
+
+<li><p>以指针或结构体的角度看, 都是值传递!</p></li>
+</ul>
+
+<h2 id="那go语言有传引用的说法吗">那Go语言有传引用的说法吗?</h2>
+
+<p>Go语言其实也是有传引用的地方的, 但是不是函数的参数, 而是闭包对外部环境是通过引用访问的.</p>
+
+<p>查看以下的代码:</p>
+
+<pre><code>func main() {
+    a := new(int)
+    fmt.Println(a)
+    func() {
+        a = nil
+    }()
+    fmt.Println(a)
+}
+</code></pre>
+
+<p>输出为:</p>
+
+<pre><code>0xc010000000
+&lt;nil&gt;
+</code></pre>
+
+<p>因为闭包是通过引用的方式使用外部环境的<code>a</code>变量, 因此可以直接修改<code>a</code>的值.</p>
+
+<p>比如下面2段代码的输出是截然不同的, 原因就是第二个代码是通过闭包引用的方式输出<code>i</code>变量:</p>
+
+<pre><code>for i := 0; i &lt; 5; i++ {
+    defer fmt.Printf(&quot;%d &quot;, i)
+    // Output: 4 3 2 1 0
+}
+
+fmt.Printf(&quot;\n&quot;)
+    for i := 0; i &lt; 5; i++ {
+    defer func(){ fmt.Printf(&quot;%d &quot;, i) } ()
+    // Output: 5 5 5 5 5
+}
+</code></pre>
+
+<p>像第二个代码就是于闭包引用导致的副作用, 回避这个副作用的办法是通过参数传值或每次闭包构造不同的临时变量:</p>
+
+<pre><code>// 方法1: 每次循环构造一个临时变量 i
+for i := 0; i &lt; 5; i++ {
+    i := i
+    defer func(){ fmt.Printf(&quot;%d &quot;, i) } ()
+    // Output: 4 3 2 1 0
+}
+// 方法2: 通过函数参数传参
+for i := 0; i &lt; 5; i++ {
+    defer func(i int){ fmt.Printf(&quot;%d &quot;, i) } (i)
+    // Output: 4 3 2 1 0
+}
+</code></pre>
+
+<h2 id="什么是引用类型-和指针有何区别-联系">什么是引用类型, 和指针有何区别/联系 ?</h2>
+
+<p>在Go语言的官方FAQ中描述, <code>maps</code>/<code>slices</code>/<code>channels</code> 是引用类型, 数组是值类型:</p>
+
+<blockquote>
+<p><strong>Why are maps, slices, and channels references while arrays are values?</strong></p>
+
+<p>There&rsquo;s a lot of history on that topic. Early on, maps and channels were syntactically pointers and it was impossible to declare or use a non-pointer instance. Also, we struggled with how arrays should work. Eventually we decided that the strict separation of pointers and values made the language harder to use. Changing these types to act as references to the associated, shared data structures resolved these issues. This change added some regrettable complexity to the language but had a large effect on usability: Go became a more productive, comfortable language when it was introduced.</p>
+
+<p>from: <a href="http://golang.org/doc/faq#references">http://golang.org/doc/faq#references</a></p>
+</blockquote>
+
+<p>我个人理解, 引用类型和指针在底层实现上是一样的.
+但是引用类型在语法上隐藏了显示的指针操作.
+引用类型和函数参数的传引用/传值并不是一个概念.</p>
+
+<p>我们知道 <code>maps</code>/<code>slices</code>/<code>channels</code> 在底层虽然隐含了指针,
+但是使用中并没有需要使用指针的语法.
+但是引用内存毕竟是基于指针实现, 因此就必须依赖 <code>make</code>/<code>new</code> 之类的函数才能构造出来.
+当然它们都支持字面值语法构造, 但是本质上还是需要一个构造的过程的.</p>
+
+<p>要用好Go语言的引用类型, 必须要了解一些底层的结构(特别是<code>slice</code>的混合结构).</p>
+
+<p>我们可以自己给Go语言模拟一个引用类型.
+我们可以将值类型特定的数组类型定义为一个引用类型(同时提供一个构造函数):</p>
+
+<pre><code>type RefIntArray2 *[2]int
+
+func NewRefIntArray2() RefIntArray2 {
+    return RefIntArray2(new([2]int))
+}
+</code></pre>
+
+<p>这样我们就可以将 <code>RefIntArray2</code> 当作引用类型来使用.</p>
+
+<pre><code>func main() {
+    refArr2 := NewRefIntArray2()
+    fmt.Println(refArr2)
+    modifyRefArr2(refArr2)
+    fmt.Println(refArr2)
+}
+
+func modifyRefArr2(arr RefIntArray2) {
+    arr[0] = 1
+}
+</code></pre>
+
+<p>输出为:</p>
+
+<pre><code>&amp;[0 0]
+&amp;[1 0]
+</code></pre>
+
+<p>之所以选择数组作为例子, 是因为Go语言的数组指针可以直接用<code>[]</code>访问的语法糖.
+所以, 引用类型一般都是底层指针实现, 只是在上层加上的语法糖而已.</p>
+
+<p><em>注: 本节根据 @hooluupog 和 @LoongWong 的评论做的补充.</em></p>
+
+<h2 id="总结">总结</h2>
+
+<ul>
+<li>函数参数传值, 闭包传引用!</li>
+<li>slice 含 values/count/capacity 等信息, 是按值传递</li>
+<li>按值传递的 slice 只能修改values指向的数据, 其他都不能修改</li>
+<li>slice 是结构体和指针的混合体</li>
+<li>引用类型和传引用是两个概念</li>
+</ul>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2013-09-14</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go-type-assert-and-convert/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go语言的类型转换和类型断言</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go1_2/">
+            <span class="next-text nav-default">Go1.2新功能简介</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ascii on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/ascii/</link>
+    <description>Recent content in Ascii on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 06 May 2013 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/ascii/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>ASCII码中大小写字母转换</title>
+      <link>https://chai2010.cn/post/misc/ascii-upper-lower/</link>
+      <pubDate>Mon, 06 May 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/misc/ascii-upper-lower/</guid>
+      
+        <description>&lt;p&gt;ASCII中消息字母比大写字母大32, 比如: &amp;lsquo;a&amp;rsquo;对应97, &amp;lsquo;A&amp;rsquo;对应65(97-32=65).&lt;/p&gt;
+
+&lt;p&gt;ASCII中大小写字母都是排列有序的, 一般在转换大小写字母时都会基于这个特性.&lt;/p&gt;
+
+&lt;p&gt;下边是&lt;ctypes.h&gt;中转换函数的一种实现:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int tolower(int c) {return ( c -&#39;A&#39;+&#39;a&#39;);}
+int toupper(int c) {return ( c -&#39;a&#39;+&#39;A&#39;);}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其实&lt;code&gt;&#39;a&#39;-&#39;A&#39;&lt;/code&gt;对应的32刚好是2的幂, 二进制表示为: &lt;code&gt;00010 0000&lt;/code&gt;.
+ASCII中大小写字母转换只是将32的二进制中唯一的bit为1的数置0或置1.
+置0对应减32转换为大写字母, 置1对应加32转换为小写字母.&lt;/p&gt;
+
+&lt;p&gt;我们可以用位运算重新实现上面的函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int tolower(int c) {return (c ^ 32);}
+int toupper(int c) {return (c ^ 32);}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;继续观察可以发现32刚好对应ASCII中的空格&amp;rsquo; &amp;lsquo;, 因此代码调整为:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int tolower(int c) {return (c ^ &#39; &#39;);}
+int toupper(int c) {return (c ^ &#39; &#39;);}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在转换单个字母时这样就可以了: &lt;code&gt;c ^= &#39; &#39;&lt;/code&gt;.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>I18n on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/i18n/</link>
+    <description>Recent content in I18n on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 04 Apr 2013 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/i18n/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>VC2010下Qt5的中文乱码问题</title>
+      <link>https://chai2010.cn/post/misc/qt5-i18n/</link>
+      <pubDate>Thu, 04 Apr 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/misc/qt5-i18n/</guid>
+      
+        <description>&lt;p&gt;要搞清楚这个问题，先要弄明白编码。但是编码问题实在太复杂，这里肯定讲不开。&lt;/p&gt;
+
+&lt;p&gt;我先找一个例子，比如：&amp;rdquo;中文&amp;rdquo; 的 Unicode 码点/UTF8编码/GBK 分别是多少。&lt;/p&gt;
+
+&lt;p&gt;先去这个网站，输入 &amp;ldquo;中文&amp;rdquo; 查询对应的 Unicode 码点/UTF8编码：&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://www.mytju.com/classcode/tools/encode_utf8.asp&#34;&gt;http://www.mytju.com/classcode/tools/encode_utf8.asp&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Unicode的码点分别是(十进制)：中(20013)，文(25991)。
+对应的UTF8编码分别(16进制): 中(E4B8AD)，文(E69687)。&lt;/p&gt;
+
+&lt;p&gt;然后再去下面这个网站，输入 &amp;ldquo;中文&amp;rdquo; 查询对应的 GBK 编码：
+&lt;a href=&#34;http://www.mytju.com/classcode/tools/encode_gb2312.asp&#34;&gt;http://www.mytju.com/classcode/tools/encode_gb2312.asp&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;GBK编码16进制(GBK内码)分别是：中(D6D0)，文(CEC4)。&lt;/p&gt;
+
+&lt;p&gt;现在已经知道了&amp;rdquo;中文&amp;rdquo;的UTF8和GBK编码的具体值。
+我们再看看VC2010是怎么处理的。&lt;/p&gt;
+
+&lt;h2 id=&#34;1-先看-无-bom-的-utf8-编码的代码-utf8-no-bom-cpp&#34;&gt;1. 先看 无 BOM 的 UTF8 编码的代码 (utf8_no_bom.cpp)&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;// utf8 no bom
+// 文件中包含不能在当前代码页（936）中表示的字符
+#include &amp;lt;stdio.h&amp;gt;
+
+int main() {
+    const char* str = &amp;quot;中文&amp;quot;;
+    for(int i = 0; i &amp;lt; sizeof(str); ++i) {
+        printf(&amp;quot;0x%x &amp;quot;, str[i]&amp;amp;0xFF);
+    }
+    return 0;
+    // Output:
+    // 0xe4 0xb8 0xad 0xe6
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出是：0xe4 0xb8 0xad 0xe6。
+感觉好像是对的。&lt;/p&gt;
+
+&lt;p&gt;但是，先别急：VC编译时输出了一条警告信息：
+utf8_no_bom.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。
+请将该文件保存为 Unicode 格式以防止数据丢失。&lt;/p&gt;
+
+&lt;p&gt;潜台词就是，你这个代码有GBK不能表示的字符，请用Unicode方式保存。
+VC根本就没把 代码(utf8_no_bom.cpp) 当作UTF8，VC只是把它作为GBK处理罢了。&lt;/p&gt;
+
+&lt;p&gt;那为什么又输出了正确的结果呢？&lt;/p&gt;
+
+&lt;p&gt;因为 VC 把 (utf8_no_bom.cpp) 当作 GBK，而编译时也要转换为本地编码(也是GBK)。
+因此，UTF8编码的 &amp;ldquo;中文&amp;rdquo;，被VC当作编码为 &amp;ldquo;0xe4 0xb8 0xad 0xe6&amp;rdquo; 的其他中文处理了。
+VC已经不知道 &amp;ldquo;0xe4 0xb8 0xad 0xe6&amp;rdquo; 是对应 &amp;ldquo;中文&amp;rdquo; 字面值了。&lt;/p&gt;
+
+&lt;p&gt;但是在GBK(实际是无BOM的UTF8)转GBK的过程中，发现了一些UTF8编码的字符并不是
+GBK能表达的合理方式，因此就出现了那个C4819编译警告。&lt;/p&gt;
+
+&lt;h2 id=&#34;2-再看带bom的utf8是怎么处理的-utf8-with-bom-cpp&#34;&gt;2. 再看带BOM的UTF8是怎么处理的 (utf8_with_bom.cpp)&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;// utf8 with bom
+#include &amp;lt;stdio.h&amp;gt;
+
+int main() {
+    const char* str = &amp;quot;中文&amp;quot;;
+    for(int i = 0; i &amp;lt; sizeof(str); ++i) {
+        printf(&amp;quot;0x%x &amp;quot;, str[i]&amp;amp;0xFF);
+    }
+    return 0;
+    // Output:
+    // 0xd6 0xd0 0xce 0xc4
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;编译没有警告，但是输出有问题：0xd6 0xd0 0xce 0xc4。&lt;/p&gt;
+
+&lt;p&gt;源文件明明是 UTF8 编码的格式&amp;rdquo;0xe4 0xb8 0xad 0xe6&amp;rdquo;，
+怎么变成了 &amp;ldquo;0xd6 0xd0 0xce 0xc4&amp;rdquo; (这个是GBK编码)？&lt;/p&gt;
+
+&lt;p&gt;这就是VC私下干的好事：它自作聪明的将UTF8源代码转换为GBK处理了！&lt;/p&gt;
+
+&lt;p&gt;VC为何要做这样蠢事？&lt;/p&gt;
+
+&lt;p&gt;原因是为了兼容老的VC版本。
+因为以前的VC不能处理UTF8，都是用本地编码处理的。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-在看看真的gbk是怎么处理的-gbk-cpp&#34;&gt;3. 在看看真的GBK是怎么处理的 (gbk.cpp)&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;// gbk
+#include &amp;lt;stdio.h&amp;gt;
+
+int main() {
+    const char* str = &amp;quot;中文&amp;quot;;
+    for(int i = 0; i &amp;lt; sizeof(str); ++i) {
+        printf(&amp;quot;0x%x &amp;quot;, str[i]&amp;amp;0xFF);
+    }
+    return 0;
+    // Output:
+    // 0xd6 0xd0 0xce 0xc4
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;没有编译错误，输出也和源代码一致：&amp;rdquo;0xd6 0xd0 0xce 0xc4&amp;rdquo;。&lt;/p&gt;
+
+&lt;p&gt;因为源文件就是GBK，cl在编译时GBK转化为GBK，没有改变字符串。&lt;/p&gt;
+
+&lt;p&gt;只是，现在很多人不想用GBK了（因为只能在中国地区用，不能表示全球字符）。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;到这里，可以初步小结一下：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;VC编辑器和VC编译器是2个概念，VC编辑器支持UTF8并不能表示VC编译器也支持UTF8&lt;/li&gt;
+&lt;li&gt;VC编辑器从2008?开始支持带BOM的UTF8(不带BOM的暂时没戏，因为会本地编码冲突)&lt;/li&gt;
+&lt;li&gt;VC编译器从2010开始重要可以支持UTF8了(虽然支持方式很不优雅)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;4-看看vc2010是怎么处理带bom的utf8的-utf8-with-bom-2010-cpp&#34;&gt;4. 看看VC2010是怎么处理带BOM的UTF8的 (utf8_with_bom_2010.cpp)&lt;/h2&gt;
+
+&lt;p&gt;VC2010重要增加了UTF8的编译支持(&lt;code&gt;#pragma execution_character_set(&amp;quot;utf-8&amp;quot;)&lt;/code&gt;),
+具体查看:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://social.msdn.microsoft.com/Forums/en-US/vcgeneral/thread/2f328917-4e99-40be-adfa-35cc17c9cdec&#34;&gt;http://social.msdn.microsoft.com/Forums/en-US/vcgeneral/thread/2f328917-4e99-40be-adfa-35cc17c9cdec&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// utf8 with bom (VC2010), 这句是重点！
+#pragma execution_character_set(&amp;quot;utf-8&amp;quot;)
+
+#include &amp;lt;stdio.h&amp;gt;
+
+int main() {
+    const char* str = &amp;quot;中文&amp;quot;;
+    for(int i = 0; i &amp;lt; sizeof(str); ++i) {
+        printf(&amp;quot;0x%x &amp;quot;, str[i]&amp;amp;0xFF);
+    }
+    return 0;
+    // Output:
+    // 0xe4 0xb8 0xad 0xe6
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;没有编译错误，输出也和源代码一致：&amp;rdquo;0xe4 0xb8 0xad 0xe6&amp;rdquo;。&lt;/p&gt;
+
+&lt;p&gt;UTF8编码，UTF8输出。完美!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;回到-qt5-的中文输出问题&#34;&gt;回到 Qt5 的中文输出问题。&lt;/h1&gt;
+
+&lt;p&gt;Qt默认支持 VS2010/MinGW/Gcc 等编译器，而它们现在都已经真正支持UTF8了。&lt;/p&gt;
+
+&lt;p&gt;当然，VS2010 对UTF8的支持会入侵代码(&lt;code&gt;#pragma execution_character_set(&amp;quot;utf-8&amp;quot;)&lt;/code&gt;)。&lt;/p&gt;
+
+&lt;p&gt;看看Qt官方论坛别人是怎么说的：
+&lt;a href=&#34;http://qt-project.org/forums/viewthread/17617&#34;&gt;http://qt-project.org/forums/viewthread/17617&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Nothing special need to do, it will works by default.
+If the exec-charset of your your compiler is UTF-8.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;简单的说，从Qt5开始，源代码就是默认UTF8编码的。&lt;/p&gt;
+
+&lt;p&gt;当然，VC2010编辑器对带BOM的UTF8也是认识，只可惜VC2010编译器根本承认它是UTF8！&lt;/p&gt;
+
+&lt;p&gt;在继续看官方论坛的回复：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;You can write a simple example like this&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  #include &amp;lt;QApplication&amp;gt;
+  #include &amp;lt;QLabel&amp;gt;
+
+  #if _MSC_VER &amp;gt;= 1600
+  #pragma execution_character_set(&amp;quot;utf-8&amp;quot;)
+  #endif
+
+  int main(int argc, char *argv[])
+  {
+      QApplication a(argc, argv);
+      QLabel label(&amp;quot;ąśćółęńżź&amp;quot;);
+      label.show();
+
+      return a.exec();
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If other people can reproduce your problem, you can file a bug.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;教完整的解决方案(增加了Qt4/Qt5和非VC环境的判断):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// Coding: UTF-8(BOM)
+#if defined(_MSC_VER) &amp;amp;&amp;amp; (_MSC_VER &amp;gt;= 1600)
+# pragma execution_character_set(&amp;quot;utf-8&amp;quot;)
+#endif
+
+#include &amp;lt;QApplication&amp;gt;
+#include &amp;lt;QTextCodec&amp;gt;
+#include &amp;lt;QLabel&amp;gt;
+
+int main(int argc, char* argv[])
+{
+    QApplication app(argc, argv);
+
+#if QT_VERSION &amp;lt; QT_VERSION_CHECK(5,0,0)
+#if defined(_MSC_VER) &amp;amp;&amp;amp; (_MSC_VER &amp;lt; 1600)
+    QTextCodec::setCodecForTr(QTextCodec::codecForName(&amp;quot;GB18030-0&amp;quot;));
+#else
+    QTextCodec::setCodecForTr(QTextCodec::codecForName(&amp;quot;UTF-8&amp;quot;));
+#endif
+#endif
+
+    QLabel *label = new QLabel(QObject::tr(&amp;quot;你好！&amp;quot;));
+    label-&amp;gt;show();
+
+    return app.exec();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有以下几种类型(源代码必须是带BOM的UTF8):&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Qt5+/VC2010+: 包含了 &lt;code&gt;# pragma execution_character_set(&amp;quot;utf-8&amp;quot;)&lt;/code&gt; 已经支持中文&lt;/li&gt;
+&lt;li&gt;Qt5/VC2008-: 这个暂时误解(我还没找到方法)&lt;/li&gt;
+&lt;li&gt;Qt4+/VC2008-: 采用以前老的方式, 指定代码为 &amp;ldquo;GB18030-0&amp;rdquo; 编码&lt;/li&gt;
+&lt;li&gt;Qt4/Qt5/Linux: 只要是默认的UTF8环境, 应该都没问题&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;其实这个问题不是Qt特有的, 追根溯源还是C/C++和编译器的问题.&lt;/p&gt;
+
+&lt;p&gt;即使是支持UTF16的Java也同样难逃此问题.&lt;/p&gt;
+
+&lt;p&gt;不过还好, &lt;a href=&#34;http://golang.org&#34;&gt;Go语言&lt;/a&gt; 算是彻底了解决了这个问题.
+以后转向 &lt;a href=&#34;http://golang.org&#34;&gt;Go语言&lt;/a&gt; 了 !&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

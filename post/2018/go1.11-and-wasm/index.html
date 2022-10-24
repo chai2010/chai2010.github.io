@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go1.11和WebAssembly - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。
+
+" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2018/go1.11-and-wasm/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go1.11和WebAssembly" />
+<meta property="og:description" content="Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2018/go1.11-and-wasm/" />
+
+
+
+<meta property="article:published_time" content="2018-08-25T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2018-08-25T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go1.11和WebAssembly">
+<meta itemprop="description" content="Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。
+
+">
+
+
+<meta itemprop="datePublished" content="2018-08-25T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2018-08-25T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1234">
+
+
+
+<meta itemprop="keywords" content="golang,wasm," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go1.11和WebAssembly"/>
+<meta name="twitter:description" content="Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go1.11和WebAssembly</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2018-08-25 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+              <a href="/categories/wasm/"> wasm </a>
+            
+          </div>
+        <span class="more-meta"> 约 1234 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。</p>
+
+<p></p>
+
+<p><img src="/images/win2k-on-wasm.jpg" alt="" /></p>
+
+<p>在上一周，qemu的作者bellard大神将Windows 2000搬到浏览器到新闻彻底引爆了WebAssembly技术，这也证明了WebAssembly的强大的性能优势。</p>
+
+<p>感兴趣的同学可以查看bellard大神到网站，网站提供了在浏览器Linux和Windows等多种系统等运行链接：<a href="https://bellard.org/jslinux/">https://bellard.org/jslinux/</a></p>
+
+<p>不过本文我们将重点和大家分享如何在Go语言中使用WebAssembly。先安装好Go1.11+版本的Go语言环境。然后创建hello.go文件：</p>
+
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	fmt.Println(&quot;你好，WebAssembly！&quot;)
+}
+</code></pre>
+
+<p>为了不了解Go语言的同学便于理解，让我们简单介绍一下程序。第一句表示当前的包名字为main，同时包中有一个main函数，而main包的main函数就是Go语言程序的入口。在main函数中通过导入的fmt包内的Println方法输出了一个字符串。然后在命令行中直接输入go run hello.go来运行程序。如果一切正常的话。应该可以在命令行看到输出&rdquo;你好，WebAssembly！&rdquo;的结果。</p>
+
+<p>Go1.11开始支持WebAssembly，对应的操作系统名为js，对应的CPU类型为wasm。目前还无法通过go run的方式直接运行输出的wasm文件，因此我们需要通过go build的方式生成wasm目标文件，然后通过Node环境执行。需要注意的是更新的Node版本对wasm的支持会更好，作者推进使用v10以上的版本。</p>
+
+<p>通过以下命令将hello.go编译为a.out.wasm：</p>
+
+<pre><code>$ GOARCH=wasm GOOS=js go build -o a.out.wasm hello.go
+</code></pre>
+
+<p>生成的a.out.wasm文件体积可能超过2MB大小。而且生成等a.out.wasm还无法直接运行，需要初始化Go语言必须的运行时环境。</p>
+
+<p>对运行时初始化是一个相对复杂的工作，因此Go语言提供了一个$(GOROOT)/misc/wasm/wasm_exec.js文件用于初始化和运行的工作。同时提供了一个基于node包装的$(GOROOT)/misc/wasm/go_js_wasm_exec脚本文件，用于执行Go语言生成的wasm文件。</p>
+
+<p>参考go_js_wasm_exec脚本的实现，我们可以直接使用wasm_exec.js来运行wasm模块。我们可以先将wasm_exec.js文件复制到当前目录，然后通过以下命令运行wasm模块：</p>
+
+<pre><code>$ node wasm_exec.js a.out.wasm
+你好，WebAssembly
+</code></pre>
+
+<p>现在终于可以正常运行Go语言生成wasm程序了。因此以后可以使用Go语言来开发Web应用了。</p>
+
+<p>如果对WebAssembly技术感兴趣，可以关注Github上的WebAssembly(wasm)资源精选项目：</p>
+
+<p><a href="https://github.com/chai2010/awesome-wasm-zh">https://github.com/chai2010/awesome-wasm-zh</a></p>
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2018-08-25</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+          <a href="/tags/wasm/">wasm</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/wasm/wasm-v1.0/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Ending定律即将生效!</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2018/advanced-go-programming-book-done/">
+            <span class="next-text nav-default">《Go高级编程》初稿完成</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

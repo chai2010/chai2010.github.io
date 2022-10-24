@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>RSA学习笔记 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="先贴学习RSA时的练习代码(uint32范围): // RSA加密系统: // 1. 随机选取2个大的素数p和q // 2. 根据n=p*q式计算出n的值 // 3. 选取一个" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2006/rsa-notes/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="RSA学习笔记" />
+<meta property="og:description" content="先贴学习RSA时的练习代码(uint32范围): // RSA加密系统: // 1. 随机选取2个大的素数p和q // 2. 根据n=p*q式计算出n的值 // 3. 选取一个" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2006/rsa-notes/" />
+
+
+
+<meta property="article:published_time" content="2006-12-27T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2006-12-27T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="RSA学习笔记">
+<meta itemprop="description" content="先贴学习RSA时的练习代码(uint32范围): // RSA加密系统: // 1. 随机选取2个大的素数p和q // 2. 根据n=p*q式计算出n的值 // 3. 选取一个">
+
+
+<meta itemprop="datePublished" content="2006-12-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2006-12-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2046">
+
+
+
+<meta itemprop="keywords" content="算法,加密,RSA," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="RSA学习笔记"/>
+<meta name="twitter:description" content="先贴学习RSA时的练习代码(uint32范围): // RSA加密系统: // 1. 随机选取2个大的素数p和q // 2. 根据n=p*q式计算出n的值 // 3. 选取一个"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">RSA学习笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2006-12-27 </span>
+        <div class="post-category">
+            
+              <a href="/categories/%E7%AE%97%E6%B3%95/"> 算法 </a>
+            
+          </div>
+        <span class="more-meta"> 约 2046 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>先贴学习RSA时的练习代码(uint32范围):</p>
+
+<pre><code>// RSA加密系统:
+// 1. 随机选取2个大的素数p和q
+// 2. 根据n=p*q式计算出n的值
+// 3. 选取一个与f(n)互素的小奇数e. 其中f(n)为欧拉装载函数, 值为(p-1)(q-1)
+// 4. 对于模f(n), 计算e的乘法逆元d
+// 5. 公开对P=(e,n), 并把它作为RSA公开秘钥
+// 6. 把对S=(d,n)进行保密, 并把它作为RSA的机密秘钥
+
+// 加密过程: C = (M^e)%n
+// 解秘过程: M = (C^d)%n
+
+#include &lt;stdio.h&gt;
+#include &lt;assert.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+
+// 返回一个位于low和high之间的随机数
+#define ran(low,high) ((rand()%((high)-(low)+1))+(low))
+
+// 计算数组的元素个数
+#define NELEMS(x) ((sizeof(x)) / (sizeof((x)[0])))
+
+// 构造素数序列primes[]
+void makePrimes(int primes[], int num)
+{
+    primes[0] = 2;
+
+    for(int p = 3, cnt = 1; cnt &lt; num; p += 2)
+    {
+        for(int k = 0; ; ++k)
+        {
+            // 可以在div时得到余数
+            div_t dt = div(p, primes[k]);
+
+            if(dt.rem == 0) break;
+            if(dt.quot &lt;= primes[k]) { primes[cnt++] = p; break; }
+        }
+    }
+}
+
+// 返回2个随机素数, 在10000~40000之间
+void rand_pq(int&amp; p, int&amp; q)
+{
+    // [2, 2^16]范围内有6542个素数
+    static int primes[1024*8];
+    static int low, high;
+
+    // 初始化(只处理一次)
+    if(low == 0 &amp;&amp; high == 0)
+    {
+        // 生成素数序列
+        makePrimes(primes, NELEMS(primes));
+
+        // 计算10000和40000附近的素数下标
+        for(int i = 0; i &lt; NELEMS(primes); ++i)
+        {
+            if(!low &amp;&amp; primes[i] &gt; 10000) { low = i; continue; }
+            if(!high &amp;&amp; primes[i] &gt; 40000) { high = i; break; }
+        }
+
+        // 设置随机数种子
+        srand(time(NULL));
+    }
+
+    // 在low, high之间返回2个不同的随机数
+    int r1 = ran(low,high);
+    int r2 = ran(low,high);
+
+    // r1和r2不能相等
+    while(r2 == r1) r2 = ran(low,high);
+
+    // 返回r1,r2位置对应的素数
+    p = primes[r1];
+    q = primes[r2];
+}
+
+// 扩展的欧几里得算法
+int xgcd(int a, int b, int&amp; x, int&amp; y)
+{
+    if(b == 0) { x = 1, y = 0; return a; }
+
+    int d = xgcd(b, a%b, x, y);
+    int t = x-(a/b)*y; x = y; y = t;
+
+    return d;
+}
+
+// 针对(p-1)(q-1)产生e和d
+void rand_ed(int p, int q, int&amp; e, int &amp;d)
+{
+    int n = (p-1)*(q-1);
+    int x, y;
+
+    // 选择一个小的互素奇数e
+    for(e = 37; ; e += 2)
+    {
+        if(xgcd(e, n, x, y) == 1) break;
+    }
+
+    // 将d转换到[0, n-1]之间
+    while(x &gt; 0) x -= n;
+    while(x &lt; 0) x += n;
+
+    d = x;
+}
+
+// 计算(u*v)%m
+unsigned mul_mod(unsigned u, unsigned v, unsigned z)
+{
+    // 如果u*v没有溢出, 则直接计算
+    if((u*v)/u == v) return (u*v)%z;
+
+    // 进行长乘法(结果为64位)
+    unsigned u0, v0, w0;
+    unsigned u1, v1, w1, w2, t;
+
+    u0 = u &amp; 0xFFFF;  u1 = u &gt;&gt; 16;
+    v0 = v &amp; 0xFFFF;  v1 = v &gt;&gt; 16;
+    w0 = u0*v0;
+    t  = u1*v0 + (w0 &gt;&gt; 16);
+    w1 = t &amp; 0xFFFF;
+    w2 = t &gt;&gt; 16;
+    w1 = u0*v1 + w1;
+
+    // x为高32位, y为低32位
+    unsigned x = u1*v1 + w2 + (w1 &gt;&gt; 16);
+    unsigned y = u*v;
+
+    // 进行长除法(被除数为64位)
+    for (int i = 1; i &lt;= 32; i++)
+    {
+        t = (int)x &gt;&gt; 31;           // All 1's if x(31) = 1.
+
+        x = (x &lt;&lt; 1) | (y &gt;&gt; 31);   // Shift x || y left
+        y &lt;&lt;= 1;                    // one bit.
+
+        if((x|t) &gt;= z) { x -= z; y++; }
+    }
+
+    return x; // y为商, x为余数
+}
+
+// 计算(a^p)%n
+unsigned pow_mod(unsigned a, unsigned p, unsigned n)
+{
+    unsigned k = 1;
+
+    // 反复平方法
+    while(p &gt; 1)
+    {
+        if(p&amp;1) k = mul_mod(k, a, n);
+        a = mul_mod(a, a, n); p &gt;&gt;= 1;
+    }
+
+    return mul_mod(k, a, n);
+}
+
+// 产生RSA需要的所有参数
+void rsa_rand(int&amp; e, int&amp; d, int&amp; n)
+{
+    int p, q;
+
+    rand_pq(p, q);
+    rand_ed(p, q, e, d);
+    n = p*q;
+}
+
+// 加密和解密的过程
+int rsa_encryp(int m, int ed, int n)
+{
+    assert(m &gt; 0 &amp;&amp; m &lt; n);
+    return pow_mod(m, ed, n);
+}
+
+// RSA加密测试
+int main(void)
+{
+    int e, d, n;
+    int m = 119; // 需要加密的数据
+
+    printf(&quot;RSA加密系统.\n\n&quot;);
+
+    // 产生秘钥
+    rsa_rand(e, d, n);
+    printf(&quot;秘钥: e = %d, d = %d, n = %d\n\n&quot;, e, d, n);
+
+    while(1)
+    {
+        printf(&quot;\n输入数据M(0&lt;M&lt;n): &quot;);
+        if(scanf(&quot;%d&quot;, &amp;m) != 1) break;
+        if(m &lt;= 0 || m &gt;= n) break;
+
+        // 加密前数据
+        printf(&quot;加密前: %d\n&quot;, m);
+
+        // 加密文件, 秘钥为(e, n)
+        printf(&quot;加密后: %d\n&quot;, m = rsa_encryp(m, e, n));
+
+        // 解密文件, 秘钥为(d, n)
+        printf(&quot;解密后: %d\n&quot;, m = rsa_encryp(m, d, n));
+    }
+
+    return 0;
+}
+</code></pre>
+
+<p>关于学习RSA的几点体会:</p>
+
+<p><strong>1. 该实现的RSA密码强度很低, 可能仅满足于学习需要</strong></p>
+
+<p>具体地n = p*q, n为32位int类型数据, 则p/q中必然
+有一个值小于等于sqrt(n) &lt;= sqrt(2^32) == 2^16.
+而[0,2^16]范围内只有6542个素数, 因此因式分解n的
+难度很低.</p>
+
+<p><strong>2. 实际产生大的随机素数时, 一般采用费马小定理</strong></p>
+
+<p>费马定理只是一种概率测试. 由于这里涉及的素数范围
+很小, 因此直接从素数表中随机选取. 素数表的构造过
+程很有意思, makePrimes从第一个素数2开始, 根据已知
+的素数逐步扩充未知的素数.</p>
+
+<p><strong>3. 关于GCD</strong></p>
+
+<p>这里采用了扩展的GCD算法, 为的是得到下面的等式:
+x*a + y*b == gcd(a,b).
+根据x可以得到模线形方程a*x=1(mod b)的解.
+GCD还有一种二进制的实现, 这里采用的是Euclid给的
+算法.</p>
+
+<p>观察代码可以发现, a/b和x/y参数的传递方向是相反:
+a/b在进栈的时候向栈内传递信息; x/y则是在出栈的
+时候从栈底向外传递信息.</p>
+
+<p><strong>4. 关于与(p-1)*(q-1)互素的小奇数e</strong></p>
+
+<p>满足e的条件的基数很多, 但是具体取哪个呢? 最小的
+是否可以?</p>
+
+<p>个人觉得e的值最好不要小于log2(n). 因为如果e的值
+太小, 比如为3, 那么当m^3也小于n时就相当于没有加密
+了. 针对这里n为int型数据的话, e大于32应该就可以了.</p>
+
+<p><strong>5. m为1和n-1时</strong></p>
+
+<p>m为1的话, 加密解密都是1, 因为1的x次幂依然为1.
+m为n-1, 测试了一些数据, 加密后的值依然为n-1,
+我想应该可以从数论角度给出证明, 数学比较强的朋友
+可以尝试证明一下.</p>
+
+<p><strong>6. m &lt; 0 or m &gt;= n</strong></p>
+
+<p>因为RSA需要用模n运算, 因此如果m超出n范围的话, 解密
+肯定会出现错误. 最好回避.</p>
+
+<p><strong>7. m为0</strong></p>
+
+<p>这个情况也比较特殊, 回避.</p>
+
+<p><strong>8. (a^p)%n运算</strong></p>
+
+<p>由于a^p结果可能溢出, 因此采用了长乘法(乘积为64位数).</p>
+
+<p><strong>9. 函数f(a) = (a^p)%n的循环周期</strong></p>
+
+<p>由于函数f的值域固定(0,n-1), 因此这个函数必然有循环周期.
+大家有感兴趣可以自己测试一下循环周期.</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2006-12-27</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+          
+          <a href="/tags/%E5%8A%A0%E5%AF%86/">加密</a>
+          
+          <a href="/tags/rsa/">RSA</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2009/arduino-wiring-hack/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Arduino备忘资料</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2006/recursion-deep-learn/">
+            <span class="next-text nav-default">挑战递归...</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

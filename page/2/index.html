@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="chai2010 的博客" />
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/" />
+<link href="https://chai2010.cn/index.xml" rel="alternate" type="application/rss+xml" title="chai2010 的博客" />
+  <link href="https://chai2010.cn/index.xml" rel="feed" type="application/rss+xml" title="chai2010 的博客" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="chai2010 的博客" />
+<meta property="og:description" content="chai2010 的博客" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://chai2010.cn/" />
+
+
+
+<meta property="og:updated_time" content="2018-12-07T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="chai2010 的博客">
+<meta itemprop="description" content="chai2010 的博客">
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="chai2010 的博客"/>
+<meta name="twitter:description" content="chai2010 的博客"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          
+  <section id="posts" class="posts">
+    
+    
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/wasm/wasm-book/">《WebAssembly 标准入门》开始预售了，欢迎关注!</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-12-07 </span>
+      <div class="post-category">
+          
+            <a href="/categories/wasm/"> wasm </a>
+          
+        </div>
+      <span class="more-meta"> 约 1380 字 </span>
+      <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。本书详尽介绍了 WebAssembly 程序在 JavaScript 环境下的使用方法、WebAssembly 汇编语言和二进制格式，给出了大量简单易懂的示例，同时以 C/C++和 Go 语言开发环境为例，介绍了如何使用其他高级语言开发 WebAssembly 模块。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/wasm/wasm-book/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/2018/webdav/">Go语言实现WebDAV文件系统</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-10-24 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+            <a href="/categories/webdav/"> webdav </a>
+          
+        </div>
+      <span class="more-meta"> 约 3129 字 </span>
+      <span class="more-meta"> 预计阅读 7 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>WebDAV （Web-based Distributed Authoring and Versioning） 是一种基于 HTTP 1.1协议的通信协议。它扩展了HTTP 1.1，在GET、POST、HEAD等几个HTTP标准方法以外添加了一些新的方法，使应用程序可对Web Server直接读写，并支持写文件锁定(Locking)及解锁(Unlock)，还可以支持文件的版本控制。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/2018/webdav/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/2018/window-service/">Go语言和Windows服务</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-10-21 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+            <a href="/categories/windows/"> windows </a>
+          
+        </div>
+      <span class="more-meta"> 约 2281 字 </span>
+      <span class="more-meta"> 预计阅读 5 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>Windows服务使您能够创建在后台Windows会话中可长时间运行的可执行应用程序。Windows服务可以在计算机启动时自动启动，管理员也可以临时暂停和重新启动服务。Windows服务非常适合运行一些需要长时间在后台运行的服务器程序，例如Web服务器等应用。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/2018/window-service/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/2018/go-wasm-asm/">Go中的wasm汇编语言</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-10-03 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+            <a href="/categories/wasm/"> wasm </a>
+          
+        </div>
+      <span class="more-meta"> 约 1526 字 </span>
+      <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/2018/go-wasm-asm/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/2018/go-python/">Go实现Python模块</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-10-01 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+            <a href="/categories/python/"> python </a>
+          
+        </div>
+      <span class="more-meta"> 约 2118 字 </span>
+      <span class="more-meta"> 预计阅读 5 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      Go语言和Python语言作为当下最红的语言，使用Go语言来为Python语言编写模块是很多用户梦寐以求的方式。这里我们将演示如何通过Go语
+    </div>
+    <div class="read-more">
+      <a href="/post/2018/go-python/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+  </section>
+  
+  <nav class="pagination">
+    
+      <a class="prev" href="/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    
+      <a class="next" href="/page/3/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+  </nav>
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

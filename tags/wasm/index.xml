@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Wasm on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/wasm/</link>
+    <description>Recent content in Wasm on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 23 Oct 2022 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/wasm/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>WebAssembly将引领下一代计算范式[翻译]</title>
+      <link>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</link>
+      <pubDate>Sun, 23 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</guid>
+      
+        <description>
+
+&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。2018 年 WebAssembly 第一个规范草案诞生，2019 年成为 W3C 第四个标准语言。到了 2022 年底，WebAssembly 现在怎么样了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/00.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;作者：Anders Ranum, Justin Liu, David Carter&lt;/li&gt;
+&lt;li&gt;译者：柴树杉，凹语言作者，2本WASM图书作者，WASM布道者，目前在蚂蚁从事 KusionStack 和 KCL 开发。&lt;/li&gt;
+&lt;li&gt;时间：Thought Leadership / October 18, 2022&lt;/li&gt;
+&lt;li&gt;原文：&lt;a href=&#34;https://sapphireventures.com/blog/whats-up-with-webassembly-computes-next-paradigm-shift/&#34;&gt;https://sapphireventures.com/blog/whats-up-with-webassembly-computes-next-paradigm-shift/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;WebAssembly（简称Wasm）是一个自诞生之日起就充满潜力的技术，从 &amp;ldquo;JavaScript杀手 &amp;ldquo;到 &amp;ldquo;云计算的下一个前沿方向&amp;rdquo;几乎覆盖了全部新兴领域。同时在从云计算项边缘计算渗透，Wasm已经远远超出了起作为第四种Web标准语言的角色。甚至重新定义了应用软件的开发模式，正逐渐接近其“一次编写，随处运行”的愿景。&lt;/p&gt;
+
+&lt;p&gt;在Wasm从诞生到现在的几年间，我们见证了从最开始的Wasm应用演示到为数十亿的头部技术产品提供基础设施支持。在同整个Wasm社区交谈过程中，我们也发现虽然很多人很看好Wasm未来发展前景，但是也存在争议和讨论。&lt;/p&gt;
+
+&lt;p&gt;不过在Sapphire，依然对围绕Wasm的快速发展和Wasm开始为更广泛的计算世界带来的新的可能性感到非常兴奋。在本文中我们将探讨什么是Wasm，为什么它很重要、今天它是如何被使用的、以及对这个生态系统的繁荣有什么期待。我们不会详细展开讨论Wasm的历史，但如果你对这些感到好奇可以看看Lin Clark 的精彩系列文章。&lt;/p&gt;
+
+&lt;h2 id=&#34;一-什么是wasm&#34;&gt;一、什么是Wasm？&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/10.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;WebAssembly正在沿着其名字中Web和Assembly两个领域之外的方向发展，因此这是一个极其有误导性的名字。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;首先它不完全是汇编语言。Wasm是一种类似汇编字节码的指令格式标准，它更像LLVM-IR那种比汇编语言更高一些抽象的中间语言（比如其中函数的参数和返回值定义更像高级语言）。开发人员也不需要完全手写Wasm；相反人们一般选择使用其他高级语言（如C、C++、Rust、Go、凹语言等）将他们的代码编译为Wasm。&lt;/li&gt;
+&lt;li&gt;另外它不再只是Web网络。虽然Wasm最初被设计为Web浏览器的编译目标，但它的影响并没有停止。今天，使用与Wasm兼容的运行时，Wasm文件可以在客户端和服务器端执行，将使用范围扩大到浏览器之外——稍后将进一步探讨这些例子。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;二-为什么wasm很重要&#34;&gt;二、为什么Wasm很重要？&lt;/h2&gt;
+
+&lt;p&gt;Wasm有几个关键的设计目标使其出生开始就自带令人亮眼的关注：&lt;/p&gt;
+
+&lt;h3 id=&#34;2-1-首先wasm是可移植的&#34;&gt;2.1 首先Wasm是可移植的&lt;/h3&gt;
+
+&lt;p&gt;虽然Wasm最初是为Web设计的，而且今天所有主要的浏览器都提供对Wasm的支持。同时它也被设计为针对低级虚拟机架构，其指令由物理机单独翻译成机器代码。这意味着Wasm二进制文件最终可以在各种操作系统和芯片架构上运行——无论是在运行X86笔记本电脑的浏览器中，还是在内部或云端的服务器上，在移动设备、物联网设备上等等。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-2-其次wasm是多语言之下的一个标准&#34;&gt;2.2 其次Wasm是多语言之下的一个标准&lt;/h3&gt;
+
+&lt;p&gt;因为Wasm是一个编译目标，用于编程模块的具体语言并不重要，重要的是是否有支持将该语言编译到Wasm。开发人员可以灵活地使用多种语言（如C、C++、Rust、凹语言等）来构建二进制文件，并享受Wasm带来的复利。这意味着不需要考虑诸多组件和库链接等狗屁问题，只要他们都被编译到Wasm可以用于支持一个单一的应用。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-3-最后wasm是轻量和高效的&#34;&gt;2.3 最后Wasm是轻量和高效的&lt;/h3&gt;
+
+&lt;p&gt;作为一个低级别的二进制指令格式，只需要较少的操作来将Wasm翻译成优化的机器代码。例如比如和Javascript进行比较（感兴趣的话可以参考 Lin Clark 的一些分析文章）。Javascript作为解释型语言，必须在运行时用即时编译（JIT）进行编译，并且必须经过获取/解析/编译/优化，最后才能执行和垃圾回收等步骤。&lt;/p&gt;
+
+&lt;p&gt;虽然JavaScript也可以被解析并转换为字节码，但Wasm已经是原生的字节码。另外Wasm也是静态类型的，这使得大多数优化在其初始编译时就已完成。最后JavaScript是动态类型的，需要在运行时进行优化和再优化，这共同导致了较难预测的性能。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/23.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这些优势也体现在浏览器之外，特别是Wasm模块的大小对于冷启动有极大的优势。目前，Serverless 的一个有问题是冷启动缓慢。虽然Serverless为开发者节省了管理后台基础设施和资源分配的时间，但如果该功能在冷态下被调用，就必须启动新的资源从而带来执行时间增加的额外成本。因为Wasm模块是非常轻量级的，和库调用类似方式使得启动时间可以大大减少（低至毫秒）。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-4-wasm是默认安全的&#34;&gt;2.4 Wasm是默认安全的&lt;/h3&gt;
+
+&lt;p&gt;Wasm 目标之一是安全，它在一个沙盒环境中执行，对主机运行时没有初始可见性。这意味着对系统资源（如文件系统，硬件等）的访问是受限制的，除非明确导入了对应的函数以支持。因此Wasm极大限制了攻击面，实现了多租户环境中不受信任的代码安全受限地执行。这种安全模式是一个关键的促成因素，允许开发人员使用插件和用户提交的代码来扩展现有的应用程序，我们将在下面进一步探讨这一使用情况。 &lt;/p&gt;
+
+&lt;h2 id=&#34;三-wasm现在是如何使用的&#34;&gt;三、Wasm现在是如何使用的？&lt;/h2&gt;
+
+&lt;h3 id=&#34;3-1-客户端使用案例&#34;&gt;3.1 客户端使用案例&lt;/h3&gt;
+
+&lt;h4 id=&#34;3-1-1-浏览器中的多语言支持&#34;&gt;3.1.1 浏览器中的多语言支持&lt;/h4&gt;
+
+&lt;p&gt;开发客户端的流行语言不多，大部分都是Javascript构建的。应用程序的语言在历史上是有限的，今天大多数现代网络应用程序是用Javascript构建的。而浏览器和前端框架对Wasm的支持已经开始打开闸门，使开发者更容易在浏览器中编译和执行其他流行语言。现在开发者可以选择在浏览器中直接运行C、C++、Rust、和Go等语言。此外，像Zig这样的新兴系统语言已经为Wasm增加了很好的支持。而其他专门从Wasm设计的语言也已经出现，包括AssemblyScript、Grain、Motoko和凹语言等。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-1-2-高性能的网络应用&#34;&gt;3.1.2 高性能的网络应用&lt;/h4&gt;
+
+&lt;p&gt;已经有一些公司使用Wasm来显著提高他们的网络应用程序的性能。例如，Figma（刚刚被Adobe以200亿美元收购），一个基于浏览器的协作界面设计工具，使用C++构建其渲染引擎，最初将其代码交叉编译到称为asm.js的Javascript子集。在之前因为面临Javascript固有的优化限制，在改用Wasm后Figma的加载时间快了3倍，无论正在加载的文档大小如何。&lt;/p&gt;
+
+&lt;p&gt;其他价值数十亿美元的公司也已经在产品采用了Wasm。比如Adobe的Photoshop、Autodesk的AutoCAD。重新利用现有的代码库，用Wasm将整个桌面应用移植到网络上已经是真实发生的事情。其他有趣的例子包括移植成熟的视频游戏和项目，如完全在浏览器中运行的Doom3和Angrybots，Unity明确地将其WebGL构建的编译目标转换为Wasm。&lt;/p&gt;
+
+&lt;p&gt;除了移植已有的应用，我们还看到一些公司利用Wasm建立新的功能，这些功能在以前会受到性能限制的制约。 一些例子包括Runway，这是一个下一代内容创作套件，使用Wasm来支持其视频编解码器和媒体操作，以及StackBlitz，使用Wasm来支持纯Web的IDE开发环境，这比以前伪在线IDE外挂一个远程服务器拖油瓶的方式有着更好的安全性和性能优势。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-1-3-浏览器内的数据库和分析&#34;&gt;3.1.3 浏览器内的数据库和分析&lt;/h4&gt;
+
+&lt;p&gt;我们已经开始看到数据库的出现，它们利用Wasm的执行性能，使以前的服务器端分析工作负载更接近数据的存在。这里的例子包括DuckDB-Wasm，它使用Wasm为浏览器的中分析SQL数据库提供动力。以及SQL.js，它允许开发人员完全在浏览器中创建和查询SQLite数据库。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-wasi-突破浏览器的桎梏&#34;&gt;3.2 WASI：突破浏览器的桎梏&lt;/h3&gt;
+
+&lt;p&gt;鉴于Wasm模块在默认情况下不能访问被明确授权的功能，纯WASM其实只能实现一些纯运算的功能。在上面的例子中，浏览器本身代表Wasm模块对系统资源的访问控制界面（例如，文件系统、I/O、时钟、全局变量等）。然而当我们在浏览器之外使用Wasm时需要什么呢？ &lt;/p&gt;
+
+&lt;p&gt;在实践中，运行时实如何提供对系统资源的访问方面有很大的不同。这就是WebAssembly系统接口（WASI）出现的地方。WASI是W3C的一个项目，是一个供应商中立的、模块化的标准化API集合，正如其名称所示，它作为Wasm模块和操作系统之间的接口，促进与主机运行时的通信，并以一致的方式使用选定的系统资源。&lt;/p&gt;
+
+&lt;p&gt;当然，WASI是扩大Wasm可能的范围的关键促成因素之一，包括像下面即将提到的服务器端应用程序。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-3-服务器端场景&#34;&gt;3.3 服务器端场景&lt;/h3&gt;
+
+&lt;p&gt;虽然已经有很多例子证明了Wasm在客户端的优势和价值，但我们对Wasm在服务器端的想象空间更加兴奋。Wasm的每一个设计原则（速度、安全和可移植性）都能使下一波服务器端的工作负载成为可能。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-1-serverless计算&#34;&gt;3.3.1 Serverless计算&lt;/h4&gt;
+
+&lt;p&gt;Serverless强依赖高度优化的冷启动，Wasm运行时（如WasmEdge）非常适合为下一代无服务器平台提供动力。SecondState、Cloudflare、Netlify和Vercel等公司都支持通过其边缘运行时部署WebAssembly功能。其他公司如Grafbase正在使用Wasm，使开发者能够在边缘用他们选择的语言编写和部署GraphQL解析器。同时，Fermyon提供了一个类似于FaaS的自助式开发平台，用Wasm合成和运行基于云的应用程序。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-2-边缘的数据分析和机器学习&#34;&gt;3.3.2 边缘的数据分析和机器学习&lt;/h4&gt;
+
+&lt;p&gt;Wasm的效率和可移植性使其独特地适合于支持边缘的机器学习工作负载，部署在外形和计算能力差异很大的设备上。我们相信，实时ML用例将推动计算越来越接近数据产生的地方，无论是运行在网络边缘（如CDN）还是设备边缘（如IoT）。Wasi-nn（神经网络）是一个API规格，旨在将服务器端的Wasm程序与运行在主机上的流行ML框架（如Tensorflow、PyTorch、OpenVINO）连接起来。 今天利用Wasm的ML场景的公司包括Edge Impulse和Hammer of the Gods，前者提供一个低代码开发平台，将TinyML模型设计和部署到Wasm模块中，在嵌入式设备上运行；后者使开发者能够创建超便携容器，通过其开源项目Rune，使用Rust和Wasm在边缘运行ML的工作负载。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-3-插件和扩展&#34;&gt;3.3.3 插件和扩展&lt;/h4&gt;
+
+&lt;p&gt;Wasm的多语言支持和沙盒隔离技术使其成为产品的有力的候选技术，产品开发者希望在现有的应用程序上提供一个可扩展的模型和执行第三方（可信或不可信）代码的能力。例如，Shopify在其Shopify Scripts框架背后使用了WebAssembly，为商家提供了以更有效的方式定制客户体验中对性能敏感的方面（如购物车、结账）的能力。 Suborbital提供了一个扩展引擎，使SaaS供应商能够安全、独立地运行 &amp;ldquo;终端用户开发者 &amp;ldquo;提供的代码。 Dynaboard使开发者能够在其低代码网络应用程序开发平台之上运行用户提供的代码，包括客户端和服务器端。&lt;/p&gt;
+
+&lt;p&gt;SingleStore和ScyllaDB已经开始利用Wasm，用用户定义的函数（UDF）引擎来扩展他们的数据库，允许开发人员重新使用现有的库，并将计算转移到数据库本身（例如，规避了将数据导出到另一个应用程序进行处理的限制）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/333.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;同时，RedPanda和Infinyon允许用户使用Wasm对流媒体数据进行实时内联转换。  代理服务器领域也开始接受Wasm，Tetrate（Sapphire Portfolio公司）等服务网格供应商正在开发func-e等工具，以帮助团队快速构建Wasm模块，扩展开源的Envoy。&lt;/p&gt;
+
+&lt;p&gt;Profian是Enarx的监护人，这是一个开源项目，使用Wasmtime运行时间在可信执行环境（TEE）内执行Wasm二进制文件——这是Wasm的硬件可移植性的另一个场景。虽然Wasm的安全模型保护主机免受不受信任的代码影响，但Profian将这一好处翻转过来，在TEE内使用Wasm二进制文件，以保护应用程序免受不受信任的主机影响。这使企业能够将其敏感的应用程序和数据部署到云端或内部，并获得加密保证。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-4-web3应用开发和智能合约&#34;&gt;3.3.4 Web3应用开发和智能合约&lt;/h4&gt;
+
+&lt;p&gt;Wasm天然适合以加密为中心的场景：首先Wasm的可移植性使运行不同硬件集的节点网络具有可靠性；其次Wasm的性能在这些网络中转化为更广泛的效率。&lt;/p&gt;
+
+&lt;p&gt;Ewasm是一个关键的例子，并被视为以太坊第二阶段升级的一个关键组成部分。Ewasm将取代以太坊虚拟机（EVM），EVM虚拟机目前为交易提供动力并维护以太坊的网络状态，但没有针对不同的硬件平台进行优化，因此效率不高。Ewasm（连同分片和转向股权证明）代表了改善整体网络性能，并提供了一个更具扩展性的底层，为希望建立去中心化应用程序的开发人员扩大了对Solidity以外的语言支持。&lt;/p&gt;
+
+&lt;p&gt;Wasm也被用来支持其他网络和可互操作区块链的计算。例如，Parity是Substrate的开发者，这是一个开源框架，使用Wasm作为Polkadot生态系统的骨干。同时，CosmWasm是一个为Cosmos生态系统建立的多链智能合约平台，运行Wasm字节码。 Fluence实验室提供Marine，这是一个通用的Wasm运行时，与他们的专用编程语言Aqua相结合，使分散的应用程序和协议能够在他们的点对点网络上运行。目前利用Wasm的其他协议包括NEAR、Dfinity、EOS等。&lt;/p&gt;
+
+&lt;h2 id=&#34;四-wasm的应用和基础大图&#34;&gt;四、Wasm的应用和基础大图&lt;/h2&gt;
+
+&lt;p&gt;我们已经列出了一些公司和组织，他们主要分为两类：一类是使用Wasm来支持他们自己的产品和平台；另一类是提供所需的基础工具和基础设施，使开发人员能够自己建立Wasm。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/40.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;五-最后总结&#34;&gt;五、最后总结&lt;/h2&gt;
+
+&lt;h3 id=&#34;5-1-wasm的未来&#34;&gt;5.1 Wasm的未来&lt;/h3&gt;
+
+&lt;p&gt;虽然我们看到许多初创企业和科技巨头采用Wasm技术，但生态系统的一些关键技术只是在最近才逐渐发展起来。今天，Wasm带来增量效益往往被使用一个低级技术和一个不成熟的工具链所带来的额外成本所抵销。&lt;/p&gt;
+
+&lt;p&gt;我们认为在推动Wasm的未来应用中有四个方面是最重要的。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;无缝的开发者体验。在最初阶段，开发人员在企业级利用Wasm所需的环境一直是比较复杂的。Wasm的开发者体验并不舒适（例如，调试Wasm仍然是众所周知的困难），在整个开发生命周期中，在编译到Wasm和以实际方式利用Wasm方面，有大量的空间可以提供更好的工具。 同时大多数开发人员不具备低级语言和技术的专业知识，因此，通过抽象来提高可用性对促进更多的人的采用是非常重要的。我们已经开始看到第一波明确致力于为开发者配备这些工具的公司，包括Fermyon、Second State、Suborbital、Wasmer和Cosmonic。&lt;/li&gt;
+&lt;li&gt;标准的继续推进。 虽然社区有一些分裂意见（例如，见AssemblyScript决定放弃对WASI的支持），但是Wasm标准的活力依然重要。除了蓬勃发展的创业生态系统，微软、亚马逊、谷歌、Fastly、Cloudflare、Mozilla等科技巨头也开始认识到Wasm是支持下一代云工作负载的有效底层，他们正在积极为标准机构和非营利组织（如W3C和字节码联盟）做出贡献，以推动这个社区的发展。CNCF也在发挥重要作用，接受wasmCloud和WasmEdge作为沙盒项目。仍有重要的工作要做；像文档，如垃圾收集、本地DOM访问、套接字、线程、组件模型等，都在激烈讨论中。标准的总体目标是使Wasm更适用于更多的目标，并适用于更多的使用案例。&lt;/li&gt;
+&lt;li&gt;编程语言支持。 虽然Wasm最常被吹捧的好处之一是多语言支持，但目前支持的现实状态是介于两者之间。像C++、Go（包括TinyGo）和Rust这样的语言已经接受了Wasm，但一些最常见的语言，如Python、Java和PHP还在努力实现一等公民的地位。 为了真正实现主流采用，Wasm的支持必须继续扩展到一些更复杂的语言，如C++和Rust，并向最广泛采用的语言扩展。 对于那些有兴趣跟踪这方面进展的人来说，Fermyon团队已经做了一项伟大的工作，即跟踪Wasm在RedMonk的前20种编程语言中的支持情况。中国的Gopher创建的凹语言则将支持WASM作为第一目的，其语言命名正是Wasm图标基于中国汉字的变形。&lt;/li&gt;
+&lt;li&gt;理念、传播和社区。  正如我们在容器和协调引擎（如Kubernetes）的案例中看到的那样，开发者对Wasm的采用可以通过布道者和更广泛的、成熟的倡导者社区来进一步推动。像云原生计算基金会（CNCF）和字节码联盟这样的组织已经走在了吸引开发者的前列，以促进对Wasm相关项目、活动和倡议的参与。除了开发者受众，其他利益相关者对Wasm的认识可以通过阐述二阶价值主张来推动，例如在云和Serverless环境中使用Wasm可能带来的成本节约。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/x-lang.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;5-2-wasm会取代容器吗&#34;&gt;5.2 Wasm会取代容器吗？&lt;/h3&gt;
+
+&lt;p&gt;随着时间的推移，我们相信Wasm运行时将作为containerd、microVMs（Firecracker）和其他流行的容器结构的合法替代品 - 特别是随着WASI等标准的进一步扩展。这并不是说Wasm将全盘取代容器；在可预见的未来，它们将并肩存在，而利用每种容器的决定是由特定工作负载的特点所驱动的。&lt;/p&gt;
+
+&lt;p&gt;与传统的基于管理程序的虚拟机相比，Docker风格的容器提供了显著的改进，而Wasm已经能够将这些相同的效率提高到 &amp;ldquo;下一个水平&amp;rdquo;。凭借其亚毫秒级的冷启动，Wasm容器非常适合寿命较短的无服务器和边缘工作负载（除了现有的客户端用例之外）。同时，传统的Docker式工作负载非常适用于需要大量I/O或需要访问网络套接字的长期运行的服务（如缓存服务器）。&lt;/p&gt;
+
+&lt;p&gt;我们渴望看到像Kubernetes这样的协调引擎如何随着时间的推移与Wasm进行整合。尽管还很早，但像Krustlet（kubelet代理的替代品）、runwasi、Containerd Wasm Shims和crun的Wasm处理程序等项目和扩展都旨在将Wasm提升为容器环境中的一等公民，将其作为一个新的运行时类，可以由K8s进行相应的调度和管理。&lt;/p&gt;
+
+&lt;h3 id=&#34;5-3-谁会赢&#34;&gt;5.3 谁会赢？&lt;/h3&gt;
+
+&lt;p&gt;云厂商和Serverless是这里的明显候选人。但在Sapphire依然期望保持对Wasm生态每一个新兴技术保持近距离的关注依然。&lt;/p&gt;
+
+&lt;p&gt;随着任何新兴技术的出现，需要使其能够被主流采用。我们已经开始看到了许多真实的案例。然而，尽管今天正在推进的标准和正在开发的框架和运行时为实现Wasm的潜力奠定了基础，但百废待兴仍有许多工作要做。从以Wasm为中心的应用开发到开发人员生产力工具，到监控和安全解决方案，我们很高兴支持那些建立基础设施和工具的人，为每个人释放Wasm的优势，从个人开发者到全球企业。&lt;/p&gt;
+
+&lt;p&gt;如果你正在为Wasm生态系统做出贡献，或者正在使用Wasm为你的基础设施提供动力，请联系 anders@sapphireventures.com, liu@sapphireventures.com 或 carter@sapphireventures.com - 我们很乐意听到你的意见！&lt;/p&gt;
+
+&lt;p&gt;特别感谢Michael Yuan、Matt Butcher、Liam Randall、Connor Hicks和Alexander Gallego的宝贵观点和反馈。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>《WebAssembly 标准入门》开始预售了，欢迎关注!</title>
+      <link>https://chai2010.cn/post/wasm/wasm-book/</link>
+      <pubDate>Fri, 07 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/wasm/wasm-book/</guid>
+      
+        <description>&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。本书详尽介绍了 WebAssembly 程序在 JavaScript 环境下的使用方法、WebAssembly 汇编语言和二进制格式，给出了大量简单易懂的示例，同时以 C/C++和 Go 语言开发环境为例，介绍了如何使用其他高级语言开发 WebAssembly 模块。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://erpimg.epubit.com:8081/upload/img/erp/A20181946.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;序&#34;&gt;序&lt;/h2&gt;
+
+&lt;p&gt;某一天，有朋友向我推荐了一项新技术——WebAssembly。我认为这是一项值得关注的技术。&lt;/p&gt;
+
+&lt;p&gt;说WebAssembly是一门编程语言，但它更像一个编译器。实际上它是一个虚拟机，包含了一门低级汇编语言和对应的虚拟机体系结构，而WebAssembly这个名字从字面理解就说明了一切——Web的汇编语言。它的优点是文件小、加载快、执行效率非常高，可以实现更复杂的逻辑。&lt;/p&gt;
+
+&lt;p&gt;其实，我觉得出现这样的技术并不令人意外，而只是顺应了潮流，App的封闭系统必然会被新一代Web OS取代。但现有的Web开发技术，如JavaScript，前端执行效率和解决各种复杂问题的能力还不足，而WebAssembly的编译执行功能恰恰能弥补这些不足。WebAssembly标准是在谋智（Mozilla）、谷歌（Google）、微软（Microsoft）、苹果（Apple）等各大厂商的大力推进下诞生的，目前包括Chrome、Firefox、Safari、Opera、Edge在内的大部分主流浏览器均已支持WebAssembly。这使得WebAssembly前景非常好。&lt;/p&gt;
+
+&lt;p&gt;WebAssembly是Web前端技术，具有很强的可移植性，技术的潜在受益者不局限于传统的前端开发人员，随着技术的推进，越来越多的其他语言的开发者也将从中受益。如果开发者愿意，他们可以使用C/C++、Go、Rust、Kotlin、C#等开发语言来写代码，然后编译为WebAssembly，并在Web上执行，这是不是很酷？它能让我们很容易将用其他编程语言编写的程序移植到Web上，对于企业级应用和工业级应用都是巨大利好。&lt;/p&gt;
+
+&lt;p&gt;WebAssembly的应用场景也相当丰富，如Google Earth，2017年10月Google Earth开始在Firefox上运行，其中的关键就是使用了WebAssembly；再如网页游戏，WebAssembly能让HTML5游戏引擎速度大幅提高，国内一家公司使用WebAssembly后引擎效率提高了300%。&lt;/p&gt;
+
+&lt;p&gt;WebAssembly作为一种新兴的技术，为开发者提供了一种崭新的思路和工作方式，未来是很有可能大放光彩的，不过目前其相关的资料和社区还不够丰富，尽管已经有一些社区开始出现了相关技术文章，CSDN上也有较多的文章，但像本书这样全面系统地介绍WebAssembly技术的还不多，甚至没有。本书的两位作者都是有10多年经验的一线开发者，他们从WebAssembly概念诞生之初就开始密切关注该技术的发展，其中柴树杉是Emscripten（WebAssembly的技术前身之一）的首批实践者，丁尔男是国内首批工程化使用WebAssembly的开发者。&lt;/p&gt;
+
+&lt;p&gt;2018年7月，WebAssembly社区工作组发布了WebAssembly 1.0标准。现在，我在第一时间就向国内开发者介绍和推荐本书，是希望开发者能迅速地了解和学习新技术，探索新技术的价值。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;——蒋涛 CSDN创始人、总裁，极客帮创始合伙人&lt;/em&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go中的wasm汇编语言</title>
+      <link>https://chai2010.cn/post/2018/go-wasm-asm/</link>
+      <pubDate>Wed, 03 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go-wasm-asm/</guid>
+      
+        <description>&lt;p&gt;Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。对于Go汇编语言爱好者来说，WebAssembly平台是一个新的挑战。本文尝试从最简单的memclr函数入手，简要了解WebAssembly汇编语言。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;runtime-memclrnoheappointers-函数&#34;&gt;runtime·memclrNoHeapPointers 函数&lt;/h2&gt;
+
+&lt;p&gt;改函数源文件在：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s&#34;&gt;https://github.com/golang/go/blob/master/src/runtime/memclr_wasm.s&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;函数的实现如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;// func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+TEXT runtime·memclrNoHeapPointers(SB), NOSPLIT, $0-16
+	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;函数签名&#34;&gt;函数签名&lt;/h2&gt;
+
+&lt;p&gt;函数的签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func memclrNoHeapPointers(ptr unsafe.Pointer, n uintptr)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对应C语言的签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;void memclrNoHeapPointers(int32_t ptr, int32_t n);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对应WebAssembly的函数签名如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	...
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;读取函数参数&#34;&gt;读取函数参数&lt;/h2&gt;
+
+&lt;p&gt;因为Go语言是动态栈，和WebAssembly的内存模型并不一样。我们先忽略这些问题的细节，看看如何读取参数的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;	MOVD ptr+0(FP), R0
+	MOVD n+8(FP), R1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;熟悉Go汇编语言的同学肯定很容易理解上述代码。其中第一行指令是将Go函数的第一个参数加载到R0寄存器，第二行指令是将第二个参数加载到R1寄存器。FP是伪寄存器，表示当前函数调用的帧寄存器，每个参数分别使用参数名作为前缀+参数相对于FP的地址偏移量确定。&lt;/p&gt;
+
+&lt;p&gt;不过WebAssembly是基于栈式的虚拟机结构，并不存在寄存器的概念。不过我们可以将R0和R1看作是函数的局部变量。因此在memclrNoHeapPointers函数的定义中再增加2个局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+	...
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;webassembly汇编语言&#34;&gt;WebAssembly汇编语言&lt;/h2&gt;
+
+&lt;p&gt;现在将函数的主体指令改为WebAssembly汇编语言，大概是如下的写法：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(func $memclrNoHeapPointers (param $ptr i32) (param $n i32)
+	(local i32) (local f32) ;; R0 R1 寄存器
+
+loop:
+	Loop
+		Get R1
+		I64Eqz
+		If
+			RET
+		End
+
+		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+
+		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+
+		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+
+		Br loop
+	End
+	UNDEF
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;具体的算法类似以下的Go语言代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func memclrNoHeapPointers(ptr, n int32) {
+	R0 := ptr
+	R1 := n
+
+	loop: for {
+		if R1 == 0 {
+			return
+		}
+
+		Memort[R0] = 0
+		R0++
+		R1--
+
+		continue loop
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在循环中，第一组指令是R1表示的未清0的元素个数是否未0，如果未0则返回。对应代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R1
+		I64Eqz
+		If
+			RET
+		End
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中Get对应WebAssembly的get_local指令，用于根据局部变量的索引标号获取一个值，放到栈中。I64Eqz对应i64.eqz指令，从栈中取出一个值，判断是否为0，并将结果从新放入栈中。而If则对应br_if控制流指令，首先从栈取出一个值，如果非0则执行分支内的指令。RET返回函数，和WebAssembly的return指令不一定完全等价。&lt;/p&gt;
+
+&lt;p&gt;第二组指令是强R0表示的内存地址对应的空间清0：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R0
+		I32WrapI64
+		I64Const $0
+		I64Store8 $0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Get对应get_local指令，取出一个i64类型的值。I32WrapI64对应i32.wrap/i64指令，将i64类型强制转型为i32类型，重新入栈。I64Const则是生成一个常数0，入栈。I64Store8对应i32.store8指令，从栈取出内存地址，第二个参数是0表示地址采用默认的对其方式。简而言之就是将R0对应的地址设置为0。&lt;/p&gt;
+
+&lt;p&gt;第三组是将R0加一后存回R0局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R0
+		I64Const $1
+		I64Add
+		Set R0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;第四组是将R1减一后存回R1局部变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-s&#34;&gt;		Get R1
+		I64Const $1
+		I64Sub
+		Set R1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;循环内的最后一个&lt;code&gt;Br loop&lt;/code&gt;指令是继续从loop标号开始的循环。&lt;/p&gt;
+
+&lt;p&gt;函数最后的UNDEF并不是WebAssembly汇编指令。&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;因为Go语言序言支持栈的分裂，Go语言对WebAssembly的汇编语言是一个变异的版本。Go语言使用局部或者是全局变量来模拟寄存器，在函数的内部在依然基于WebAssembly栈虚拟机的方式工作。&lt;/p&gt;
+
+&lt;p&gt;因为WebAssembly也是刚刚支持的平台，很多技术细节还需要进一步确认。想深入了解WebAssembly汇编语言的同学，本人写的 &lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md&#34;&gt;《WebAssembly标准入门
+》&lt;/a&gt; 中的汇编语言章节部分的内容。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>《C&#43;&#43;面向wasm编程》开源！[转]</title>
+      <link>https://chai2010.cn/post/2018/cppwasm-book/</link>
+      <pubDate>Tue, 25 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/cppwasm-book/</guid>
+      
+        <description>&lt;p&gt;目前支持WebAssembly的各种高级语言中，与WebAssembly匹配度最高的无疑是C/C++，为此，我们将开源编写《C++面向wasm编程》一书。本书将围绕“如何开发对WebAssembly友好的C/C++程序”这一中心，从Emscripten工具链的使用、C/C++与JavaScript互操作、一般性的设计原则等多方面介绍相关知识，并分享作者在实际工程应用中总结出的诸多经验。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/3dgen/cppwasm-book/master/cover.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;原文：&lt;a href=&#34;https://mp.weixin.qq.com/s/o4NIuc67eV3U_FGODT0ufA&#34;&gt;https://mp.weixin.qq.com/s/o4NIuc67eV3U_FGODT0ufA&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;目录&#34;&gt;目录&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;第0章 WebAssembly简介&lt;/li&gt;
+&lt;li&gt;第1章 Emscripten快速入门
+
+&lt;ul&gt;
+&lt;li&gt;1.1 安装Emscripten&lt;/li&gt;
+&lt;li&gt;1.2 你好，世界！&lt;/li&gt;
+&lt;li&gt;1.3 胶水代码初探&lt;/li&gt;
+&lt;li&gt;1.4 编译目标及编译流程&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第2章 C与JavaScript互操作
+
+&lt;ul&gt;
+&lt;li&gt;2.1 JavaScript调用C函数&lt;/li&gt;
+&lt;li&gt;2.2 JavaScript函数注入C&lt;/li&gt;
+&lt;li&gt;2.3 单向透明的内存模型&lt;/li&gt;
+&lt;li&gt;2.4 JavaScript与C交换数据&lt;/li&gt;
+&lt;li&gt;2.5 EM_ASM宏&lt;/li&gt;
+&lt;li&gt;2.6 emscripten_run_script函数&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第3章 Emscripten运行时
+
+&lt;ul&gt;
+&lt;li&gt;3.1 main函数与生命周期&lt;/li&gt;
+&lt;li&gt;3.2 消息循环&lt;/li&gt;
+&lt;li&gt;3.3 文件系统&lt;/li&gt;
+&lt;li&gt;3.4 内存管理&lt;/li&gt;
+&lt;li&gt;3.5 Module定制&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第4章 WebAssembly友好的一般性方法
+
+&lt;ul&gt;
+&lt;li&gt;4.1 消息循环分离&lt;/li&gt;
+&lt;li&gt;4.2 数据对齐&lt;/li&gt;
+&lt;li&gt;4.3 使用C接口导出C++对象&lt;/li&gt;
+&lt;li&gt;4.4 C++对象生命周期控制&lt;/li&gt;
+&lt;li&gt;4.5 使用C接口注入JavaScript对象&lt;/li&gt;
+&lt;li&gt;4.6 小心int64&lt;/li&gt;
+&lt;li&gt;4.7 忘掉文件系统&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第5章 网络IO
+
+&lt;ul&gt;
+&lt;li&gt;5.1 websocket&lt;/li&gt;
+&lt;li&gt;5.2 ajax&lt;/li&gt;
+&lt;li&gt;5.3 fetch&lt;/li&gt;
+&lt;li&gt;5.4 一个通用的网络IO小框架&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第6章 多线程
+
+&lt;ul&gt;
+&lt;li&gt;6.1 JavaScript中的多线模型&lt;/li&gt;
+&lt;li&gt;6.2 一个例子&lt;/li&gt;
+&lt;li&gt;6.3 一个通用的多线程小框架&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第7章 GUI及交互
+
+&lt;ul&gt;
+&lt;li&gt;7.1 canvas&lt;/li&gt;
+&lt;li&gt;7.2 鼠标事件&lt;/li&gt;
+&lt;li&gt;7.3 键盘事件&lt;/li&gt;
+&lt;li&gt;7.4 触屏事件&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;第8章 工程管理
+
+&lt;ul&gt;
+&lt;li&gt;8.1 使用Makefile&lt;/li&gt;
+&lt;li&gt;8.2 静态库&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;项目地址：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/3dgen/cppwasm-book&#34;&gt;https://github.com/3dgen/cppwasm-book&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;欢迎围观。加星可以鼓励作者尽快更新哦！&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Ending定律即将生效!</title>
+      <link>https://chai2010.cn/post/wasm/wasm-v1.0/</link>
+      <pubDate>Sun, 16 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/wasm/wasm-v1.0/</guid>
+      
+        <description>&lt;p&gt;WebAssembly草案1.0终于在2018年7月正式诞生，Ending定律即将生效！&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Ending&amp;rsquo;s law: &amp;ldquo;Any application that can be compiled to WebAssembly, will be compiled to WebAssembly eventually.&amp;rdquo;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/wasm/wasm-book-header.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Ending定律也称为终结者定律，它是Ending在2016年Emscripten技术交流会上给出的断言：所有可以用WebAssembly实现的终将会用WebAssembly实现。&lt;/p&gt;
+
+&lt;p&gt;在2018年7月，WebAssembly的第一份标准草案终于诞生，一切准备就绪。终于到了Ending定律生效的时刻了！&lt;/p&gt;
+
+&lt;p&gt;WebAssembly也叫wasm，是最新的Web汇编语言标准，同时涵盖了一个虚拟机标准，可以用于浏览器或者其它嵌入式环境。WebAssembly被刻意设计为便携式的抽象语法树结构，用于提供比JavaScript更快速的编译和运行。2018年，Firefox、Chrome、Microsoft Edge、Safari等主流的浏览器已经充分支持WebAssembly特性。&lt;/p&gt;
+
+&lt;p&gt;我们知道在JavaScript领域有个木头定律，但是木头定律不适用于WebAssembly！因为WebAssembly是为了性能而诞生，再用JavaScript模拟的WebAssembly性能将是一坨屎，没有任何价值！但是WebAssembly之上却很有可能再跑一个v8引擎。&lt;/p&gt;
+
+&lt;p&gt;Ending定律的威力不仅仅在语言层面。WebAssembly是第一个虚拟机世界标准，以后将人手至少一个wasm虚拟机。曾被大家鄙视的JavaScript语言大举入侵各个领域的情况将再次重演，Lua、Java、Python等语言首当其冲，它们的虚拟机统统将面临被WebAssembly蚕食的境况！&lt;/p&gt;
+
+&lt;p&gt;星辰大海的入口已经打开，let’s dive!&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Go1.11和WebAssembly</title>
+      <link>https://chai2010.cn/post/2018/go1.11-and-wasm/</link>
+      <pubDate>Sat, 25 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2018/go1.11-and-wasm/</guid>
+      
+        <description>&lt;p&gt;Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/win2k-on-wasm.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在上一周，qemu的作者bellard大神将Windows 2000搬到浏览器到新闻彻底引爆了WebAssembly技术，这也证明了WebAssembly的强大的性能优势。&lt;/p&gt;
+
+&lt;p&gt;感兴趣的同学可以查看bellard大神到网站，网站提供了在浏览器Linux和Windows等多种系统等运行链接：&lt;a href=&#34;https://bellard.org/jslinux/&#34;&gt;https://bellard.org/jslinux/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;不过本文我们将重点和大家分享如何在Go语言中使用WebAssembly。先安装好Go1.11+版本的Go语言环境。然后创建hello.go文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import &amp;quot;fmt&amp;quot;
+
+func main() {
+	fmt.Println(&amp;quot;你好，WebAssembly！&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;为了不了解Go语言的同学便于理解，让我们简单介绍一下程序。第一句表示当前的包名字为main，同时包中有一个main函数，而main包的main函数就是Go语言程序的入口。在main函数中通过导入的fmt包内的Println方法输出了一个字符串。然后在命令行中直接输入go run hello.go来运行程序。如果一切正常的话。应该可以在命令行看到输出&amp;rdquo;你好，WebAssembly！&amp;rdquo;的结果。&lt;/p&gt;
+
+&lt;p&gt;Go1.11开始支持WebAssembly，对应的操作系统名为js，对应的CPU类型为wasm。目前还无法通过go run的方式直接运行输出的wasm文件，因此我们需要通过go build的方式生成wasm目标文件，然后通过Node环境执行。需要注意的是更新的Node版本对wasm的支持会更好，作者推进使用v10以上的版本。&lt;/p&gt;
+
+&lt;p&gt;通过以下命令将hello.go编译为a.out.wasm：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ GOARCH=wasm GOOS=js go build -o a.out.wasm hello.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成的a.out.wasm文件体积可能超过2MB大小。而且生成等a.out.wasm还无法直接运行，需要初始化Go语言必须的运行时环境。&lt;/p&gt;
+
+&lt;p&gt;对运行时初始化是一个相对复杂的工作，因此Go语言提供了一个$(GOROOT)/misc/wasm/wasm_exec.js文件用于初始化和运行的工作。同时提供了一个基于node包装的$(GOROOT)/misc/wasm/go_js_wasm_exec脚本文件，用于执行Go语言生成的wasm文件。&lt;/p&gt;
+
+&lt;p&gt;参考go_js_wasm_exec脚本的实现，我们可以直接使用wasm_exec.js来运行wasm模块。我们可以先将wasm_exec.js文件复制到当前目录，然后通过以下命令运行wasm模块：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ node wasm_exec.js a.out.wasm
+你好，WebAssembly
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在终于可以正常运行Go语言生成wasm程序了。因此以后可以使用Go语言来开发Web应用了。&lt;/p&gt;
+
+&lt;p&gt;如果对WebAssembly技术感兴趣，可以关注Github上的WebAssembly(wasm)资源精选项目：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh&#34;&gt;https://github.com/chai2010/awesome-wasm-zh&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

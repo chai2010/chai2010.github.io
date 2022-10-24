@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gist on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/gist/</link>
+    <description>Recent content in Gist on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 27 Jan 2017 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/gist/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>非主流C/C&#43;&#43;编程</title>
+      <link>https://chai2010.cn/post/gist/cpp-js/</link>
+      <pubDate>Fri, 27 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/gist/cpp-js/</guid>
+      
+        <description>&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;enum class NewStyle {
+	ONE = 200,
+	TWO,
+};
+static auto init_enum_NewStyle = my_run_script_int(R&amp;quot;==(
+	const varargs = [
+		Module.getValue(arguments[1]+4*0, &#39;i32&#39;),
+		Module.getValue(arguments[1]+4*1, &#39;i32&#39;),
+	];
+	Module.NewStyle = class {
+		static get ONE(){ return varargs[0] }
+		static get TWO(){ return varargs[1] }
+	};
+)==&amp;quot;,
+	NewStyle::ONE,
+	NewStyle::TWO
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

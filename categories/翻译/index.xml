@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>翻译 on chai2010 的博客</title>
+    <link>https://chai2010.cn/categories/%E7%BF%BB%E8%AF%91/</link>
+    <description>Recent content in 翻译 on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 23 Oct 2022 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/categories/%E7%BF%BB%E8%AF%91/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>WebAssembly将引领下一代计算范式[翻译]</title>
+      <link>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</link>
+      <pubDate>Sun, 23 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</guid>
+      
+        <description>
+
+&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。2018 年 WebAssembly 第一个规范草案诞生，2019 年成为 W3C 第四个标准语言。到了 2022 年底，WebAssembly 现在怎么样了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/00.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;作者：Anders Ranum, Justin Liu, David Carter&lt;/li&gt;
+&lt;li&gt;译者：柴树杉，凹语言作者，2本WASM图书作者，WASM布道者，目前在蚂蚁从事 KusionStack 和 KCL 开发。&lt;/li&gt;
+&lt;li&gt;时间：Thought Leadership / October 18, 2022&lt;/li&gt;
+&lt;li&gt;原文：&lt;a href=&#34;https://sapphireventures.com/blog/whats-up-with-webassembly-computes-next-paradigm-shift/&#34;&gt;https://sapphireventures.com/blog/whats-up-with-webassembly-computes-next-paradigm-shift/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;WebAssembly（简称Wasm）是一个自诞生之日起就充满潜力的技术，从 &amp;ldquo;JavaScript杀手 &amp;ldquo;到 &amp;ldquo;云计算的下一个前沿方向&amp;rdquo;几乎覆盖了全部新兴领域。同时在从云计算项边缘计算渗透，Wasm已经远远超出了起作为第四种Web标准语言的角色。甚至重新定义了应用软件的开发模式，正逐渐接近其“一次编写，随处运行”的愿景。&lt;/p&gt;
+
+&lt;p&gt;在Wasm从诞生到现在的几年间，我们见证了从最开始的Wasm应用演示到为数十亿的头部技术产品提供基础设施支持。在同整个Wasm社区交谈过程中，我们也发现虽然很多人很看好Wasm未来发展前景，但是也存在争议和讨论。&lt;/p&gt;
+
+&lt;p&gt;不过在Sapphire，依然对围绕Wasm的快速发展和Wasm开始为更广泛的计算世界带来的新的可能性感到非常兴奋。在本文中我们将探讨什么是Wasm，为什么它很重要、今天它是如何被使用的、以及对这个生态系统的繁荣有什么期待。我们不会详细展开讨论Wasm的历史，但如果你对这些感到好奇可以看看Lin Clark 的精彩系列文章。&lt;/p&gt;
+
+&lt;h2 id=&#34;一-什么是wasm&#34;&gt;一、什么是Wasm？&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/10.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;WebAssembly正在沿着其名字中Web和Assembly两个领域之外的方向发展，因此这是一个极其有误导性的名字。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;首先它不完全是汇编语言。Wasm是一种类似汇编字节码的指令格式标准，它更像LLVM-IR那种比汇编语言更高一些抽象的中间语言（比如其中函数的参数和返回值定义更像高级语言）。开发人员也不需要完全手写Wasm；相反人们一般选择使用其他高级语言（如C、C++、Rust、Go、凹语言等）将他们的代码编译为Wasm。&lt;/li&gt;
+&lt;li&gt;另外它不再只是Web网络。虽然Wasm最初被设计为Web浏览器的编译目标，但它的影响并没有停止。今天，使用与Wasm兼容的运行时，Wasm文件可以在客户端和服务器端执行，将使用范围扩大到浏览器之外——稍后将进一步探讨这些例子。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;二-为什么wasm很重要&#34;&gt;二、为什么Wasm很重要？&lt;/h2&gt;
+
+&lt;p&gt;Wasm有几个关键的设计目标使其出生开始就自带令人亮眼的关注：&lt;/p&gt;
+
+&lt;h3 id=&#34;2-1-首先wasm是可移植的&#34;&gt;2.1 首先Wasm是可移植的&lt;/h3&gt;
+
+&lt;p&gt;虽然Wasm最初是为Web设计的，而且今天所有主要的浏览器都提供对Wasm的支持。同时它也被设计为针对低级虚拟机架构，其指令由物理机单独翻译成机器代码。这意味着Wasm二进制文件最终可以在各种操作系统和芯片架构上运行——无论是在运行X86笔记本电脑的浏览器中，还是在内部或云端的服务器上，在移动设备、物联网设备上等等。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-2-其次wasm是多语言之下的一个标准&#34;&gt;2.2 其次Wasm是多语言之下的一个标准&lt;/h3&gt;
+
+&lt;p&gt;因为Wasm是一个编译目标，用于编程模块的具体语言并不重要，重要的是是否有支持将该语言编译到Wasm。开发人员可以灵活地使用多种语言（如C、C++、Rust、凹语言等）来构建二进制文件，并享受Wasm带来的复利。这意味着不需要考虑诸多组件和库链接等狗屁问题，只要他们都被编译到Wasm可以用于支持一个单一的应用。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-3-最后wasm是轻量和高效的&#34;&gt;2.3 最后Wasm是轻量和高效的&lt;/h3&gt;
+
+&lt;p&gt;作为一个低级别的二进制指令格式，只需要较少的操作来将Wasm翻译成优化的机器代码。例如比如和Javascript进行比较（感兴趣的话可以参考 Lin Clark 的一些分析文章）。Javascript作为解释型语言，必须在运行时用即时编译（JIT）进行编译，并且必须经过获取/解析/编译/优化，最后才能执行和垃圾回收等步骤。&lt;/p&gt;
+
+&lt;p&gt;虽然JavaScript也可以被解析并转换为字节码，但Wasm已经是原生的字节码。另外Wasm也是静态类型的，这使得大多数优化在其初始编译时就已完成。最后JavaScript是动态类型的，需要在运行时进行优化和再优化，这共同导致了较难预测的性能。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/23.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这些优势也体现在浏览器之外，特别是Wasm模块的大小对于冷启动有极大的优势。目前，Serverless 的一个有问题是冷启动缓慢。虽然Serverless为开发者节省了管理后台基础设施和资源分配的时间，但如果该功能在冷态下被调用，就必须启动新的资源从而带来执行时间增加的额外成本。因为Wasm模块是非常轻量级的，和库调用类似方式使得启动时间可以大大减少（低至毫秒）。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-4-wasm是默认安全的&#34;&gt;2.4 Wasm是默认安全的&lt;/h3&gt;
+
+&lt;p&gt;Wasm 目标之一是安全，它在一个沙盒环境中执行，对主机运行时没有初始可见性。这意味着对系统资源（如文件系统，硬件等）的访问是受限制的，除非明确导入了对应的函数以支持。因此Wasm极大限制了攻击面，实现了多租户环境中不受信任的代码安全受限地执行。这种安全模式是一个关键的促成因素，允许开发人员使用插件和用户提交的代码来扩展现有的应用程序，我们将在下面进一步探讨这一使用情况。 &lt;/p&gt;
+
+&lt;h2 id=&#34;三-wasm现在是如何使用的&#34;&gt;三、Wasm现在是如何使用的？&lt;/h2&gt;
+
+&lt;h3 id=&#34;3-1-客户端使用案例&#34;&gt;3.1 客户端使用案例&lt;/h3&gt;
+
+&lt;h4 id=&#34;3-1-1-浏览器中的多语言支持&#34;&gt;3.1.1 浏览器中的多语言支持&lt;/h4&gt;
+
+&lt;p&gt;开发客户端的流行语言不多，大部分都是Javascript构建的。应用程序的语言在历史上是有限的，今天大多数现代网络应用程序是用Javascript构建的。而浏览器和前端框架对Wasm的支持已经开始打开闸门，使开发者更容易在浏览器中编译和执行其他流行语言。现在开发者可以选择在浏览器中直接运行C、C++、Rust、和Go等语言。此外，像Zig这样的新兴系统语言已经为Wasm增加了很好的支持。而其他专门从Wasm设计的语言也已经出现，包括AssemblyScript、Grain、Motoko和凹语言等。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-1-2-高性能的网络应用&#34;&gt;3.1.2 高性能的网络应用&lt;/h4&gt;
+
+&lt;p&gt;已经有一些公司使用Wasm来显著提高他们的网络应用程序的性能。例如，Figma（刚刚被Adobe以200亿美元收购），一个基于浏览器的协作界面设计工具，使用C++构建其渲染引擎，最初将其代码交叉编译到称为asm.js的Javascript子集。在之前因为面临Javascript固有的优化限制，在改用Wasm后Figma的加载时间快了3倍，无论正在加载的文档大小如何。&lt;/p&gt;
+
+&lt;p&gt;其他价值数十亿美元的公司也已经在产品采用了Wasm。比如Adobe的Photoshop、Autodesk的AutoCAD。重新利用现有的代码库，用Wasm将整个桌面应用移植到网络上已经是真实发生的事情。其他有趣的例子包括移植成熟的视频游戏和项目，如完全在浏览器中运行的Doom3和Angrybots，Unity明确地将其WebGL构建的编译目标转换为Wasm。&lt;/p&gt;
+
+&lt;p&gt;除了移植已有的应用，我们还看到一些公司利用Wasm建立新的功能，这些功能在以前会受到性能限制的制约。 一些例子包括Runway，这是一个下一代内容创作套件，使用Wasm来支持其视频编解码器和媒体操作，以及StackBlitz，使用Wasm来支持纯Web的IDE开发环境，这比以前伪在线IDE外挂一个远程服务器拖油瓶的方式有着更好的安全性和性能优势。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-1-3-浏览器内的数据库和分析&#34;&gt;3.1.3 浏览器内的数据库和分析&lt;/h4&gt;
+
+&lt;p&gt;我们已经开始看到数据库的出现，它们利用Wasm的执行性能，使以前的服务器端分析工作负载更接近数据的存在。这里的例子包括DuckDB-Wasm，它使用Wasm为浏览器的中分析SQL数据库提供动力。以及SQL.js，它允许开发人员完全在浏览器中创建和查询SQLite数据库。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-wasi-突破浏览器的桎梏&#34;&gt;3.2 WASI：突破浏览器的桎梏&lt;/h3&gt;
+
+&lt;p&gt;鉴于Wasm模块在默认情况下不能访问被明确授权的功能，纯WASM其实只能实现一些纯运算的功能。在上面的例子中，浏览器本身代表Wasm模块对系统资源的访问控制界面（例如，文件系统、I/O、时钟、全局变量等）。然而当我们在浏览器之外使用Wasm时需要什么呢？ &lt;/p&gt;
+
+&lt;p&gt;在实践中，运行时实如何提供对系统资源的访问方面有很大的不同。这就是WebAssembly系统接口（WASI）出现的地方。WASI是W3C的一个项目，是一个供应商中立的、模块化的标准化API集合，正如其名称所示，它作为Wasm模块和操作系统之间的接口，促进与主机运行时的通信，并以一致的方式使用选定的系统资源。&lt;/p&gt;
+
+&lt;p&gt;当然，WASI是扩大Wasm可能的范围的关键促成因素之一，包括像下面即将提到的服务器端应用程序。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-3-服务器端场景&#34;&gt;3.3 服务器端场景&lt;/h3&gt;
+
+&lt;p&gt;虽然已经有很多例子证明了Wasm在客户端的优势和价值，但我们对Wasm在服务器端的想象空间更加兴奋。Wasm的每一个设计原则（速度、安全和可移植性）都能使下一波服务器端的工作负载成为可能。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-1-serverless计算&#34;&gt;3.3.1 Serverless计算&lt;/h4&gt;
+
+&lt;p&gt;Serverless强依赖高度优化的冷启动，Wasm运行时（如WasmEdge）非常适合为下一代无服务器平台提供动力。SecondState、Cloudflare、Netlify和Vercel等公司都支持通过其边缘运行时部署WebAssembly功能。其他公司如Grafbase正在使用Wasm，使开发者能够在边缘用他们选择的语言编写和部署GraphQL解析器。同时，Fermyon提供了一个类似于FaaS的自助式开发平台，用Wasm合成和运行基于云的应用程序。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-2-边缘的数据分析和机器学习&#34;&gt;3.3.2 边缘的数据分析和机器学习&lt;/h4&gt;
+
+&lt;p&gt;Wasm的效率和可移植性使其独特地适合于支持边缘的机器学习工作负载，部署在外形和计算能力差异很大的设备上。我们相信，实时ML用例将推动计算越来越接近数据产生的地方，无论是运行在网络边缘（如CDN）还是设备边缘（如IoT）。Wasi-nn（神经网络）是一个API规格，旨在将服务器端的Wasm程序与运行在主机上的流行ML框架（如Tensorflow、PyTorch、OpenVINO）连接起来。 今天利用Wasm的ML场景的公司包括Edge Impulse和Hammer of the Gods，前者提供一个低代码开发平台，将TinyML模型设计和部署到Wasm模块中，在嵌入式设备上运行；后者使开发者能够创建超便携容器，通过其开源项目Rune，使用Rust和Wasm在边缘运行ML的工作负载。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-3-插件和扩展&#34;&gt;3.3.3 插件和扩展&lt;/h4&gt;
+
+&lt;p&gt;Wasm的多语言支持和沙盒隔离技术使其成为产品的有力的候选技术，产品开发者希望在现有的应用程序上提供一个可扩展的模型和执行第三方（可信或不可信）代码的能力。例如，Shopify在其Shopify Scripts框架背后使用了WebAssembly，为商家提供了以更有效的方式定制客户体验中对性能敏感的方面（如购物车、结账）的能力。 Suborbital提供了一个扩展引擎，使SaaS供应商能够安全、独立地运行 &amp;ldquo;终端用户开发者 &amp;ldquo;提供的代码。 Dynaboard使开发者能够在其低代码网络应用程序开发平台之上运行用户提供的代码，包括客户端和服务器端。&lt;/p&gt;
+
+&lt;p&gt;SingleStore和ScyllaDB已经开始利用Wasm，用用户定义的函数（UDF）引擎来扩展他们的数据库，允许开发人员重新使用现有的库，并将计算转移到数据库本身（例如，规避了将数据导出到另一个应用程序进行处理的限制）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/333.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;同时，RedPanda和Infinyon允许用户使用Wasm对流媒体数据进行实时内联转换。  代理服务器领域也开始接受Wasm，Tetrate（Sapphire Portfolio公司）等服务网格供应商正在开发func-e等工具，以帮助团队快速构建Wasm模块，扩展开源的Envoy。&lt;/p&gt;
+
+&lt;p&gt;Profian是Enarx的监护人，这是一个开源项目，使用Wasmtime运行时间在可信执行环境（TEE）内执行Wasm二进制文件——这是Wasm的硬件可移植性的另一个场景。虽然Wasm的安全模型保护主机免受不受信任的代码影响，但Profian将这一好处翻转过来，在TEE内使用Wasm二进制文件，以保护应用程序免受不受信任的主机影响。这使企业能够将其敏感的应用程序和数据部署到云端或内部，并获得加密保证。&lt;/p&gt;
+
+&lt;h4 id=&#34;3-3-4-web3应用开发和智能合约&#34;&gt;3.3.4 Web3应用开发和智能合约&lt;/h4&gt;
+
+&lt;p&gt;Wasm天然适合以加密为中心的场景：首先Wasm的可移植性使运行不同硬件集的节点网络具有可靠性；其次Wasm的性能在这些网络中转化为更广泛的效率。&lt;/p&gt;
+
+&lt;p&gt;Ewasm是一个关键的例子，并被视为以太坊第二阶段升级的一个关键组成部分。Ewasm将取代以太坊虚拟机（EVM），EVM虚拟机目前为交易提供动力并维护以太坊的网络状态，但没有针对不同的硬件平台进行优化，因此效率不高。Ewasm（连同分片和转向股权证明）代表了改善整体网络性能，并提供了一个更具扩展性的底层，为希望建立去中心化应用程序的开发人员扩大了对Solidity以外的语言支持。&lt;/p&gt;
+
+&lt;p&gt;Wasm也被用来支持其他网络和可互操作区块链的计算。例如，Parity是Substrate的开发者，这是一个开源框架，使用Wasm作为Polkadot生态系统的骨干。同时，CosmWasm是一个为Cosmos生态系统建立的多链智能合约平台，运行Wasm字节码。 Fluence实验室提供Marine，这是一个通用的Wasm运行时，与他们的专用编程语言Aqua相结合，使分散的应用程序和协议能够在他们的点对点网络上运行。目前利用Wasm的其他协议包括NEAR、Dfinity、EOS等。&lt;/p&gt;
+
+&lt;h2 id=&#34;四-wasm的应用和基础大图&#34;&gt;四、Wasm的应用和基础大图&lt;/h2&gt;
+
+&lt;p&gt;我们已经列出了一些公司和组织，他们主要分为两类：一类是使用Wasm来支持他们自己的产品和平台；另一类是提供所需的基础工具和基础设施，使开发人员能够自己建立Wasm。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/40.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;五-最后总结&#34;&gt;五、最后总结&lt;/h2&gt;
+
+&lt;h3 id=&#34;5-1-wasm的未来&#34;&gt;5.1 Wasm的未来&lt;/h3&gt;
+
+&lt;p&gt;虽然我们看到许多初创企业和科技巨头采用Wasm技术，但生态系统的一些关键技术只是在最近才逐渐发展起来。今天，Wasm带来增量效益往往被使用一个低级技术和一个不成熟的工具链所带来的额外成本所抵销。&lt;/p&gt;
+
+&lt;p&gt;我们认为在推动Wasm的未来应用中有四个方面是最重要的。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;无缝的开发者体验。在最初阶段，开发人员在企业级利用Wasm所需的环境一直是比较复杂的。Wasm的开发者体验并不舒适（例如，调试Wasm仍然是众所周知的困难），在整个开发生命周期中，在编译到Wasm和以实际方式利用Wasm方面，有大量的空间可以提供更好的工具。 同时大多数开发人员不具备低级语言和技术的专业知识，因此，通过抽象来提高可用性对促进更多的人的采用是非常重要的。我们已经开始看到第一波明确致力于为开发者配备这些工具的公司，包括Fermyon、Second State、Suborbital、Wasmer和Cosmonic。&lt;/li&gt;
+&lt;li&gt;标准的继续推进。 虽然社区有一些分裂意见（例如，见AssemblyScript决定放弃对WASI的支持），但是Wasm标准的活力依然重要。除了蓬勃发展的创业生态系统，微软、亚马逊、谷歌、Fastly、Cloudflare、Mozilla等科技巨头也开始认识到Wasm是支持下一代云工作负载的有效底层，他们正在积极为标准机构和非营利组织（如W3C和字节码联盟）做出贡献，以推动这个社区的发展。CNCF也在发挥重要作用，接受wasmCloud和WasmEdge作为沙盒项目。仍有重要的工作要做；像文档，如垃圾收集、本地DOM访问、套接字、线程、组件模型等，都在激烈讨论中。标准的总体目标是使Wasm更适用于更多的目标，并适用于更多的使用案例。&lt;/li&gt;
+&lt;li&gt;编程语言支持。 虽然Wasm最常被吹捧的好处之一是多语言支持，但目前支持的现实状态是介于两者之间。像C++、Go（包括TinyGo）和Rust这样的语言已经接受了Wasm，但一些最常见的语言，如Python、Java和PHP还在努力实现一等公民的地位。 为了真正实现主流采用，Wasm的支持必须继续扩展到一些更复杂的语言，如C++和Rust，并向最广泛采用的语言扩展。 对于那些有兴趣跟踪这方面进展的人来说，Fermyon团队已经做了一项伟大的工作，即跟踪Wasm在RedMonk的前20种编程语言中的支持情况。中国的Gopher创建的凹语言则将支持WASM作为第一目的，其语言命名正是Wasm图标基于中国汉字的变形。&lt;/li&gt;
+&lt;li&gt;理念、传播和社区。  正如我们在容器和协调引擎（如Kubernetes）的案例中看到的那样，开发者对Wasm的采用可以通过布道者和更广泛的、成熟的倡导者社区来进一步推动。像云原生计算基金会（CNCF）和字节码联盟这样的组织已经走在了吸引开发者的前列，以促进对Wasm相关项目、活动和倡议的参与。除了开发者受众，其他利益相关者对Wasm的认识可以通过阐述二阶价值主张来推动，例如在云和Serverless环境中使用Wasm可能带来的成本节约。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/x-lang.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;5-2-wasm会取代容器吗&#34;&gt;5.2 Wasm会取代容器吗？&lt;/h3&gt;
+
+&lt;p&gt;随着时间的推移，我们相信Wasm运行时将作为containerd、microVMs（Firecracker）和其他流行的容器结构的合法替代品 - 特别是随着WASI等标准的进一步扩展。这并不是说Wasm将全盘取代容器；在可预见的未来，它们将并肩存在，而利用每种容器的决定是由特定工作负载的特点所驱动的。&lt;/p&gt;
+
+&lt;p&gt;与传统的基于管理程序的虚拟机相比，Docker风格的容器提供了显著的改进，而Wasm已经能够将这些相同的效率提高到 &amp;ldquo;下一个水平&amp;rdquo;。凭借其亚毫秒级的冷启动，Wasm容器非常适合寿命较短的无服务器和边缘工作负载（除了现有的客户端用例之外）。同时，传统的Docker式工作负载非常适用于需要大量I/O或需要访问网络套接字的长期运行的服务（如缓存服务器）。&lt;/p&gt;
+
+&lt;p&gt;我们渴望看到像Kubernetes这样的协调引擎如何随着时间的推移与Wasm进行整合。尽管还很早，但像Krustlet（kubelet代理的替代品）、runwasi、Containerd Wasm Shims和crun的Wasm处理程序等项目和扩展都旨在将Wasm提升为容器环境中的一等公民，将其作为一个新的运行时类，可以由K8s进行相应的调度和管理。&lt;/p&gt;
+
+&lt;h3 id=&#34;5-3-谁会赢&#34;&gt;5.3 谁会赢？&lt;/h3&gt;
+
+&lt;p&gt;云厂商和Serverless是这里的明显候选人。但在Sapphire依然期望保持对Wasm生态每一个新兴技术保持近距离的关注依然。&lt;/p&gt;
+
+&lt;p&gt;随着任何新兴技术的出现，需要使其能够被主流采用。我们已经开始看到了许多真实的案例。然而，尽管今天正在推进的标准和正在开发的框架和运行时为实现Wasm的潜力奠定了基础，但百废待兴仍有许多工作要做。从以Wasm为中心的应用开发到开发人员生产力工具，到监控和安全解决方案，我们很高兴支持那些建立基础设施和工具的人，为每个人释放Wasm的优势，从个人开发者到全球企业。&lt;/p&gt;
+
+&lt;p&gt;如果你正在为Wasm生态系统做出贡献，或者正在使用Wasm为你的基础设施提供动力，请联系 anders@sapphireventures.com, liu@sapphireventures.com 或 carter@sapphireventures.com - 我们很乐意听到你的意见！&lt;/p&gt;
+
+&lt;p&gt;特别感谢Michael Yuan、Matt Butcher、Liam Randall、Connor Hicks和Alexander Gallego的宝贵观点和反馈。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bazel on chai2010 的博客</title>
+    <link>https://chai2010.cn/categories/bazel/</link>
+    <description>Recent content in Bazel on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 28 Jun 2016 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/categories/bazel/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Bazel C&#43;&#43; 基础[翻译]</title>
+      <link>https://chai2010.cn/post/bazel/bazel-cpp/</link>
+      <pubDate>Tue, 28 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/bazel/bazel-cpp/</guid>
+      
+        <description>&lt;ul&gt;
+&lt;li&gt;原文：&lt;a href=&#34;http://www.bazel.io/docs/cpp.html&#34;&gt;http://www.bazel.io/docs/cpp.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;译者：&lt;a href=&#34;http://github.com/chai2010&#34;&gt;chai2010&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;使用绝对路径&#34;&gt;使用绝对路径&lt;/h2&gt;
+
+&lt;p&gt;包含的路径是相对于工作区的根路径。假设有以下的目录结构：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[workspace]/
+    WORKSPACE
+    a/
+        BUILD
+        a.h
+        a.cc
+    b/
+        BUILD
+        b.h
+        b.cc
+        main.cc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果&lt;code&gt;b/main.cc&lt;/code&gt;需要包含&lt;code&gt;b.h&lt;/code&gt;头文件，我们需要创建以下的&lt;code&gt;b/BUILD&lt;/code&gt;文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;b&amp;quot;,
+    srcs = [&amp;quot;b.cc&amp;quot;],
+    hdrs = [&amp;quot;b.h&amp;quot;],
+)
+
+cc_binary(
+    name = &amp;quot;main&amp;quot;,
+    srcs = [&amp;quot;main.cc&amp;quot;],
+    deps = [&amp;quot;:b&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;b/main.cc&lt;/code&gt;可以这样包含&lt;code&gt;b.h&lt;/code&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;quot;b/b.h&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的头文件包含路径是相对于工作区根目录的相对路径。如果&lt;code&gt;b/main.cc&lt;/code&gt;还要依赖&lt;code&gt;a/a.h&lt;/code&gt;头文件的话，我们还需要添加&lt;code&gt;a/BUILD&lt;/code&gt;文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;a&amp;quot;,
+    srcs = [&amp;quot;a.cc&amp;quot;],
+    hdrs = [&amp;quot;a.h&amp;quot;],
+    visibility = [&amp;quot;//b:__pkg__&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后我们在&lt;code&gt;b/BUILD&lt;/code&gt;添加依赖关系：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_binary(
+    name = &amp;quot;main&amp;quot;,
+    srcs = [&amp;quot;main.cc&amp;quot;],
+    deps = [
+        &amp;quot;:b&amp;quot;,
+        &amp;quot;//a&amp;quot;,
+    ],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;b/main.cc&lt;/code&gt;代码中也包含了&lt;code&gt;a/a.h&lt;/code&gt;头文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;quot;a/a.h&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;b/main.cc&lt;/code&gt;就可以正常使用&lt;code&gt;a/a.h&lt;/code&gt;或&lt;code&gt;b/b.h&lt;/code&gt;中导出的符号了。&lt;/p&gt;
+
+&lt;h2 id=&#34;依赖传递&#34;&gt;依赖传递&lt;/h2&gt;
+
+&lt;p&gt;如果包含了一个头文件，那么需要将头文件对应的库添加到依赖中。不过，只需有添加直接依赖的库。假设三明治对应的&lt;code&gt;sandwich.h&lt;/code&gt;文件包含了面包对应的&lt;code&gt;bread.h&lt;/code&gt;文件，同时&lt;code&gt;bread.h&lt;/code&gt;又包含了面粉对应的&lt;code&gt;flour.h&lt;/code&gt;文件。但是，三明治&lt;code&gt;sandwich.h&lt;/code&gt;文件并没有直接包含面粉&lt;code&gt;flour.h&lt;/code&gt;文件（三明治用户当然不关心面粉的事情），因此BUILD文件可以这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;sandwich&amp;quot;,
+    srcs = [&amp;quot;sandwich.cc&amp;quot;],
+    hdrs = [&amp;quot;sandwich.h&amp;quot;],
+    deps = [&amp;quot;:bread&amp;quot;],
+)
+
+cc_library(
+    name = &amp;quot;bread&amp;quot;,
+    srcs = [&amp;quot;bread.cc&amp;quot;],
+    hdrs = [&amp;quot;bread.h&amp;quot;],
+    deps = [&amp;quot;:flour&amp;quot;],
+)
+
+cc_library(
+    name = &amp;quot;flour&amp;quot;,
+    srcs = [&amp;quot;flour.cc&amp;quot;],
+    hdrs = [&amp;quot;flour.h&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面表示了&lt;code&gt;sandwich&lt;/code&gt;三明治库依赖&lt;code&gt;bread&lt;/code&gt;面包库，&lt;code&gt;bread&lt;/code&gt;又依赖&lt;code&gt;flour&lt;/code&gt;对应的面粉库。&lt;/p&gt;
+
+&lt;h2 id=&#34;添加头文件包含路径&#34;&gt;添加头文件包含路径&lt;/h2&gt;
+
+&lt;p&gt;很多时候你可能并不希望基于工作区根路径的相对路径来包含每个头文件。因为很多已经存在的第三方库的头文件包含方式并不是基于工作区的根路径。假设有以下目录结构：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[workspace]/
+    WORKSPACE
+    third_party/
+        some_lib/
+            include/
+                some_lib.h
+            BUILD
+            some_lib.cc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Bazel希望用&lt;code&gt;third_party/some_lib/include/some_lib.h&lt;/code&gt;方式包含&lt;code&gt;some_lib.h&lt;/code&gt;，但是&lt;code&gt;some_lib.cc&lt;/code&gt;可能跟希望用&lt;code&gt;&amp;quot;include/some_lib.h&amp;quot;&lt;/code&gt;方式包含。为了使得包含路径有效，需要在&lt;code&gt;third_party/some_lib/BUILD&lt;/code&gt;文件中将&lt;code&gt;some_lib/&lt;/code&gt;目录添加到头文件包含路径的搜索列表中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;some_lib&amp;quot;,
+    srcs = [&amp;quot;some_lib.cc&amp;quot;],
+    hdrs = [&amp;quot;some_lib.h&amp;quot;],
+    copts = [&amp;quot;-Ithird_party/some_lib&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这对于依赖的外部第三方库特别有效，因为可以避免在头文件路径中出现无关的&lt;code&gt;external/[repository-name]/&lt;/code&gt;前缀。&lt;/p&gt;
+
+&lt;h2 id=&#34;包含外部库-一个例子&#34;&gt;包含外部库：一个例子&lt;/h2&gt;
+
+&lt;p&gt;假设使用了 &lt;a href=&#34;https://github.com/google/googletest&#34;&gt;Google Test&lt;/a&gt;。可以在&lt;code&gt;WORKSPACE&lt;/code&gt;文件中使用&lt;code&gt;new_&lt;/code&gt;开头的仓库相关的函数，下载依赖的GTest代码到当前仓库中：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;new_http_archive(
+    name = &amp;quot;gtest&amp;quot;,
+    url = &amp;quot;https://googletest.googlecode.com/files/gtest-1.7.0.zip&amp;quot;,
+    sha256 = &amp;quot;247ca18dd83f53deb1328be17e4b1be31514cedfc1e3424f672bf11fd7e0d60d&amp;quot;,
+    build_file = &amp;quot;gtest.BUILD&amp;quot;,
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建&lt;code&gt;gtest.BUILD&lt;/code&gt;文件，对应Google Test的构建配置文件。配置文件中有几个需要特别注意的地方：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;gtest-1.7.0/src/gtest-all.cc&lt;/code&gt;文件已经采用&lt;code&gt;#include&lt;/code&gt;语法包含了&lt;code&gt;gtest-1.7.0/src/&lt;/code&gt;目录中其它&lt;code&gt;*.cc&lt;/code&gt;文件，因此需要将它排除在外（也可以只包含它一个文件，但是需要正确配置包含路径）。&lt;/li&gt;
+&lt;li&gt;它的头文件在&lt;code&gt;gtest-1.7.0/include/&lt;/code&gt;目录，需要将它添加到头文件包含路径列表中&lt;/li&gt;
+&lt;li&gt;GTest依赖&lt;code&gt;pthread&lt;/code&gt;多线程库，通过&lt;code&gt;linkopt&lt;/code&gt;选项指定。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最终的规则大概是这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;main&amp;quot;,
+    srcs = glob(
+        [&amp;quot;gtest-1.7.0/src/*.cc&amp;quot;],
+        exclude = [&amp;quot;gtest-1.7.0/src/gtest-all.cc&amp;quot;]
+    ),
+    hdrs = glob([
+        &amp;quot;gtest-1.7.0/include/**/*.h&amp;quot;,
+        &amp;quot;gtest-1.7.0/src/*.h&amp;quot;
+    ]),
+    copts = [
+        &amp;quot;-Iexternal/gtest/gtest-1.7.0/include&amp;quot;
+    ],
+    linkopts = [&amp;quot;-pthread&amp;quot;],
+    visibility = [&amp;quot;//visibility:public&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是有点混乱：所有以&lt;code&gt;gtest-1.7.0&lt;/code&gt;为前缀的其实都是生成的临时文件。我们可以通过&lt;code&gt;new_http_archive&lt;/code&gt;函数中的&lt;code&gt;strip_prefix&lt;/code&gt;属性来忽略它：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;new_http_archive(
+    name = &amp;quot;gtest&amp;quot;,
+    url = &amp;quot;https://googletest.googlecode.com/files/gtest-1.7.0.zip&amp;quot;,
+    sha256 = &amp;quot;247ca18dd83f53deb1328be17e4b1be31514cedfc1e3424f672bf11fd7e0d60d&amp;quot;,
+    build_file = &amp;quot;gtest.BUILD&amp;quot;,
+    strip_prefix = &amp;quot;gtest-1.7.0&amp;quot;,
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在&lt;code&gt;gtest.BUILD&lt;/code&gt;简洁多了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;main&amp;quot;,
+    srcs = glob(
+        [&amp;quot;src/*.cc&amp;quot;],
+        exclude = [&amp;quot;src/gtest-all.cc&amp;quot;]
+    ),
+    hdrs = glob([
+        &amp;quot;include/**/*.h&amp;quot;,
+        &amp;quot;src/*.h&amp;quot;
+    ]),
+    copts = [&amp;quot;-Iexternal/gtest/include&amp;quot;],
+    linkopts = [&amp;quot;-pthread&amp;quot;],
+    visibility = [&amp;quot;//visibility:public&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在&lt;code&gt;cc_&lt;/code&gt;相关的规则可以通过&lt;code&gt;//external:gtest/main&lt;/code&gt;引用GTest了。&lt;/p&gt;
+
+&lt;p&gt;例如：我们可以创建以下测试：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cpp&#34;&gt;#include &amp;quot;gtest/gtest.h&amp;quot;
+
+TEST(FactorialTest, Negative) {
+  EXPECT_EQ(1, 1);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;创建对应的BUILD文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_test(
+    name = &amp;quot;my_test&amp;quot;,
+    srcs = [&amp;quot;my_test.cc&amp;quot;],
+    copts = [&amp;quot;-Iexternal/gtest/include&amp;quot;],
+    deps = [&amp;quot;@gtest//:main&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用&lt;code&gt;bazel test&lt;/code&gt;命令运行测试。&lt;/p&gt;
+
+&lt;h2 id=&#34;依赖预编译的库&#34;&gt;依赖预编译的库&lt;/h2&gt;
+
+&lt;p&gt;如果要依赖一个已经编译好的库（可能只有头文件和对应的&lt;code&gt;*.so&lt;/code&gt;库文件），可以使用&lt;code&gt;cc_library&lt;/code&gt;规则包装一个库对象：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;cc_library(
+    name = &amp;quot;mylib&amp;quot;,
+    srcs = [&amp;quot;mylib.so&amp;quot;],
+    hdrs = [&amp;quot;mylib.h&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其它的目标就可以依赖这个包装的库对象了。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Bazel教程：构建iOS应用[翻译]</title>
+      <link>https://chai2010.cn/post/bazel/bazel-ios-app/</link>
+      <pubDate>Thu, 19 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/bazel/bazel-ios-app/</guid>
+      
+        <description>&lt;h1 id=&#34;bazel教程-构建ios应用&#34;&gt;Bazel教程：构建iOS应用&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;原文：&lt;a href=&#34;http://bazel.io/docs/tutorial/ios-app.html&#34;&gt;http://bazel.io/docs/tutorial/ios-app.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;译者：&lt;a href=&#34;http://github.com/chai2010&#34;&gt;chai2010&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;本教程包含以下步骤（Bazel新用户请先参考: &lt;a href=&#34;http://my.oschina.net/chai2010/blog/674110&#34;&gt;Bazel入门教程&lt;/a&gt;）：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;代码预览&lt;/li&gt;
+&lt;li&gt;创建BUILD构建文件&lt;/li&gt;
+&lt;li&gt;针对模拟器构建应用&lt;/li&gt;
+&lt;li&gt;查看构建输出&lt;/li&gt;
+&lt;li&gt;在模拟器环境运行／调试应用&lt;/li&gt;
+&lt;li&gt;针对设备构建应用&lt;/li&gt;
+&lt;li&gt;安装应用到设备&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;需要在 Mac OS X 环境，&lt;code&gt;WORKSPACE&lt;/code&gt; 不用配置。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;查看源文件结构&#34;&gt;查看源文件结构&lt;/h2&gt;
+
+&lt;p&gt;iOS应用源文件在&lt;code&gt;$WORKSPACE/ios-app/UrlGet&lt;/code&gt;目录。&lt;/p&gt;
+
+&lt;p&gt;代码在这里：&lt;a href=&#34;https://github.com/bazelbuild/examples/tree/master/tutorial/ios-app/UrlGet&#34;&gt;https://github.com/bazelbuild/examples/tree/master/tutorial/ios-app/UrlGet&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;创建build文件&#34;&gt;创建BUILD文件&lt;/h2&gt;
+
+&lt;p&gt;在命令行用vi创建并编辑BUILD文件（其它编辑器也可以）：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ vi $WORKSPACE/ios-app/BUILD
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;添加一个-objc-library-规则&#34;&gt;添加一个&lt;code&gt;objc_library&lt;/code&gt;规则&lt;/h2&gt;
+
+&lt;p&gt;Bazel针对构建iOS应用提供了诸多规则命令。在这里，我们首先使用
+&lt;a href=&#34;http://bazel.io/docs/be/objective-c.html#objc_library&#34;&gt;&lt;code&gt;objc_library&lt;/code&gt;&lt;/a&gt;
+规则从源文件和Xib文件构建 &lt;a href=&#34;https://developer.apple.com/library/ios/technotes/iOSStaticLibraries/Introduction.html&#34;&gt;静态库&lt;/a&gt;。
+（这个只是最小的规则，此外还有&lt;code&gt;ios_application&lt;/code&gt;规则可以用于构建多架构的iOS应用。）&lt;/p&gt;
+
+&lt;p&gt;BUILD的内容如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;objc_library(
+    name = &amp;quot;UrlGetClasses&amp;quot;,
+    srcs = [
+        &amp;quot;UrlGet/AppDelegate.m&amp;quot;,
+        &amp;quot;UrlGet/UrlGetViewController.m&amp;quot;,
+    ],
+    hdrs = glob([&amp;quot;UrlGet/*.h&amp;quot;]),
+    xibs = [&amp;quot;UrlGet/UrlGetViewController.xib&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;规则对应的目标名字是&lt;code&gt;UrlGetClasses&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h2 id=&#34;添加-objc-binary-规则&#34;&gt;添加&lt;code&gt;objc_binary&lt;/code&gt;规则&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bazel.io/docs/be/objective-c.html#objc_binary&#34;&gt;&lt;code&gt;objc_binary&lt;/code&gt;&lt;/a&gt; 创建一个
+bundled应用中的二进制可执行程序。&lt;/p&gt;
+
+&lt;p&gt;BUILD文件添加如下内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;objc_binary(
+    name = &amp;quot;ios-app-binary&amp;quot;,
+    srcs = [
+        &amp;quot;UrlGet/main.m&amp;quot;,
+    ],
+    deps = [
+        &amp;quot;:UrlGetClasses&amp;quot;,
+    ],
+)
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中&lt;code&gt;deps&lt;/code&gt;属性引用了前面的&lt;code&gt;UrlGetClasses&lt;/code&gt;静态库。&lt;/p&gt;
+
+&lt;h2 id=&#34;添加-ios-application-规则&#34;&gt;添加&lt;code&gt;ios_application&lt;/code&gt;规则&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://chai2010.cn/docs/be/objective-c.html#ios_application&#34;&gt;&lt;code&gt;ios_application&lt;/code&gt;&lt;/a&gt; 规则用于创建&lt;code&gt;.ipa&lt;/code&gt;打包应用，
+同时生成Xcode过程文件。&lt;/p&gt;
+
+&lt;p&gt;BUILD文件添加如下内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;ios_application(
+    name = &amp;quot;ios-app&amp;quot;,
+    binary = &amp;quot;:ios-app-binary&amp;quot;,
+    infoplist = &amp;quot;UrlGet/UrlGet-Info.plist&amp;quot;,
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;完整的BUILD文件在这里：&lt;a href=&#34;https://github.com/bazelbuild/examples/blob/master/tutorial/ios-app/BUILD&#34;&gt;https://github.com/bazelbuild/examples/blob/master/tutorial/ios-app/BUILD&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;构建模拟器环境的应用&#34;&gt;构建模拟器环境的应用&lt;/h2&gt;
+
+&lt;p&gt;命令行环境，确保当前目录对应Bazel的workspace：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cd $WORKSPACE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输入以下命令构建应用：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ bazel build //ios-app:ios-app
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Bazel将启动构建工作。当构建完成时，输出类似下面的信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;INFO: Found 1 target...
+Target //ios-app:ios-app up-to-date:
+  bazel-bin/ios-app/ios-app.ipa
+  bazel-bin/ios-app/ios-app.xcodeproj/project.pbxproj
+INFO: Elapsed time: 3.765s, Critical Path: 3.44s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;查找构建的输出&#34;&gt;查找构建的输出&lt;/h2&gt;
+
+&lt;p&gt;输出的&lt;code&gt;.ipa&lt;/code&gt;和其它文件在&lt;code&gt;$WORKSPACE/bazel-bin/ios-app&lt;/code&gt;目录。&lt;/p&gt;
+
+&lt;h2 id=&#34;模拟器环境运行-调试应用&#34;&gt;模拟器环境运行／调试应用&lt;/h2&gt;
+
+&lt;p&gt;现在可以从Xcode环境的模拟器来运行应用。先打开&lt;code&gt;$WORKSPACE/bazel-bin/ios-app/ios-app.xcodeproj&lt;/code&gt;工程文件，
+然后选择相应版本的iOS模拟器，然后点击 &lt;strong&gt;Run&lt;/strong&gt; 按钮运行。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意：&lt;/strong&gt; 如果要Xcode工程中的任何信息发生变化（比如删除文件或添加／改变依赖），必须使用Bazel重新生成Xcode工程文件。&lt;/p&gt;
+
+&lt;h2 id=&#34;针对设备构建应用&#34;&gt;针对设备构建应用&lt;/h2&gt;
+
+&lt;p&gt;针对设备构建应用，需要设置bazel以找到目标对应设备的provisioning profile配置文件。
+根据以下步骤设置：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;打开网页 &lt;a href=&#34;https://developer.apple.com/account/ios/profile/profileList.action&#34;&gt;Apple Profiles&lt;/a&gt;
+  下载设备对应的provisioning profile配置文件。
+  如果又疑问，请参考 &lt;a href=&#34;https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingProfiles/MaintainingProfiles.html&#34;&gt;Apple&amp;rsquo;s documentation&lt;/a&gt;。&lt;/li&gt;
+&lt;li&gt;将profile配置文件放到&lt;code&gt;$WORKSPACE/tools/objc&lt;/code&gt;目录。&lt;/li&gt;
+&lt;li&gt;可选操作 － 可以在&lt;code&gt;.gitignore&lt;/code&gt;中忽略配置文件。&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;编辑 &lt;code&gt;$WORKSPACE/tools/objc/BUILD&lt;/code&gt; 文件，添加：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;  filegroup(
+      name = &amp;quot;default_provisioning_profile&amp;quot;,
+      srcs = [&amp;quot;&amp;lt;NAME OF YOUR PROFILE&amp;gt;.mobileprovision&amp;quot;],
+  )
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;现在可以构建针对设备的应用了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ bazel build //ios-app:ios-app --ios_multi_cpus=armv7,arm64
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面的命令将构建针对多个类型的设备应用。如果只需要构建真的特定类型的应用，
+可以指定一个特定的设备架构体系结构。&lt;/p&gt;
+
+&lt;p&gt;如果需要选择一个特定版本的Xcode或特定版本的SDK，可以通过&lt;code&gt;--xcode_version=7.2 --ios_sdk_version=9.2&lt;/code&gt;指定。
+要确保选定版本的SDK对应的Xcode已经安装到本机。&lt;/p&gt;
+
+&lt;p&gt;如果需要指定一个能够运行的最小iOS版本，可以通过&lt;code&gt;--ios_minimum_os=7.0&lt;/code&gt;指定。&lt;/p&gt;
+
+&lt;h2 id=&#34;安装应用到设备上&#34;&gt;安装应用到设备上&lt;/h2&gt;
+
+&lt;p&gt;安装应用到设备最简单的方法是打开Xcode，然后点击&lt;code&gt;Windows &amp;gt; Devices&lt;/code&gt;菜单。
+从左边列表选择相应的设备，点击 &amp;ldquo;+&amp;rdquo; 按钮并选择生成的 &lt;code&gt;.ipa&lt;/code&gt; 文件。&lt;/p&gt;
+
+&lt;p&gt;如果程序没有运行，请检查设备和provisioning profile配置是否匹配。
+点击&lt;code&gt;Devices&lt;/code&gt;下面的&lt;code&gt;View Device Logs&lt;/code&gt;按钮，可以查看到相关的错误信息。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Bazel入门[翻译]</title>
+      <link>https://chai2010.cn/post/bazel/bazel-guide/</link>
+      <pubDate>Thu, 12 May 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/bazel/bazel-guide/</guid>
+      
+        <description>&lt;h1 id=&#34;bazel入门-翻译&#34;&gt;Bazel入门［翻译］&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;原文：&lt;a href=&#34;http://bazel.io/docs/getting-started.html&#34;&gt;http://bazel.io/docs/getting-started.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;译者：&lt;a href=&#34;http://github.com/chai2010&#34;&gt;chai2010&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;安装&#34;&gt;安装&lt;/h2&gt;
+
+&lt;p&gt;安装过程请参考: &lt;a href=&#34;http://bazel.io/docs/install.html&#34;&gt;http://bazel.io/docs/install.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;使用工作区-workspace&#34;&gt;使用工作区（workspace）&lt;/h2&gt;
+
+&lt;p&gt;所有的Bazel构建都是基于一个 &lt;a href=&#34;http://bazel.io/docs/build-ref.html#workspaces&#34;&gt;&lt;em&gt;工作区（workspace）&lt;/em&gt;&lt;/a&gt; 概念，
+它是文件系统中一个保存了全部源代码的目录，同时还将包含一些构建后的输出目录的符号链接（例如：&lt;code&gt;bazel-bin&lt;/code&gt; 和 &lt;code&gt;bazel-out&lt;/code&gt; 等输出目录）。
+工作区目录可以随意放在哪里，但是工作区的根目录必须包含一个名为 &lt;code&gt;WORKSPACE&lt;/code&gt; 的工作区配置文件。
+工作区配置文件可以是一个空文件，也可以包含引用外部构建输出所需的 &lt;a href=&#34;http://bazel.io/docs/external.html&#34;&gt;依赖关系&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;在一个工作区内，可以根据需要共享多个项目。为了简单，我们先从只有一个项目的工作区开始介绍。&lt;/p&gt;
+
+&lt;p&gt;先假设你已经有了一个项目，对应 &lt;code&gt;~/gitroot/my-project/&lt;/code&gt; 目录。我们先创建一个
+空的 &lt;code&gt;~/gitroot/my-project/WORKSPACE&lt;/code&gt; 工作区配置文件，用于表示这是Bazel项目对应的根目录。&lt;/p&gt;
+
+&lt;h2 id=&#34;创建自己的build构建文件&#34;&gt;创建自己的Build构建文件&lt;/h2&gt;
+
+&lt;p&gt;使用下面的命令创建一个简单的Java项目：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ # If you&#39;re not already there, move to your workspace directory.
+$ cd ~/gitroot/my-project
+$ mkdir -p src/main/java/com/example
+$ cat &amp;gt; src/main/java/com/example/ProjectRunner.java &amp;lt;&amp;lt;EOF
+package com.example;
+
+public class ProjectRunner {
+    public static void main(String args[]) {
+        Greeting.sayHi();
+    }
+}
+EOF
+$ cat &amp;gt; src/main/java/com/example/Greeting.java &amp;lt;&amp;lt;EOF
+package com.example;
+
+public class Greeting {
+    public static void sayHi() {
+        System.out.println(&amp;quot;Hi!&amp;quot;);
+    }
+}
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Bazel通过工作区中所有名为 &lt;code&gt;BUILD&lt;/code&gt; 的文件来解析需要构建的项目信息，因此，
+我们需要先在 &lt;code&gt;~/gitroot/my-project&lt;/code&gt; 目录创建一个 &lt;code&gt;BUILD&lt;/code&gt; 构建文件。
+下面是BUILD构建文件的内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# ~/gitroot/my-project/BUILD
+java_binary(
+    name = &amp;quot;my-runner&amp;quot;,
+    srcs = glob([&amp;quot;**/*.java&amp;quot;]),
+    main_class = &amp;quot;com.example.ProjectRunner&amp;quot;,
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;BUILD文件采用类似Python的语法。虽然不能包含任意的Python语法，
+但是BUILD文件中的每个构建规则看起来都象是一个Python函数调用，
+而且你也可以用 &lt;code&gt;&amp;quot;#&amp;quot;&lt;/code&gt; 开头来添加单行注释。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;java_binary&lt;/code&gt; 是一个构建规则。
+其中 &lt;code&gt;name&lt;/code&gt; 对应一个构建目标的标识符，可用用它来向Bazel指定构建哪个项目。
+&lt;code&gt;srcs&lt;/code&gt; 对应一个源文件列表，Bazel需要将这些源文件编译为二进制文件。
+其中 &lt;code&gt;glob([&amp;quot;**/*.java&amp;quot;])&lt;/code&gt; 表示递归包含每个子目录中以每个 &lt;code&gt;.java&lt;/code&gt; 为后缀名的文件。
+&lt;code&gt;com.example.ProjectRunner&lt;/code&gt; 指定包含main方法的类。&lt;/p&gt;
+
+&lt;p&gt;现在可以用下面的命令构建这个Java程序了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd ~/gitroot/my-project
+$ bazel build //:my-runner
+INFO: Found 1 target...
+Target //:my-runner up-to-date:
+  bazel-bin/my-runner.jar
+  bazel-bin/my-runner
+INFO: Elapsed time: 1.021s, Critical Path: 0.83s
+$ bazel-bin/my-runner
+Hi!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;恭喜，你已经成功构建了第一个Bazel项目了！&lt;/p&gt;
+
+&lt;h2 id=&#34;添加依赖关系&#34;&gt;添加依赖关系&lt;/h2&gt;
+
+&lt;p&gt;对于小项目创建一个规则是可以的，但是随着项目的变大，则需要分别构建项目的不同的部件，
+最终再组装成产品。这种构建方式可以避免因为局部细小的修改儿导致重现构建整个应用，
+同时不同的构建步骤可以很好地并发执行以提高构建效率。&lt;/p&gt;
+
+&lt;p&gt;我们现在将一个项目拆分为两个部分独立构建，同时设置它们之间的依赖关系。
+基于上面的例子，我们重写了BUILD构建文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;java_binary(
+    name = &amp;quot;my-other-runner&amp;quot;,
+    srcs = [&amp;quot;src/main/java/com/example/ProjectRunner.java&amp;quot;],
+    main_class = &amp;quot;com.example.ProjectRunner&amp;quot;,
+    deps = [&amp;quot;:greeter&amp;quot;],
+)
+
+java_library(
+    name = &amp;quot;greeter&amp;quot;,
+    srcs = [&amp;quot;src/main/java/com/example/Greeting.java&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;虽然源文件是一样的，但是现在Bazel将采用不同的方式来构建：首先是构建 &lt;code&gt;greeter&lt;/code&gt; 库，
+然后是构建 &lt;code&gt;my-other-runner&lt;/code&gt;。可以在构建成功后立刻运行 &lt;code&gt;//:my-other-runner&lt;/code&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ bazel run //:my-other-runner
+INFO: Found 1 target...
+Target //:my-other-runner up-to-date:
+  bazel-bin/my-other-runner.jar
+  bazel-bin/my-other-runner
+INFO: Elapsed time: 2.454s, Critical Path: 1.58s
+
+INFO: Running command line: bazel-bin/my-other-runner
+Hi!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在如果你改动&lt;code&gt;ProjectRunner.java&lt;/code&gt;代码并重新构建&lt;code&gt;my-other-runner&lt;/code&gt;目标，
+&lt;code&gt;Greeting.java&lt;/code&gt;文件因为没有变化而不会重现编译。&lt;/p&gt;
+
+&lt;h2 id=&#34;使用多个包-packages&#34;&gt;使用多个包（Packages）&lt;/h2&gt;
+
+&lt;p&gt;对于更大的项目，我们通常需要将它们拆分到多个目录中。
+你可以用类似&lt;code&gt;//path/to/directory:target-name&lt;/code&gt;的名字引用在其他BUILD文件定义的目标。
+假设&lt;code&gt;src/main/java/com/example/&lt;/code&gt;有一个&lt;code&gt;cmdline/&lt;/code&gt;子目录，包含下面的文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ mkdir -p src/main/java/com/example/cmdline
+$ cat &amp;gt; src/main/java/com/example/cmdline/Runner.java &amp;lt;&amp;lt;EOF
+package com.example.cmdline;
+
+import com.example.Greeting;
+
+public class Runner {
+    public static void main(String args[]) {
+        Greeting.sayHi();
+    }
+}
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;Runner.java&lt;/code&gt;依赖&lt;code&gt;com.example.Greeting&lt;/code&gt;，因此我们需要在&lt;code&gt;src/main/java/com/example/cmdline/BUILD&lt;/code&gt;
+构建文件中添加相应的依赖规则：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# ~/gitroot/my-project/src/main/java/com/example/cmdline/BUILD
+java_binary(
+    name = &amp;quot;runner&amp;quot;,
+    srcs = [&amp;quot;Runner.java&amp;quot;],
+    main_class = &amp;quot;com.example.cmdline.Runner&amp;quot;,
+    deps = [&amp;quot;//:greeter&amp;quot;]
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然而，默认情况下构建目标都是 &lt;em&gt;私有&lt;/em&gt; 的。也就是说，我们只能在同一个BUILD文件中被引用。
+这可以避免将很多实现的细节暴漏给公共的接口，但是也意味着我们需要手工允许&lt;code&gt;runner&lt;/code&gt;所依赖的&lt;code&gt;//:greeter&lt;/code&gt;目标。
+就是类似下面这个在构建&lt;code&gt;runner&lt;/code&gt;目标时遇到的错误：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ bazel build //src/main/java/com/example/cmdline:runner
+ERROR: /home/user/gitroot/my-project/src/main/java/com/example/cmdline/BUILD:2:1:
+  Target &#39;//:greeter&#39; is not visible from target &#39;//src/main/java/com/example/cmdline:runner&#39;.
+  Check the visibility declaration of the former target if you think the dependency is legitimate.
+ERROR: Analysis of target &#39;//src/main/java/com/example/cmdline:runner&#39; failed; build aborted.
+INFO: Elapsed time: 0.091s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可用通过在BUILD文件增加&lt;code&gt;visibility = level&lt;/code&gt;属性来改变目标的可间范围。
+下面是通过在&lt;code&gt;~/gitroot/my-project/BUILD&lt;/code&gt;文件增加可见规则，来改变&lt;code&gt;greeter&lt;/code&gt;目标的可见范围：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;java_library(
+    name = &amp;quot;greeter&amp;quot;,
+    srcs = [&amp;quot;src/main/java/com/example/Greeting.java&amp;quot;],
+    visibility = [&amp;quot;//src/main/java/com/example/cmdline:__pkg__&amp;quot;],
+)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个规则表示&lt;code&gt;//:greeter&lt;/code&gt;目标对于&lt;code&gt;//src/main/java/com/example/cmdline&lt;/code&gt;包是可见的。
+现在我们可以重新构建&lt;code&gt;runner&lt;/code&gt;目标程序：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ bazel run //src/main/java/com/example/cmdline:runner
+INFO: Found 1 target...
+Target //src/main/java/com/example/cmdline:runner up-to-date:
+  bazel-bin/src/main/java/com/example/cmdline/runner.jar
+  bazel-bin/src/main/java/com/example/cmdline/runner
+INFO: Elapsed time: 1.576s, Critical Path: 0.81s
+
+INFO: Running command line: bazel-bin/src/main/java/com/example/cmdline/runner
+Hi!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://bazel.io/docs/be/common-definitions.html#common.visibility&#34;&gt;参考文档&lt;/a&gt; 中有可见性配置说明。&lt;/p&gt;
+
+&lt;h2 id=&#34;部署&#34;&gt;部署&lt;/h2&gt;
+
+&lt;p&gt;如果你查看 &lt;em&gt;bazel-bin/src/main/java/com/example/cmdline/runner.jar&lt;/em&gt; 的内容，
+可以看到里面只包含了&lt;code&gt;Runner.class&lt;/code&gt;，并没有保护所依赖的&lt;code&gt;Greeting.class&lt;/code&gt;：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ jar tf bazel-bin/src/main/java/com/example/cmdline/runner.jar
+META-INF/
+META-INF/MANIFEST.MF
+com/
+com/example/
+com/example/cmdline/
+com/example/cmdline/Runner.class
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这只能在本机正常工作（因为Bazel的&lt;code&gt;runner&lt;/code&gt;脚本已经将greeter jar添加到了classpath），
+但是如果将&lt;code&gt;runner.jar&lt;/code&gt;单独复制到另一台机器上讲不能正常运行。
+如果想要构建可用于部署发布的自包含所有依赖的目标，可以构建&lt;code&gt;runner_deploy.jar&lt;/code&gt;目标
+（类似&lt;code&gt;&amp;lt;target-name&amp;gt;_deploy.jar&lt;/code&gt;以&lt;code&gt;_deploy&lt;/code&gt;为后缀的名字对应可部署目标）。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ bazel build //src/main/java/com/example/cmdline:runner_deploy.jar
+INFO: Found 1 target...
+Target //src/main/java/com/example/cmdline:runner_deploy.jar up-to-date:
+  bazel-bin/src/main/java/com/example/cmdline/runner_deploy.jar
+INFO: Elapsed time: 1.700s, Critical Path: 0.23s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;runner_deploy.jar&lt;/code&gt;中将包含全部的依赖。&lt;/p&gt;
+
+&lt;h2 id=&#34;下一步&#34;&gt;下一步&lt;/h2&gt;
+
+&lt;p&gt;现在，您可以创建自己的目标并组装最终产品了。
+接下来，可查看 &lt;a href=&#34;http://bazel.io/docs/tutorial/index.html&#34;&gt;相关教程&lt;/a&gt; 分别学习如何用Bazel构建
+一个服务器、Android和iOS应用。
+也可以参考 &lt;a href=&#34;http://bazel.io/docs/be/overview.html&#34;&gt;构建百科&lt;/a&gt; 和 &lt;a href=&#34;http://bazel.io/docs/bazel-user-manual.html&#34;&gt;用户手册&lt;/a&gt;
+获得更多的信息。
+如果有问题的话，可以到 &lt;a href=&#34;https://groups.google.com/forum/#!forum/bazel-discuss&#34;&gt;bazel-discuss&lt;/a&gt; 论坛提问。&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

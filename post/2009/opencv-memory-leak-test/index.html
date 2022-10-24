@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>OpenCV中的内存泄漏检测 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="内存泄漏时程序开发中经常遇到的问题. 而且出现内存泄漏很难检测, 但是其导致的结果却是灾难性的. 这里讲一下opencv中内存泄漏检测 的一些技巧." />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2009/opencv-memory-leak-test/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="OpenCV中的内存泄漏检测" />
+<meta property="og:description" content="内存泄漏时程序开发中经常遇到的问题. 而且出现内存泄漏很难检测, 但是其导致的结果却是灾难性的. 这里讲一下opencv中内存泄漏检测 的一些技巧." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2009/opencv-memory-leak-test/" />
+
+
+
+<meta property="article:published_time" content="2009-12-06T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2009-12-06T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="OpenCV中的内存泄漏检测">
+<meta itemprop="description" content="内存泄漏时程序开发中经常遇到的问题. 而且出现内存泄漏很难检测, 但是其导致的结果却是灾难性的. 这里讲一下opencv中内存泄漏检测 的一些技巧.">
+
+
+<meta itemprop="datePublished" content="2009-12-06T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2009-12-06T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="4337">
+
+
+
+<meta itemprop="keywords" content="opencv," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="OpenCV中的内存泄漏检测"/>
+<meta name="twitter:description" content="内存泄漏时程序开发中经常遇到的问题. 而且出现内存泄漏很难检测, 但是其导致的结果却是灾难性的. 这里讲一下opencv中内存泄漏检测 的一些技巧."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">OpenCV中的内存泄漏检测</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2009-12-06 </span>
+        <div class="post-category">
+            
+              <a href="/categories/opencv/"> opencv </a>
+            
+          </div>
+        <span class="more-meta"> 约 4337 字 </span>
+        <span class="more-meta"> 预计阅读 9 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>内存泄漏时程序开发中经常遇到的问题. 而且出现内存泄漏很难检测,
+但是其导致的结果却是灾难性的. 这里讲一下opencv中内存泄漏检测
+的一些技巧.</p>
+
+<p>OpenCV中关于内存管理主要涉及到以下3个函数:</p>
+
+<pre><code>CV_IMPL void  cvSetMemoryManager( CvAllocFunc alloc_func, CvFreeFunc free_func, void* userdata );
+CV_IMPL void* cvAlloc( size_t size );
+CV_IMPL void  cvFree_( void* ptr );
+</code></pre>
+
+<p>还有一个对应 <code>cvFree_</code> 的宏:</p>
+
+<pre><code>#define cvFree(ptr) (cvFree_(*(ptr)), *(ptr)=0)
+</code></pre>
+
+<p>宏 <code>cvFree</code> 的用处是在释放<code>ptr</code>指针对应的内存后, 将<code>ptr</code>设置为<code>NULL</code>.</p>
+
+<p>这里我们先做个假设: opencv中所有的内存分配和释放都是通过<code>cvAlloc</code>和<code>cvFree</code>合作完成的.
+如果你使用<code>cvAlloc</code>分配一个内存, 然后用<code>delete</code>来是释放内存是错误的(切记)!!!</p>
+
+<p>因此, 如果我们能够跟踪到<code>cvAlloc</code>/<code>cvFree</code>的调用流程, 就可以分析内存泄漏的情况了.</p>
+
+<p>一般情况下, 一个<code>cvAlloc</code>分配的内存最终必然要对应<code>cvFree</code>来释放, 如果<code>cvAlloc</code>/<code>cvFree</code>不是
+匹配出现, 那么可以认为出现了内存泄漏.</p>
+
+<p>为此, 我们需要定义自己的内存管理函数, 然后通过<code>cvSetMemoryManager</code>装载到opencv中.
+内存管理函数的类型如下:</p>
+
+<pre><code>typedef void* (CV_CDECL *CvAllocFunc)(size_t size, void* userdata);
+typedef int (CV_CDECL *CvFreeFunc)(void* pptr, void* userdata);
+</code></pre>
+
+<p>其中的<code>userdata</code>是用户通过<code>cvSetMemoryManager</code>来设置的. 我们可以简单的吧<code>userdata</code>当作一个
+容器指针, 在每次执行我们自己的<code>alloc_func</code>/<code>free_func</code>函数时, 将内存的分配/释放情况记录到
+<code>userdata</code>对应的容器.</p>
+
+<p>为此, 我自己简单设计了一个<code>MemTracker</code>类:</p>
+
+<pre><code>#ifndef OPENCV_MEM_TRACKER_H
+#define OPENCV_MEM_TRACKER_H
+
+#include &lt;stdio.h&gt;
+#include &lt;vector&gt;
+
+// 内存泄漏追踪
+
+class MemTracker
+{
+public:
+    MemTracker(void);
+    ~MemTracker(void);
+
+private:
+
+    // 登记分配/释放的内存
+    void regAlloc(void *ptr, size_t size);
+    void regFree(void *ptr);
+
+    // 输出泄漏的内存
+    int output(FILE* fp=stderr);
+
+private:
+
+    // 分配内存
+    static void* alloc_func(size_t size, void *userdata);
+    // 释放内存
+    static int free_func(void *ptr, void *userdata);
+
+private:
+
+    struct Ptr
+    {
+        void *ptr;      // 内存地址
+        size_t size;    // 内存大小
+
+        Ptr(void *ptr, size_t size)
+        {
+            this-&gt;ptr = ptr;
+            this-&gt;size = size;
+        }
+    };
+
+    // 记录当前使用中的内存
+    std::vector&lt;Ptr&gt;   m_memTracker;
+};
+
+#endif   // OPENCV_MEM_TRACKER_H
+</code></pre>
+
+<p>类的实现如下:</p>
+
+<pre><code>#include &quot;MemTracker.h&quot;
+
+#include &lt;assert.h&gt;
+#include &lt;cv.h&gt;
+
+MemTracker::MemTracker(void)
+{
+    // 注册管理函数
+    cvSetMemoryManager(alloc_func, free_func, (void*)this);
+}
+
+MemTracker::~MemTracker(void)
+{
+    // 取消管理函数
+    cvSetMemoryManager(NULL, NULL, NULL);
+
+    // 输出结果
+    this-&gt;output();
+}
+
+// 登记分配/释放的内存
+void MemTracker::regAlloc(void *ptr, size_t size)
+{
+    m_memTracker.push_back(Ptr(ptr, size));
+}
+
+void MemTracker::regFree(void *ptr)
+{
+    int i;
+    for(i = 0; i &lt; m_memTracker.size(); ++i)
+    {
+        // 删除记录
+        if(m_memTracker[i].ptr == ptr)
+        {
+            m_memTracker[i] = m_memTracker[m_memTracker.size()-1];
+            m_memTracker.pop_back();
+            return;
+        }
+    }
+}
+
+// 输出泄漏的内存
+
+int MemTracker::output(FILE* fp)
+{
+    int n = m_memTracker.size();
+    int i;
+
+    for(i = 0; i &lt; n; ++i)
+    {
+        fprintf(fp, &quot;%d: %p, %u\n&quot;, i, m_memTracker[i].ptr, m_memTracker[i].size);
+    }
+    return n;
+}
+
+// 分配内存
+
+void* MemTracker::alloc_func(size_t size, void *userdata)
+{
+    assert(size &gt; 0 &amp;&amp; userdata != NULL);
+
+    // 分配内存
+    void *ptr = malloc(size);
+    if(!ptr) return NULL;
+
+    // 登记
+    MemTracker *tracker = (MemTracker*)userdata;
+    tracker-&gt;regAlloc(ptr, size);
+    return ptr;
+}
+
+// 释放内存
+int MemTracker::free_func(void *ptr, void *userdata)
+{
+    assert(ptr != NULL &amp;&amp; userdata != NULL);
+
+    // 释放内存
+    free(ptr);
+
+    // 登记
+    MemTracker *tracker = (MemTracker*)userdata;
+    tracker-&gt;regFree(ptr);
+
+    // CV_OK == 0
+    return 0;
+}
+</code></pre>
+
+<p>MemTracker在构造的时候会注册自己的内存管理函数, 在析构的时候会输出没有被释放的内存.
+下面我们编写一个测试程序:</p>
+
+<pre><code>#include &lt;cv.h&gt;
+#include &lt;highgui.h&gt;
+
+#include &quot;MemTracker.h&quot;
+
+int main()
+{
+    MemTracker mem;
+
+    IplImage *img = cvLoadImage(&quot;lena.jpg&quot;, 1);
+    if(!img) return -1;
+
+    // 没有释放img内存
+    // cvReleaseImage(&amp;img);
+
+    return 0;
+}
+</code></pre>
+
+<p>在main函数退出的时候mem会被析构, 然后输出内存的泄漏情况. 下面是在我的电脑上测试的结果:</p>
+
+<pre><code>C:\work\vs2005\MemTracker\debug&gt;MemTracker.exe
+0: 00C750C0, 112
+1: 00D90040, 786432
+</code></pre>
+
+<p>OK, 先说到这里吧, 下次再补充&hellip;</p>
+
+<p>前面我们已经解决了内存泄漏的检测, 但是在出现内存泄漏的时候我们怎么才能
+跟踪到出现内存泄漏的代码呢? 如果能够调试到没有被释放内存对应的cvAlloc函数就好了.</p>
+
+<p>这个我们可以通过<code>m_memTracker[i].ptr</code>来比较内存的地址来检测, 例如在alloc_func中
+添加以下代码, 然后设置断点:</p>
+
+<pre><code>// 检测00C750C0内存
+if(ptr == (void*)00C750C0)
+{
+    // 设置断点
+}
+</code></pre>
+
+<p>但是这个方法可能还有缺陷. 因为每次运行程序的时候, 内存的布局可能是有区别的.
+最好的方法是把cvAlloc的调用顺序记录下来.</p>
+
+<p>变动的部分代码:</p>
+
+<pre><code>class MemTracker
+{
+    struct Ptr
+    {
+        void *ptr;      // 内存地址
+        size_t size;    // 内存大小
+        int   id;
+
+        Ptr(void *ptr, size_t size, int id)
+        {
+            this-&gt;ptr = ptr;
+            this-&gt;size = size;
+            this-&gt;id = id;
+        }
+    };
+
+    // 记录当前使用中的内存
+    std::vector&lt;Ptr&gt;   m_memTracker;
+
+    // alloc_func对应的编号
+    int               m_id;
+};
+
+MemTracker::MemTracker(void)
+{
+    m_id = 0;
+
+    // 注册管理函数
+
+    cvSetMemoryManager(alloc_func, free_func, (void*)this);
+}
+
+void MemTracker::regAlloc(void *ptr, size_t size)
+{
+    // 每次记录一个新的m_id
+    m_memTracker.push_back(Ptr(ptr, size, m_id++));
+}
+
+// 输出泄漏的内存
+int MemTracker::output(FILE* fp)
+{
+    int n = m_memTracker.size();
+    int i;
+
+    for(i = 0; i &lt; n; ++i)
+    {
+        fprintf(fp, &quot;%d: %p, %u\n&quot;, m_memTracker[i].id, m_memTracker[i].ptr, m_memTracker[i].size);
+    }
+    return n;
+}
+</code></pre>
+
+<p>以后就可以根据<code>m_memTracker[i].id</code>来设置断点跟踪调试. 因为每次运行程序的时候, <code>cvAlloc</code>的调用次序是不变
+的, 因此可以认为每次<code>cvAlloc</code>对应的<code>id</code>也是不变的. 这样就可以根据<code>id</code>来追踪出现内存泄漏的<code>cvAlloc</code>了.</p>
+
+<p>前面的帖子中我们已经讨论了<code>cvAlloc</code>/<code>cvFree_</code>/<code>cvSetMemoryManager</code>等函数的使用技巧.
+下面开始分析OpenCV中以上函数的实现代码. 我觉得如果在阅读代码之前, 如果能对函数的
+用法有个基本的认识, 那么对于分析源代码是很有帮助的.</p>
+
+<pre><code>CV_IMPL  void*  cvAlloc( size_t size )
+{
+    void* ptr = 0;
+
+    CV_FUNCNAME( &quot;cvAlloc&quot; );
+
+    __BEGIN__;
+
+    if( (size_t)size &gt; CV_MAX_ALLOC_SIZE )
+        CV_ERROR( CV_StsOutOfRange,
+                &quot;Negative or too large argument of cvAlloc function&quot; );
+
+    ptr = p_cvAlloc( size, p_cvAllocUserData );
+    if( !ptr )
+        CV_ERROR( CV_StsNoMem, &quot;Out of memory&quot; );
+
+    __END__;
+
+    return ptr;
+}
+</code></pre>
+
+<p>从代码我们可以直观的看出, <code>cvAlloc</code>分配的内存不得大于<code>CV_MAX_ALLOC_SIZE</code>, 即使是使用我们
+自己的内存管理函数也会有这个限制.</p>
+
+<p>然后通过<code>p_cvAlloc</code>对应的函数指针对应的函数来分配内存. <code>p_cvAlloc</code>是一个全局<code>static</code>变量, 对应的
+还有<code>p_cvFree</code>和<code>p_cvAllocUserData</code>, 分别对应释放内存函数和用户数据. 它们的定义如下:</p>
+
+<pre><code>// pointers to allocation functions, initially set to default
+static CvAllocFunc p_cvAlloc = icvDefaultAlloc;
+static CvFreeFunc p_cvFree = icvDefaultFree;
+static void* p_cvAllocUserData = 0;
+</code></pre>
+
+<p>默认的内存管理函数分别为<code>icvDefaultAlloc</code>和<code>icvDefaultFree</code>(<code>icv</code>开头的表示为内部函数), 用户数据指针为空.</p>
+
+<p>继续跟踪默认的内存分配函数<code>icvDefaultAlloc</code>, 代码如下:</p>
+
+<pre><code>static void*
+icvDefaultAlloc( size_t size, void* )
+{
+    char *ptr, *ptr0 = (char*)malloc(
+        (size_t)(size + CV_MALLOC_ALIGN*((size &gt;= 4096) + 1) + sizeof(char*)));
+
+    if( !ptr0 )
+        return 0;
+
+    // align the pointer
+    ptr = (char*)cvAlignPtr(ptr0 + sizeof(char*) + 1, CV_MALLOC_ALIGN);
+    *(char**)(ptr - sizeof(char*)) = ptr0;
+
+    return ptr;
+}
+</code></pre>
+
+<p>内部使用的是C语言中的<code>malloc</code>函数, 在分配的时候多申请了<code>CV_MALLOC_ALIGN*((size &gt;= 4096) + 1) + sizeof(char*)</code>
+大小的空间. 多申请空间的用处暂时先不分析.</p>
+
+<p>下面的<code>cvAlignPtr</code>函数用于将指针对其到<code>CV_MALLOC_ALIGN</code>边界, 对于我们常规的PC来说是32bit, 也就是4字节.
+<code>cvAlignPtr</code>函数在后面会详细讨论.</p>
+
+<p>下面语句将ptr0记录到<code>(ptr - sizeof(char*))</code>, 可以把它看作一个指针. 最后返回<code>ptr</code>.
+细心的朋友可能会发现, 前面<code>malloc</code>分配的是<code>ptr0</code>, 现在返回的却是<code>ptr</code>, 这个是为什么呢?</p>
+
+<p>这个的原因还是先放下, 但是返回ptr而不返回<code>ptr0</code>带来的影响至少有2个:</p>
+
+<ol>
+<li>返回的<code>ptr</code>指针不能通过C语言的<code>free</code>函数释放(这也是<code>cvAlloc</code>/<code>cvFree</code>必须配对使用的原因).</li>
+<li>在<code>cvFree</code>的时候, 可以根据<code>(ptr - sizeof(char*))</code>对应的值来检测该内存是不是由<code>icvDefaultAlloc</code>申请.</li>
+</ol>
+
+<p>这样应该说可以增加程序的健壮性, <code>icvDefaultFree</code>可以不像傻瓜似的对于任何指针都进行释放.</p>
+
+<p>下面来看看<code>cvAlignPtr</code>函数:</p>
+
+<pre><code>CV_INLINE void* cvAlignPtr( const void* ptr, int align=32 )
+{
+    assert( (align &amp; (align-1)) == 0 );
+    return (void*)( ((size_t)ptr + align - 1) &amp; ~(size_t)(align-1) );
+}
+</code></pre>
+
+<p>该函数的目的主要是将指针<code>ptr</code>调整到<code>align</code>的整数倍</p>
+
+<p>其中<code>align</code>必须为2的幂, <code>assert</code>语言用于该检测. 语句<code>(align &amp; (align-1))</code>
+一般用于将<code>align</code>的最低的为1的bit位设置为0. 如果为2的幂那么就只有1个为1
+的bit位, 因此语句<code>(x&amp;(x-1) == 0)</code>可以完成该检测.</p>
+
+<p><code>return</code>语句简化后为 <code>(ptr+align-1)&amp;~(align-1)</code>, 等价于<code>((ptr+align-1)/align)*align</code>.
+就是找到不小于<code>ptr</code>, 且为<code>align</code>整数倍的最小整数, 这里对应为将指针对其到4字节(32bit).</p>
+
+<p><code>cvFree_</code>函数和<code>cvAlloc</code>类似, 就不详细分析了:</p>
+
+<pre><code>CV_IMPL  void  cvFree_( void* ptr )
+{
+    CV_FUNCNAME( &quot;cvFree_&quot; );
+
+    __BEGIN__;
+
+    if( ptr )
+    {
+        CVStatus status = p_cvFree( ptr, p_cvAllocUserData );
+        if( status &lt; 0 )
+            CV_ERROR( status, &quot;Deallocation error&quot; );
+    }
+
+    __END__;
+}
+</code></pre>
+
+<p><code>p_cvFree</code>默认值为<code>icvDefaultFree</code>:</p>
+
+<pre><code>static int
+icvDefaultFree( void* ptr, void* )
+{
+    // Pointer must be aligned by CV_MALLOC_ALIGN
+    if( ((size_t)ptr &amp; (CV_MALLOC_ALIGN-1)) != 0 )
+        return CV_BADARG_ERR;
+    free( *((char**)ptr - 1) );
+
+    return CV_OK;
+}
+</code></pre>
+
+<p>最后我们简要看下<code>cvSetMemoryManager</code>函数, 它主要用来设置用户自己定义的内存管理函数:</p>
+
+<pre><code>CV_IMPL void cvSetMemoryManager( CvAllocFunc alloc_func, CvFreeFunc free_func, void* userdata )
+{
+    CV_FUNCNAME( &quot;cvSetMemoryManager&quot; );
+
+    __BEGIN__;
+
+    // 必须配套出现
+    if( (alloc_func == 0) ^ (free_func == 0) )
+        CV_ERROR( CV_StsNullPtr, &quot;Either both pointers should be NULL or none of them&quot;);
+
+    p_cvAlloc = alloc_func ? alloc_func : icvDefaultAlloc;
+    p_cvFree = free_func ? free_func : icvDefaultFree;
+    p_cvAllocUserData = userdata;
+
+    __END__;
+}
+</code></pre>
+
+<p>如果函数指针不为空, 则记录到<code>p_cvAlloc</code>和<code>p_cvFree</code>指针, 如果为空则恢复到默认的内存管理函数.
+需要注意的是if语句的条件<code>(alloc_func == 0) ^ (free_func == 0)</code>, 只有当2个函数1个为<code>NULL</code>, 1个
+不为<code>NULL</code>的时候才会出现, 出现这个的原因是内存管理函数的分配和释放函数不匹配了, 这个是不允许的.</p>
+
+<p>因此, 我们需要设置自己的内存管理函数, 就需要同时指定alloc_func和free_func函数, 清空的时候
+则把2个参数都设置NULL就可以了.</p>
+
+<p>今天再来补充一个小技巧 :)</p>
+
+<p>我们前面通过<code>cvSetMemoryManager</code>函数来重新设置了自己的内存管理函数.
+但是前面也说到过, 如果<code>cvAlloc</code>/<code>cvFree</code>覆盖的周期和<code>MemTracker</code>相交, 那么
+内存会出现错误.</p>
+
+<p>即,</p>
+
+<ol>
+<li>原来OpenCV默认函数分配的内存可能使用我们自己的<code>cvFree</code>函数来释放.</li>
+<li>我们自己定义的<code>cvAlloc</code>分配的内存可能使用原来OpenCV默认的函数来释放.</li>
+</ol>
+
+<p>这都会造成错误!</p>
+
+<p>其实我们定义的目的只是要统计内存的使用情况, 我们并不想真的使用自己的函数的管理
+OpenCV的内存. 道理很简单, OpenCV的内存经过优化, 对齐到某个字节, 效率更好.</p>
+
+<p>如果能获取OpenCV原始的内存管理函数就好了, 但是没有这样的函数!!!</p>
+
+<p>但是, 我们任然有方法来绕过这个缺陷.</p>
+
+<p>我们可以在<code>MemTracker::alloc_func</code>函数进入之后, 在用<code>cvSetMemoryManager</code>恢复原来的
+内存管理函数, 这样我们统计目的也达到了, 而且还是用了OpenCV本身的函数来分配内存.</p>
+
+<p>代码如下:</p>
+
+<pre><code>void* MemTracker::alloc_func(size_t size, void *userdata)
+{
+    assert(size &gt; 0 &amp;&amp; userdata != NULL);
+
+    // 取消管理函数
+    cvSetMemoryManager(NULL, NULL, NULL);
+
+    // 用OpenCV的方式分配内存
+    void *ptr = cvAlloc(size);
+
+    // 登记
+    if(ptr)
+    {
+        MemTracker *tracker = (MemTracker*)userdata;
+        tracker-&gt;regAlloc(ptr, size);
+    }
+
+    // 重新注册注册管理函数
+    cvSetMemoryManager(alloc_func, free_func, userdata);
+
+    return ptr;
+}
+</code></pre>
+
+<p><code>MemTracker::free_func</code>的方法和上面类似, 就不贴代码了.</p>
+
+<p>以后我们就可以透明的使用<code>MemTracker</code>了, 不管<code>MemTracker</code>对象在那个地方定义,
+它对OpenCV的内存管理都不会有影响.</p>
+
+<p>前面的方法虽然使得 <code>MemTracker</code> 可以在任何地方使用, 但是可能带来理解的难度.</p>
+
+<p>因为 在<code>cvAlloc</code>之后进入的是 <code>MemTracker::alloc_func</code>, 但是在这个函数中又调用了<code>cvAlloc</code>!
+这看起来很像一个无穷递归调用!!</p>
+
+<p>但是实际的运行结果却没有出现无穷递归导致的栈溢出情形. 仔细分析就知道原理了:</p>
+
+<p><strong>1. 定义MemTracker对象</strong></p>
+
+<p>中间调用了 <code>cvSetMemoryManager(alloc_func, free_func, (void*)this);</code> 函数,
+设置 <code>MemTracker::alloc_func</code> 为分配函数.</p>
+
+<p><strong>2. 调用cvAlloc</strong></p>
+
+<p>内部执行到 <code>MemTracker::alloc_func</code>, 依次执行</p>
+
+<pre><code>// 取消管理函数
+cvSetMemoryManager(NULL, NULL, NULL);
+</code></pre>
+
+<p>此刻, 分配函数又恢复为OpenCV的<code>icvDefaultAlloc</code>函数.</p>
+
+<p>执行</p>
+
+<pre><code>// 用OpenCV的方式分配内存
+void *ptr = cvAlloc(size);
+
+// 登记
+if(ptr)
+{
+    CvxMemTracker *tracker = (CvxMemTracker*)userdata;
+    tracker-&gt;regAlloc(ptr, size);
+}
+</code></pre>
+
+<p>这里的<code>cvAlloc</code>函数内部调用的是<code>icvDefaultAlloc</code>函数, 并不是<code>MemTracker::alloc_func</code> !!
+就是这里了, <code>alloc_func</code>内部虽然调用了<code>cvAlloc</code>, 但是没有执行到<code>alloc_func</code>.</p>
+
+<p>因此<code>alloc_func</code>不会出现递归.</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2009-12-06</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/opencv/">opencv</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2009/opencv-cvimage-bug/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">CvImage中的陷阱和BUG</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2009/opencv-image-driver-framework/">
+            <span class="next-text nav-default">OpenCV的图像读写框架</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

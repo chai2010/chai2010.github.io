@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go语言中隐式接口的冲突问题 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="Go语言中采用的是隐式接口, 只要满足的接口的定义, 就可以当作接口使用. 比如内置的 error 接口: type error struct { Error() string } 隐式接口的好处有很多. 但我个人觉得最主" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-safe-interface/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go语言中隐式接口的冲突问题" />
+<meta property="og:description" content="Go语言中采用的是隐式接口, 只要满足的接口的定义, 就可以当作接口使用. 比如内置的 error 接口: type error struct { Error() string } 隐式接口的好处有很多. 但我个人觉得最主" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-safe-interface/" />
+
+
+
+<meta property="article:published_time" content="2015-05-19T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2015-05-19T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go语言中隐式接口的冲突问题">
+<meta itemprop="description" content="Go语言中采用的是隐式接口, 只要满足的接口的定义, 就可以当作接口使用. 比如内置的 error 接口: type error struct { Error() string } 隐式接口的好处有很多. 但我个人觉得最主">
+
+
+<meta itemprop="datePublished" content="2015-05-19T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2015-05-19T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="710">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go语言中隐式接口的冲突问题"/>
+<meta name="twitter:description" content="Go语言中采用的是隐式接口, 只要满足的接口的定义, 就可以当作接口使用. 比如内置的 error 接口: type error struct { Error() string } 隐式接口的好处有很多. 但我个人觉得最主"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go语言中隐式接口的冲突问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2015-05-19 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 710 字 </span>
+        <span class="more-meta"> 预计阅读 2 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>Go语言中采用的是隐式接口, 只要满足的接口的定义, 就可以当作接口使用.</p>
+
+<p>比如内置的 <code>error</code> 接口:</p>
+
+<pre><code>type error struct {
+	Error() string
+}
+</code></pre>
+
+<p>隐式接口的好处有很多. 但我个人觉得最主要的一点就是不需要再去画祖宗八代的继承关系图了(松耦合).</p>
+
+<p>但是隐式接口会带来冲突问题.</p>
+
+<p>简单来说, 我也想定义一个自己的 <code>MyError</code> 接口, 里面也有一个 <code>Error() string</code> 方法:</p>
+
+<pre><code>type MyError struct {
+	Error() string
+}
+</code></pre>
+
+<p>但是我希望 <code>MyError</code> 接口 和 <code>error</code> 接口 是不同的类型 (不能相互转换).</p>
+
+<p>当然, 在 Go语言中 <code>MyError</code> 接口 和 <code>error</code> 接口 是等价的, 禁止 相互转换 比较困难.</p>
+
+<p>我们一般可以在 <code>MyError</code> 接口 中增加一个唯一的空方法 来回避这个问题:</p>
+
+<pre><code>type MyError struct {
+	Error() string
+	AssertMyError()
+}
+</code></pre>
+
+<p>方法 <code>AssertMyError</code> 只是为了区别 <code>error</code> 接口, 没有其他用处.</p>
+
+<p>这是 Protobuf 中 <a href="http://godoc.org/github.com/golang/protobuf/proto#Message">proto.Message</a> 采用的方法:</p>
+
+<pre><code>// Message is implemented by generated protocol buffer messages.
+type Message interface {
+	Reset()
+	String() string
+	ProtoMessage()
+}
+</code></pre>
+
+<p>生成的每个 <code>Message</code> 类型有个特殊的 <code>ProtoMessage</code> 空方法, 特别对应 <code>proto.Message</code> 接口.</p>
+
+<p>当然, 如果有另一个接口刚好也有 <code>ProtoMessage</code> 方法, 还是有冲突的危险.</p>
+
+<p>极端的做法是随机生成一个 特别的 方法名, 比如用 UUID 做唯一名字.</p>
+
+<p>但是, 公开的名字依然有被别人恶意覆盖的危险(实际中不大可能).</p>
+
+<p>更严格的做法是将这个用于区别接口的方法名定义为私有的方法. 比如 <a href="http://godoc.org/testing#TB"><code>testing.TB</code></a>:</p>
+
+<pre><code>type TB interface {
+	Error(args ...interface{})
+	Errorf(format string, args ...interface{})
+	Fail()
+	FailNow()
+	Failed() bool
+	Fatal(args ...interface{})
+	Fatalf(format string, args ...interface{})
+	Log(args ...interface{})
+	Logf(format string, args ...interface{})
+	Skip(args ...interface{})
+	SkipNow()
+	Skipf(format string, args ...interface{})
+	Skipped() bool
+
+	// A private method to prevent users implementing the
+	// interface and so future additions to it will not
+	// violate Go 1 compatibility.
+	private()
+}
+</code></pre>
+
+<p><code>private</code> 不仅仅是私有方法, 而且必须是 <code>testing</code> 包内部定义的 <code>private()</code> 方法的类型才能匹配这个接口!</p>
+
+<p>因此 <a href="http://godoc.org/testing#TB"><code>testing.TB</code></a> 接口是全局唯一的, 不会出现等价可互换的接口.</p>
+
+<p>现在 <a href="http://godoc.org/testing#TB"><code>testing.TB</code></a> 保证了接口的唯一性, 但是如何在外部实现 这个接口呢(<code>private()</code>是<code>testing</code> 包内部定义的)?</p>
+
+<p>我们可以从 <a href="http://godoc.org/testing#TB"><code>testing.TB</code></a> 接口继承这个 <code>private()</code> 方法:</p>
+
+<pre><code>package main
+
+import (
+	&quot;fmt&quot;
+	&quot;testing&quot;
+)
+
+type TB struct {
+	testing.TB
+}
+
+func (p *TB) Fatal(args ...interface{}) {
+	fmt.Println(&quot;TB.Fatal disabled!&quot;)
+}
+
+func main() {
+	var tb testing.TB = new(TB)
+	tb.Fatal(&quot;Hello, playground&quot;)
+}
+</code></pre>
+
+<p>play 地址: <a href="http://play.golang.org/p/tFB0fLwq9q">http://play.golang.org/p/tFB0fLwq9q</a></p>
+
+<p>上面的代码模拟了显式接口, 而且 <a href="http://godoc.org/testing#TB"><code>testing.TB</code></a> 接口永远不用担心有冲突的危险.</p>
+
+<p>当然, 上面的代码有过度使用技巧的问题, 这和Go语言简单的编程哲学是矛盾的.</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2015-05-19</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go-rust-fans-pk/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">驳狗屎文 &#39;我为什么放弃Go语言&#39;</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go-xslice-to-yslice/">
+            <span class="next-text nav-default">Go语言中不同类型切片之间的相互转换</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

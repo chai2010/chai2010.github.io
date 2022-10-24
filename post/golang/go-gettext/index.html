@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go语言的国际化支持(基于gettext-go) - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="本文在 Golang中国博客 的地址: http://blog.go-china.org/07-gettext hello, world! 假设有以下的程序, 输出: &amp;ldquo;Hello, world!&amp;rdquo;. package main import ( &amp;quot;fmt&amp;quot; ) func main() { fmt.Println(&amp;quot;Hello, world!&amp;quot;) } 现在要让改程序支持不同语言的用户, 然后以本地语言" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-gettext/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go语言的国际化支持(基于gettext-go)" />
+<meta property="og:description" content="本文在 Golang中国博客 的地址: http://blog.go-china.org/07-gettext hello, world! 假设有以下的程序, 输出: &ldquo;Hello, world!&rdquo;. package main import ( &quot;fmt&quot; ) func main() { fmt.Println(&quot;Hello, world!&quot;) } 现在要让改程序支持不同语言的用户, 然后以本地语言" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-gettext/" />
+
+
+
+<meta property="article:published_time" content="2014-01-07T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2014-01-07T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go语言的国际化支持(基于gettext-go)">
+<meta itemprop="description" content="本文在 Golang中国博客 的地址: http://blog.go-china.org/07-gettext hello, world! 假设有以下的程序, 输出: &ldquo;Hello, world!&rdquo;. package main import ( &quot;fmt&quot; ) func main() { fmt.Println(&quot;Hello, world!&quot;) } 现在要让改程序支持不同语言的用户, 然后以本地语言">
+
+
+<meta itemprop="datePublished" content="2014-01-07T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-01-07T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1595">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go语言的国际化支持(基于gettext-go)"/>
+<meta name="twitter:description" content="本文在 Golang中国博客 的地址: http://blog.go-china.org/07-gettext hello, world! 假设有以下的程序, 输出: &ldquo;Hello, world!&rdquo;. package main import ( &quot;fmt&quot; ) func main() { fmt.Println(&quot;Hello, world!&quot;) } 现在要让改程序支持不同语言的用户, 然后以本地语言"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go语言的国际化支持(基于gettext-go)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-01-07 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 1595 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#hello-world">hello, world!</a></li>
+<li><a href="#go语言的国际化思路">Go语言的国际化思路</a></li>
+<li><a href="#go语言的多国语言支持">Go语言的多国语言支持</a></li>
+<li><a href="#生成翻译文件">生成翻译文件</a></li>
+<li><a href="#本地的语言环境">本地的语言环境</a></li>
+<li><a href="#动态切换语言">动态切换语言</a></li>
+<li><a href="#翻译的上下文">翻译的上下文</a></li>
+<li><a href="#练习题">练习题</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>本文在 <a href="http://blog.go-china.org/07-gettext">Golang中国博客</a> 的地址: <a href="http://blog.go-china.org/07-gettext">http://blog.go-china.org/07-gettext</a></p>
+
+<h2 id="hello-world">hello, world!</h2>
+
+<p>假设有以下的程序, 输出: &ldquo;Hello, world!&rdquo;.</p>
+
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func main() {
+    fmt.Println(&quot;Hello, world!&quot;)
+}
+</code></pre>
+
+<p>现在要让改程序支持不同语言的用户, 然后以本地语言输出相同意思的信息. 这就是很多程序面临的国际化问题.</p>
+
+<h2 id="go语言的国际化思路">Go语言的国际化思路</h2>
+
+<p>程序的国际化一般涉及到编码和翻译两个概念. 其中编码一般采用UTF8编码标准, Go语言已经完美支持. 而目前常见翻译技术是Qt的<code>tr</code>函数和GNU gettext提供的<code>gettext</code>函数, 另外微软的<code>MFC</code>也有自己的多国语言支持方式.</p>
+
+<p>Go语言目前还没有标准的多国语言翻译方式. 不过笔者已经初步将<code>gettext</code>的运行时环境移植到了Go语言(采用纯Go实现, 无其他依赖).</p>
+
+<p>Go语言版的<code>gettext</code>名字为<code>gettext-go</code>, 项目地址在: <a href="http://code.google.com/p/gettext-go">http://code.google.com/p/gettext-go</a>.</p>
+
+<p><a href="http://code.google.com/p/gettext-go">gettext-go</a> 同时也借鉴了 Qt 的翻译上下文特性. 在 GNU gettext 的 <code>po</code> 和 <code>mo</code> 翻译文件中都是含有 <code>msgctxt</code> 上下文信息的, 但是 C/C++ 的翻译接口函数并没有上下文的参数, 因此 传统的 <code>gettext</code> 函数没有设置上下文的参数.</p>
+
+<p>可以去 <a href="http://godoc.org/code.google.com/p/gettext-go/gettext">godoc.org</a> 或 <a href="http://gowalker.org/code.google.com/p/gettext-go/gettext">gowalker.org</a> 查看 <a href="http://code.google.com/p/gettext-go">gettext-go</a> 的文档.</p>
+
+<h2 id="go语言的多国语言支持">Go语言的多国语言支持</h2>
+
+<p>基于 <a href="http://code.google.com/p/gettext-go">gettext-go</a> , 我们可以很容易给Go程序增加多国语言的支持:</p>
+
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+
+    &quot;code.google.com/p/gettext-go/gettext&quot;
+)
+
+func main() {
+    gettext.BindTextdomain(&quot;hello&quot;, &quot;local&quot;, nil)
+    gettext.Textdomain(&quot;hello&quot;)
+
+    fmt.Println(gettext.Gettext(&quot;Hello, world!&quot;))
+}
+</code></pre>
+
+<p>其中 <code>gettext.BindTextdomain</code> 是绑定翻译的空间, 其中 <code>&quot;hello&quot;</code> 是对应翻译一类信息的翻译, <code>&quot;local&quot;</code> 为翻译文件的所在路径(这里当前目录下的&rdquo;local&rdquo;)子目录.</p>
+
+<p>按照 GNU gettext 的习惯, 简体中文对应的翻译文件为 <code>&quot;local/zh_CN/LC_MESSAGES/hello.mo&quot;</code>. 不同语言的命名有一个国际规范, 比如繁体中文对应<code>&quot;zh_TW&quot;</code>, 美国英文对应<code>&quot;en_US&quot;</code>等等. 但是 <a href="http://code.google.com/p/gettext-go">gettext-go</a> 对名字并没有特殊的要求.</p>
+
+<p><code>gettext.BindTextdomain</code> 可以绑定多个翻译空间, 但是同一个时刻只能使用一个翻译空间.</p>
+
+<p>这里我们使用 <code>gettext.Textdomain</code> 指定当前的翻译空间为 <code>&quot;hello&quot;</code> .</p>
+
+<p>运行新的程序程序, 发现输出还是: &ldquo;Hello, world!&rdquo;.</p>
+
+<p>这是因为缺少翻译文件&hellip;</p>
+
+<h2 id="生成翻译文件">生成翻译文件</h2>
+
+<p>未来, <a href="http://code.google.com/p/gettext-go">gettext-go</a> 会开发一个  GNU gettext 工具集 中 的 <code>xgettext</code> 类似工具, 用于从程序中提取要翻译的字符串.</p>
+
+<p>不过目前, 我们只能手工支持翻译文件了(还好这个例子只有一个字符串需要翻译).</p>
+
+<p>创建 <code>&quot;local/zh_CN/LC_MESSAGES/hello.po&quot;</code> 文件, 内容如下:</p>
+
+<pre><code>msgid &quot;&quot;
+msgstr &quot;&quot;
+
+msgctxt &quot;main.main&quot;
+msgid &quot;Hello, world!&quot;
+msgstr &quot;你好, 世界!&quot;
+</code></pre>
+
+<p>保存为<strong>UTF8</strong>编码格式.</p>
+
+<p>然后用 GNU gettext 工具集中的 <code>msgfmt</code> 命令将 <code>hello.po</code> 文件编译为 <code>hello.mo</code> 文件(<em>注:如果缺少mo文件的话,也尝试用同名的po文件代替.</em>):</p>
+
+<pre><code>msgfmt -o hello.mo hello.po
+</code></pre>
+
+<p>如果是Windows用户, 可以下载 <a href="http://www.poedit.net/">poedit</a> 翻译工具. 然后用 <a href="http://www.poedit.net/">poedit</a> 打开 <code>hello.po</code> 文件, 点击保存后会自动生成 <code>hello.mo</code> 文件(也是<a href="http://www.poedit.net/">poedit</a>的bin目录下自带的<code>msgfmt</code> 命令生成的).</p>
+
+<p>重新运行新的程序程序, <strong>还是输出: &ldquo;Hello, world!&rdquo; ?</strong></p>
+
+<h2 id="本地的语言环境">本地的语言环境</h2>
+
+<p>在上一节, 我们已经制作了简体中文的翻译文件 <code>&quot;local/zh_CN/LC_MESSAGES/hello.mo&quot;</code>, 然后输出依然是英文.</p>
+
+<p>这是因为 <a href="http://code.google.com/p/gettext-go">gettext-go</a> 翻译时不仅要依赖对应语言的翻译文件, 还需要知道要范围为哪种语言(和网上翻译类似, 需要知道翻译的目标语言).</p>
+
+<p>如果没有指定翻译语言, <a href="http://code.google.com/p/gettext-go">gettext-go</a> 会尝试获取本地的默认语言环境, 主要是通过检查 <code>$(LC_MESSAGES)</code> 和 <code>$(LANG)</code> 两个环境变量. 如果两个环境变量都没有设置, 那么默认是不进行翻译的.</p>
+
+<p>我们设置环境变量后重新运行程序(Windows):</p>
+
+<pre><code>set LANG=zh_CN
+go run hello.go
+</code></pre>
+
+<p>这里时候应该可以输出中文了.</p>
+
+<h2 id="动态切换语言">动态切换语言</h2>
+
+<p>如果不想使用默认的本地语言环境, 也可以用 <code>gettext.SetLocale</code> 接口设置本地语言环境.</p>
+
+<pre><code>func main() {
+    gettext.BindTextdomain(&quot;hello&quot;, &quot;local&quot;, nil)
+    gettext.Textdomain(&quot;hello&quot;)
+
+    // 切换到简体中文
+    gettext.SetLocale(&quot;zh_CN&quot;)
+    fmt.Println(gettext.Gettext(&quot;Hello, world!&quot;))
+    // 切换到繁体中文
+    gettext.SetLocale(&quot;zh_TW&quot;)
+    fmt.Println(gettext.Gettext(&quot;Hello, world!&quot;))
+}
+</code></pre>
+
+<p>这样可以根据需要采用合适的语言翻译文件.</p>
+
+<h2 id="翻译的上下文">翻译的上下文</h2>
+
+<p>Go语言版的 <a href="http://code.google.com/p/gettext-go">gettext-go</a> 的每个 <code>gettext.Gettext</code> 调用都有一个隐含的上下文信息(如果想自己指定上下文可以使用<code>gettext.PGettext</code>).</p>
+
+<p>默认的上下文为包含<code>gettext.Gettext</code>调用的函数名称, 比如:</p>
+
+<ul>
+<li>如果是main包的全局函数初始化调用, 则为 <code>main.init</code></li>
+<li>如果是main包的init函数调用, 则为 <code>main.init</code></li>
+<li>如果是main包的main函数调用, 则为 <code>main.main</code></li>
+<li>如果是main包中的闭包调用, 则为 <code>main.func</code></li>
+<li>如果是非main包的函数, 则还需要包含包的完全路径名</li>
+</ul>
+
+<p>上下文对应Go的运行时调用者名称, 具体实现在这里: <a href="https://code.google.com/p/gettext-go/source/browse/gettext/caller.go">caller.go</a> .</p>
+
+<h2 id="练习题">练习题</h2>
+
+<ol>
+<li>给前面的程序增加 繁体/日文/韩文/克林贡语 等语言的支持</li>
+<li>增加一个 <code>-local</code> 参数, 用于设置本地语言</li>
+<li>提交改进建议或其他反馈意见</li>
+</ol>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2014-01-07</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go-protorpc-2014/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go语言的RPC介绍(含Protobuf-RPC)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go-func-call-stack/">
+            <span class="next-text nav-default">Go语言的函数调用信息</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

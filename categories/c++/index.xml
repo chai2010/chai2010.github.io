@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C&#43;&#43; on chai2010 的博客</title>
+    <link>https://chai2010.cn/categories/c&#43;&#43;/</link>
+    <description>Recent content in C&#43;&#43; on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Fri, 27 Jan 2017 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/categories/c++/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>非主流C/C&#43;&#43;编程</title>
+      <link>https://chai2010.cn/post/gist/cpp-js/</link>
+      <pubDate>Fri, 27 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/gist/cpp-js/</guid>
+      
+        <description>&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;enum class NewStyle {
+	ONE = 200,
+	TWO,
+};
+static auto init_enum_NewStyle = my_run_script_int(R&amp;quot;==(
+	const varargs = [
+		Module.getValue(arguments[1]+4*0, &#39;i32&#39;),
+		Module.getValue(arguments[1]+4*1, &#39;i32&#39;),
+	];
+	Module.NewStyle = class {
+		static get ONE(){ return varargs[0] }
+		static get TWO(){ return varargs[1] }
+	};
+)==&amp;quot;,
+	NewStyle::ONE,
+	NewStyle::TWO
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>使用Defer的几个场景</title>
+      <link>https://chai2010.cn/post/golang/defer-2013/</link>
+      <pubDate>Sun, 23 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/defer-2013/</guid>
+      
+        <description>&lt;!-- 使用Defer几个场景 --&gt;
+
+&lt;p&gt;Go 语言中的 &lt;code&gt;defer&lt;/code&gt; 语句是 UNIX 之父 &lt;code&gt;Ken Thompson&lt;/code&gt; 大神发明的, 是完全正交的设计.&lt;/p&gt;
+
+&lt;p&gt;也正因为 Go 语言遵循的是正交的设计, 所以才有了: &amp;ldquo;&lt;a href=&#34;http://www.mikespook.com/2012/06/%E7%BF%BB%E8%AF%91%E5%B0%91%E6%98%AF%E6%8C%87%E6%95%B0%E7%BA%A7%E7%9A%84%E5%A4%9A/&#34;&gt;少是指数级的多&lt;/a&gt;/&lt;a href=&#34;http://commandcenter.blogspot.com/2012/06/less-is-exponentially-more.html&#34;&gt;Less is exponentially more&lt;/a&gt;&amp;rdquo; 的说法. 因为是正交的设计, 最终得到的组合形式是指数级的组合形式.&lt;/p&gt;
+
+&lt;p&gt;相反, C++的特性虽然很多, 但是很多不是正交的设计, 而只是简单的特性罗列,
+所以C++的很多地方是无法达到指数级的多的组合方式的. 但是学习成本却非常高.&lt;/p&gt;
+
+&lt;p&gt;简单的例子就是C++的构造函数和析构函数和C语言的函数和&lt;code&gt;struct&lt;/code&gt;完全是互斥的.
+具体的例子可以参考: &lt;a href=&#34;https://chai2010.cn/post/cpp/fuck-cpp-constructor/&#34;&gt;C++去掉构造函数会怎么样?&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;关于 Go 语言中 &lt;code&gt;defer&lt;/code&gt; 语句的详细介绍请参考: &lt;a href=&#34;https://chai2010.cn/post/golang/defer-panic-recover/&#34;&gt;Defer, Panic, and Recover&lt;/a&gt; .&lt;/p&gt;
+
+&lt;p&gt;C++ 中模拟的 &lt;code&gt;defer&lt;/code&gt; 实现请参考: &lt;a href=&#34;https://chai2010.cn/post/cpp/cpp-defer/&#34;&gt;C++版的defer语句&lt;/a&gt; .&lt;/p&gt;
+
+&lt;p&gt;这里主要是总结 &lt;code&gt;defer&lt;/code&gt; 语句的一些使用场景.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;1. 简化资源的回收&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;这是最常见的 &lt;code&gt;defer&lt;/code&gt; 用法. 比如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mu.Lock()
+defer mu.Unlock()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然, &lt;code&gt;defer&lt;/code&gt; 也有一定的开销, 也有为了节省性能而回避使用的 &lt;code&gt;defer&lt;/code&gt; 的:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mu.Lock()
+count++
+mu.Unlock()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从简化资源的释放角度看, &lt;code&gt;defer&lt;/code&gt; 类似一个语法糖, 好像不是必须的.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;2. &lt;code&gt;panic&lt;/code&gt;异常的捕获&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;defer&lt;/code&gt; 除了用于简化资源的释放外, 还是Go语言异常框架的一个组成部分.&lt;/p&gt;
+
+&lt;p&gt;Go语言中, &lt;code&gt;panic&lt;/code&gt;用于抛出异常, &lt;code&gt;recover&lt;/code&gt;用于捕获异常. &lt;code&gt;recover&lt;/code&gt;只能在&lt;code&gt;defer&lt;/code&gt;语句中使用, 直接调用&lt;code&gt;recover&lt;/code&gt;是无效的.&lt;/p&gt;
+
+&lt;p&gt;比如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    f()
+    fmt.Println(&amp;quot;Returned normally from f.&amp;quot;)
+}
+
+func f() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println(&amp;quot;Recovered in f&amp;quot;, r)
+        }
+    }()
+    fmt.Println(&amp;quot;Calling g.&amp;quot;)
+    g()
+    fmt.Println(&amp;quot;Returned normally from g.&amp;quot;)
+}
+
+func g() {
+    panic(&amp;quot;ERROR&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因此, 如果要捕获Go语言中函数的异常, 就离不开&lt;code&gt;defer&lt;/code&gt;语句了.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;3. 修改返回值&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;defer&lt;/code&gt; 除了用于配合 &lt;code&gt;recover&lt;/code&gt;, 用于捕获 &lt;code&gt;panic&lt;/code&gt; 异常外, 还可以用于在 &lt;code&gt;return&lt;/code&gt; 之后修改函数的返回值.&lt;/p&gt;
+
+&lt;p&gt;比如:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func doubleSum(a, b int) (sum int) {
+    defer func() {
+        sum *= 2
+    }()
+    sum = a + b
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然, 这个特性应该只是 &lt;code&gt;defer&lt;/code&gt; 的副作用, 具体在什么场景使用就要由开发者自己决定了.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;4. 安全的回收资源&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;前面第一点提到, &lt;code&gt;defer&lt;/code&gt; 最常见的用法是简化资源的回收. 而且, 从资源回收角度看,
+&lt;code&gt;defer&lt;/code&gt; 只是一个语法糖.&lt;/p&gt;
+
+&lt;p&gt;其实, 也不完全是这样, 特别是在涉及到第二点提到的&lt;code&gt;panic&lt;/code&gt;异常等因素导致&lt;code&gt;goroutine&lt;/code&gt;提前退出时.&lt;/p&gt;
+
+&lt;p&gt;比如, 有一个线程安全的slice修改函数, 为了性能没有使用&lt;code&gt;defer&lt;/code&gt;语句:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func set(mu *sync.Mutex, arr []int, i, v int) {
+    mu.Lock()
+    arr[i] = v
+    mu.Unlock()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是, 如果 &lt;code&gt;i &amp;gt;= len(arr)&lt;/code&gt;的话, &lt;code&gt;runtime&lt;/code&gt;就会抛出切片越界的异常(这里只是举例, 实际开发中不应该出现切片越界异常). 这样的话, &lt;code&gt;mu.Unlock()&lt;/code&gt; 就没有机会被执行了.&lt;/p&gt;
+
+&lt;p&gt;如果用&lt;code&gt;defer&lt;/code&gt;的话, 即使出现异常也能保证&lt;code&gt;mu.Unlock()&lt;/code&gt;被调用:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func set(mu *sync.Mutex, arr []int, i, v int) {
+    mu.Lock()
+    defer mu.Unlock()
+    arr[i] = v
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然, Go语言约定异常不会跨越&lt;code&gt;package&lt;/code&gt;边界. 因此, 调用一般函数的时候不用担心&lt;code&gt;goroutine&lt;/code&gt;异常退出的情况.&lt;/p&gt;
+
+&lt;p&gt;不过对于一些比较特殊的&lt;code&gt;package&lt;/code&gt;, 比如&lt;code&gt;go test&lt;/code&gt;依赖的&lt;code&gt;testing&lt;/code&gt;包, 包中的&lt;code&gt;t.Fatal&lt;/code&gt;就是依赖了Go中类似异常的特性(准确的说是调用了&lt;code&gt;runtime.Goexit()&lt;/code&gt;).&lt;/p&gt;
+
+&lt;p&gt;比如有以下的测试函数(详情请参考&lt;a href=&#34;https://code.google.com/p/go/issues/detail?id=5746&#34;&gt;Issue5746&lt;/a&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func TestFailed(t *testing.T) {
+    var wg sync.WaitGroup
+    for i := 0; i &amp;lt; 2; i++ {
+        wg.Add(1)
+        go func(id int) {
+            // defer wg.Done()
+            t.Fatalf(&amp;quot;TestFailed: id = %v\n&amp;quot;, id)
+            wg.Done()
+        }(i)
+    }
+    wg.Wait()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当测试失败的时候, &lt;code&gt;wg.Done()&lt;/code&gt;将没有机会执行, 最终导致&lt;code&gt;wg.Wait()&lt;/code&gt;死锁.&lt;/p&gt;
+
+&lt;p&gt;对于这个例子, 安全的做法是使用&lt;code&gt;defer&lt;/code&gt;语句保证&lt;code&gt;wg.Done()&lt;/code&gt;始终会被执行.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;去掉构造函数会怎么样?</title>
+      <link>https://chai2010.cn/post/cpp/fuck-cpp-constructor/</link>
+      <pubDate>Thu, 28 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/cpp/fuck-cpp-constructor/</guid>
+      
+        <description>&lt;p&gt;其实C++的构造函数差不多是个鸡肋: 用处不多, 但是却导致了有些不方便的地方.
+如果再参考Go语言的defer语句, C++的析构函数也可以算是残废品了.
+如果彻底抛弃构造函数和析构函数, 我们将会写出怎么样的C++代码呢?&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;兼容c语言对象&#34;&gt;兼容C语言对象&lt;/h2&gt;
+
+&lt;p&gt;构造函数可以用一个普通函数代替(当然值容器也要改变使用方式).
+比如我们可以这样将C语言的FILE对象封装为类的形式(inline方式):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 采用C++封装C语言的FILE(inline)
+// MyFile指针运行时完全等价FILE指针
+struct MyFile {
+    static MyFile* Open(const char* fname, const char* mode) {
+        return (MyFile*)fopen(fname, mode);
+    }
+    inline void Close() {
+        fclose((FILE*)this);
+    }
+
+    inline int Printf(const char * format, ...) {
+        return fprintf((FILE*)this, format, ...);
+    }
+    inline int Scanf(const char * format, ...) {
+        return fscanf((FILE*)this, format, ...);
+    }
+
+private:
+    MyFile();
+    ~MyFile();
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要注意的是, Open返回的虽然是FILE指针, 但是被强制转换为MyFile类的this指针了.
+以C语言的角度看, MyFile*和FILE*是完全等价的.&lt;/p&gt;
+
+&lt;h2 id=&#34;接口和实现分离&#34;&gt;接口和实现分离&lt;/h2&gt;
+
+&lt;p&gt;而且没有了构造函数, 也便于接口和实现的分离:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// MyObject.h
+struct MyObject {
+
+    // 构造对象
+    static MyObject* New();
+    // 释放对象
+    virtual void Delete()=0;
+
+    // funxxx
+    virtual void FunXXX()=0;
+
+protected:
+    MyObject(){}
+    virtual ~MyObject(){}
+};
+
+// MyObject.cpp
+namespace {
+    struct MyObjectImpl: public MyObject {
+        // ...
+    }
+}
+
+MyObject* MyObject::New() {
+    return new MyObjectImpl();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后再结合前面提到的 &lt;a href=&#34;http://my.oschina.net/chai2010/blog/117920&#34;&gt;C++版的defer语句&lt;/a&gt; 就可以实现类似 MutexLocker 之类的功能了.&lt;/p&gt;
+
+&lt;p&gt;当然, 因为C++没有GC, 复杂环境下对象的生命周期管理还是比较麻烦的.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;版的defer语句</title>
+      <link>https://chai2010.cn/post/cpp/cpp-defer/</link>
+      <pubDate>Wed, 27 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/cpp/cpp-defer/</guid>
+      
+        <description>&lt;p&gt;Go语言的defer语句是汤普森大神的神来之笔, 非常适合于局部资源安全的延迟释放. 本文将探讨如何在C++语言中实现一个近似的defer特性.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Go语言的defer具体用法可参考:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://golang.org/doc/articles/defer_panic_recover.html&#34;&gt;http://golang.org/doc/articles/defer_panic_recover.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;c-版defer&#34;&gt;C++版defer&lt;/h2&gt;
+
+&lt;p&gt;一直想在C++中也能模拟类似defer的效果, 经过无数次google和尝试之后重要找到解决方法.
+整理后的代码在这里:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/chai2010/defer&#34;&gt;https://github.com/chai2010/defer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;基本的使用方法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FILE* fp = fopen(&amp;quot;foo.txt&amp;quot;, &amp;quot;rt&amp;quot;);
+if(fp == NULL) return false;
+defer([&amp;amp;](){ printf(&amp;quot;fclose(fp)\n&amp;quot;); fclose(fp); });
+
+char* buf = new char[1024];
+defer([&amp;amp;](){ printf(&amp;quot;delete buf\n&amp;quot;); delete[] buf; });
+
+defer([](){ printf(&amp;quot;defer a: %d\n&amp;quot;, __LINE__); });
+defer([](){ printf(&amp;quot;defer a: %d\n&amp;quot;, __LINE__); });
+defer([](){ printf(&amp;quot;defer a: %d\n&amp;quot;, __LINE__); });
+
+{
+    defer([](){ printf(&amp;quot;defer b: %d\n&amp;quot;, __LINE__); });
+    defer([](){ printf(&amp;quot;defer b: %d\n&amp;quot;, __LINE__); });
+    defer([](){ printf(&amp;quot;defer b: %d\n&amp;quot;, __LINE__); });
+}
+
+defer([](){
+    printf(&amp;quot;defer c:\n&amp;quot;);
+    for(int i = 0; i &amp;lt; 3; ++i) {
+        defer([&amp;amp;](){ defer([&amp;amp;](){
+            printf(&amp;quot;\ti = %d: begin\n&amp;quot;, i);
+            defer([&amp;amp;](){ printf(&amp;quot;\ti = %d\n&amp;quot;, i); });
+            printf(&amp;quot;\ti = %d: end\n&amp;quot;, i);
+        });});
+    }
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要注意的地方:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;defer 定义的对象在超出作用域时执行闭包函数(析构函数)&lt;/li&gt;
+&lt;li&gt;defer 定义的对象在同一个文件内部标识符不同(根据行号生成)&lt;/li&gt;
+&lt;li&gt;defer 在全局作用域使用可能会出现重名现象(行号相同)&lt;/li&gt;
+&lt;li&gt;defer 在判断语句使用可能提前执行(作用域结束时)&lt;/li&gt;
+&lt;li&gt;defer 在循环语句内使用无效(作用域结束时)&lt;/li&gt;
+&lt;li&gt;defer 和Go语言的defer并不完全等价&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考链接&#34;&gt;参考链接&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.korfuri.fr/post/go-defer-in-cpp/&#34;&gt;http://blog.korfuri.fr/post/go-defer-in-cpp/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.korfuri.fr/attachments/go-defer-in-cpp/defer.hh&#34;&gt;http://blog.korfuri.fr/attachments/go-defer-in-cpp/defer.hh&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blogs.msdn.com/b/vcblog/archive/2011/09/12/10209291.aspx&#34;&gt;http://blogs.msdn.com/b/vcblog/archive/2011/09/12/10209291.aspx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://golang.org/doc/effective_go.html#defer&#34;&gt;http://golang.org/doc/effective_go.html#defer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://golang.org/ref/spec#Defer_statements&#34;&gt;http://golang.org/ref/spec#Defer_statements&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

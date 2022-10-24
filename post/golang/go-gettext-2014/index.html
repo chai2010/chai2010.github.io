@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go语言的国际化支持(资源文件翻译) - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="在之前的 Go语言的国际化支持(基于gettext-go) 中, 讲到了如何翻译源代码中的字符串. 项目地址在: http://code.google.com/p/gettext-go. 文档在 godoc.org 或 gowalker.org . 根据评论的反馈(@羊" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-gettext-2014/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go语言的国际化支持(资源文件翻译)" />
+<meta property="og:description" content="在之前的 Go语言的国际化支持(基于gettext-go) 中, 讲到了如何翻译源代码中的字符串. 项目地址在: http://code.google.com/p/gettext-go. 文档在 godoc.org 或 gowalker.org . 根据评论的反馈(@羊" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-gettext-2014/" />
+
+
+
+<meta property="article:published_time" content="2014-01-27T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2014-01-27T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go语言的国际化支持(资源文件翻译)">
+<meta itemprop="description" content="在之前的 Go语言的国际化支持(基于gettext-go) 中, 讲到了如何翻译源代码中的字符串. 项目地址在: http://code.google.com/p/gettext-go. 文档在 godoc.org 或 gowalker.org . 根据评论的反馈(@羊">
+
+
+<meta itemprop="datePublished" content="2014-01-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-01-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1109">
+
+
+
+<meta itemprop="keywords" content="golang,gettext," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go语言的国际化支持(资源文件翻译)"/>
+<meta name="twitter:description" content="在之前的 Go语言的国际化支持(基于gettext-go) 中, 讲到了如何翻译源代码中的字符串. 项目地址在: http://code.google.com/p/gettext-go. 文档在 godoc.org 或 gowalker.org . 根据评论的反馈(@羊"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go语言的国际化支持(资源文件翻译)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-01-27 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 1109 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#资源文件的翻译">资源文件的翻译</a></li>
+<li><a href="#zip格式的翻译文件支持">zip格式的翻译文件支持</a></li>
+<li><a href="#翻译目录的结构">翻译目录的结构</a></li>
+<li><a href="#展望">展望</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>在之前的 <a href="http://my.oschina.net/chai2010/blog/190914">Go语言的国际化支持(基于gettext-go)</a> 中, 讲到了如何翻译源代码中的字符串.</p>
+
+<p>项目地址在: <a href="http://code.google.com/p/gettext-go">http://code.google.com/p/gettext-go</a>. 文档在 <a href="http://godoc.org/code.google.com/p/gettext-go/gettext">godoc.org</a> 或 <a href="http://gowalker.org/code.google.com/p/gettext-go/gettext">gowalker.org</a> .</p>
+
+<p>根据评论的反馈(@羊半仙), 之前版本的缺少对资源文件的支持.</p>
+
+<p>最近对 <a href="http://code.google.com/p/gettext-go">gettext-go</a> 做了一些改进, 主要涉及以下几点:</p>
+
+<ul>
+<li>支持资源文件的翻译</li>
+<li>支持zip格式的翻译文件</li>
+</ul>
+
+<h2 id="资源文件的翻译">资源文件的翻译</h2>
+
+<p>资源文件的翻译比字符串更简单(使用<code>gettext.Getdata</code>函数):</p>
+
+<pre><code>import (
+    &quot;code.google.com/p/gettext-go/gettext&quot;
+)
+
+func main() {
+    gettext.SetLocale(&quot;zh_CN&quot;)
+    gettext.Textdomain(&quot;hello&quot;)
+
+    // translate resource
+    fmt.Println(string(gettext.Getdata(&quot;poems.txt&quot;)))
+    // Output: ...
+}
+</code></pre>
+
+<p>输出的内容是 李白 诗歌 <a href="http://code.google.com/p/gettext-go/source/browse/examples/local/zh_CN/LC_RESOURCE/hello/poems.txt">&lt;月下独酌&gt;</a>:</p>
+
+<ul>
+<li>简体中文版: <a href="http://code.google.com/p/gettext-go/source/browse/examples/local/zh_CN/LC_RESOURCE/hello/poems.txt">&lt;月下独酌&gt;</a></li>
+<li>繁体中文版: <a href="http://code.google.com/p/gettext-go/source/browse/examples/local/zh_TW/LC_RESOURCE/hello/poems.txt">&lt;月下独酌&gt;</a></li>
+<li>英文翻译版: <a href="http://code.google.com/p/gettext-go/source/browse/examples/local/default/LC_RESOURCE/hello/poems.txt">&lt;月下独酌&gt;</a></li>
+</ul>
+
+<h2 id="zip格式的翻译文件支持">zip格式的翻译文件支持</h2>
+
+<p>可以将翻译文件目录打包为zip格式. 如果绑定的翻译文件不是一个目录, 而是一个文件, 则会当作zip文件处理.</p>
+
+<pre><code>import (
+    &quot;code.google.com/p/gettext-go/gettext&quot;
+)
+
+func main() {
+    gettext.SetLocale(&quot;zh_CN&quot;)
+    gettext.Textdomain(&quot;hello&quot;)
+
+    gettext.BindTextdomain(&quot;hello&quot;, &quot;local.zip&quot;, nil)
+
+    ...
+}
+</code></pre>
+
+<p>Zip文件在这里: <a href="http://gettext-go.googlecode.com/hg/examples/local.zip">http://gettext-go.googlecode.com/hg/examples/local.zip</a></p>
+
+<p>如果希望将zip文件嵌入到程序中, 可以先用工具将zip文件转换为<code>[]byte</code>格式的数据, 然后绑定到翻译域中:</p>
+
+<pre><code>import (
+    &quot;code.google.com/p/gettext-go/gettext&quot;
+)
+
+// 根据 local.zip 生成
+var local_zip_data = []byte{
+    0x00, 0x01, 0x02, 0x03, ...
+}
+
+func main() {
+    gettext.SetLocale(&quot;zh_CN&quot;)
+    gettext.Textdomain(&quot;hello&quot;)
+
+    gettext.BindTextdomain(&quot;hello&quot;, &quot;embeded_local&quot;, local_zip_data)
+
+    ...
+}
+</code></pre>
+
+<p>如果 <code>gettext.BindTextdomain</code> 的第三个参数不为 <code>nil</code>, 则会将该参数传入的数据作为zip数据处理.</p>
+
+<h2 id="翻译目录的结构">翻译目录的结构</h2>
+
+<p><a href="http://code.google.com/p/gettext-go">gettext-go</a> 包的翻译文件涉及以下几个概念:</p>
+
+<ul>
+<li><strong>local</strong>: 本地采用的语言. 默认值可以由<code>$(LC_MESSAGES)</code>或<code>$(LANG)</code>环境变量指定.</li>
+<li><strong>domain</strong> : 翻译的名字空间, 类似文本编辑器中的配色风格的概念,  <code>gettext.BindTextdomain</code> 的第一个参数.</li>
+<li><strong>domain_path</strong>: <strong>domain</strong> 对应的目录路径, 也可能是zip文件路径或zip数据名,  <code>gettext.BindTextdomain</code> 的第二个参数.</li>
+<li><strong>domain_data</strong>: <strong>domain</strong> 对应的zip数据(可以为空), <code>gettext.BindTextdomain</code> 的第二个参数.</li>
+</ul>
+
+<p>不管是zip还是本地目录, 内部的目录组织结构是一致的:</p>
+
+<pre><code>Root: &quot;path&quot; or &quot;file.zip/zipBaseName&quot;
+ +-default                 # local: $(LC_MESSAGES) or $(LANG) or &quot;default&quot;
+ |  +-LC_MESSAGES            # just for `gettext.Gettext`
+ |  |   +-hello.mo             # $(Root)/$(local)/LC_MESSAGES/$(domain).mo
+ |  |   \-hello.po             # $(Root)/$(local)/LC_MESSAGES/$(domain).mo
+ |  |
+ |  \-LC_RESOURCE            # just for `gettext.Getdata`
+ |      +-hello                # domain map a dir in resource translate
+ |         +-favicon.ico       # $(Root)/$(local)/LC_RESOURCE/$(domain)/$(filename)
+ |         \-poems.txt
+ |
+ \-zh_CN                   # simple chinese translate
+    +-LC_MESSAGES
+    |   +-hello.mo             # try &quot;$(domain).mo&quot; first
+    |   \-hello.po             # try &quot;$(domain).po&quot; second
+    |
+    \-LC_RESOURCE
+        +-hello
+           +-favicon.ico       # try &quot;$(local)/$(domain)/file&quot; first
+           \-poems.txt         # try &quot;default/$(domain)/file&quot; second
+</code></pre>
+
+<p>其中 <code>$(Root)/$(local)/LC_MESSAGES/</code> 对应 <code>gettext.Gettext</code> 的翻译字符串, <code>$(Root)/$(local)/LC_RESOURCE/$(domain)/?</code> 对应 <code>gettext.Getdata</code> 要翻译的资源文件.</p>
+
+<p>翻译字符串时, 会先尝试<code>mo</code>格式的二进制翻译文件, 如果失败则会继续尝试<code>po</code>格式的原始翻译文件, 如果依然失败则返回原字符串.</p>
+
+<p>翻译资源文件时, 如果资源文件缺失会继续尝试加载Local为<code>default</code>的资源文件, 如果依然失败则返回<code>nil</code>.</p>
+
+<h2 id="展望">展望</h2>
+
+<p>目前 <a href="http://code.google.com/p/gettext-go">gettext-go</a> 的运行时已经初步完备, 可以支持字符串和资源文件的翻译. 不过 <a href="http://code.google.com/p/gettext-go">gettext-go</a> 的辅助工具依然不足, 特别是缺少可以从Go程序中自动提取字符串的<code>xgettext</code>工具. 下一步会考虑实现一个针对Go语言的<code>xgettext</code>工具.</p>
+
+<p>在Go语言中还有一类比较特殊的字符串资源: 用于godoc显示的文档信息(类似的还有blog文章等). 如果<code>xgettext</code>工具能够支持Go语言文档的信息的提取和翻译后文档的合并, 那么文档的翻译将会方便很多.</p>
+
+<p>如果有感兴趣的同学可以一起完善.</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2014-01-27</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+          <a href="/tags/gettext/">gettext</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go-tenary/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go语言的三元表达式</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go-protorpc-2014/">
+            <span class="next-text nav-default">Go语言的RPC介绍(含Protobuf-RPC)</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

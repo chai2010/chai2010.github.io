@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Gccgo in GCC 4.7.1[翻译] - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="英文原文: http://blog.golang.org/2012/07/gccgo-in-gcc-471.html Go语言开始就由一个语言规范定义，并不是倚赖某个具体实现。Go开发小组针对语言规范，实现了两个不同版本的编译器：gc和gccgo" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/gccgo-gcc471/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Gccgo in GCC 4.7.1[翻译]" />
+<meta property="og:description" content="英文原文: http://blog.golang.org/2012/07/gccgo-in-gcc-471.html Go语言开始就由一个语言规范定义，并不是倚赖某个具体实现。Go开发小组针对语言规范，实现了两个不同版本的编译器：gc和gccgo" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/gccgo-gcc471/" />
+
+
+
+<meta property="article:published_time" content="2013-04-01T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2013-04-01T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Gccgo in GCC 4.7.1[翻译]">
+<meta itemprop="description" content="英文原文: http://blog.golang.org/2012/07/gccgo-in-gcc-471.html Go语言开始就由一个语言规范定义，并不是倚赖某个具体实现。Go开发小组针对语言规范，实现了两个不同版本的编译器：gc和gccgo">
+
+
+<meta itemprop="datePublished" content="2013-04-01T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-04-01T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1040">
+
+
+
+<meta itemprop="keywords" content="gccgo,golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Gccgo in GCC 4.7.1[翻译]"/>
+<meta name="twitter:description" content="英文原文: http://blog.golang.org/2012/07/gccgo-in-gcc-471.html Go语言开始就由一个语言规范定义，并不是倚赖某个具体实现。Go开发小组针对语言规范，实现了两个不同版本的编译器：gc和gccgo"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Gccgo in GCC 4.7.1[翻译]</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-04-01 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 1040 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>英文原文: <a href="http://blog.golang.org/2012/07/gccgo-in-gcc-471.html">http://blog.golang.org/2012/07/gccgo-in-gcc-471.html</a></p>
+
+<p>Go语言开始就由一个<a href="http://golang.org/ref/spec">语言规范</a>定义，并不是倚赖某个具体实现。Go开发小组针对语言规范，实现了两个不同版本的编译器：gc和gccgo。  有两个不同的实现有助于保持语言规范的完整和完整：当两个实现相互冲突时，我们修改语言规范，或者是修改实现以保持和规范一致。  Gc是默认的编译器，专门针对go编写。Gccgo是另一个不同实现（有不同的侧重目标），下面我们将详细介绍。</p>
+
+<p>Gccgo是作为gcc的一个部分发布，属于gcc编译器集合。GCC前端可以支持多种不同的编程语言：gccgo是针对go语言的前端实现。Go前端同时保持和GCC相对独立，它的设计目标之一是可以连接的到不同的编译器后端，当然目前只支持GCC。</p>
+
+<p>gccgo的编译速度比gc较慢一点，但是可以生成更优的代码，因此程序执行速度会更快。GCC的优化技术经过多年完善，涵盖 循环优化、指令等各个方面。虽然gccgo不一定总是产生最好的代码，但是在某些情况下它编译的程序运行效率可以提高达30%。</p>
+
+<p>GC编译器只支持主流的处理器： X86(32/64位)和ARM。Gccgo可以支持GCC所支持的绝大部分类型处理器。目前gccgo已经测试的处理器类型包括：X86(<sup>32</sup>&frasl;<sub>64</sub>)、SPARC、MIPS、PowerPC和Alpha等。  Gccgo也测试了GC编译器所不支持的操作系统，特别是Solaris系统。</p>
+
+<p>Gccgo同时提供了标准且完备的go语言标准库。gccgo和gc的关于Go运行时的一些特性也尽量保持一致，比如：goroutine的调度、channels、内存分配和垃圾回收等。Gccgo在X86已经支持goroutine的动态堆栈，需要使用gold连接器（在其他处理器，每个goroutine还是会分配一个大的栈，如果出现深度的函数嵌套调用会导致堆栈溢出）。</p>
+
+<p>目前发布的Gccgo还不包含go命令。 但是通过Go正式版本安装的go命令已经可以支持gccgo，需要使用 -compiler选项：<code>go build -compiler gccgo myprog</code> 。用于连接Go和C/C++的cgo和SWIG工具同样支持gccgo。</p>
+
+<p>我们已经将针对GCC的Go前端采用和Go相同的BSD许可证发布。可以从 <a href="http://code.google.com/p/gofrontend">gofrontend Google Code project</a> 下载代码。需要注意的是Go前端和GCC后端连接时，采用GPL许可证(译注： 应该是BSD被GPL传染的原因)。</p>
+
+<p>最新的GCC 4.7.1，包含的gccgo完美支持Go1。对于用户，如果需要更好编译优化，或者是使用GC所不支持的处理器或操作系统，gccgo可能是一个更好的选择。</p>
+
+<p><em>by Ian Lance Taylor</em></p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2013-04-01</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/gccgo/">gccgo</a>
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/defer-panic-recover/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Defer, Panic, and Recover[翻译]</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go-quine/">
+            <span class="next-text nav-default">Go语言的自重写程序</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

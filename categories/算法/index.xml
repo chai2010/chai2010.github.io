@@ -1,0 +1,2936 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>算法 on chai2010 的博客</title>
+    <link>https://chai2010.cn/categories/%E7%AE%97%E6%B3%95/</link>
+    <description>Recent content in 算法 on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 08 Dec 2011 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/categories/%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>解浮点数方程: X&#43;1=X</title>
+      <link>https://chai2010.cn/post/2011/ieee754-question/</link>
+      <pubDate>Thu, 08 Dec 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2011/ieee754-question/</guid>
+      
+        <description>&lt;p&gt;不是纯数学意义上的方程, 对应计算机的一个浮点数问题:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if((float)(x+1.0) == (float)(x)) { x = ? }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;简单分析, ieee754中float采用23bit表示有效位, 再加省略的1, 共有24bit.
+当结果超出24bit时, 小数部分被被丢失.&lt;/p&gt;
+
+&lt;p&gt;大于 &lt;code&gt;2^24 = 16777216&lt;/code&gt; 的x, 满足 &lt;code&gt;x+1.0==x&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;测试程序:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+
+// Little endian
+union ieee754_float {
+    float f;
+
+    /* This is the IEEE 754 single-precision format.  */
+    struct {
+        unsigned int mantissa:23;
+        unsigned int exponent:8;
+        unsigned int negative:1;
+    } ieee;
+
+    /* This format makes it easier to see if a NaN is a signalling NaN.  */
+    struct {
+        unsigned int mantissa:22;
+        unsigned int quiet_nan:1;
+        unsigned int exponent:8;
+        unsigned int negative:1;
+    } ieee_nan;
+};
+
+int main()
+{
+    union ieee754_float f = { 0.0f };
+
+    // Find a positive floating point value x, for which x+1.0=x.
+    for(f.ieee.exponent = 127; f.ieee.exponent &amp;lt; 255; f.ieee.exponent++) {
+        if((float)(f.f + 1.f) == f.f) {
+            printf(&amp;quot;%f: exponent = %d\n&amp;quot;, f.f, f.ieee.exponent);
+        }
+    }
+    return 0;
+}
+
+// output:
+// 16777216.000000: exponent = 151
+// 33554432.000000: exponent = 152
+// 67108864.000000: exponent = 153
+// 134217728.000000: exponent = 154
+//
+// ... ...
+//
+// 21267647932558654000000000000000000000.000000: exponent = 251
+// 42535295865117308000000000000000000000.000000: exponent = 252
+// 85070591730234616000000000000000000000.000000: exponent = 253
+// 170141183460469230000000000000000000000.000000: exponent = 254
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;IEEE754相关资源:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/IEEE_754-2008&#34;&gt;http://en.wikipedia.org/wiki/IEEE_754-2008&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/Single_precision&#34;&gt;http://en.wikipedia.org/wiki/Single_precision&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.h-schmidt.net/FloatApplet/IEEE754.html&#34;&gt;http://www.h-schmidt.net/FloatApplet/IEEE754.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://babbage.cs.qc.edu/IEEE-754/&#34;&gt;http://babbage.cs.qc.edu/IEEE-754/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.scs.stanford.edu/histar/src/pkg/uclibc/include/ieee754.h&#34;&gt;http://www.scs.stanford.edu/histar/src/pkg/uclibc/include/ieee754.h&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>单向链表的逆序</title>
+      <link>https://chai2010.cn/post/2009/link-list-reverse/</link>
+      <pubDate>Mon, 07 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/link-list-reverse/</guid>
+      
+        <description>&lt;p&gt;假设链表的结构为:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;struct Node { int item; Node* next; };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;单向链表是一个有序的序列.假设有一个单向链表A:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1, 2, 3, 4, 5, ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;现在将A表逆序后得到链表B:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;..., 5, 4, 3, 2, 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;常规的反转链表方法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Node *reverse(Node *list)
+{
+    link t, y = list, r = 0;
+    while (y != 0) { t = y-&amp;gt;next; y-&amp;gt;next = r; r = y; y = t; }
+    return r;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其实上面的这个操作自然地对应于栈的出栈/压栈操作.
+因此, 单向链表的逆序问题我们也可以抽象为A和B两个栈的转换问题.&lt;/p&gt;
+
+&lt;p&gt;现在给Node实现用于栈的操作函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 1. 判断栈是否为空
+bool isEmpty(Node* stack)
+{
+    return (stack == NULL);
+}
+
+// 2. 向栈stack中压入一个node元素
+void push(Node* &amp;amp;stack, Node* node)
+{
+    node-&amp;gt;next = stack;
+    stack = node;
+}
+
+// 3. 从栈stack中弹出一个元素
+Node* pop(Node* &amp;amp;stack)
+{
+    assert(!isEmpty(stack));
+
+    Node *t = stack;
+    stack = stack-&amp;gt;next;
+
+    return t;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面可以基于栈实现单向链表的逆序操作了.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Node *reverse(Node *oldList)
+{
+    Node *newList = NULL;
+
+    while(!isEmpty(oldList))
+    {
+        push(newList, pop(oldList));
+    }
+
+    return newList;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;采用栈的思维来思考单向链表的逆序问题之后,许多本来相对复杂的问题都会变得异常简单.
+例如, 我们现在再考虑用递归的方法来逆序链表.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 递归实现反转链表
+Node *reverse(Node *oldList, Node *newList=NULL)
+{
+    // 判断oldList是否为空
+    if(isEmpty(oldList)) return newList;
+
+    // 从oldList栈弹出一个元素
+    // 然后将弹出的元素压到newList栈中
+    push(newList, pop(oldList));
+
+    // 递归处理剩下的oldList链表
+    return reverse(oldList, newList);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;递归版本的调用方式:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int main()
+{
+    Node *list = NULL;
+
+    // newList采用默认的NULL
+    Node *t = reverse(list);
+
+    // ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>Josephus问题</title>
+      <link>https://chai2010.cn/post/2009/josephus-reseach/</link>
+      <pubDate>Sat, 05 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/josephus-reseach/</guid>
+      
+        <description>&lt;p&gt;&lt;strong&gt;1. 问题的由来&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Josephus问题是以10世纪的著名历史学家Flavius Josephus命名的. 据说, Josephus
+如果没有数学才能, 他就不会在活着的时候出名! 在犹太人和古罗马人战争期间, 他是
+陷如罗马人陷阱的41个犹太反抗者之一. 反抗者宁死不做俘虏, 他们决定围成一个圆圈,&lt;/p&gt;
+
+&lt;p&gt;且围绕圆圈来进行, 杀死所有第3个剩下的人直到没有一个人留下. 但是, Josephus和一个&lt;/p&gt;
+
+&lt;p&gt;不告发的同谋者感到自杀是愚蠢的行为, 所以以他快速计算出在此恶性循环中他和他的
+朋友应该站的地方. 因此, 他们活了下来&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;**2. 平凡的解法  **&lt;/p&gt;
+
+&lt;p&gt;我们用一个循环连表来模拟他们的行为。为了省事，我直接找了一个一个java代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Josephus
+{
+    static class Node
+    {
+        int val; Node next;
+        Node(int v) { val = v; }
+    }
+    public static void main(String[] args)
+    {
+        int N = Integer.parseInt(args[0]);
+        int M = Integer.parseInt(args[1]);
+
+        Node t = new Node(1);
+        Node x = t;
+
+        for(int i = 2; i &amp;lt;= N; x = (x.next=new Node(i++)));
+
+        x.next = t;
+
+        while(x != x.next)
+        {
+            for(int i = 1; i &amp;lt; M; i++) x = x.next;
+            x.next = x.next.next;
+        }
+        Out.println(&amp;quot;Survivor is &amp;quot; + x.val);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;3. 递归公式&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;喜欢这个问题的朋友肯定不满足上面的方法，很想知道更简单的算法。
+其实Josephus问题中的序列确实存在递归的公式。但是递归公式的推导
+比较麻烦，我就直接给出结果。如果想了解详细过程可以查阅相关资料。&lt;/p&gt;
+
+&lt;p&gt;假设有n个人，每次杀第m个人，则k为第k个被杀死的人&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;j1: x  &amp;lt;- k*m
+j2: if(x &amp;lt;= n) 输入结果x
+j3: x &amp;lt;- floor((m*(x-n)-1)/(m-1)), goto j1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以C语言实现如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;unsigned josephus(unsigned  m, unsigned  n, unsigned  k)
+{
+    unsigned x = km;
+    while(x &amp;lt;= n) x = (m*(x-n)-1)/(m-1);
+    return  x;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;4. m为2的情况&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;现在考虑一种m为2的特殊情形。
+这时候有更简单的递归公式：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x = 2*n + 1 - (2*n+1-2*k)*2^log2((2*n)/(2*n+1-2*k))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，&lt;code&gt;log2((2*n)/(2*n+1-2*k))&lt;/code&gt;为计算&lt;code&gt;(2*n)/(2*n+1-2*k)&lt;/code&gt;以&lt;code&gt;2&lt;/code&gt;为底的对数，
+结果向下取整数。&lt;/p&gt;
+
+&lt;p&gt;观察&lt;code&gt;2^log2((2*n)/(2*n+1-2*k))&lt;/code&gt;整体，可以理解为将&lt;code&gt;(2*n)/(2*n+1-2*k)&lt;/code&gt;向下
+舍取到2的幂。有些地方把这中运算称为地板函数，我们定义为flp2，下面是
+C语言的实现：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;unsigned flp2(unsigned  x)
+{
+    unsigned y;
+    do { y = x; x &amp;amp;= x-1; }while(x);
+    return y;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中&lt;code&gt;x &amp;amp;= x-1;&lt;/code&gt;语句是每次把&lt;code&gt;x&lt;/code&gt;二进制最右边的&lt;code&gt;1&lt;/code&gt;修改为&lt;code&gt;0&lt;/code&gt;，直到最左边的1为止.
+这种方法也可以用来计算x二进制中1的数目，当x二进制中1的数目比较小的
+时候算法的效率很高。&lt;/p&gt;
+
+&lt;p&gt;m为2的代码实现:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;unsigned josephus2k(unsigned n, unsigned k)
+{
+    unsiged t = (n&amp;lt;&amp;lt;1) - (k&amp;lt;&amp;lt;1) + 1;
+    return (n&amp;lt;&amp;lt;1)+1 - t*flp2((n&amp;lt;&amp;lt;1)/t);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;5. m为2的情况, k为n的情形&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;该问题一般都是计算最后一个被杀的人的位置。
+现在考虑更为特殊的，m为2的情况, k为n的情形。&lt;/p&gt;
+
+&lt;p&gt;令k=n可以化简前边m=2的公式：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x = 2*n + 1 - (2*n+1-2*n)*2^log2((2*n)/(2*n+1-2*n))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;即&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x = 2*n + 1 - 2^log2(2*n)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从二进制的角度可以理解为：
+将n左移1位（即乘以2），然后将最右端设置为1（既加1），
+最后将左端的1置为0（既减去&lt;code&gt;2*n&lt;/code&gt;的向下取的2的幂）。&lt;/p&gt;
+
+&lt;p&gt;更简单的描述是将n的二进制表示循环左移动一位!&lt;/p&gt;
+
+&lt;p&gt;例如: n为&lt;code&gt;1011001 -&amp;gt; 0110011 -&amp;gt; 110011&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;用代码实现为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;unsigned josephus2n(unsigned n)
+{
+    return ((n-flp2(n))&amp;lt;&amp;lt;1)|1;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;继续修改：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;unsigned josephus2n(unsigned n)
+{
+    return ((n&amp;amp;(~flp2(n)))&amp;lt;&amp;lt;1)|1;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;参考资料: 具体数学.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>二进制的GCD算法</title>
+      <link>https://chai2010.cn/post/2009/binary-gcd/</link>
+      <pubDate>Sat, 05 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/binary-gcd/</guid>
+      
+        <description>&lt;p&gt;GCD的几个性质(针对二进制数):&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;如果a,b都是偶数, 则gcd(a, b) = gcd(a/2, b/2)&lt;/li&gt;
+&lt;li&gt;如果a是奇数, b是偶数,  则gcd(a, b) =  gcd(a, b/2)&lt;/li&gt;
+&lt;li&gt;如果a,b都是奇数, 则gcd(a, b) = gcd((a-b)/2, b)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;基于上述性质实现的二进制GCD算法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;unsigned binary_gcd(unsigned x, unsigned y)
+{
+    // 记录2的幂数
+    unsigned k = 0;
+
+    // 处理特殊的情况
+
+    if(x == 0) return y;
+    if(y == 0) return x;
+
+    // xy都是偶数, 则根据性质1
+    while(((x&amp;amp;brvbary)&amp;amp;1) == 0)
+    {
+        x  &amp;gt;&amp;gt;= 1;  y &amp;gt;&amp;gt;= 1; k++;
+    }
+
+    // xy中只有一个是偶数, 根据性质2
+    while((x&amp;amp;1) == 0) x &amp;gt;&amp;gt;= 1;
+
+    // xy都是奇数, 根据性质3
+    while(y)
+    {
+        while((y&amp;amp;1) == 0) y &amp;gt;&amp;gt;= 1;
+
+        unsigned t = y;
+        y = (x&amp;gt;y)? x-y: y-x;
+        x = t;
+    }
+
+    // 根据性质1
+    return (x&amp;lt;&amp;lt;k);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个算法比Euclid算法更复杂，但可能更快。
+因为一些C语言实现求余运算的速度比较慢，
+特别是对无符号的操作数。&lt;/p&gt;
+
+&lt;p&gt;该算法的时间复杂度为&lt;code&gt;O(lg(max(a,b)))&lt;/code&gt;.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>怎样判断链表有没有环</title>
+      <link>https://chai2010.cn/post/2009/link-list-ring-test/</link>
+      <pubDate>Sat, 05 Dec 2009 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2009/link-list-ring-test/</guid>
+      
+        <description>&lt;p&gt;假设序列&lt;code&gt;X0, X1, X2, ...&lt;/code&gt;是由&lt;code&gt;X(n+1) = f(Xn)&lt;/code&gt;定义的, 如果f的值域是有限,
+那么序列必定是循环的.
+也就是说，这个序列包含一个前导（前缀）序列: &lt;code&gt;X0, X1, ... X(u-1)&lt;/code&gt;,
+后面跟着一个不受限制的循环: &lt;code&gt;Xu, X(u+1), ..., X(u+t-1)&lt;/code&gt;, 其中t是循环的周期.&lt;/p&gt;
+
+&lt;p&gt;这个结论可以由抽屉原理推导出来:
+即N+1个苹果放在N个屉子里, 至少有一个屉子至少有2个或以上的苹果.
+对于&lt;code&gt;X(n+1) = f(Xn)&lt;/code&gt;来说, 如果&lt;code&gt;Xn&lt;/code&gt;和&lt;code&gt;X(n+t-1)&lt;/code&gt;是相同的, 那么它们的后继也就是相同的,
+也就是出现环了.&lt;/p&gt;
+
+&lt;p&gt;在随机数的生成以及检测连表的循环方面，都是相同的问题。&lt;/p&gt;
+
+&lt;p&gt;对于单连表而言，可以定义函数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int f(int x)
+{
+    return (x)? ((Node*)x)-&amp;gt;next: head;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;即，假设连表到尾部之后再调用f就从头开始,
+这样我们测试f的循环周期, 如果周期比连表
+长度短肯定是是有内部循环.&lt;/p&gt;
+
+&lt;p&gt;R.W.Floyd算法可以描述为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;x = f(x)
+y = f(f(y))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中，&lt;code&gt;xy&lt;/code&gt;被初始化为&lt;code&gt;X0&lt;/code&gt;。经过n步之后，&lt;code&gt;x = Xn, y = X2n&lt;/code&gt;。
+比较这些元素，如果相等，那么就知道Xn和X2n之间的间隔
+是周期&lt;code&gt;t&lt;/code&gt;的整数倍，即&lt;code&gt;2n-n=n&lt;/code&gt;是&lt;code&gt;t&lt;/code&gt;的倍数。&lt;/p&gt;
+
+&lt;p&gt;于是&lt;code&gt;u&lt;/code&gt;就可以通过重新生成序列并比较&lt;code&gt;X0&lt;/code&gt;和&lt;code&gt;Xn&lt;/code&gt;, &lt;code&gt;X1&lt;/code&gt;和&lt;code&gt;X(n+1)&lt;/code&gt;, 等等来确定.
+当&lt;code&gt;Xu&lt;/code&gt;和&lt;code&gt;X(u+n)&lt;/code&gt;相比较相等的情况.&lt;/p&gt;
+
+&lt;p&gt;最后, 通过重新生成更多的元素并把&lt;code&gt;Xu&lt;/code&gt;和&lt;code&gt;X(u+1)&lt;/code&gt;, &lt;code&gt;X(u+2)&lt;/code&gt;, &amp;hellip;
+相比较来确定周期t.&lt;/p&gt;
+
+&lt;p&gt;这个算法仅需要较小且有界的空间, 但是它要多次计算f。&lt;/p&gt;
+
+&lt;p&gt;Gosper的算法寻找f的周期t, 但不求第一次循环开始点u.
+他的主要特征是从不回头去重新计算f, 而且在空间和时间上相当经济.&lt;/p&gt;
+
+&lt;p&gt;它所用的空间是无界的: 它需要一个长度为&lt;code&gt;log2(max(t))+1&lt;/code&gt;的表,
+其中max(t)是最大可能的周期. 这不会需要太多的空间.&lt;/p&gt;
+
+&lt;p&gt;例如: 如果是针对32位二进制, 那么33个字就足够了.&lt;/p&gt;
+
+&lt;p&gt;Gosper算法的C实现如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void ld_Gosper(int (*f)(int), int X0,
+            int *mu_l,int *mu_u, int *lambda)
+{
+    int Xn, k, m, kmax, n, lgl;
+    int T[33];
+
+    T[0] = X0;
+    Xn = X0;
+    for (n = 1; ; n++) {
+        Xn = f(Xn);
+        kmax = 31 - nlz(n);           // Floor(log2 n).
+        for (k = 0; k &amp;lt;= kmax; k++) {
+            if (Xn == T[k]) goto L;
+        }
+        T[ntz(n+1)] = Xn;             // No match.
+    }
+
+L:
+    // Compute m = max{i | i &amp;lt; n and ntz(i+1) = k}.
+
+    m = ((((n &amp;gt;&amp;gt; k) - 1) | 1) &amp;lt;&amp;lt; k) - 1;
+    *lambda = n - m;
+    lgl = 31 - nlz(*lambda - 1); // Ceil(log2 lambda) - 1.
+    *mu_u = m;                       // Upper bound on mu.
+    *mu_l = m - max(1, 1 &amp;lt;&amp;lt; lgl) + 1;// Lower bound on mu.
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;该函数以需要分析的函数f和初始值X0为参数。它返回u的上界
+和下界以及周期t（尽管Gosper算法不能计算u，但它能计算u的
+上界和下界）。&lt;/p&gt;
+
+&lt;p&gt;函数中还用到了3个子函数：&lt;code&gt;nlz&lt;/code&gt;, &lt;code&gt;ntz&lt;/code&gt;, &lt;code&gt;max&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;其中&lt;code&gt;nlz&lt;/code&gt;是求二进制前缀0的数目，&lt;code&gt;ntz&lt;/code&gt;是计算二进制后缀0的数目，
+&lt;code&gt;max&lt;/code&gt;求最大值（不用详细描述）。下面给出&lt;code&gt;nlz&lt;/code&gt;和&lt;code&gt;ntz&lt;/code&gt;的实现代码。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int nlz(unsigned x)
+{
+    int n;
+
+    if (x == 0) return(32);
+    n = 1;
+    if ((x &amp;gt;&amp;gt; 16) == 0) {n = n +16; x = x &amp;lt;&amp;lt;16;}
+    if ((x &amp;gt;&amp;gt; 24) == 0) {n = n + 8; x = x &amp;lt;&amp;lt; 8;}
+    if ((x &amp;gt;&amp;gt; 28) == 0) {n = n + 4; x = x &amp;lt;&amp;lt; 4;}
+    if ((x &amp;gt;&amp;gt; 30) == 0) {n = n + 2; x = x &amp;lt;&amp;lt; 2;}
+    n = n - (x &amp;gt;&amp;gt; 31);
+    return n;
+}
+
+int ntz(unsigned x)
+{
+    int n;
+
+    x = ~x &amp;amp; (x - 1);
+    n = 0;                       // n = 32;
+    while(x != 0) {              // while (x != 0) {
+        n = n + 1;                //    n = n - 1;
+        x = x &amp;gt;&amp;gt; 1;               //    x = x + x;
+    }                            // }
+    return n;                    // return n;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中计算后缀0数目的函数&lt;code&gt;ntz&lt;/code&gt;有的地方也叫标尺函数，
+因为通过它给出了标尺上的二等份、四等份、&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;标尺函数可以揭示出如何解汉诺塔之谜。标尺函数
+还可以用于生成反射二进制Gray编码。&lt;/p&gt;
+
+&lt;p&gt;关于Gosper的讨论可以参考Knuth, Donald E的经典著作：
+《计算机程序设计的艺术》卷2，3.1节的习题7。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>RSA学习笔记</title>
+      <link>https://chai2010.cn/post/2006/rsa-notes/</link>
+      <pubDate>Wed, 27 Dec 2006 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2006/rsa-notes/</guid>
+      
+        <description>&lt;p&gt;先贴学习RSA时的练习代码(uint32范围):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// RSA加密系统:
+// 1. 随机选取2个大的素数p和q
+// 2. 根据n=p*q式计算出n的值
+// 3. 选取一个与f(n)互素的小奇数e. 其中f(n)为欧拉装载函数, 值为(p-1)(q-1)
+// 4. 对于模f(n), 计算e的乘法逆元d
+// 5. 公开对P=(e,n), 并把它作为RSA公开秘钥
+// 6. 把对S=(d,n)进行保密, 并把它作为RSA的机密秘钥
+
+// 加密过程: C = (M^e)%n
+// 解秘过程: M = (C^d)%n
+
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;assert.h&amp;gt;
+#include &amp;lt;stdlib.h&amp;gt;
+#include &amp;lt;time.h&amp;gt;
+
+// 返回一个位于low和high之间的随机数
+#define ran(low,high) ((rand()%((high)-(low)+1))+(low))
+
+// 计算数组的元素个数
+#define NELEMS(x) ((sizeof(x)) / (sizeof((x)[0])))
+
+// 构造素数序列primes[]
+void makePrimes(int primes[], int num)
+{
+    primes[0] = 2;
+
+    for(int p = 3, cnt = 1; cnt &amp;lt; num; p += 2)
+    {
+        for(int k = 0; ; ++k)
+        {
+            // 可以在div时得到余数
+            div_t dt = div(p, primes[k]);
+
+            if(dt.rem == 0) break;
+            if(dt.quot &amp;lt;= primes[k]) { primes[cnt++] = p; break; }
+        }
+    }
+}
+
+// 返回2个随机素数, 在10000~40000之间
+void rand_pq(int&amp;amp; p, int&amp;amp; q)
+{
+    // [2, 2^16]范围内有6542个素数
+    static int primes[1024*8];
+    static int low, high;
+
+    // 初始化(只处理一次)
+    if(low == 0 &amp;amp;&amp;amp; high == 0)
+    {
+        // 生成素数序列
+        makePrimes(primes, NELEMS(primes));
+
+        // 计算10000和40000附近的素数下标
+        for(int i = 0; i &amp;lt; NELEMS(primes); ++i)
+        {
+            if(!low &amp;amp;&amp;amp; primes[i] &amp;gt; 10000) { low = i; continue; }
+            if(!high &amp;amp;&amp;amp; primes[i] &amp;gt; 40000) { high = i; break; }
+        }
+
+        // 设置随机数种子
+        srand(time(NULL));
+    }
+
+    // 在low, high之间返回2个不同的随机数
+    int r1 = ran(low,high);
+    int r2 = ran(low,high);
+
+    // r1和r2不能相等
+    while(r2 == r1) r2 = ran(low,high);
+
+    // 返回r1,r2位置对应的素数
+    p = primes[r1];
+    q = primes[r2];
+}
+
+// 扩展的欧几里得算法
+int xgcd(int a, int b, int&amp;amp; x, int&amp;amp; y)
+{
+    if(b == 0) { x = 1, y = 0; return a; }
+
+    int d = xgcd(b, a%b, x, y);
+    int t = x-(a/b)*y; x = y; y = t;
+
+    return d;
+}
+
+// 针对(p-1)(q-1)产生e和d
+void rand_ed(int p, int q, int&amp;amp; e, int &amp;amp;d)
+{
+    int n = (p-1)*(q-1);
+    int x, y;
+
+    // 选择一个小的互素奇数e
+    for(e = 37; ; e += 2)
+    {
+        if(xgcd(e, n, x, y) == 1) break;
+    }
+
+    // 将d转换到[0, n-1]之间
+    while(x &amp;gt; 0) x -= n;
+    while(x &amp;lt; 0) x += n;
+
+    d = x;
+}
+
+// 计算(u*v)%m
+unsigned mul_mod(unsigned u, unsigned v, unsigned z)
+{
+    // 如果u*v没有溢出, 则直接计算
+    if((u*v)/u == v) return (u*v)%z;
+
+    // 进行长乘法(结果为64位)
+    unsigned u0, v0, w0;
+    unsigned u1, v1, w1, w2, t;
+
+    u0 = u &amp;amp; 0xFFFF;  u1 = u &amp;gt;&amp;gt; 16;
+    v0 = v &amp;amp; 0xFFFF;  v1 = v &amp;gt;&amp;gt; 16;
+    w0 = u0*v0;
+    t  = u1*v0 + (w0 &amp;gt;&amp;gt; 16);
+    w1 = t &amp;amp; 0xFFFF;
+    w2 = t &amp;gt;&amp;gt; 16;
+    w1 = u0*v1 + w1;
+
+    // x为高32位, y为低32位
+    unsigned x = u1*v1 + w2 + (w1 &amp;gt;&amp;gt; 16);
+    unsigned y = u*v;
+
+    // 进行长除法(被除数为64位)
+    for (int i = 1; i &amp;lt;= 32; i++)
+    {
+        t = (int)x &amp;gt;&amp;gt; 31;           // All 1&#39;s if x(31) = 1.
+
+        x = (x &amp;lt;&amp;lt; 1) | (y &amp;gt;&amp;gt; 31);   // Shift x || y left
+        y &amp;lt;&amp;lt;= 1;                    // one bit.
+
+        if((x|t) &amp;gt;= z) { x -= z; y++; }
+    }
+
+    return x; // y为商, x为余数
+}
+
+// 计算(a^p)%n
+unsigned pow_mod(unsigned a, unsigned p, unsigned n)
+{
+    unsigned k = 1;
+
+    // 反复平方法
+    while(p &amp;gt; 1)
+    {
+        if(p&amp;amp;1) k = mul_mod(k, a, n);
+        a = mul_mod(a, a, n); p &amp;gt;&amp;gt;= 1;
+    }
+
+    return mul_mod(k, a, n);
+}
+
+// 产生RSA需要的所有参数
+void rsa_rand(int&amp;amp; e, int&amp;amp; d, int&amp;amp; n)
+{
+    int p, q;
+
+    rand_pq(p, q);
+    rand_ed(p, q, e, d);
+    n = p*q;
+}
+
+// 加密和解密的过程
+int rsa_encryp(int m, int ed, int n)
+{
+    assert(m &amp;gt; 0 &amp;amp;&amp;amp; m &amp;lt; n);
+    return pow_mod(m, ed, n);
+}
+
+// RSA加密测试
+int main(void)
+{
+    int e, d, n;
+    int m = 119; // 需要加密的数据
+
+    printf(&amp;quot;RSA加密系统.\n\n&amp;quot;);
+
+    // 产生秘钥
+    rsa_rand(e, d, n);
+    printf(&amp;quot;秘钥: e = %d, d = %d, n = %d\n\n&amp;quot;, e, d, n);
+
+    while(1)
+    {
+        printf(&amp;quot;\n输入数据M(0&amp;lt;M&amp;lt;n): &amp;quot;);
+        if(scanf(&amp;quot;%d&amp;quot;, &amp;amp;m) != 1) break;
+        if(m &amp;lt;= 0 || m &amp;gt;= n) break;
+
+        // 加密前数据
+        printf(&amp;quot;加密前: %d\n&amp;quot;, m);
+
+        // 加密文件, 秘钥为(e, n)
+        printf(&amp;quot;加密后: %d\n&amp;quot;, m = rsa_encryp(m, e, n));
+
+        // 解密文件, 秘钥为(d, n)
+        printf(&amp;quot;解密后: %d\n&amp;quot;, m = rsa_encryp(m, d, n));
+    }
+
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;关于学习RSA的几点体会:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. 该实现的RSA密码强度很低, 可能仅满足于学习需要&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;具体地n = p*q, n为32位int类型数据, 则p/q中必然
+有一个值小于等于sqrt(n) &amp;lt;= sqrt(2^32) == 2^16.
+而[0,2^16]范围内只有6542个素数, 因此因式分解n的
+难度很低.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2. 实际产生大的随机素数时, 一般采用费马小定理&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;费马定理只是一种概率测试. 由于这里涉及的素数范围
+很小, 因此直接从素数表中随机选取. 素数表的构造过
+程很有意思, makePrimes从第一个素数2开始, 根据已知
+的素数逐步扩充未知的素数.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3. 关于GCD&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;这里采用了扩展的GCD算法, 为的是得到下面的等式:
+x*a + y*b == gcd(a,b).
+根据x可以得到模线形方程a*x=1(mod b)的解.
+GCD还有一种二进制的实现, 这里采用的是Euclid给的
+算法.&lt;/p&gt;
+
+&lt;p&gt;观察代码可以发现, a/b和x/y参数的传递方向是相反:
+a/b在进栈的时候向栈内传递信息; x/y则是在出栈的
+时候从栈底向外传递信息.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;4. 关于与(p-1)*(q-1)互素的小奇数e&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;满足e的条件的基数很多, 但是具体取哪个呢? 最小的
+是否可以?&lt;/p&gt;
+
+&lt;p&gt;个人觉得e的值最好不要小于log2(n). 因为如果e的值
+太小, 比如为3, 那么当m^3也小于n时就相当于没有加密
+了. 针对这里n为int型数据的话, e大于32应该就可以了.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;5. m为1和n-1时&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;m为1的话, 加密解密都是1, 因为1的x次幂依然为1.
+m为n-1, 测试了一些数据, 加密后的值依然为n-1,
+我想应该可以从数论角度给出证明, 数学比较强的朋友
+可以尝试证明一下.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;6. m &amp;lt; 0 or m &amp;gt;= n&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;因为RSA需要用模n运算, 因此如果m超出n范围的话, 解密
+肯定会出现错误. 最好回避.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;7. m为0&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;这个情况也比较特殊, 回避.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;8. (a^p)%n运算&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;由于a^p结果可能溢出, 因此采用了长乘法(乘积为64位数).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;9. 函数f(a) = (a^p)%n的循环周期&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;由于函数f的值域固定(0,n-1), 因此这个函数必然有循环周期.
+大家有感兴趣可以自己测试一下循环周期.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>挑战递归...</title>
+      <link>https://chai2010.cn/post/2006/recursion-deep-learn/</link>
+      <pubDate>Thu, 30 Nov 2006 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2006/recursion-deep-learn/</guid>
+      
+        <description>&lt;p&gt;发信人: knuth (Knuth), 信区: Program
+标  题: [合集] 挑战递归&amp;hellip;
+发信站: 侏罗纪公园 (Fri Aug  1 17:27:37 2008), 站内&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Thu Nov 30 13:49:23 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我想大家写程序到一定层度都会觉得递归很有意思。
+其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/p&gt;
+
+&lt;p&gt;举个例子：&lt;/p&gt;
+
+&lt;p&gt;从数组顺序查找一个值应该很简单。
+但是，也可以从递归角度来实现！
+我们第一次先比较第一个，然后再递归查找
+剩下的数组。&lt;/p&gt;
+
+&lt;p&gt;下面我先给个小例子开个头：
+假设要把一个十进制的数逆序，119 -&amp;gt; 911&lt;/p&gt;
+
+&lt;p&gt;代码如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int fx(int n, int k)
+{
+    return (n)? fx(n/10, k*10+(n%10)): k;
+}
+
+main()
+{
+    printf(&amp;quot;%d\n&amp;quot;, fx(119, 0));
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面由大家来接啊&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;char *reverse(char *str);&lt;/code&gt;是将&lt;code&gt;str&lt;/code&gt;逆序后返回。
+要求用递归实现&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;IPconfig (readme.txt) 于  (Thu Nov 30 17:01:54 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;一直不喜欢用递归.
+使用递归时,计算机做了什么,其实我们并不是很了解,也谈不上控制了.
+我宁愿自己构造堆栈,用循环.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Thu Nov 30 18:26:46 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dd&gt;char *reverse(char *str);是将str逆序后返回。&lt;/dd&gt;
+&lt;dd&gt;要求用递归实现&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;期待中&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Thu Nov 30 18:37:17 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 IPconfig (readme.txt) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一直不喜欢用递归.&lt;/dd&gt;
+&lt;dd&gt;使用递归时,计算机做了什么,其实我们并不是很了解,也谈不上控制了.&lt;/dd&gt;
+&lt;dd&gt;我宁愿自己构造堆栈,用循环.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;递归其实是和函数调用的原理一样的（在C中）。
+函数调用参数要进栈，返回要出栈，
+因此，可以隐式地使用系统本身的栈&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;关键是代码看起来简单明了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 10:07:00 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;reverse(char *str,int left,int right)
+{
+    char tmp;
+    tmp = str[left];
+    str[left] = str[right];
+    str[right] = tmp;
+    left++;
+    right--;
+    if(right &amp;gt; left)
+        reverse(str,left,right);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 11:51:57 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;pre&gt;&lt;code&gt;    reverse(str,left,right);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;对ls的程序有个疑问：&lt;/p&gt;
+
+&lt;p&gt;left/right是str的下标还是str的内容？&lt;/p&gt;
+
+&lt;p&gt;如果left/right是下标，那么交换的时候怎么只交换left/right的值？
+如果left/right是内容，那传递str参数是否还有必要？&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 14:22:15 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;下标，写错了&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;reverse(char *str,int left,int right)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;char tmp;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 14:32:54 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;下标，写错了&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;那现在继续增加挑战的难度^_^&lt;/p&gt;
+
+&lt;p&gt;函数的原形为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char *str);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;要求用递归实现该函数，但不能自行增加参数。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 14:45:11 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;可以有全局变量吗&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;那现在继续增加挑战的难度^_^&lt;/dd&gt;
+&lt;dd&gt;函数的原形为：&lt;/dd&gt;
+&lt;dd&gt;char *reverse(char *str);&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 15:01:40 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;可以有全局变量吗&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;那个不管，总之用户只是把它当作一个函数使用。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;main()
+{
+    char s1[] = &amp;quot;abc&amp;quot;;
+    char s2[] = &amp;quot;abc&amp;quot;;
+    printf(&amp;quot;%s -&amp;gt; %s&amp;quot;, s1, reverse(s2));
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;debug (Leaving) 于  (Fri Dec  1 17:26:59 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/*
+ * reverse.cpp
+ * IDE: DEV-CPP
+ * &amp;lt;zmstone#gmail.com&amp;gt;
+ */
+#include &amp;lt;cstring&amp;gt;
+#include &amp;lt;cstdio&amp;gt;
+#include &amp;lt;algorithm&amp;gt;
+using namespace std;
+
+void reverse(char* s, int k){
+    if(k&amp;gt;1){
+        reverse(s+1, k-2);
+        swap(*s, s[k]);
+    }
+}
+
+int main(){
+    char str[] = &amp;quot;abcdefghijklmno&amp;quot;;
+    printf(&amp;quot;%s\n&amp;quot;, str);
+    reverse(str, strlen(str)-1);
+    printf(&amp;quot;%s\n&amp;quot;, str);
+    while(1);
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 IPconfig (readme.txt) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一直不喜欢用递归.&lt;/dd&gt;
+&lt;dd&gt;使用递归时,计算机做了什么,其实我们并不是很了解,也谈不上控制了.&lt;/dd&gt;
+&lt;dd&gt;我宁愿自己构造堆栈,用循环.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 17:35:59 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 debug (Leaving) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;/*&lt;/dd&gt;
+&lt;dd&gt;* reverse.cpp&lt;/dd&gt;
+&lt;dd&gt;* IDE: DEV-CPP&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;pre&gt;&lt;code&gt; reverse(s+1, k-2);
+      swap(*s, s[k]);
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;dl&gt;
+&lt;dt&gt;}&lt;/dt&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;楼上程序还没有完全达到要求哦&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char* str);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;函数只有1个参数，且返回逆序后的字符串。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;debug (Leaving) 于  (Fri Dec  1 17:46:31 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;按你的要求来应该这样:
+    /*
+     * reverse.cpp
+     * IDE: DEV-CPP
+     * &lt;zmstone#gmail.com&gt;
+     */
+    #include &lt;cstring&gt;
+    #include &lt;cstdio&gt;
+    #include &lt;algorithm&gt;
+    using namespace std;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *s, int k){
+    if(k&amp;lt;0) return;
+    reverse(s+1, k-2);
+    swap(*s, s[k]);
+}
+char* reverse(char* s){
+    char* ret = strdup(s);
+    reverse(ret, strlen(ret)-1);
+    return ret;
+}
+int main(){
+    char *tmp, str[256];
+    while(1 == scanf(&amp;quot;%s&amp;quot;, str)){
+        printf(&amp;quot;%s -&amp;gt; %s\n&amp;quot;, str, tmp = reverse(str));
+        if(strcmp(strrev(str), tmp)) printf(&amp;quot;error!\n&amp;quot;);
+        delete []tmp;
+    }
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;前面那个递归写错了&amp;hellip;
+直接调用&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;leo (leo) 于  (Fri Dec  1 17:57:55 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;递归很好的,写出的代码简单又容易理解.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 17:59:18 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 debug (Leaving) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;按你的要求来应该这样:&lt;/dd&gt;
+&lt;dd&gt;/*&lt;/dd&gt;
+&lt;dd&gt;* reverse.cpp&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;楼上使用了C++的重载功能。
+本质上发生递归的是reverse(char *s, int k)函数，
+还是2个参数。&lt;/p&gt;
+
+&lt;p&gt;提高的要求是用1个参数实现递归^_^&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 18:33:29 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我觉得这个如果用递归不划算,我倒是想到了用分治来实现一个参数的,递归.就是让前面
+一半的字符串和后面一半的分别reverse,然后整个再reverse.不过时空复杂度都比不递
+归大的多.不知道,有没有别的简单的递归算法.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;楼上使用了C++的重载功能。&lt;/dd&gt;
+&lt;dd&gt;本质上发生递归的是reverse(char *s, int k)函数，&lt;/dd&gt;
+&lt;dd&gt;还是2个参数。&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 18:35:29 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;如果有全局变量和没有全局变量思路完全不一样.如果有全局变量相当于传递了参数,那
+么把有多个参数的程序稍微改下就可以了.如果没有全局变量用分治可以实现一个参数.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;那个不管，总之用户只是把它当作一个函数使用。&lt;/dd&gt;
+&lt;dd&gt;main()&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 18:41:09 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我觉得这个如果用递归不划算,我倒是想到了用分治来实现一个参数的,递归.就是让?..&lt;/dd&gt;
+&lt;dd&gt;一半的字符串和后面一半的分别reverse,然后整个再reverse.不过时空复杂度都比不递&lt;/dd&gt;
+&lt;dd&gt;归大的多.不知道,有没有别的简单的递归算法.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;贴个代码出来吧&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;不过这里用递归实现并不是要使用，
+只是想大家能更深入些了解递归&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 18:53:27 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;reverse(char *str)
+{
+    int len;
+    char *tmp;
+    len = strlen(str);
+    if(len&amp;amp;1)
+    {
+        tmp=str+len/2+1;
+        reverse(tmp);
+    }
+    else
+    {
+        tmp=str+len/2;
+        reverse(tmp);
+    }
+    int i;
+    for(i=0;i&amp;lt;len/2;i++)
+    {
+        swap(str[i],str[i+len/2]);
+    }
+    reverse(tmp);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;贴个代码出来吧&lt;em&gt;_&lt;/em&gt;&lt;/dd&gt;
+&lt;dd&gt;不过这里用递归实现并不是要使用，&lt;/dd&gt;
+&lt;dd&gt;只是想大家能更深入些了解递归&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 18:55:42 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;把if else里面的reverse()提出来代码更简洁点&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;reverse(char *str)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;int len;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 19:12:22 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;reverse(char *str)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;int len;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;看了你的代码，觉得结果不对,
+而且实际运行的时候错误错误。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 19:16:47 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;思路应该没问题 ,自己改改吧&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;看了你的代码，觉得结果不对,&lt;/dd&gt;
+&lt;dd&gt;而且实际运行的时候错误错误。&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:18:08 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;从软件安全和维护的角度来讲,我认为提醒程序员自己做了什么很重要.
+所以,我认为不应该设计一个返回变量等待程序员释放.
+我的想法是让程序员自己new字符串.这样也许更能提醒程序员注意自己使用的系统资源.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *str)
+{
+    static int begin = -1;
+    static int end = -1;
+
+    if (begin == -1)
+    {
+        begin = 0;
+        end = strlen(str)-1;
+    }
+
+    if ( (end-begin) &amp;gt;= 1 )
+    {
+        str[begin] = str[begin] ^ str[end];
+        str[end]   = str[end]   ^ str[begin];
+        str[begin] = str[begin] ^ str[end];
+        begin++;
+        end--;
+        return reverse(str);
+    }
+    else
+    {
+        begin  = -1;
+        end = -1;
+        return str;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:25:42 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;本来有了这么多的解决方法,自己不应该再多此一举.但是,呵呵,发现自己还是和大一
+初学编程的时候一样会为这样的&amp;rdquo;挑战&amp;rdquo;而狂热&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;编程为什么有趣？作为回报，它的从业者期望得到什么样的快乐？
+首先是一种创建事物的纯粹快乐。如同小孩在玩泥巴时感到愉快一样，成年人喜欢创建事
+物，特别是自己进行设计。我想这种快乐是上帝创造世界的折射，一种呈现在每片独特、
+崭新的树叶和雪花上的喜悦1。
+&amp;hellip;&amp;hellip;&amp;hellip;
+1. Ershov认为编程是一种乐趣和苦恼共存的活动。A.P. Ershov, “Aesthetics and
+ the human factor in programming,” CACM, 15,7(July,1972), pp. 501-505.&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;摘自《人月神话》 作者：FREDERICK P. BROOKS, JR. 翻译：Adams Wang&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 19:30:04 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;conio.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+
+void reverse(char *str)
+{
+    char *tmp;
+    int i;
+    int len;
+    char c;
+    int add;
+    len = strlen(str);
+    if(len &amp;lt; 1)
+        return;
+    if(len&amp;amp;1)
+    {
+        add = len/2+1;
+    }
+    else
+    {
+        add = len/2;
+    }
+    tmp = str + add;
+    reverse(tmp);
+    for(i=0;i&amp;lt;len/2;i++)
+    {
+        c = str[i];
+        str[i] = str[i+add];
+        str[i+add] = c;
+    }
+    reverse(tmp);
+}
+
+void main()
+{
+    char str[10] = &amp;quot;abcdef&amp;quot;;
+    printf(&amp;quot;%s\n&amp;quot;,str);
+    reverse(str);
+    printf(&amp;quot;%s&amp;quot;,str);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;看了你的代码，觉得结果不对,&lt;/dd&gt;
+&lt;dd&gt;而且实际运行的时候错误错误。&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 19:34:38 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;思路应该没问题 ,自己改改吧&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;刚才又看了一下，觉得似乎可以&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:36:06 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;还有一个问题，我刚刚也暗示了。
+这个：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;
+using namespace std;
+int main()
+{
+char* s=&amp;quot;12&amp;quot;;
+s[0] = &#39;1&#39;;
+return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我想大家知道我要说什么。&lt;/p&gt;
+
+&lt;p&gt;也许大家强调题目并没有明确指出这一点，但是knuth函数原型的返回值暗示了：参数
+也许指向常量。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;reverse(char *str,int left,int right)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;char tmp;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 19:37:35 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;你说什么呢?
+我一直没看懂&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;还有一个问题，我刚刚也暗示了。&lt;/dd&gt;
+&lt;dd&gt;这个：&lt;/dd&gt;
+&lt;dd&gt;#include &lt;iostream&gt;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:45:53 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;你运行一下我那段小代码，常量不能访问的问题。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Fri Dec  1 19:49:06 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;本来有了这么多的解决方法,自己不应该再多此一举.但是,呵呵,发现自己还是和..&lt;/dd&gt;
+&lt;dd&gt;初学编程的时候一样会为这样的&amp;rdquo;挑战&amp;rdquo;而狂热&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;ldquo;编程为什么有趣？作为回报，它的从业者期望得到什么样的快乐？&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;地大bbs在外网访问太慢了！！！
+根本大不开帖子！
+现在才看到已经回了好多。&lt;/p&gt;
+
+&lt;p&gt;magicGG的方法和我的有些相似&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char *str)
+{
+    static int stk;
+    static char *s;
+
+    if(!stk) s = str+strlen(str)-1;
+
+    stk++;
+    if(str &amp;lt; s)
+    {
+        char c = *s; *s = *str; *str = c;
+        s--; reverse(str+1);
+    }
+    stk--;
+
+    return str;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;都用到了static变量！&lt;/p&gt;
+
+&lt;p&gt;发了这个回去就回去了，下周再看。
+要是现在看，估计得等到10点&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 19:57:22 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;不好意思：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *str)
+{
+    static int begin = -1;
+    static int end = -1;
+
+    if (begin == -1)
+    {
+        begin = 0;
+        end = strlen(str)-1;
+    }
+
+    if ( (end-begin) &amp;gt;= 1 )
+    {
+        str[begin] = str[begin] ^ str[end];
+        str[end]   = str[end]   ^ str[begin];
+        str[begin] = str[begin] ^ str[end];
+        begin++;
+        end--;
+        //return
+        reverse(str);
+    }
+    else
+    {
+        begin  = -1;
+        end = -1;
+        //return str;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 20:16:06 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我认为 TomasMao (毛豆) 是最“递归”的解法。
+相比之下，我和knuth过多依赖了语言元素。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;#include &lt;stdio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;conio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;string.h&gt;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Fri Dec  1 20:28:49 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我来尝试解释：TomasMao (毛豆)的方法：
+1.首先反转串的后半部分。
+2.把反转后的后半子串平移到前半部分来。这样以后就把结果串的前半部分弄好了。
+  此时，原来串的前半部分已经被移动到了后面。对它的移动已经完成了，它现在需
+  要被反转。
+3.反转它。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Fri Dec  1 20:39:52 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;呵呵,谢谢啊&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我来尝试解释：TomasMao (毛豆)的方法：&lt;/dd&gt;
+&lt;dd&gt;1.首先反转串的后半部分。&lt;/dd&gt;
+&lt;dd&gt;2.把反转后的后半子串平移到前半部分来。这样以后就把结果串的前半部分弄好了。&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;Superren (西门飘雪) 于  (Fri Dec  1 22:57:12 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;#include &lt;stdio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;conio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;string.h&gt;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;TomasMao (毛豆)方法不错,但是&amp;rdquo;if else&amp;rdquo;代码段还可精简&lt;code&gt;add = (len+1)/2;&lt;/code&gt;
+该语句把奇偶情况全包含了.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;ray (小平) 于  (Fri Dec  1 23:13:41 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;阅，
+抄送家宝！&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;Superren (西门飘雪) 于  (Sat Dec  2 00:16:43 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;大家方法都不错
+不过对比一下
+还是算&amp;rdquo;毛豆&amp;rdquo;先生是真正的为了解决问题而递归的.
+其它的递归都是为了递归而递归的,与其这样,直接整个翻转就OK了,还费那么大劲
+哈哈,不过都有收获&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Sat Dec  2 14:10:19 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 Superren (西门飘雪) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;大家方法都不错&lt;/dd&gt;
+&lt;dd&gt;不过对比一下&lt;/dd&gt;
+&lt;dd&gt;还是算&amp;rdquo;毛豆&amp;rdquo;先生是真正的为了解决问题而递归的.&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;递归代价比较大，一般不能不用递归就不要使用递归。
+递归花费了大量的内存空间（系统栈空间和应用堆参数表空间）和函数调用时环境切换的
+时间。&lt;/p&gt;
+
+&lt;p&gt;从理论上来说，递归可以使用递推来完成，相比之下，递推代码书写量要大些，但代码的
+可控制性更高！&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Sat Dec  2 14:19:09 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 C9456 (C9456) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;递归代价比较大，一般不能不用递归就不要使用递归。&lt;/dd&gt;
+&lt;dd&gt;递归花费了大量的内存空间（系统栈空间和应用堆参数表空间）和函数调用时环境切..&lt;/dd&gt;
+&lt;dd&gt;时间。&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;我也发个：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;string.h&amp;gt;
+#include &amp;lt;malloc.h&amp;gt;
+#include &amp;lt;windows.h&amp;gt;
+#include &amp;lt;winbase.h&amp;gt;
+
+char* reverse(char *str)
+{
+    static char* rev_buf = NULL;
+    static char* Str_Error =&amp;quot;ERROR&amp;quot;;
+    char* ret_buf;
+    int str_len;
+    static int str_count = 0;
+
+    str_len = (int)strlen(str) - str_count;
+    if(str_len &amp;lt; 0)        //递归出口判断条件
+        goto End;
+
+    //分配全局静态空间
+    if(rev_buf == NULL){
+        if((rev_buf = (char*)malloc( sizeof(char)*strlen(str))) != NULL)
+            ZeroMemory(rev_buf, strlen(rev_buf));
+        else
+            return Str_Error;
+    }
+
+    //将返回值，拷贝到全局静态空间中
+    str_count++ ;
+    sprintf(rev_buf,&amp;quot;%s%c&amp;quot;, rev_buf, *reverse(str));
+    str_count --;
+
+End:
+    if(str_count == 0){
+        sprintf(rev_buf,&amp;quot;%s%c&amp;quot;, rev_buf, *(str));        //最后返回，差一个字节，此处补上
+        if((ret_buf = malloc(sizeof(char)*strlen(str))) != NULL){
+            strcpy(ret_buf, rev_buf);                    //静态缓冲空间不便作返回值
+        //    ZeroMemory(rev_buf, strlen(rev_buf));      //清空内存数据，再次使用不用malloc
+            rev_buf = NULL;                              //清空指针，以便下次该函数使用，之后使用要malloc
+            return ret_buf;                              //返回字符串
+        }
+        return Str_Error;                                //返回出错信息
+    }
+    else
+        return str + str_count;
+}
+
+void main(void)
+{
+    char* str = &amp;quot;123456&amp;quot;;
+    char* str1 = &amp;quot;123456789&amp;quot;;
+    char str2[20];
+    strcpy(str2, reverse(str1));
+    printf(&amp;quot;%s\n%s\n&amp;quot;, reverse(str), reverse(str1));
+    printf(&amp;quot;%s\n&amp;quot;, str2);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;steam (少上bbs,多读书) 于  (Sat Dec  2 14:31:05 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;也原创一下&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *buf)
+{
+    static char *pBuf=buf;
+
+    char ch=*buf;
+    if(*(++buf)!=&#39;\0&#39;)
+        reverse(buf);
+    *(pBuf++)=ch;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sat Dec  2 15:02:33 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;逻辑好像不对.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 steam (少上bbs,多读书) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;也原创一下&lt;/dd&gt;
+&lt;dd&gt;void reverse(char *buf)&lt;/dd&gt;
+&lt;dd&gt;{&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;steam (javaing) 于  (Sat Dec  2 15:10:56 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;为啥不对？
+你试了没&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;逻辑好像不对.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sat Dec  2 15:15:22 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;steam的算法也很简单.但只是忘记考虑static初始化只能执行一次的问题.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;逻辑好像不对.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sat Dec  2 15:35:30 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;好复杂啊.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 C9456 (C9456) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我也发个：&lt;/dd&gt;
+&lt;dd&gt;#include &lt;stdio.h&gt;&lt;/dd&gt;
+&lt;dd&gt;#include &lt;string.h&gt;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sat Dec  2 15:36:55 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我试了.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 steam (javaing) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;为啥不对？&lt;/dd&gt;
+&lt;dd&gt;你试了没&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;steam (javaing) 于  (Sat Dec  2 15:38:10 2006)  提到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;void reverse(char *buf)
+{
+    static char *pBuf=0;
+    static int n=0;
+    if(n==0)
+        pBuf=buf;
+    n++;
+    char ch=*buf;
+    if(*(++buf)!=&#39;\0&#39;)
+        reverse(buf);
+    *(pBuf++)=ch;
+    n--;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;好复杂啊.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Sun Dec  3 09:58:17 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想大家写程序到一定层度都会觉得递归很有意思。&lt;/dd&gt;
+&lt;dd&gt;其实，我们接触很多算法都可以用递归实现的——虽然很多可能没有必要。&lt;/dd&gt;
+&lt;dd&gt;举个例子：&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;一天没看，已经回了这么多拉，哈哈&lt;/p&gt;
+
+&lt;p&gt;想必大家都对reverse有了较深入的了解，&lt;/p&gt;
+
+&lt;p&gt;现在让我们再回到原点&amp;hellip;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;开始我给了一个逆序十进制数的程序&lt;/p&gt;
+
+&lt;p&gt;int fx(int n, int k)
+{
+    return (n)? fx(n/10, k*10+(n%10)): k;
+}&lt;/p&gt;
+
+&lt;p&gt;main()
+{
+    printf(&amp;ldquo;%d\n&amp;rdquo;, fx(119, 0));
+}&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;fx也是设置了一个辅助参数k。参考reverse的方法，
+我们也可以把k去掉。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int fx(int n)
+{
+    static int stk;
+    static int k;
+
+    if(!stk) k = 0;
+
+    stk++;
+    if(n) { k = k*10 + n%10; fx(n/10); }
+    stk--;
+
+    return k;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当然这种修改没什么特别之处。我的目的是要进一步考察它们的联系&amp;hellip;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;fx把十进制119逆序为911，reverse则是把字符串逆序。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;那么我们是否可以把reverse要逆序的字符串也看作是一个数呢？&lt;/p&gt;
+
+&lt;p&gt;当然可以了，一个char占一个字节8个二进制位，因此权值为256&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;从这个角度看的话，fx的方法同样也可以用于实现reverse。&lt;/p&gt;
+
+&lt;p&gt;和二进制相似，&lt;code&gt;reverse&lt;/code&gt;的&lt;code&gt;str/256&lt;/code&gt;和&lt;code&gt;str%256&lt;/code&gt;我们可以利用左移来实现。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char *str)
+{
+    static int stk;
+    static char *s;
+
+    if(!stk) s = str + strlen(str) - 1;
+
+    stk++;
+    if(str &amp;lt; s)
+    {
+        char *p = s - 1;
+        char c = *p;
+
+        while(*(p+1))
+        {
+            *p = *(p+1); p++;
+        }
+        *p = c;
+
+        s--; reverse(str);
+    }
+    stk--;
+
+    return str;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中&lt;code&gt;str-s&lt;/code&gt;对应fx中当前的n，s到末尾对应fx中的k。&lt;/p&gt;
+
+&lt;p&gt;今天还有事情，先写这些了&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Sun Dec  3 10:44:03 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;确实精巧,深刻.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一天没看，已经回了这么多拉，哈哈&lt;/dd&gt;
+&lt;dd&gt;想必大家都对reverse有了较深入的了解，&lt;/dd&gt;
+&lt;dd&gt;现在让我们再回到原点&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Mon Dec  4 08:49:44 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一天没看，已经回了这么多拉，哈哈&lt;/dd&gt;
+&lt;dd&gt;想必大家都对reverse有了较深入的了解，&lt;/dd&gt;
+&lt;dd&gt;现在让我们再回到原点&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;现在再把算法左右对称一下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char *reverse(char *str)
+{
+    static int stk;
+    static char *s;
+
+    if(!stk) s = str;
+
+    stk++;
+    if(*str)
+    {
+        char *p = str, t = *p;
+        while(p &amp;gt; s) { *p = *(p-1); p--; }
+        *p = t;
+
+        reverse(str+1);
+    }
+    stk--;
+
+    return str;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样我们就得到另一种完整的方法&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 09:21:09 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;恩.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Mon Dec  4 09:32:27 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;一天没看，已经回了这么多拉，哈哈&lt;/dd&gt;
+&lt;dd&gt;想必大家都对reverse有了较深入的了解，&lt;/dd&gt;
+&lt;dd&gt;现在让我们再回到原点&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;呵呵，
+思想不错，可惜我没有完全看懂！&lt;/p&gt;
+
+&lt;p&gt;不知道你分析了下其空间复杂度和时间复杂度没有？&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 09:35:15 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我想,如果从你的思路出发,继续向前,还是有路可走的.&lt;/p&gt;
+
+&lt;p&gt;那就是TomasMao(毛豆)的思路.&lt;/p&gt;
+
+&lt;p&gt;他的算法思想如果非要找到一个和你一样的思路的话,到是可以这样解释:&lt;/p&gt;
+
+&lt;p&gt;每次不是除以256,然后取余.而是动态的除以当前串长的一半所代表的权值,然后把另
+一半(也就是余数),赋给K.和你的思想的最大的不同还有一点,就是他的算法就此没有迭代
+得使用算术思想,而是每个递归都仅此一步算术.我想表达的意思是他的算法中的算术不具
+有连续性,不知道说清楚没&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;steam的算法好像是迄今效率最高的.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Mon Dec  4 09:49:52 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我想,如果从你的思路出发,继续向前,还是有路可走的.&lt;/dd&gt;
+&lt;dd&gt;那就是TomasMao(毛豆)的思路.&lt;/dd&gt;
+&lt;dd&gt;他的算法思想如果非要找到一个和你一样的思路的话,到是可以这样解释:&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;哈哈，现在问题终于被展开了&lt;em&gt;_&lt;/em&gt;
+看来我开始的目的已经达到了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 10:12:43 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我发现一规律:就是knuth用三个点(&amp;hellip;)的时候一定是笑里藏刀,绵里藏针&amp;hellip;醉翁之意
+不在酒&amp;hellip;更大的还在后头&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;哈哈&amp;hellip;^_^&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;TomasMao (毛豆) 于  (Mon Dec  4 10:44:22 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;递归问题没必要弄得这么复杂吧？
+我觉得递归就是将一个问题和子问题的相似性利用起来
+这样使程序看起来非常简洁&lt;/p&gt;
+
+&lt;p&gt;我想当初那些做编译器的人支持递归也是发现了很多程序问题，子问题跟原问题有相似性
+如果让人为的实现这些相似性比如自己构造堆栈来实现递归非常麻烦
+那么我们就让编译器帮我们实现，于是开始支持递归
+我是这么想的，反正就是为了方便程序员处理问题
+像算法里面的动态规划和分治这两个最常用最重要的算法都用到了递归，可见递归的重要性。&lt;/p&gt;
+
+&lt;p&gt;还有一点就是程序就是为了帮助程序员解决问题
+所以我觉得还是把精力放到解决问题上比较好
+不用拿一些解决问题方法例如递归，或者一些语言的特性研究半天
+其实语言为什么有那么多种？就是因为要解决不同的问题，写脚步用脚本语言perl python shell
+开发大规模现实应用程序需要接近人类思维需要面向对象c++ java，底层开发要接近硬件思维c语言，汇编语言。
+还有数据库查询也需要自己的SQL语言。总之一句话什么方便用什么，什么让程序员能快速解决问题用什么。
+任何语言都有它存在的道理。大家不但要学习这些语言还要明白为什么要学习使用这些语言
+不要只学习知识而忘记学习知识的目的
+其实递归好像也没什么好研究的&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;哈哈，现在问题终于被展开了&lt;em&gt;_&lt;/em&gt;&lt;/dd&gt;
+&lt;dd&gt;看来我开始的目的已经达到了&amp;hellip;&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Mon Dec  4 12:00:21 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;递归问题没必要弄得这么复杂吧？&lt;/dd&gt;
+&lt;dd&gt;我觉得递归就是将一个问题和子问题的相似性利用起来&lt;/dd&gt;
+&lt;dd&gt;这样使程序看起来非常简洁&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;说得极是！&lt;/p&gt;
+
+&lt;p&gt;能不用递归就不要用递归！
+空间复杂度问题始终是递归使用者忽略的问题。&lt;/p&gt;
+
+&lt;p&gt;对于程序员来说，递归是简单了编程的过程，但对计算机来说是个挑战！&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;kusa (时代青年) 于  (Mon Dec  4 13:30:43 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;递归问题没必要弄得这么复杂吧？&lt;/dd&gt;
+&lt;dd&gt;我觉得递归就是将一个问题和子问题的相似性利用起来&lt;/dd&gt;
+&lt;dd&gt;这样使程序看起来非常简洁&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;递归遍历的效率一般是比较低的!&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;steam (javaing) 于  (Mon Dec  4 15:42:23 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;效率暂时不谈，考虑堆栈可能溢出的问题，很多时候对递归没安全感,虽然用它来描述思想
+和编写程序比较简单。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 TomasMao (毛豆) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;递归问题没必要弄得这么复杂吧？&lt;/dd&gt;
+&lt;dd&gt;我觉得递归就是将一个问题和子问题的相似性利用起来&lt;/dd&gt;
+&lt;dd&gt;这样使程序看起来非常简洁&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 16:03:15 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;我同意的你部分观点,但不同意另外一部分.&lt;/p&gt;
+
+&lt;p&gt;首先,一个小概念的澄清.编译器设计和程序设计语言的设计不是等同的.语言递归特征
+的出现我想当初是人的求解思路的直接要求.像菲波那楔数列的定义和其他某些事物的定义
+本身就引导我们使用一种叫递归的东西去求解,所以在&amp;rdquo;语言设计&amp;rdquo;中加入了这个特征.我印
+象中是有语言不支持函数直接调用自身的的,但我们可以用两个函数互相调用来解决这个问
+题,我想.&lt;/p&gt;
+
+&lt;p&gt;其次,每个人研究的层次不同,这个层次有高低之分,但没有贵贱之分.这个贵贱不是人
+的,而是问题的&amp;mdash;-没有.我的意思是说不论是对语言特征应用的讨论还是问题建模的讨论
+还是对思路的讨论都很重要.不同的语言对思维有不一样的反作用,&amp;ldquo;解决问题&amp;rdquo;总要使用语
+言,总要被它的特征所拓展和限制&amp;mdash;-无论是自然语言,数学语言,亦或计算机程序设计语言
+.(关于语言与思维的关系的讨论详见我发在数学工具版的&lt;My Perspective of Programmi
+ng Language&gt;).&lt;/p&gt;
+
+&lt;p&gt;最后,这次讨论我受到很多启发.&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Mon Dec  4 16:19:07 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;我同意的你部分观点,但不同意另外一部分.&lt;/dd&gt;
+&lt;dd&gt;首先,一个小概念的澄清.编译器设计和程序设计语言的设计不是等同的.语言递?..&lt;/dd&gt;
+&lt;dd&gt;的出现我想当初是人的求解思路的直接要求.像菲波那楔数列的定义和其他某些事物?..&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;呵呵，
+多搞这样的讨论才好啊！
+讨论是个让我们进步很快的方法！&lt;/p&gt;
+
+&lt;p&gt;强烈建议大家多讨论。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Mon Dec  4 18:52:13 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 C9456 (C9456) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;呵呵，&lt;/dd&gt;
+&lt;dd&gt;多搞这样的讨论才好啊！&lt;/dd&gt;
+&lt;dd&gt;讨论是个让我们进步很快的方法！&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;看来大家讨论的还是很激烈啊&lt;em&gt;_&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;本来还想继续深入的，
+但刚才看了帖子已经到60楼了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;因此，就先告一段落吧。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;stdlib.h&amp;gt;
+
+void main(void)
+{
+    unsigned n = 1;
+    while(malloc(n &amp;lt;&amp;lt;= 1));
+    main();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不过不知道这个程序是否能停止得了&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;magicGG (magicGG) 于  (Mon Dec  4 19:16:05 2006)  提到:&lt;/p&gt;
+
+&lt;p&gt;三个点,注意到没?&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;knuth (Knuth) 于  (Mon Dec  4 19:17:36 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 magicGG (magicGG) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;三个点,注意到没?&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;哈哈，觉得magicGG兄很幽默啊。&lt;/p&gt;
+
+&lt;p&gt;☆─────────────────────────────────────☆&lt;/p&gt;
+
+&lt;p&gt;C9456 (C9456) 于  (Mon Dec  4 20:28:24 2006)  提到:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;dl&gt;
+&lt;dt&gt;【 在 knuth (Knuth) 的大作中提到: 】&lt;/dt&gt;
+&lt;dd&gt;看来大家讨论的还是很激烈啊&lt;em&gt;_&lt;/em&gt;&lt;/dd&gt;
+&lt;dd&gt;本来还想继续深入的，&lt;/dd&gt;
+&lt;dd&gt;但刚才看了帖子已经到60楼了&amp;hellip;&lt;/dd&gt;
+&lt;dd&gt;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;&amp;hellip;.&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;内存完了就会异常结束！&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>浅析求素数算法</title>
+      <link>https://chai2010.cn/post/2006/prime-notes/</link>
+      <pubDate>Fri, 27 Oct 2006 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2006/prime-notes/</guid>
+      
+        <description>&lt;p&gt;注意: 如果没有特殊说明, 以下讨论的都是针对n为素数时的时间复杂度&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. 根据概念判断&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;如果一个正整数只有两个因子, 1和p，则称p为素数.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bool isPrime(int n)
+{
+    if(n &amp;lt; 2) return false;
+    for(int i = 2; i &amp;lt; n; ++i)
+        if(n%i == 0) return false;
+    return true;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;时间复杂度&lt;code&gt;O(n)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2. 改进, 去掉偶数的判断&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bool isPrime(int n)
+{
+    if(n &amp;lt; 2) return false;
+    if(n == 2) return true;
+    if(n%2 == 0) return false;
+
+    for(int i = 3; i &amp;lt; n; i += 2)
+        if(n%i == 0) return false;
+    return true;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;时间复杂度&lt;code&gt;O(n/2)&lt;/code&gt;, 速度提高一倍.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;3. 进一步减少判断的范围&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;定理: 如果n不是素数, 则n有满足1&amp;lt;d&amp;lt;=sqrt(n)的一个因子d.&lt;/li&gt;
+&lt;li&gt;证明: 如果n不是素数, 则由定义n有一个因子d满足1&amp;lt;d&amp;lt;n.&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;如果d大于sqrt(n), 则n/d是满足1&amp;lt;n/d&amp;lt;=sqrt(n)的一个因子.&lt;/p&gt;
+
+&lt;p&gt;bool isPrime(int n)
+{
+    if(n &amp;lt; 2) return false;
+    if(n == 2) return true;
+    if(n%2 == 0) return false;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for(int i = 3; i*i &amp;lt;= n; i += 2)
+    if(n%i == 0) return false;
+return true;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;}&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;时间复杂度&lt;code&gt;O(sqrt(n)/2)&lt;/code&gt;, 速度提高&lt;code&gt;O((n-sqrt(n))/2)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;4. 剔除因子中的重复判断&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;例如: &lt;code&gt;11%3 != 0&lt;/code&gt; 可以确定 &lt;code&gt;11%(3*i) != 0&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;如果n不是素数, 则n有满足1&amp;lt;d&amp;lt;=sqrt(n)的一个&amp;rdquo;素数&amp;rdquo;因子d.&lt;/li&gt;
+&lt;li&gt;I1. 如果n不是素数, 则n有满足1&amp;lt;d&amp;lt;=sqrt(n)的一个因子d.&lt;/li&gt;
+&lt;li&gt;I2. 如果d是素数, 则定理得证, 算法终止.&lt;/li&gt;
+&lt;li&gt;I3. 令n=d, 并转到步骤I1.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;由于不可能无限分解n的因子, 因此上述证明的算法最终会停止.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// primes[i]是递增的素数序列: 2, 3, 5, 7, ...
+// 更准确地说primes[i]序列包含1-&amp;gt;sqrt(n)范围内的所有素数
+bool isPrime(int primes[], int n)
+{
+    if(n &amp;lt; 2) return false;
+
+    for(int i = 0; primes[i]*primes[i] &amp;lt;= n; ++i)
+        if(n%primes[i] == 0) return false;
+    return true;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;假设n范围内的素数个数为&lt;code&gt;PI(n)&lt;/code&gt;, 则时间复杂度&lt;code&gt;O(PI(sqrt(n)))&lt;/code&gt;.
+函数&lt;code&gt;PI(x)&lt;/code&gt;满足素数定理: &lt;code&gt;ln(x)-3/2 &amp;lt; x/PI(x) &amp;lt; ln(x)-1/2&lt;/code&gt;, 当&lt;code&gt;x &amp;gt;= 67&lt;/code&gt;时.
+因此&lt;code&gt;O(PI(sqrt(n)))&lt;/code&gt;可以表示为&lt;code&gt;O(sqrt(x)/(ln(sqrt(x))-3/2))&lt;/code&gt;,
+&lt;code&gt;O(sqrt(x)/(ln(sqrt(x))-3/2))&lt;/code&gt;也是这个算法的空间复杂度.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;5. 构造素数序列&lt;code&gt;primes[i]: 2, 3, 5, 7, ...&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;由4的算法我们知道, 在素数序列已经被构造的情况下, 判断n是否为素数效率很高;
+但是, 在构造素数序列本身的时候, 是否也可是达到最好的效率呢?&lt;/p&gt;
+
+&lt;p&gt;事实上这是可以的, 我们在构造的时候完全可以利用已经被构造的素数序列!
+假设我们已经我素数序列: &lt;code&gt;p1, p2, .. pn&lt;/code&gt;.
+现在要判断&lt;code&gt;pn+1&lt;/code&gt;是否是素数, 则需要&lt;code&gt;(1, sqrt(pn+1)]&lt;/code&gt;范围内的所有素数序列,&lt;/p&gt;
+
+&lt;p&gt;而这个素数序列显然已经作为&lt;code&gt;p1, p2, .. pn&lt;/code&gt;的一个子集被包含了!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 构造素数序列primes[]
+void makePrimes(int primes[], int num)
+{
+    int i, j, cnt;
+
+    primes[0] = 2;
+    primes[1] = 3;
+
+    for(i = 5, cnt = 2; cnt &amp;lt; num; i += 2)
+    {
+        int flag = true;
+        for(j = 1; primes[j]*primes[j] &amp;lt;= i; ++j)
+        {
+            if(i%primes[j] == 0)
+            {
+                flag = false; break;
+            }
+        }
+        if(flag) primes[cnt++] = i;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;makePrimes&lt;/code&gt;的时间复杂度比较复杂, 而且它只有在初始化的时候才被调用一次.
+在一定的应用范围内, 我们可以把近似认为&lt;code&gt;makePrimes&lt;/code&gt;需要常数时间.
+在后面的讨论中, 我们将探讨一种对计算机而言更好的&lt;code&gt;makePrimes&lt;/code&gt;方法.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;6. 更好地利用计算机资源&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;当前的主流PC中, 一个整数的大小为&lt;code&gt;2^32&lt;/code&gt;. 如果需要判断&lt;code&gt;2^32&lt;/code&gt;大小的数是否为素数,
+则可能需要测试&lt;code&gt;[2, 2^16]&lt;/code&gt;范围内的所有素数&lt;code&gt;(2^16 == sqrt(2^32))&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;由4中提到的素数定理我们可以大概确定&lt;code&gt;[2, 2^16]&lt;/code&gt;范围内的素数个数.
+由于&lt;code&gt;2^16/(ln(2^16)-1/2) = 6138, 2^16/(ln(2^16)-3/2) = 6834&lt;/code&gt;,&lt;/p&gt;
+
+&lt;p&gt;我们可以大概估计出&lt;code&gt;[2, 2^16]&lt;/code&gt;范围内的素数个数&lt;code&gt;6138 &amp;lt; PI(2^16) &amp;lt; 6834&lt;/code&gt;.
+在对&lt;code&gt;[2, 2^16]&lt;/code&gt;范围内的素数进行统计, 发现只有&lt;code&gt;6542&lt;/code&gt;个素数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;p_6542: 65521, 65521^2 = 4293001441 &amp;lt; 2^32, (2^32 = 4294967296)
+p_6543: 65537, 65537^2 = 4295098369 &amp;gt; 2^32, (2^32 = 4294967296)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在实际运算时&lt;code&gt;unsigned long x = 4295098369;&lt;/code&gt;将发生溢出, 为&lt;code&gt;131073&lt;/code&gt;.
+在程序中, 我是采用double类型计算得到的结果.&lt;/p&gt;
+
+&lt;p&gt;分析到这里我们可以看到, 我们只需要缓冲6543个素数, 我们就可以采用4中的算法
+高效率地判断[2, 2^32]如此庞大范围内的素数!
+(原本的2^32大小的问题规模现在已经被减小到6543规模了!)&lt;/p&gt;
+
+&lt;p&gt;虽然用现在的计算机处理&lt;code&gt;[2, 2^16]&lt;/code&gt;范围内的&lt;code&gt;6542&lt;/code&gt;个素数已经没有一点问题,
+虽然&lt;code&gt;makePrimes&lt;/code&gt;只要被运行一次就可以, 但是我们还是考虑一下是否被改进的可能?!
+我想学过java的人肯定想把&lt;code&gt;makePrimes&lt;/code&gt;作为一个静态的初始化实现, 在C++中也可以
+模拟java中静态的初始化的类似实现:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#define NELEMS(x) ((sizeof(x)) / (sizeof((x)[0])))
+
+static int primes[6542+1];
+static struct _Init { _Init(){makePrimes(primes, NELEMS(primes);} } _init;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如此, 就可以在程序启动的时候自动掉用&lt;code&gt;makePrimes&lt;/code&gt;初始化素数序列.&lt;/p&gt;
+
+&lt;p&gt;但, 我现在的想法是: 为什么我们不能在编译的时候调用&lt;code&gt;makePrimes&lt;/code&gt;函数呢?
+完全可以!&lt;/p&gt;
+
+&lt;p&gt;代码如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 这段代码可以由程序直接生成
+const static int primes[] =
+{
+    2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,
+    107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,
+    223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,
+    337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,
+    457,461,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571,577,587,
+    593,599,601,607,613,617,619,631,641,643,647,653,659,661,673,677,683,691,701,709,
+    719,727,733,739,743,751,757,761,769,773,787,797,809,811,821,823,827,829,839,853,
+    857,859,863,877,881,883,887,907,911,919,929,937,941,947,953,967,971,977,983,991,
+    ...
+    65521, 65537
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有点不可思议吧心情好, 原本&lt;code&gt;makePrimes&lt;/code&gt;需要花费的时间复杂度现在真的变成&lt;code&gt;O(1)&lt;/code&gt;了!
+(我觉得叫O(0)可能更合适!)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;7. 二分法查找&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;现在我们缓存了前大约&lt;code&gt;sqrt(2^32)/(ln(sqrt(2^32)-3/2))&lt;/code&gt;个素数列表, 在判断2^32级别的
+素数时最多也只需要&lt;code&gt;PI(sqrt(2^32))&lt;/code&gt;次判断(准确值是&lt;code&gt;6543&lt;/code&gt;次), 但是否还有其他的方式判断呢?
+当素数比较小的时候(不大于&lt;code&gt;2^16&lt;/code&gt;), 是否可以直接从缓存的素数列表中直接查询得到呢?
+答案是肯定的! 由于&lt;code&gt;primes&lt;/code&gt;是一个有序的数列, 因此我们当素数小于&lt;code&gt;2^16&lt;/code&gt;时, 我们可以直接
+采用二分法从primes中查询得到(如果查询失败则不是素数).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;static bool cmp(const int *p, const int *q)
+{
+    return (*p) - (*q);
+}
+
+bool isPrime(int n)
+{
+    if(n &amp;lt; 2) return false;
+    if(n == 2) return true;
+    if(n%2 == 0) return false;
+
+    if(n &amp;gt;= 67 &amp;amp;&amp;amp; n &amp;lt;= primes[NELEMS(primes)-1])
+    {
+        return NULL !=
+            bsearch(&amp;amp;n, primes, NELEMS(primes), sizeof(n), cmp);
+    }
+    else
+    {
+        for(int i = 1; primes[i]*primes[i] &amp;lt;= n; ++i)
+            if(n%primes[i] == 0) return false;
+        return true;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;时间复杂度:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if(n &amp;lt;= primes[NELEMS(primes)-1] &amp;amp;&amp;amp; n &amp;gt;= 67): O(log2(NELEMS(primes))) &amp;lt; 13;
+if(n &amp;gt; primes[NELEMS(primes)-1]): O(PI(sqrt(n))) &amp;lt;= NELEMS(primes).
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;8. 素数定理+2分法查找&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在7中, 我们对小等于&lt;code&gt;primes[NELEMS(primes)-1]&lt;/code&gt;的数采用2分法查找进行判断.
+我们之前针对&lt;code&gt;2^32&lt;/code&gt;缓冲的&lt;code&gt;6453&lt;/code&gt;个素数需要判断的次数为13次&lt;code&gt;(log2(1024*8) == 13)&lt;/code&gt;.
+对于小的素数而言(其实就是2^16范围只内的数), 13次的比较已经完全可以接受了.&lt;/p&gt;
+
+&lt;p&gt;不过根据素数定理: &lt;code&gt;ln(x)-3/2 &amp;lt; x/PI(x) &amp;lt; ln(x)-1/2&lt;/code&gt;, 当&lt;code&gt;x &amp;gt;= 67&lt;/code&gt;时, 我们依然
+可以进一步缩小小于&lt;code&gt;2^32&lt;/code&gt;情况的查找范围(现在是&lt;code&gt;0&lt;/code&gt;到&lt;code&gt;NELEMS(primes)-1&lt;/code&gt;范围查找).
+我们需要解决问题是(&lt;code&gt;n &amp;lt;= primes[NELEMS(primes)-1&lt;/code&gt;):&lt;/p&gt;
+
+&lt;p&gt;如果n为素数, 那么它在素数序列可能出现的范围在哪?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(n/(ln(n)-1/2), n/(ln(n)-3/2))&lt;/code&gt;, 即素数定理!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上面的代码修改如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bool isPrime(int n)
+{
+    if(n &amp;lt; 2) return false;
+    if(n == 2) return true;
+    if(n%2 == 0) return false;
+
+    int hi = (int)ceil(n/(ln(n)-3/2));
+
+    if(n &amp;gt;= 67 &amp;amp;&amp;amp; hi &amp;lt; NELEMS(primes))
+    {
+        int lo = (int)floor(n/(ln(n)-1/2));
+
+        return NULL !=
+            bsearch(&amp;amp;n, primes+lo, hi-lo, sizeof(n), cmp);
+    }
+    else
+    {
+        for(int i = 1; primes[i]*primes[i] &amp;lt;= n; ++i)
+            if(n%primes[i] == 0) return false;
+        return true;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;时间复杂度:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if(n &amp;lt;= primes[NELEMS(primes)-1] &amp;amp;&amp;amp; n &amp;gt;= 67): O(log2(hi-lo))) &amp;lt; ???;
+if(n &amp;gt; primes[NELEMS(primes)-1]): O(PI(sqrt(n))) &amp;lt;= NELEMS(primes).
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;9. 回顾, 以及推广&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;到目前为止, 我已经给出了我所知道所有改进的方法(如果有人有更好的算法感谢告诉我).
+这里需要强调的一点是, 这里讨论的素数求法是针对&lt;code&gt;0-2^32&lt;/code&gt;范围的数而言, 至于像寻找
+成百上千位大小的数不在此讨论范围, 那应该算是纯数学的内容了.&lt;/p&gt;
+
+&lt;p&gt;到这里, 关于素数的讨论基本告一段落. 回顾我们之前的求解过程, 我们会发现
+如果缺少数学的基本知识会很难设计好的算法; 但是如果一味地只考虑数学原理,
+而忽律了计算机的本质特征, 也会有同样的问题.&lt;/p&gt;
+
+&lt;p&gt;一个很常见的例子就是求Fibonacci数列. 当然方法很多, 但是在目前的计算机中
+都没有实现的必要!&lt;/p&gt;
+
+&lt;p&gt;因为Fibonacci数列本身是指数增长的, 32位的有符号整数所能表示的位置只有前46个:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 1, 1, 2, 3, 5, 8, ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因此, 我只需要把前46个Fibonacci数保存到数组中就可以搞定了!
+比如: &lt;code&gt;F(int i) = {return Fibonacci[i];}&lt;/code&gt; 非常简单, 效率也非常好.
+同样的例子如求阶乘n!, 虽然也有很多数学上的描述, 但是计算机一般都表示不了,
+我们直接把能用的计算好放到内存中就可以了.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;补充: 基于费马小定理判定&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// 函数: bool isPrime(unsigned n);
+// 描述: 判断n是否为素数
+// 算法: 费马小定理-卡尔麦克数
+// 时间: 2006-11-04
+
+#include &amp;lt;assert.h&amp;gt;
+#include &amp;lt;stdlib.h&amp;gt;
+
+// 计算数组的元素个数
+#define NELEMS(x) ((sizeof(x)) / (sizeof((x)[0])))
+
+// 2^32范围内的所有卡尔麦克数
+static const unsigned CarmichaeNumbers[] =
+{
+561,1105,1729,2465,2821,6601,8911,10585,15841,29341,41041,46657,52633,62745,
+63973,75361,101101,115921,126217,162401,172081,188461,252601,278545,294409,
+314821,334153,340561,399001,410041,449065,488881,512461,530881,552721,656601,
+658801,670033,748657,825265,838201,852841,997633,1024651,1033669,1050985,
+1082809,1152271,1193221,1461241,1569457,1615681,1773289,1857241,1909001,
+2100901,2113921,2433601,2455921,2508013,2531845,2628073,2704801,3057601,
+3146221,3224065,3581761,3664585,3828001,4335241,4463641,4767841,4903921,
+4909177,5031181,5049001,5148001,5310721,5444489,5481451,5632705,5968873,
+6049681,6054985,6189121,6313681,6733693,6840001,6868261,7207201,7519441,
+7995169,8134561,8341201,8355841,8719309,8719921,8830801,8927101,9439201,
+9494101,9582145,9585541,9613297,9890881,10024561,10267951,10402561,10606681,
+10837321,10877581,11119105,11205601,11921001,11972017,12261061,12262321,
+12490201,12945745,13187665,13696033,13992265,14469841,14676481,14913991,
+15247621,15403285,15829633,15888313,16046641,16778881,17098369,17236801,
+17316001,17586361,17812081,18162001,18307381,18900973,19384289,19683001,
+20964961,21584305,22665505,23382529,25603201,26280073,26474581,26719701,
+26921089,26932081,27062101,27336673,27402481,28787185,29020321,29111881,
+31146661,31405501,31692805,32914441,33302401,33596641,34196401,34657141,
+34901461,35571601,35703361,36121345,36765901,37167361,37280881,37354465,
+37964809,38151361,38624041,38637361,39353665,40160737,40280065,40430401,
+40622401,40917241,41298985,41341321,41471521,42490801,43286881,43331401,
+43584481,43620409,44238481,45318561,45877861,45890209,46483633,47006785,
+48321001,48628801,49333201,50201089,53245921,53711113,54767881,55462177,
+56052361,58489201,60112885,60957361,62756641,64377991,64774081,65037817,
+65241793,67371265,67653433,67902031,67994641,68154001,69331969,70561921,
+72108421,72286501,74165065,75151441,75681541,75765313,76595761,77826001,
+78091201,78120001,79411201,79624621,80282161,80927821,81638401,81926461,
+82929001,83099521,83966401,84311569,84350561,84417985,87318001,88689601,
+90698401,92625121,93030145,93614521,93869665,94536001,96895441,99036001,
+99830641,99861985,100427041,101649241,101957401,102090781,104404861,104569501,
+104852881,105117481,105309289,105869401,106041937,107714881,109393201,109577161,
+111291181,114910489,115039081,115542505,116682721,118901521,119327041,120981601,
+121247281,122785741,124630273,127664461,128697361,129255841,129762001,130032865,
+130497361,132511681,133205761,133344793,133800661,134809921,134857801,135556345,
+136625941,139592101,139952671,140241361,144218341,145124785,146843929,150846961,
+151530401,151813201,153589801,153927961,157731841,158404141,158864833,159492061,
+161035057,161242705,161913961,163954561,167979421,168659569,169057801,169570801,
+170947105,171454321,171679561,172290241,172430401,172947529,173085121,174352641,
+175997185,176659201,178451857,178482151,178837201,180115489,181154701,182356993,
+184353001,186393481,186782401,187188001,188516329,188689501,189941761,193708801,
+193910977,194120389,194675041,196358977,200753281,206955841,208969201,212027401,
+213835861,214850881,214852609,216821881,221884001,225745345,226509361,227752993,
+228842209,230630401,230996949,231194965,237597361,238244041,238527745,241242001,
+242641153,246446929,247095361,250200721,252141121,255160621,256828321,257495641,
+258634741,266003101,270857521,271481329,271794601,273769921,274569601,275283401,
+277241401,278152381,279377281,280067761,280761481,288120421,289766701,289860481,
+291848401,292244833,292776121,295643089,295826581,296559361,299736181,300614161,
+301704985,302751505,306871201,311388337,318266641,321197185,321602401,325546585,
+328573477,329769721,333065305,333229141,334783585,338740417,346808881,348612265,
+354938221,357277921,357380101,358940737,360067201,362569201,364590721,366532321,
+366652201,367804801,367939585,368113411,382304161,382536001,390489121,392099401,
+393122521,393513121,393716701,395044651,395136505,396262945,399906001,403043257,
+403317421,405739681,413058601,413138881,413631505,416964241,417241045,419520241,
+426821473,429553345,434330401,434932961,438359041,440306461,440707345,455106601,
+458368201,461502097,461854261,462199681,471441001,471905281,473847121,477726145,
+481239361,483006889,484662529,490099681,490503601,492559141,496050841,499310197,
+503758801,507726901,509033161,510825601,511338241,516684961,517937581,518117041,
+518706721,527761081,529782121,530443201,532758241,533860309,540066241,542497201,
+544101481,545363281,545570641,547652161,548871961,549117205,549333121,549538081,
+551672221,552894301,555465601,556199281,556450777,557160241,557795161,558570961,
+558977761,561481921,561777121,564651361,568227241,569332177,573896881,577240273,
+579606301,580565233,590754385,593234929,595405201,597717121,600892993,602074585,
+602426161,602593441,606057985,609865201,611397865,612347905,612816751,616463809,
+618068881,620169409,621101185,625060801,625482001,629692801,631071001,633639097,
+638959321,642708001,652969351,656187001,662086041,672389641,683032801,683379841,
+684106401,686059921,689880801,697906561,698548201,702683101,703995733,704934361,
+705101761,707926801,710382401,710541481,711374401,713588401,717164449,721244161,
+722923201,727083001,739444021,743404663,744866305,745864945,746706961,752102401,
+759472561,765245881,771043201,775368901,775866001,776176261,781347841,784966297,
+790020001,790623289,794937601,798770161,804978721,809702401,809883361,814056001,
+822531841,824389441,824405041,829678141,832060801,833608321,834244501,834720601,
+836515681,839275921,841340521,842202361,843704401,847491361,849064321,851703301,
+851934601,852729121,854197345,855734401,860056705,863984881,867800701,868234081,
+876850801,882796321,885336481,888700681,891706861,897880321,902645857,914801665,
+918661501,928482241,930745621,931694401,934784929,935794081,939947009,940123801,
+941056273,945959365,947993761,954732853,955134181,957044881,958735681,958762729,
+958970545,962442001,962500561,963163201,963168193,968553181,968915521,975303121,
+977737321,977892241,981567505,981789337,985052881,986088961,990893569,993420289,
+993905641,1001152801,1018928485,1027334881,1030401901,1031750401,1035608041,
+1038165961,1055384929,1070659201,1072570801,1074363265,1079556193,1090842145,
+1093916341,1100674561,1103145121,1125038377,1131222841,1132988545,1134044821,
+1136739745,1138049137,1140441121,1150270849,1152793621,1162202581,1163659861,
+1177195201,1177800481,1180398961,1183104001,1189238401,1190790721,1193229577,
+1194866101,1198650961,1200456577,1200778753,1206057601,1207252621,1210178305,
+1213619761,1214703721,1216631521,1223475841,1227220801,1227280681,1232469001,
+1251295501,1251992281,1254318481,1256855041,1257102001,1260332137,1264145401,
+1268604001,1269295201,1271325841,1295577361,1299963601,1309440001,1312114945,
+1312332001,1316958721,1317828601,1318126321,1321983937,1330655041,1332521065,
+1337805505,1348964401,1349671681,1362132541,1376844481,1378483393,1382114881,
+1384157161,1394746081,1394942473,1404111241,1404228421,1407548341,1410833281,
+1419339691,1420379065,1422477001,1423668961,1428966001,1439328001,1439492041,
+1441316269,1442761201,1445084173,1452767521,1481619601,1483199641,1490078305,
+1490522545,1504651681,1505432881,1507746241,1515785041,1520467201,1521835381,
+1528936501,1529544961,1534274841,1540454761,1545387481,1571503801,1573132561,
+1574601601,1576826161,1583582113,1588247851,1592668441,1597009393,1597821121,
+1615335085,1618206745,1626167341,1632785701,1641323905,1646426881,1648076041,
+1657700353,1659935761,1672719217,1674309385,1676203201,1676641681,1678569121,
+1685266561,1688214529,1688639041,1689411601,1690230241,1696572001,1698623641,
+1699279441,1701016801,1705470481,1708549501,1726372441,1746692641,1750412161,
+1752710401,1760460481,1769031901,1772267281,1773486001,1776450565,1778382541,
+1784291041,1784975941,1785507361,1795216501,1801558201,1803278401,1817067169,
+1825568641,1828377001,1831048561,1833328621,1836304561,1841034961,1845871105,
+1846817281,1848112761,1848681121,1849811041,1854001513,1855100017,1858395529,
+1879480513,1887933601,1894344001,1896961801,1899525601,1913016001,1916729101,
+1918052065,1919767681,1932608161,1942608529,1943951041,1949646601,1950276565,
+1954174465,1955324449,1958102641,1962804565,1976295241,1984089601,1988071801,
+1992841201,1999004365,2000436751,2023528501,2029554241,2048443501,2048751901,
+2049293401,2064236401,2064373921,2067887557,2073560401,2080544005,2097317377,
+2101170097,2105594401,2107535221,2111416021,2111488561,2117725921,2126689501,
+2140538401,2140699681,2159003281,2170282969,2176838049,2178944461,2199700321,
+2199931651,2201169601,2212935985,2215407601,2216430721,2217951073,2223876601,
+2224519921,2230305949,2232385345,2239622113,2244932281,2246916001,2258118721,
+2265650401,2272748401,2278677961,2295209281,2301745249,2302419601,2309027281,
+2313774001,2320224481,2320690177,2322648901,2323147201,2332627249,2335640077,
+2339165521,2342644921,2353639681,2359686241,2361232477,2367379201,2377166401,
+2391137281,2396357041,2407376665,2414829781,2430556381,2436691321,2438403661,
+2443829641,2444950561,2456536681,2457411265,2467813621,2470348441,2470894273,
+2479305985,2480343553,2489462641,2494465921,2494621585,2497638781,2509860961,
+2510085721,2519819281,2523947041,2527812001,2529410281,2539024741,2544590161,
+2547621973,2560104001,2560600351,2561945401,2564889601,2573686441,2574243721,
+2575260241,2586927553,2588653081,2597928961,2598933481,2601144001,2602378721,
+2605557781,2607162961,2607237361,2616662881,2617181281,2630374741,2642025673,
+2657502001,2665141921,2677147201,2685422593,2690867401,2693939401,2702470861,
+2709611521,2723859001,2733494401,2735309521,2766172501,2766901501,2770560241,
+2776874941,2787998641,2797002901,2801124001,2806205689,2811315361,2815304401,
+2832480001,2833846561,2842912381,2858298301,2867755969,2942952481,2943556201,
+2965085641,2998467901,3001561441,3007991701,3022354401,3024774901,3025708561,
+3030758401,3034203361,3035837161,3044238121,3044970001,3068534701,3069196417,
+3072080089,3072094201,3077802001,3078386641,3086434561,3088134721,3090578401,
+3102234751,3104207821,3105567361,3112974481,3119101921,3138302401,3159422785,
+3159939601,3164207761,3180288385,3180632833,3188744065,3190894201,3193414093,
+3203895601,3215031751,3222053185,3232450585,3240392401,3245477761,3246238801,
+3248891101,3249390145,3263564305,3264820001,3270933121,3277595665,3281736601,
+3284630713,3307322305,3313196881,3313744561,3314111761,3319323601,3328437481,
+3345878017,3347570941,3348463105,3353809537,3378014641,3380740301,3411338491,
+3413656441,3429457921,3438721441,3441837421,3480174001,3504570301,3508507801,
+3521441665,3534510001,3555636481,3574014445,3575798785,3576804001,3600918181,
+3618244081,3630291841,3637405045,3682471321,3697952401,3711456001,3712280041,
+3713287801,3715938721,3722793481,3727589761,3754483201,3767865601,3776698801,
+3787491457,3799111681,3800513761,3801823441,3805181281,3832646221,3834444901,
+3835537861,3858853681,3863326897,3880251649,3891338101,3892568065,3901730401,
+3907357441,3922752121,3928256641,3951813601,3981047941,3998554561,4015029061,
+4030864201,4034969401,4059151489,4065133501,4077957961,4115677501,4127050621,
+4134273793,4138747921,4146685921,4160472121,4162880401,4167038161,4169092201,
+4169867689,4189909501,4199202001,4199529601,4199932801,4202009461,4210922233,
+4212413569,4215885697,4216799521,4277982241 // 1119: 4295605861, 溢出
+};
+
+// hash表的改进方法, 只需要保存下标
+// 经测试, 最多有6次冲突, b[i][0]保存数目
+// 注意buckets的个维大小是人工测试得到!!
+static short buckets[1021][6+1];
+
+// 自动初始化hash表
+static struct init
+{
+    init(void)
+    {
+        for(int i = 0; i &amp;lt; NELEMS(CarmichaeNumbers); ++i)
+        {
+            // buckets[v]类似一个栈
+            // buckets[v][0]记录栈顶位置
+            // 最多有6次冲突, 不会溢出
+            int key = CarmichaeNumbers[i]%NELEMS(buckets);
+            assert(buckets[key][0] &amp;lt; NELEMS(buckets[0])-1);
+
+            buckets[key][++buckets[key][0]] = i;
+        }
+    }
+} _init;
+
+// bsearch的判断函数
+static int cmp(const void *x, const void *y)
+{
+    return *((unsigned*)x) - *((unsigned*)y);
+}
+
+// 判断是否是卡尔麦克数
+static bool isCarmichaelNum(unsigned n)
+{
+    // 改进: 采用hash表查找
+    int i, key = n%NELEMS(buckets);
+    for(i = 1; i &amp;lt;= buckets[key][0]; ++i)
+        if(n == CarmichaeNumbers[buckets[key][i]]) return true;
+
+    return false;
+
+    // 二分法查表CarmichaeNumbers表
+    return NULL !=
+        bsearch(&amp;amp;n, CarmichaeNumbers, NELEMS(CarmichaeNumbers), sizeof(n), cmp);
+}
+
+// 判断是否是费马(伪)素数
+static bool isFermatNum(unsigned p)
+{
+    unsigned m = p--;
+    unsigned r = 2%m;
+    unsigned k = 1;
+
+    // 蒙格马利快速幂模算法
+    while(p &amp;gt; 1)
+    {
+        if(p&amp;amp;1) k = (k*r) % m;
+        r = (r*r)%m; p &amp;gt;&amp;gt;= 1;
+    }
+
+    return (r*k)%m == 1;
+}
+
+// 根据费马小定理测试
+bool isPrime(unsigned n)
+{
+    // 处理比较特殊的情况
+    if(n &amp;lt; 2) return false;
+    if(n == 2) return true;
+
+    // 是费马(伪)素数但不是卡尔麦克数则必定为素数
+    return isFermatNum(n) &amp;amp;&amp;amp; !isCarmichaelNum(n);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要注意的是基于2的费马伪素数.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

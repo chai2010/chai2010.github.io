@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Golang · chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="chai2010 的博客" />
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/tags/golang/" />
+<link href="https://chai2010.cn/tags/golang/index.xml" rel="alternate" type="application/rss+xml" title="chai2010 的博客" />
+  <link href="https://chai2010.cn/tags/golang/index.xml" rel="feed" type="application/rss+xml" title="chai2010 的博客" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Golang" />
+<meta property="og:description" content="chai2010 的博客" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://chai2010.cn/tags/golang/" />
+
+
+
+<meta property="og:updated_time" content="2019-11-10T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Golang">
+<meta itemprop="description" content="chai2010 的博客">
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Golang"/>
+<meta name="twitter:description" content="chai2010 的博客"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          
+
+<section id="archive" class="archive">
+  
+    
+      <div class="archive-title tag">
+        <h2 class="archive-name">标签： Golang</h2>
+      </div>
+    
+  
+
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2019-11-10
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2019/go-10year/" class="archive-post-link">
+          Go 语言十年而立，Go2 蓄势待发
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2019-05-17
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2019/learn-string/" class="archive-post-link">
+          谈谈Go语言字符串
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2019-05-14
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2019/io-eof-mistake/" class="archive-post-link">
+          io.EOF设计的缺陷和改进
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-10-24
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2018/webdav/" class="archive-post-link">
+          Go语言实现WebDAV文件系统
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-10-21
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2018/window-service/" class="archive-post-link">
+          Go语言和Windows服务
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-10-03
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2018/go-wasm-asm/" class="archive-post-link">
+          Go中的wasm汇编语言
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-10-01
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2018/go-python/" class="archive-post-link">
+          Go实现Python模块
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-09-24
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2018/go-concurrency-03/" class="archive-post-link">
+          Go语言并发编程03 - 并发的内存模型
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-09-21
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2018/go-concurrency-02/" class="archive-post-link">
+          Go语言并发编程02 - 你好，并发
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-09-20
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2018/go-concurrency-01/" class="archive-post-link">
+          Go语言并发编程01 - 并发的演化历史
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-08-25
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2018/go1.11-and-wasm/" class="archive-post-link">
+          Go1.11和WebAssembly
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-08-08
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2018/advanced-go-programming-book-done/" class="archive-post-link">
+          《Go高级编程》初稿完成
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2018-03-08
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/gopherchina/gopherchina2018-chai2010/" class="archive-post-link">
+          Gopher China 2018 讲师专访: 柴树杉
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2016-05-25
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-ios-app/" class="archive-post-link">
+          使用Go语言开发iOS应用(Swift版)
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2015-06-30
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-rust-fans-pk/" class="archive-post-link">
+          驳狗屎文 &#39;我为什么放弃Go语言&#39;
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2015-05-19
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-safe-interface/" class="archive-post-link">
+          Go语言中隐式接口的冲突问题
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2014-05-20
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-xslice-to-yslice/" class="archive-post-link">
+          Go语言中不同类型切片之间的相互转换
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2014-02-25
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-tenary/" class="archive-post-link">
+          Go语言的三元表达式
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2014-01-27
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-gettext-2014/" class="archive-post-link">
+          Go语言的国际化支持(资源文件翻译)
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2014-01-08
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-protorpc-2014/" class="archive-post-link">
+          Go语言的RPC介绍(含Protobuf-RPC)
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2014-01-07
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-gettext/" class="archive-post-link">
+          Go语言的国际化支持(基于gettext-go)
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2014-01-04
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-func-call-stack/" class="archive-post-link">
+          Go语言的函数调用信息
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-12-20
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-zip-utf8/" class="archive-post-link">
+          Go如何处理zip中的中文文件名
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-12-11
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-deep-copy/" class="archive-post-link">
+          Go语言如何深度拷贝对象
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-10-13
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go13-cgo/" class="archive-post-link">
+          Go和C如何共享内存资源
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-09-20
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-image-tiff/" class="archive-post-link">
+          go.image/tiff 的一些问题
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-09-16
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-gc-2013/" class="archive-post-link">
+          Go语言资源自动回收技术
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-09-15
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-type-assert-and-convert/" class="archive-post-link">
+          Go语言的类型转换和类型断言
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-09-14
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-passed-by-value/" class="archive-post-link">
+          Go语言的传参和传引用
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-09-09
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go1_2/" class="archive-post-link">
+          Go1.2新功能简介
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-08-06
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-benchmark-pk-joke/" class="archive-post-link">
+          系统级编程语言性能大PK的笑话-Go语言
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-06-27
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/fuck-go-int/" class="archive-post-link">
+          Go语言变态用法
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-06-23
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/defer-2013/" class="archive-post-link">
+          使用Defer的几个场景
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-05-14
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-benchmark-2013/" class="archive-post-link">
+          Go1.1性能测试报告(和C差距在10%以内)
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-27
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-safe-exit-2013/" class="archive-post-link">
+          Go程序如何安全退出(CTRL&#43;C)
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-25
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-protorpc-2013/" class="archive-post-link">
+          在Go语言中使用 Protobuf-RPC
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-24
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-pb-service-gen/" class="archive-post-link">
+          Go语言: 生成Protobuf的Service接口
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-12
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-interface-pk/" class="archive-post-link">
+          评: 为什么我不喜欢Go语言式的接口
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-06
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/goweb2013/" class="archive-post-link">
+          用Go语言开发Web程序[翻译]
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-06
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-preview-2013/" class="archive-post-link">
+          为什么除了Go语言, 其他类C语言都是垃圾[转]
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-04
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/slice2013/" class="archive-post-link">
+          切片：用法和本质[翻译]
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-02
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/cgo2013/" class="archive-post-link">
+          C？Go？Cgo！[翻译]
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-01
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/gccgo-gcc471/" class="archive-post-link">
+          Gccgo in GCC 4.7.1[翻译]
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-04-01
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/defer-panic-recover/" class="archive-post-link">
+          Defer, Panic, and Recover[翻译]
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-03-29
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-quine/" class="archive-post-link">
+          Go语言的自重写程序
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-03-27
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go-nil/" class="archive-post-link">
+          Go中error类型的nil值和nil
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-03-27
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go11-intro/" class="archive-post-link">
+          Go1.1有哪些改进?
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-03-27
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/golang/go1_1/" class="archive-post-link">
+          Go1.1新特性介绍(语言和库更完善/性能提高约30%)
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2013-03-27
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/cpp/cpp-defer/" class="archive-post-link">
+          C&#43;&#43;版的defer语句
+        </a>
+      </span>
+    </div>
+  
+    <div class="archive-post">
+      <span class="archive-post-time">
+        2012-09-06
+      </span>
+      <span class="archive-post-title">
+        <a href="/post/2012/book-go-program-bugs/" class="archive-post-link">
+          关于《Go语言编程》中的一些问题
+        </a>
+      </span>
+    </div>
+  
+</section>
+
+<nav class="pagination">
+  
+  
+</nav>
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

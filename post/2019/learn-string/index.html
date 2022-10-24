@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>谈谈Go语言字符串 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="字符串是一种特别重要的类型, 可以说整个世界都是建立在字符串处理基础之上的, 甚至有很多专门针对字符串处理设计的编程语言(比如perl). 因为字" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2019/learn-string/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="谈谈Go语言字符串" />
+<meta property="og:description" content="字符串是一种特别重要的类型, 可以说整个世界都是建立在字符串处理基础之上的, 甚至有很多专门针对字符串处理设计的编程语言(比如perl). 因为字" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2019/learn-string/" />
+
+
+
+<meta property="article:published_time" content="2019-05-17T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2019-05-17T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="谈谈Go语言字符串">
+<meta itemprop="description" content="字符串是一种特别重要的类型, 可以说整个世界都是建立在字符串处理基础之上的, 甚至有很多专门针对字符串处理设计的编程语言(比如perl). 因为字">
+
+
+<meta itemprop="datePublished" content="2019-05-17T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2019-05-17T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3172">
+
+
+
+<meta itemprop="keywords" content="golang,string," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="谈谈Go语言字符串"/>
+<meta name="twitter:description" content="字符串是一种特别重要的类型, 可以说整个世界都是建立在字符串处理基础之上的, 甚至有很多专门针对字符串处理设计的编程语言(比如perl). 因为字"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">谈谈Go语言字符串</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-05-17 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 3172 字 </span>
+        <span class="more-meta"> 预计阅读 7 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-基本用法">1. 基本用法</a></li>
+<li><a href="#2-内部表示">2. 内部表示</a></li>
+<li><a href="#3-其它类型转换">3. 其它类型转换</a></li>
+<li><a href="#4-字符串替换">4. 字符串替换</a></li>
+<li><a href="#5-模板输出">5. 模板输出</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>字符串是一种特别重要的类型, 可以说整个世界都是建立在字符串处理基础之上的, 甚至有很多专门针对字符串处理设计的编程语言(比如perl). 因为字符串处理非常重要, Go语言将字符串作为值以简化使用, 同时标准库提供了strings/fmt/strconv/regexp/template等诸多包用于协助处理字符串.</p>
+
+<h2 id="1-基本用法">1. 基本用法</h2>
+
+<p>Go语言中字符串是一个不可修改的字节序列, 如果要做类比的话可以看作是一个只读的byte数组类型. 字符串有两种方式构建: 第一种是在代码中通过双引号包括起来的字符串字面值, 这是编译前就知道了字符串的内容; 另一种是在运行时通过代码运行动态产生的字符串.</p>
+
+<p>因为Go语言源代码要求是UTF8编码, 因此字符串面值的内容也是UTF8编码的. 为了方便面值字符串的遍历, Go语言的for range内置了对UTF8的支持:</p>
+
+<pre><code class="language-go">for i, c := range &quot;hello, 世界&quot; {
+    // ...
+}
+</code></pre>
+
+<p>其中i是字符所在的索引下标,  c表示Unicode字符的值(对应int32类型). 因为UTF8是一种变长的编码, 因此每次i的步进长度是变化的, 每次步进的是前当前字符串对应UTF8编码的长度.</p>
+
+<p>此外字符串语法还支持切片、链接和获取某个下标字节值的功能, 比如:</p>
+
+<pre><code class="language-go">var s = &quot;光谷码农 - https://guanggu-coder.cn/&quot;
+var c = s[0] // 获取字节值, 而不是字符对应的Unicode值
+var x = s[:len(s)-1] + &quot;abc&quot;
+</code></pre>
+
+<p>字符串不仅仅可以作为字面值, 还可以当做二进制数组使用, 这时候可以用于保存任意类型的数据:</p>
+
+<pre><code class="language-go">var s = &quot;\xe4\xb8\x96&quot; // 世
+var x = []byte{0xE4, 0xB8, 0x96}
+var s = string(x)
+</code></pre>
+
+<p>字符串的基本用法大家都是熟悉的, 我们这里不再向西展开.</p>
+
+<h2 id="2-内部表示">2. 内部表示</h2>
+
+<p>Go语言字符串的底层结构在reflect.StringHeader中定义：</p>
+
+<pre><code class="language-go">type StringHeader struct {
+    Data uintptr
+    Len  int
+}
+</code></pre>
+
+<p>字符串结构由两个信息组成：第一个是字符串指向的底层字节数组，第二个是字符串的字节的长度。字符串其实是一个结构体，因此字符串的赋值操作也就是reflect.StringHeader结构体的复制过程，并不会涉及底层字节数组的复制。</p>
+
+<p>需要注意的是字符串的头部结构是切片头部结构的前缀(只是缺少了cap表示的容量部分), 这是为了便于[]byte类型的切片和字符串相互之间的转化.</p>
+
+<h2 id="3-其它类型转换">3. 其它类型转换</h2>
+
+<p>这里讨论是底层有着不同数据布局的类型和字符串的相互转换. 如果是基于字符串重新定义的类型不在讨论之列.</p>
+
+<p>Go语言中和字符串相关的内置转换主要有三种类型: 首先是字符转为字符串, 其次是字符串和字节切片的转换, 最后是字符串和rune切片的转换.</p>
+
+<p>字符到字符串的转换时单向操作(无法从字符串反向转为字符), 下面的例子中是从“a”这个字符的ASCII值转为字符串“a”:</p>
+
+<pre><code class="language-go">fmt.Println(string(97))       // a
+fmt.Println(string(rune(97))) // a
+fmt.Println(string('a'))      // a
+</code></pre>
+
+<p>在第一行语句中, 97是一个无具体类型的数值类型的字面值常量. 在遇到string强制转型时, 只有rune类型可以和无具体类型的数值类型建立关系, 因此97被捕获为rune类型的常量, 也就是第二个语句的方法. 第三个语句中&rsquo;a&rsquo;是rune(97)对应字符的字面值写法.</p>
+
+<p>然后是字符串和字节切片的相互转换:</p>
+
+<pre><code class="language-go">var s = string([]byte{97, 98, 99}) // abc
+var x = []byte(&quot;abc&quot;)
+</code></pre>
+
+<p>因为字节切片和字符串底层的数据布局是相融的, 因此这种转换一般有着较高的优化空间(前提是不能破坏字符串只读的语义).</p>
+
+<p>内置转换的语法中最特殊的是字符串和rune切片的转换:</p>
+
+<pre><code class="language-go">var s = string([]rune{97, 98, 99}) // abc
+var x = []rune(&quot;abc&quot;)
+</code></pre>
+
+<p>rune其实是int32类型的别名, 因此换成以下写法会发现其特殊之处:</p>
+
+<pre><code class="language-go">var s = string([]int32{97, 98, 99}) // abc
+var x = []int32(&quot;abc&quot;)
+</code></pre>
+
+<p>Go语言居然内置了字符串和int32切片的转型操作, 而这个操作是有相当的复杂度的(具体要涉及内存分配和UTF8字符串编码解码, 时间复杂度和长度相关)! 很多人如果看到上面代码可行, 自然会下意识将int32推广为其它整数类型的切片. 但是这只是字符串为int32开的一个特例(所以说Go语言也不是完全正交的设计, 有不是补丁特性).</p>
+
+<p>除了内置的转换之外, 字符串还进程需要和其它bool/int等类型的转换. 这里大部分也是双向的转换, 不过我们重点讨论其他类型到字符串的转换. strconv包提供了很多这类转换操作:</p>
+
+<pre><code class="language-go">s := strconv.Itoa(-42)
+
+s10 := strconv.FormatInt(v, 10)
+s16 := strconv.FormatInt(v, 16)
+
+s := strconv.FormatBool(true)
+</code></pre>
+
+<p>其中Itoa是Int-to-ASCII的缩写, 表示整数到字符串转换, 采用十进制模式转换.  而FormatInt则可以用于指定进制进行转换. 此外FormatBool等用于其他数值类型的转换.</p>
+
+<p>strconv的转换实现性能较好. 如果不在意这转换操作这一点点的性能损耗, 可以通过fmt.Sprintf来实现到字符串的转换(fmt.Sscanf可解析, 但是打破了链式操作的便捷性):</p>
+
+<pre><code class="language-go">i := fmt.Srpintf(&quot;%v&quot;, -42)
+b := fmt.Srpintf(&quot;%v&quot;, true)
+</code></pre>
+
+<p>fmt包会通过反射识别输入参数的类型, 然后以默认的方式转换为字符串.</p>
+
+<p>此外, 对于字符串本身也提供了一种转换, 就是字符串和字符串面值格式. 比如以下代码:</p>
+
+<pre><code class="language-go">q := strconv.Quote(`&quot;hello&quot;`)     // &quot;\&quot;hello\&quot;&quot;
+q := fmt.Sprintf(&quot;%q&quot;, `&quot;hello&quot;`) // &quot;\&quot;hello\&quot;&quot;
+</code></pre>
+
+<p>输出的字符串会有一个双引号包裹, 内部的特殊符号会采用转义语法表示, 它对应fmt包中%q格式的输出.</p>
+
+<p>更进一步, 为了方便不支持中文的环境也能处理, 还可以选择完全用ASCII方式表示字符串面值:</p>
+
+<pre><code class="language-go">q := strconv.Quote(`&quot;世&quot;`)      // &quot;\&quot;\u4e16\&quot;&quot;
+q := fmt.Sprintf(&quot;%+q&quot;, `&quot;世&quot;`) // &quot;\&quot;\u4e16\&quot;&quot;
+</code></pre>
+
+<p>其中“世”已经超出ASCII值域, 因此通过\u???语法通过Unicode码点值表示, , 它对应fmt包中%+q格式的输出.</p>
+
+<h2 id="4-字符串替换">4. 字符串替换</h2>
+
+<p>字符串处理中除了涉及其他类型和字符串之间相互转换, 另一种经常遇到的是将一个字符串处理为另一个字符串. 标准库中strings包提供了诸多字符串处理函数.</p>
+
+<p>比如, 将字符串改成大写字符串:</p>
+
+<pre><code class="language-go">var s = strings.ToUpper(&quot;Gopher&quot;) // GOPHER
+</code></pre>
+
+<p>这其实是将字符串中某些子串根据某种指定的规则替换成新的字符串.</p>
+
+<p>我们可以通过strings.Map来重新实现ToUpper的功能:</p>
+
+<pre><code class="language-go">strings.Map(func(r rune) rune { return r &amp;^ ' ' }, &quot;Gopher&quot;))
+</code></pre>
+
+<p>strings.Map会遍历字符串中的每个字符, 然后通过第一参数传入的函数转换为新的字符, 最后构造出新的字符串. 而字符转换函数只有一个语句r &amp;^ &lsquo; &lsquo;, 作用是将小写字母转为大写字母.</p>
+
+<p>strings.Map函数的输出是根据输入字符动态生成输出的字符, 但是这种替换是一个字符对应一个字符, 因此输出的字符串长度输入的字符串是一样的.</p>
+
+<p>字符层面的替换是比较简单的需求. 更多时候我们需要将一个子串替换为一个新的子串. 子串的替换虽然看似功能强大, 但是因为没有统一的遍历子串的规则, 因此标准库并没有类似strings.Map这样方便的函数.</p>
+
+<p>简单的替换可以通过strings. Replace完成:</p>
+
+<pre><code class="language-go">fmt.Println(strings.Replace(&quot;oink oink oink&quot;, &quot;k&quot;, &quot;ky&quot;, 2))
+fmt.Println(strings.Replace(&quot;oink oink oink&quot;, &quot;oink&quot;, &quot;moo&quot;, -1))
+</code></pre>
+
+<p>上面是strings自带的例子. strings.Replace的第一个参数是输入的字符串, 第二个是要替换的子串, 第三个是用了替换的子串, 最后一个参数表示要替换几个子串.
+如果替换规则稍微复杂一点, strings.Replace就比较难以实现了.</p>
+
+<p>复杂的替换可以通过regexp的包完成:</p>
+
+<pre><code class="language-go">regexp.MustCompile(`a(x*)b`).ReplaceAllString(&quot;-ab-axxb-&quot;, &quot;T&quot;)
+// -T-T-
+</code></pre>
+
+<p>如果满足a(x*)b模式的子串将被替换为新的子串.</p>
+
+<h2 id="5-模板输出">5. 模板输出</h2>
+
+<p>字符串替换其实是模板的雏形. 我们可以通过字符串替换来构造一个简单的模板:</p>
+
+<pre><code class="language-go">func ReplaceMap(s string, m map[string]string) string {
+    for old, new := m {
+        s = strings.Replace(s, old, new, -1)
+    }
+    return s
+}
+
+func main() {
+    var s = ReplaceMap(`{a}+{b} = {c}`, map[string]string{
+        &quot;a&quot;: 1, &quot;b&quot;: 2, &quot;c&quot;: 3,
+    })
+}
+</code></pre>
+
+<p>通过{name}来表示要替换的子串, 然后通过map来定一个子串替换表格.</p>
+
+<p>基于类型的技巧, 我们可以将{name}定义为子串的查找规则, 这样我们将得到一个子串列表:</p>
+
+<pre><code class="language-go">func MapString(s string,
+    mapping func(x string) string,
+) string {
+    re := regexp.MustCompile(`\{\w+\}`)
+    for _, old := range re.FindAllString(&quot;{name}{age}&quot;, -1) {
+        s = strings.Replace(s, old, mapping(old), -1)
+    }
+}
+</code></pre>
+
+<p>既然能够得到子串列表, 那么就可以仿造strings.Map的接口, 通过一个转换函数来实现子串的替换(函数比表格更加灵活).</p>
+
+<p>如果结合反射机制, 完全可以基于一个接口类型输出转换表格:</p>
+
+<pre><code class="language-go">func RenderTemplate(s string, data interface{}) string {
+    return MapString(s, func(filedName string) string {
+        // 通过反射, 根据 filedName 从 data 获取数据
+    })
+}
+</code></pre>
+
+<p>当然, 这种模板比较粗糙, 没有实现结构化编程中分支和循环等语句的支持. 完整的模板可以查看标准库的template包实现. template包是一个较大的话题, 有机会的话会在新的文章中专门讨论.</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2019-05-17</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+          <a href="/tags/string/">string</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2019/go-10year/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go 语言十年而立，Go2 蓄势待发</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2019/io-eof-mistake/">
+            <span class="next-text nav-default">io.EOF设计的缺陷和改进</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

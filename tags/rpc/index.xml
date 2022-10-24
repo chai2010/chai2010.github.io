@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rpc on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/rpc/</link>
+    <description>Recent content in Rpc on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 25 Apr 2013 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/rpc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>在Go语言中使用 Protobuf-RPC</title>
+      <link>https://chai2010.cn/post/golang/go-protorpc-2013/</link>
+      <pubDate>Thu, 25 Apr 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-protorpc-2013/</guid>
+      
+        <description>
+
+&lt;p&gt;Go语言版本的Protobuf-RPC基本算完成了. 现在简单说下使用方法.&lt;/p&gt;
+
+&lt;h1 id=&#34;安装测试环境&#34;&gt;安装测试环境&lt;/h1&gt;
+
+&lt;p&gt;先下载代码(不支持&lt;code&gt;go get&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hg clone https://bitbucket.org/chai2010/gopath
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后下载后的目录设置为&lt;code&gt;GOPATH&lt;/code&gt;, 并添加&lt;code&gt;$GOPATH/bin&lt;/code&gt;到&lt;code&gt;PATH&lt;/code&gt;环境变量.&lt;/p&gt;
+
+&lt;p&gt;在&lt;code&gt;$GOPATH/bin&lt;/code&gt;中已经包含了Windows下的&lt;code&gt;2.4.1&lt;/code&gt;版本的&lt;code&gt;protoc.exe&lt;/code&gt;. 如果是&lt;code&gt;Linux&lt;/code&gt;等系统, 请自行下载并安装&lt;code&gt;protoc&lt;/code&gt;程序.&lt;/p&gt;
+
+&lt;p&gt;安装&lt;code&gt;protoc.exe&lt;/code&gt;的Go语言插件:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go install encoding/protobuf/protoc-gen-go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;该插件是基于&lt;code&gt;code.google.com/p/goprotobuf/protoc-gen-go&lt;/code&gt;实现, 主要增加了&lt;code&gt;encoding/protobuf/protoc-gen-go/generator/service.go&lt;/code&gt;文件, 用于&lt;code&gt;RPC&lt;/code&gt;的代码生成. 生成的&lt;code&gt;RPC&lt;/code&gt;代码依赖&lt;code&gt;net/rpc/protorpc&lt;/code&gt;, 这个包是&lt;code&gt;Protobuf-RPC&lt;/code&gt;的底层实现, 可以单独使用.&lt;/p&gt;
+
+&lt;p&gt;现在可以运行一下测试程序:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C:\&amp;gt;go test net/rpc/protorpc/service.pb
+ok      net/rpc/protorpc/service.pb     2.123s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;测试通过, 继续.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;编译-proto-文件&#34;&gt;编译 proto 文件&lt;/h1&gt;
+
+&lt;p&gt;创建一个名为&lt;code&gt;pbrpc&lt;/code&gt;的工作目录, 再创建&lt;code&gt;pbrpc/arith.pb&lt;/code&gt;的子目录.
+将&lt;code&gt;net/rpc/protorpc/service.pb/service.proto&lt;/code&gt;文件复制到&lt;code&gt;pbrpc/arith.pb&lt;/code&gt;的子目录.&lt;/p&gt;
+
+&lt;p&gt;包名字改为&lt;code&gt;arith&lt;/code&gt;, 文件&lt;code&gt;arith.proto&lt;/code&gt;的内容如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package arith;
+
+option cc_generic_services = true;
+option java_generic_services = true;
+option py_generic_services = true;
+
+message ArithRequest {
+    optional int32 a = 1;
+    optional int32 b = 2;
+}
+
+message ArithResponse {
+    optional int32 c = 1;
+}
+
+service ArithService {
+    rpc add (ArithRequest) returns (ArithResponse);
+    rpc mul (ArithRequest) returns (ArithResponse);
+    rpc div (ArithRequest) returns (ArithResponse);
+    rpc error (ArithRequest) returns (ArithResponse);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;主要是定义了一个&lt;code&gt;ArithService&lt;/code&gt;接口. 要注意的是&lt;code&gt;cc_generic_services&lt;/code&gt;/&lt;code&gt;java_generic_services&lt;/code&gt;, &lt;code&gt;py_generic_services&lt;/code&gt;几个选项.
+我前提提到的&lt;code&gt;protoc-gen-go&lt;/code&gt;在生成代码的时候, 这3个选项至少要有一个为&lt;code&gt;true&lt;/code&gt;, 才会生成&lt;code&gt;RPC&lt;/code&gt;的代码.&lt;/p&gt;
+
+&lt;p&gt;当然, 如果不生成&lt;code&gt;RPC&lt;/code&gt;代码的话, 也是可以单独使用&lt;code&gt;net/rpc/protorpc&lt;/code&gt;包的. 不过&lt;code&gt;protoc-gen-go&lt;/code&gt;生成的代码会简便很多.&lt;/p&gt;
+
+&lt;p&gt;进入&lt;code&gt;pbrpc/arith.pb&lt;/code&gt;的子目录, 编译&lt;code&gt;arith.proto&lt;/code&gt;文件:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;protoc --go_out=. arith.proto
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成 &lt;code&gt;arith.pb.go&lt;/code&gt; 文件, 其中&lt;code&gt;RPC&lt;/code&gt;的代码主要是下面这些:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type ArithService interface {
+    Add(in *ArithRequest, out *ArithResponse) error
+    Mul(in *ArithRequest, out *ArithResponse) error
+    Div(in *ArithRequest, out *ArithResponse) error
+    Error(in *ArithRequest, out *ArithResponse) error
+}
+
+// RegisterArithService publish the given ArithService implementation on the server.
+func RegisterArithService(srv *rpc.Server, x ArithService) error {
+    if err := srv.RegisterName(&amp;quot;ArithService&amp;quot;, x); err != nil {
+        return err
+    }
+    return nil
+}
+
+// ServeArithService serves the given ArithService implementation on conn.
+func ServeArithService(conn io.ReadWriteCloser, x ArithService) error {
+    srv := rpc.NewServer()
+    if err := srv.RegisterName(&amp;quot;ArithService&amp;quot;, x); err != nil {
+        return err
+    }
+    srv.ServeCodec(protorpc.NewServerCodec(conn))
+    return nil
+}
+
+// ListenAndServeArithService listen announces on the local network address laddr
+// and serves the given ArithService implementation.
+func ListenAndServeArithService(network, addr string, x ArithService) error {
+    clients, err := net.Listen(network, addr)
+    if err != nil {
+        return err
+    }
+    srv := rpc.NewServer()
+    if err := srv.RegisterName(&amp;quot;ArithService&amp;quot;, x); err != nil {
+        return err
+    }
+    for {
+        conn, err := clients.Accept()
+        if err != nil {
+            return err
+        }
+        go srv.ServeCodec(protorpc.NewServerCodec(conn))
+    }
+    panic(&amp;quot;unreachable&amp;quot;)
+}
+
+type rpcArithServiceStub struct {
+    *rpc.Client
+}
+
+func (c *rpcArithServiceStub) Add(in *ArithRequest, out *ArithResponse) error {
+    return c.Call(&amp;quot;ArithService.Add&amp;quot;, in, out)
+}
+func (c *rpcArithServiceStub) Mul(in *ArithRequest, out *ArithResponse) error {
+    return c.Call(&amp;quot;ArithService.Mul&amp;quot;, in, out)
+}
+func (c *rpcArithServiceStub) Div(in *ArithRequest, out *ArithResponse) error {
+    return c.Call(&amp;quot;ArithService.Div&amp;quot;, in, out)
+}
+func (c *rpcArithServiceStub) Error(in *ArithRequest, out *ArithResponse) error {
+    return c.Call(&amp;quot;ArithService.Error&amp;quot;, in, out)
+}
+
+// DialArithService connects to an ArithService at the specified network address.
+func DialArithService(network, addr string) (*rpc.Client, ArithService, error) {
+    conn, err := net.Dial(network, addr)
+    if err != nil {
+        return nil, nil, err
+    }
+    c, srv := NewArithServiceClient(conn)
+    return c, srv, nil
+}
+
+// NewArithServiceClient returns a ArithService rpc.Client and stub to handle
+// requests to the set of ArithService at the other end of the connection.
+func NewArithServiceClient(conn io.ReadWriteCloser) (*rpc.Client, ArithService) {
+    c := rpc.NewClientWithCodec(protorpc.NewClientCodec(conn))
+    return c, &amp;amp;rpcArithServiceStub{c}
+}
+
+// NewArithServiceStub returns a ArithService stub to handle rpc.Client.
+func NewArithServiceStub(c *rpc.Client) ArithService {
+    return &amp;amp;rpcArithServiceStub{c}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中生成的服务器端的代码有: &lt;code&gt;ListenAndServeArithService&lt;/code&gt;, &lt;code&gt;ServeArithService&lt;/code&gt;, &lt;code&gt;RegisterArithService&lt;/code&gt;.
+生成的客户端的接口有: &lt;code&gt;DialArithService&lt;/code&gt;, &lt;code&gt;NewArithServiceClient&lt;/code&gt;, &lt;code&gt;NewArithServiceStub&lt;/code&gt;.
+其中&lt;code&gt;RPC&lt;/code&gt;接口对应&lt;code&gt;ArithService&lt;/code&gt;接口.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;编写测试代码&#34;&gt;编写测试代码&lt;/h1&gt;
+
+&lt;p&gt;在&lt;code&gt;pbrpc&lt;/code&gt;目录创建&lt;code&gt;rpc_server.go&lt;/code&gt;文件, 代码如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+    &amp;quot;encoding/protobuf/proto&amp;quot;
+    &amp;quot;errors&amp;quot;
+
+    &amp;quot;./arith.pb&amp;quot;
+)
+
+type Arith int
+
+func (t *Arith) Add(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    reply.C = proto.Int32(args.GetA() + args.GetB())
+    return nil
+}
+
+func (t *Arith) Mul(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    reply.C = proto.Int32(args.GetA() * args.GetB())
+    return nil
+}
+
+func (t *Arith) Div(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    if args.GetB() == 0 {
+        return errors.New(&amp;quot;divide by zero&amp;quot;)
+    }
+    reply.C = proto.Int32(args.GetA() / args.GetB())
+    return nil
+}
+
+func (t *Arith) Error(args *arith.ArithRequest, reply *arith.ArithResponse) error {
+    return errors.New(&amp;quot;ArithError&amp;quot;)
+}
+
+func main() {
+    arith.ListenAndServeArithService(&amp;quot;tcp&amp;quot;, &amp;quot;:1234&amp;quot;, new(Arith))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最关键的是&lt;code&gt;arith.ListenAndServeArithService(&amp;quot;tcp&amp;quot;, &amp;quot;:1234&amp;quot;, new(Arith))&lt;/code&gt;. 当然, 也可以使用&lt;code&gt;RegisterArithService&lt;/code&gt;或&lt;code&gt;ServeArithService&lt;/code&gt;等接口进行定制.&lt;/p&gt;
+
+&lt;p&gt;然后在&lt;code&gt;pbrpc&lt;/code&gt;创建&lt;code&gt;rpc_client.go&lt;/code&gt;对应客户端, 代码如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+    &amp;quot;encoding/protobuf/proto&amp;quot;
+    &amp;quot;log&amp;quot;
+
+    &amp;quot;./arith.pb&amp;quot;
+)
+
+func main() {
+    // client
+    client, stub, err := arith.DialArithService(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1234&amp;quot;)
+    if err != nil {
+        log.Fatalf(`arith.DialArithService(&amp;quot;tcp&amp;quot;, &amp;quot;127.0.0.1:1234&amp;quot;): %v`, err)
+    }
+    defer client.Close()
+
+    var args arith.ArithRequest
+    var reply arith.ArithResponse
+
+    // Add
+    args.A = proto.Int32(1)
+    args.B = proto.Int32(2)
+    if err = stub.Add(&amp;amp;args, &amp;amp;reply); err != nil {
+        log.Fatalf(`arith.Add: %v`, err)
+    }
+    if reply.GetC() != 3 {
+        log.Fatalf(`arith.Add: expected = %d, got = %d`, 3, reply.GetC())
+    }
+
+    // Mul
+    args.A = proto.Int32(2)
+    args.B = proto.Int32(3)
+    if err = stub.Mul(&amp;amp;args, &amp;amp;reply); err != nil {
+        log.Fatalf(`arith.Mul: %v`, err)
+    }
+    if reply.GetC() != 6 {
+        log.Fatalf(`arith.Mul: expected = %d, got = %d`, 6, reply.GetC())
+    }
+
+    // Div
+    args.A = proto.Int32(13)
+    args.B = proto.Int32(5)
+    if err = stub.Div(&amp;amp;args, &amp;amp;reply); err != nil {
+        log.Fatalf(`arith.Div: %v`, err)
+    }
+    if reply.GetC() != 2 {
+        log.Fatalf(`arith.Div: expected = %d, got = %d`, 2, reply.GetC())
+    }
+
+    // Div zero
+    args.A = proto.Int32(1)
+    args.B = proto.Int32(0)
+    if err = stub.Div(&amp;amp;args, &amp;amp;reply); err.Error() != &amp;quot;divide by zero&amp;quot; {
+        log.Fatalf(`arith.Error: expected = %s, got = %s`, &amp;quot;divide by zero&amp;quot;, err.Error())
+    }
+
+    // Error
+    args.A = proto.Int32(1)
+    args.B = proto.Int32(2)
+    if err = stub.Error(&amp;amp;args, &amp;amp;reply); err.Error() != &amp;quot;ArithError&amp;quot; {
+        log.Fatalf(`arith.Error: expected = %s, got = %s`, &amp;quot;ArithError&amp;quot;, err.Error())
+    }
+
+    log.Printf(&amp;quot;Done&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后就可以启动服务, 并测试客户端了.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

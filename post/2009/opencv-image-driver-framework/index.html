@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>OpenCV的图像读写框架 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="cvSaveImage/cvLoadImage函数用于保存和读取图像，两者的结构基本相似。 下面我们主要分析cvSaveImage函数的实现。" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2009/opencv-image-driver-framework/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="OpenCV的图像读写框架" />
+<meta property="og:description" content="cvSaveImage/cvLoadImage函数用于保存和读取图像，两者的结构基本相似。 下面我们主要分析cvSaveImage函数的实现。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2009/opencv-image-driver-framework/" />
+
+
+
+<meta property="article:published_time" content="2009-12-06T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2009-12-06T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="OpenCV的图像读写框架">
+<meta itemprop="description" content="cvSaveImage/cvLoadImage函数用于保存和读取图像，两者的结构基本相似。 下面我们主要分析cvSaveImage函数的实现。">
+
+
+<meta itemprop="datePublished" content="2009-12-06T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2009-12-06T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1658">
+
+
+
+<meta itemprop="keywords" content="opencv," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="OpenCV的图像读写框架"/>
+<meta name="twitter:description" content="cvSaveImage/cvLoadImage函数用于保存和读取图像，两者的结构基本相似。 下面我们主要分析cvSaveImage函数的实现。"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">OpenCV的图像读写框架</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2009-12-06 </span>
+        <div class="post-category">
+            
+              <a href="/categories/opencv/"> opencv </a>
+            
+          </div>
+        <span class="more-meta"> 约 1658 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p><code>cvSaveImage</code>/<code>cvLoadImage</code>函数用于保存和读取图像，两者的结构基本相似。
+下面我们主要分析<code>cvSaveImage</code>函数的实现。</p>
+
+<p><code>cvLoadImage</code>函数位于 &ldquo;OpenCV\otherlibs\highgui\loadsave.cpp&rdquo; 文件：</p>
+
+<pre><code>CV_IMPL IplImage*
+cvLoadImage( const char* filename, int iscolor )
+{
+    return (IplImage*)icvLoadImage( filename, iscolor, false );
+}
+</code></pre>
+
+<p>内部基于<code>icvLoadImage</code>函数实现。其中<code>icvLoadImage</code>函数的第三个参数可以
+用于装载矩阵，这里被忽略（<code>false</code>表示读图像）。</p>
+
+<p><code>icvLoadImage</code>函数的主要部分如下：</p>
+
+<pre><code>static void*
+icvLoadImage( const char* filename, int flags, bool )
+{
+    // 查找图像的读驱动
+
+    GrFmtReader* reader = g_Filters.FindReader( filename );
+
+    // 利用图像读驱动读出图像头信息（高宽等属性）
+
+    reader-&gt;ReadHeader();
+
+    // 高度/宽度
+
+    size.width = reader-&gt;GetWidth();
+    size.height = reader-&gt;GetHeight();
+
+    // 是否彩色
+
+    int iscolor = reader-&gt;IsColor();
+
+    // 彩色通道数为3，灰度为1
+
+    int cn = iscolor ? 3 : 1;
+
+    // 创建影像
+
+    IplImage* image = cvCreateImage( size, type, cn );
+
+    // 利用读驱动读图像的所有像素
+    // image-&gt;data.ptr对应数据的开始地址
+    // image-&gt;step表示每行像素所在内存的大小
+
+    reader-&gt;ReadData( image-&gt;data.ptr, image-&gt;step, iscolor );
+
+    return image;
+}
+</code></pre>
+
+<p>其中<code>g_Filters</code>是一个静态变量：</p>
+
+<pre><code>// global image I/O filters
+static CvImageFilters  g_Filters;
+</code></pre>
+
+<p>CvImageFilters在构造的时候，将已知的图像读写驱动保存到一个链表中。</p>
+
+<pre><code>CvImageFilters::CvImageFilters()
+{
+    m_factories = new GrFmtFactoriesList;
+
+    m_factories-&gt;AddFactory( new GrFmtBmp() );
+    m_factories-&gt;AddFactory( new GrFmtJpeg() );
+    m_factories-&gt;AddFactory( new GrFmtSunRaster() );
+    m_factories-&gt;AddFactory( new GrFmtPxM() );
+    m_factories-&gt;AddFactory( new GrFmtTiff() );
+
+    ...
+}
+</code></pre>
+
+<p><code>GrFmtFactoriesList</code>在<code>grfmt_base.h</code>/<code>grfmt_base.cpp</code>中定义，用于保存<code>GrFmtFilterFactory</code>
+对象指针的链表。<code>GrFmtFilterFactory</code>为各种格式图像读写驱动的构造工厂基类：</p>
+
+<pre><code>class   GrFmtFilterFactory
+{
+public:
+
+    GrFmtFilterFactory();
+    virtual ~GrFmtFilterFactory() {};
+
+    const char*  GetDescription() { return m_description; };
+    int     GetSignatureLength()  { return m_sign_len; };
+    virtual bool CheckSignature( const char* signature );
+    virtual bool CheckExtension( const char* filename );
+    virtual GrFmtReader* NewReader( const char* filename ) = 0;
+    virtual GrFmtWriter* NewWriter( const char* filename ) = 0;
+
+protected:
+    const char* m_description;
+        // graphic format description in form:
+        // &lt;Some textual description&gt;( *.&lt;extension1&gt; [; *.&lt;extension2&gt; ...]).
+        // the textual description can not contain symbols '(', ')'
+        // and may be, some others. It is safe to use letters, digits and spaces only.
+        // e.g. &quot;Targa (*.tga)&quot;,
+        // or &quot;Portable Graphic Format (*.pbm;*.pgm;*.ppm)&quot;
+
+    int          m_sign_len;    // length of the signature of the format
+    const char*  m_signature;   // signature of the format
+};
+</code></pre>
+
+<p>其中<code>GetDescription()</code>用于获取图像文件名的描述，类似于&rdquo;文本文件 (*.txt)&ldquo;格式。</p>
+
+<p><code>GetSignatureLength()</code>用于获取图像文件的标志大小。对于tiff格式，开头有一个&rdquo;II&rdquo;或者是&rdquo;MM&rdquo;的标志，长度为2。
+如果是算上tiff后面的42版本号，长度则为4。长度大小和<code>CheckSignature</code>相关。</p>
+
+<p><code>CheckSignature</code>用于匹配图像文件的标志。如果对应的图像不需要标志，则可以在从<code>GrFmtFilterFactory</code>派生的
+子类中将其屏蔽。</p>
+
+<p><code>CheckExtension</code>匹配图像文件名的后缀名，用于也可以自己重新实现。</p>
+
+<p><code>NewReader</code>/<code>NewWriter</code>为读写驱动对应的构造函数，利用它们可以针对不同图像构造相应的驱动。</p>
+
+<p>工厂类链表定义如下：</p>
+
+<pre><code>class   GrFmtFactoriesList
+{
+public:
+
+    GrFmtFactoriesList();
+    virtual ~GrFmtFactoriesList();
+    void  RemoveAll();
+    bool  AddFactory( GrFmtFilterFactory* factory );
+    int   FactoriesCount() { return m_curFactories; };
+    ListPosition  GetFirstFactoryPos();
+    GrFmtFilterFactory*  GetNextFactory( ListPosition&amp; pos );
+    virtual GrFmtReader*  FindReader( const char* filename );
+    virtual GrFmtWriter*  FindWriter( const char* filename );
+
+protected:
+
+    GrFmtFilterFactory** m_factories;
+    int  m_maxFactories;
+    int  m_curFactories;
+};
+</code></pre>
+
+<p>FindReader/FindWriter用于查找图像对应的驱动。如果想修改查找的规则，可以通过
+GetNextFactory遍历链表来实现。</p>
+
+<p>真正的读写类从GrFmtReader派生，分别对应grfmt_bmp/grfmt_jpeg等各种格式驱动。
+然后通过前面的CvImageFilters::CvImageFilters()来讲各个驱动串到g_Filters.m_factories链表中。</p>
+
+<pre><code>class   GrFmtReader
+{
+public:
+
+    GrFmtReader( const char* filename );
+    virtual ~GrFmtReader();
+
+    int   GetWidth()  { return m_width; };
+    int   GetHeight() { return m_height; };
+    bool  IsColor()   { return m_iscolor; };
+    int   GetDepth()  { return m_bit_depth; };
+    void  UseNativeDepth( bool yes ) { m_native_depth = yes; };
+    bool  IsFloat()   { return m_isfloat; };
+
+    virtual bool  ReadHeader() = 0;
+    virtual bool  ReadData( uchar* data, int step, int color ) = 0;
+    virtual void  Close();
+
+protected:
+
+    bool    m_iscolor;
+    int     m_width;    // width  of the image ( filled by ReadHeader )
+    int     m_height;   // height of the image ( filled by ReadHeader )
+    int     m_bit_depth;// bit depth per channel (normally 8)
+    char    m_filename[_MAX_PATH]; // filename
+    bool    m_native_depth;// use the native bit depth of the image
+    bool    m_isfloat;  // is image saved as float or double?
+};
+</code></pre>
+
+<p><code>GrFmtReader</code>比较核心的地方是3个<code>virtual</code>函数，分表用于读图像文件头、读数据、关闭图像文件。
+图像文件在读图像头的时候被打开。</p>
+
+<p>对于图像的其他属性，可以通过在子类中直接操作<code>m_iscolor</code>等<code>protected</code>成员完成。</p>
+
+<p>先大概说这么多，下一步将在上述分析的基础上，自己定义一个图像格式，然后提供相应的读写驱动，
+然后集成到<code>cvSaveImage</code>/<code>cvLoadImage</code>函数中。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2009-12-06</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/opencv/">opencv</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2009/opencv-memory-leak-test/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">OpenCV中的内存泄漏检测</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2009/opencv-test-framework/">
+            <span class="next-text nav-default">OpenCV的测试框架</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

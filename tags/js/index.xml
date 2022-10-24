@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Js on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/js/</link>
+    <description>Recent content in Js on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 06 Jul 2017 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/js/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>极简的Angular2示例, Electron环境运行</title>
+      <link>https://chai2010.cn/post/js/angular2-electron-app/</link>
+      <pubDate>Thu, 06 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/js/angular2-electron-app/</guid>
+      
+        <description>&lt;p&gt;Angular2本身提供了cli命令行工具, 可以生成完整的工程.&lt;/p&gt;
+
+&lt;p&gt;但是命令行生成的工程太过复杂, 对于新学习Angular的用户会有太多的干扰.&lt;/p&gt;
+
+&lt;p&gt;我们尝试完全脱离cli工具, 只是通过TypeScript提供的tsc命令, 纯手工构造一个极简的Angular2示例.&lt;/p&gt;
+
+&lt;p&gt;完整代码: &lt;a href=&#34;http://git.oschina.net/chai2010/hello-ng2&#34;&gt;http://git.oschina.net/chai2010/hello-ng2&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ng2-electron.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;配置淘宝的镜像&#34;&gt;配置淘宝的镜像&lt;/h2&gt;
+
+&lt;p&gt;通过以下命令安装:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g cnpm --registry=https://registry.npm.taobao.org
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;完成后用 &lt;code&gt;cnpm&lt;/code&gt; 代替 &lt;code&gt;npm&lt;/code&gt; 命令.&lt;/p&gt;
+
+&lt;h2 id=&#34;html启动页面&#34;&gt;HTML启动页面&lt;/h2&gt;
+
+&lt;p&gt;首先构造一个 hello-ng2 目录, 用于存放工程文件.&lt;/p&gt;
+
+&lt;p&gt;在目录下创建 demo.html 页面, 内容如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;
+
+&amp;lt;head&amp;gt;
+	&amp;lt;title&amp;gt;Angular2应用&amp;lt;/title&amp;gt;
+&amp;lt;/head&amp;gt;
+
+&amp;lt;body&amp;gt;
+	&amp;lt;my-app&amp;gt;加载UI组件&amp;lt;/my-app&amp;gt;
+	&amp;lt;script&amp;gt;require(&#39;./demo&#39;).main()&amp;lt;/script&amp;gt;
+&amp;lt;/body&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们采用的是HTML5语法, 完全省略了最外层没有任何意义的&lt;code&gt;&amp;lt;html&amp;gt;&amp;lt;/html&amp;gt;&lt;/code&gt;标签.&lt;/p&gt;
+
+&lt;p&gt;其中包含了一个我们自定义的&lt;code&gt;&amp;lt;my-app&amp;gt;&lt;/code&gt;标签, 对应我们要创建的 Angular 窗口组件.&lt;/p&gt;
+
+&lt;p&gt;然后通过&lt;code&gt;require&lt;/code&gt;加载当前目录下的&lt;code&gt;demo&lt;/code&gt;模块(对应demo.js文件), 然后运行其中的&lt;code&gt;main&lt;/code&gt;函数启动Angular程序.&lt;/p&gt;
+
+&lt;h2 id=&#34;angular组件&#34;&gt;Angular组件&lt;/h2&gt;
+
+&lt;p&gt;Angular严重依赖ES7中的注解语法, 如果要在JS中使用该特性, 将需要一个转码工具将ES7注解语法转为ES2015或更早的格式,
+因为只有这样才能在浏览器中正常运行.&lt;/p&gt;
+
+&lt;p&gt;虽然JS社区中已经存在了很多类似的转码工具(我本人将这个看作是一个编译过程, 和将C/C++代码转为exe类似), 但是依赖太多.&lt;/p&gt;
+
+&lt;p&gt;既然必需要引入一个转码工具, 强烈推荐使用TypeScript语言提供的tsc工具. 因为TypeScript语言本身是Angular官方采用的语言,
+同时也提供了注解等特性, 而且其提供的tsc工具没有任何外部依赖(失控的依赖绝对是一个灾难).&lt;/p&gt;
+
+&lt;p&gt;创建 demo.ts 文件, 并针对&lt;code&gt;&amp;lt;my-app&amp;gt;&lt;/code&gt;标签创建一个 Angular 窗口组件:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;import * as ngCore from &#39;@angular/core&#39;
+
+@ngCore.Component({
+	selector: &#39;my-app&#39;,
+	template: `
+		&amp;lt;h1&amp;gt;你好, {{name}}! - V1&amp;lt;/h1&amp;gt;
+	`,
+	styles: [
+		`h1 {
+			color: #369;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 250%;
+		}`,
+	],
+})
+export class MainComponent {
+	name = &#39;世界&#39;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;angular模块&#34;&gt;Angular模块&lt;/h2&gt;
+
+&lt;p&gt;为了使用该窗口部件, 我们需要将其组织到一个 Angular 模块中:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import * as ngPlatformBrowser from &#39;@angular/platform-browser&#39;
+
+@ngCore.NgModule({
+	imports: [ ngPlatformBrowser.BrowserModule ],
+	declarations: [ MainComponent ],
+	bootstrap: [ MainComponent ],
+})
+export class MainModule {
+	//
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同样, 我们通过 &lt;code&gt;@ngCore.NgModule&lt;/code&gt; 注解将 Angular 的运行时模块和 MainModule 类进行了关联.&lt;/p&gt;
+
+&lt;p&gt;在模块中, 我们导入了 &lt;code&gt;ngPlatformBrowser.BrowserModule&lt;/code&gt; 浏览器模块.&lt;/p&gt;
+
+&lt;p&gt;同时, &lt;code&gt;declarations&lt;/code&gt; 部分声明了我们自己创建的Angular组件.&lt;/p&gt;
+
+&lt;p&gt;最后, &lt;code&gt;bootstrap&lt;/code&gt; 部分将 MainComponent 指定为该模块的引导组件.&lt;/p&gt;
+
+&lt;p&gt;需要说明的是, NgModule 修饰的模块是一种运行时模块, 同时用于其中各种组件名字空间的管理.&lt;/p&gt;
+
+&lt;h2 id=&#34;启动angular模块&#34;&gt;启动Angular模块&lt;/h2&gt;
+
+&lt;p&gt;一个应用中可以有多个Angular 模块, 同样要指定一个引导模块, 通过以下代码完成:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;import * as ngPlatformBrowserDynamic from &#39;@angular/platform-browser-dynamic&#39;
+
+export function main() {
+	ngPlatformBrowserDynamic.platformBrowserDynamic().bootstrapModule(MainModule)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;到此, 一个极简的Angular2示例已经完成了. 但是还不能运行!&lt;/p&gt;
+
+&lt;p&gt;不能运行的原因主要有2个:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;浏览器环境不支持模块方式启动页面, 同样需要通过外部js库辅助.&lt;/li&gt;
+&lt;li&gt;Angular 依赖一些高级的特性, 很多浏览器环境并不支持, 需要通过外部js库模拟.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;为了简化, 我们采用了Electron环境运行应用, 因为在Electron环境我们可以直接使用NodeJS中的模块.
+对于第二点, 我们可以通过以下外部js库模拟缺少的特性:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;import &#39;core-js/es6/reflect&#39;
+import &#39;core-js/es7/reflect&#39;
+import &#39;zone.js/dist/zone&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;electron环境&#34;&gt;Electron环境&lt;/h2&gt;
+
+&lt;p&gt;现在 Angular2 部分的代码已经完整. 我们还需要给 Electron 创建一个启动脚本.&lt;/p&gt;
+
+&lt;p&gt;新建一个 index.ts 文件, 用于启动Angular2程序:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;import * as fs from &#39;fs&#39;
+import * as electron from &#39;electron&#39;
+
+let win: Electron.BrowserWindow = null
+
+function createWindow() {
+	win = new electron.BrowserWindow({width: 800, height: 600})
+	win.loadURL(`file://${__dirname}/demo.html`)
+	win.webContents.openDevTools()
+
+	win.on(&#39;closed&#39;, () =&amp;gt; { win = null })
+}
+
+function main() {
+	electron.app.on(&#39;ready&#39;, () =&amp;gt; {
+		createWindow()
+	})
+	electron.app.on(&#39;activate&#39;, () =&amp;gt; {
+		createWindow()
+	})
+	electron.app.on(&#39;window-all-closed&#39;, () =&amp;gt; {
+		if(process.platform !== &#39;darwin&#39;) {
+			electron.app.quit()
+		}
+	})
+}
+
+if(require.main === module) {
+	main()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;BrowserWindow&lt;/code&gt; 对应一个 Electron 窗口, 创建窗口后通过 &lt;code&gt;win.loadURL&lt;/code&gt; 加载了 &lt;code&gt;demo.html&lt;/code&gt; 页面.&lt;/p&gt;
+
+&lt;h2 id=&#34;其他配置文件&#34;&gt;其他配置文件&lt;/h2&gt;
+
+&lt;p&gt;为了运行应用, 我们还需要package.json和tsconfig.json文件, 分别对应NodeJS包和TypeScript的配置信息.&lt;/p&gt;
+
+&lt;p&gt;其中 package.json 文件千篇一律, 并没有什么特别之处. tsconfig.json文件则有一些需要定制的特性.&lt;/p&gt;
+
+&lt;p&gt;tsconfig.json 内容如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+	&amp;quot;include&amp;quot;: [
+		&amp;quot;./**/*&amp;quot;
+	],
+	&amp;quot;exclude&amp;quot;: [
+		&amp;quot;node_modules&amp;quot;,
+		&amp;quot;**/*.spec.ts&amp;quot;
+	],
+
+	&amp;quot;compilerOptions&amp;quot;: {
+		&amp;quot;module&amp;quot;: &amp;quot;commonjs&amp;quot;,
+		&amp;quot;moduleResolution&amp;quot;: &amp;quot;node&amp;quot;,
+		&amp;quot;lib&amp;quot;: [&amp;quot;dom&amp;quot;, &amp;quot;es2016&amp;quot;],
+		&amp;quot;emitDecoratorMetadata&amp;quot;: true,
+		&amp;quot;experimentalDecorators&amp;quot;: true,
+		&amp;quot;suppressImplicitAnyIndexErrors&amp;quot;:true,
+		&amp;quot;noStrictGenericChecks&amp;quot;: true,
+		&amp;quot;noImplicitAny&amp;quot;: false,
+		&amp;quot;target&amp;quot;: &amp;quot;es5&amp;quot;
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其中 &lt;code&gt;include&lt;/code&gt; 表示用通配符选择文件, &lt;code&gt;exclude&lt;/code&gt; 表示排除的文件, &lt;code&gt;compilerOptions&lt;/code&gt; 对应编译选项.&lt;/p&gt;
+
+&lt;p&gt;在编译选项中, 我们需要指定依赖的dom和es2016库, experimentalDecorators表示注解功能也必须打开,
+emitDecoratorMetadata表示生成元信息也必须打开(元信息是反射特性所需要的).&lt;/p&gt;
+
+&lt;p&gt;其它的编译参数用于可以根据需要自行调整.&lt;/p&gt;
+
+&lt;h2 id=&#34;运行&#34;&gt;运行&lt;/h2&gt;
+
+&lt;p&gt;克隆完整代码, 进入到对应目录的命令行, 然后安装依赖并运行:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cnpm install
+node_modules\.bin\tsc
+node_modules\.bin\electron .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行效果图:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/ng2-electron-demo.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;OK!&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>一个极简的JavaScript模板引擎</title>
+      <link>https://chai2010.cn/post/js/js-tmpl-engine/</link>
+      <pubDate>Wed, 05 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/js/js-tmpl-engine/</guid>
+      
+        <description>&lt;p&gt;基于ES6的新特性, 构造一个极简的JavaScript模板引擎.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;ES6提供了可以跨越多行的模板字符串, 为内联的模板提供了很多方便.&lt;/p&gt;
+
+&lt;p&gt;使用起来很简单:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;let world = &#39;世界&#39;
+console.log(`hello, ${world}`)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在执行时, JS引擎会对模板字符串中&lt;code&gt;${...}&lt;/code&gt;部分的表达式进行求值, 最后转换为字符串显示.&lt;/p&gt;
+
+&lt;p&gt;模板字符串可以跨越多行, 中间如果需要包含 ` $ 等字符串时需要用 \ 进行转义.&lt;/p&gt;
+
+&lt;p&gt;我们可以将ES6的模板字符串看作是一种编译时的模板引擎.&lt;/p&gt;
+
+&lt;p&gt;很多时候我们也需要运行时的模板引擎. 用户根据需要选择传入模板变量.&lt;/p&gt;
+
+&lt;p&gt;我们可以基于ES6的模板引擎打造一个运行时的模板引擎, 代码如下(TypeScript实现):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-typescript&#34;&gt;export function RenderTemplate(tmpl: string, params: object): string {
+	let keys = Object.keys(params)
+	let vals = keys.map(key =&amp;gt; params[key])
+	return new Function(...keys, `return \`${tmpl}\`;`)(...vals)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用方式如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;let s = RenderTemplate(&#39;${msg}&#39;, {msg:&#39;abc&#39;})
+let s = RenderTemplate(&#39;${fn(msg)}&#39;, {fn: s =&amp;gt; s.toUpperCase(), msg:&#39;abc&#39;})
+let s = RenderTemplate(&#39;${Math.sqrt(pt.x*pt.x+pt.y*pt.y)}&#39;, {Math:Math, pt:{x:1, y:2}})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;需要注意的是传入的模板字符串不能用反斜杠`包含以避免被JS引擎展开.&lt;/p&gt;
+
+&lt;p&gt;工作原理是构造一个函数, 函数体是将传入的运行时模板转为ES6的模板字符串,
+同时传入的对象成员转为新构造函数的参数变量, 这样JS引擎会根据传入的参数变量值展开模板字符串了.&lt;/p&gt;
+
+&lt;p&gt;实现虽然简单, 但是得意于ES6模板字符串的强大特性, 我们也可以传入函数等复杂对象.&lt;/p&gt;
+
+&lt;p&gt;如果哪位同学有更简单的实现, 请告知作者, 感谢.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

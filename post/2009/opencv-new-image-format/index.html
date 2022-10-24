@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>给OpenCV增加新的图像格式支持 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="在中提供了cvSaveImage/cvLoadImage两个 函数用来读写影像。opencv本身支持一些常见的格式。 但是如果是自己定义的特殊影" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2009/opencv-new-image-format/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="给OpenCV增加新的图像格式支持" />
+<meta property="og:description" content="在中提供了cvSaveImage/cvLoadImage两个 函数用来读写影像。opencv本身支持一些常见的格式。 但是如果是自己定义的特殊影" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2009/opencv-new-image-format/" />
+
+
+
+<meta property="article:published_time" content="2009-12-06T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2009-12-06T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="给OpenCV增加新的图像格式支持">
+<meta itemprop="description" content="在中提供了cvSaveImage/cvLoadImage两个 函数用来读写影像。opencv本身支持一些常见的格式。 但是如果是自己定义的特殊影">
+
+
+<meta itemprop="datePublished" content="2009-12-06T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2009-12-06T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2122">
+
+
+
+<meta itemprop="keywords" content="opencv," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="给OpenCV增加新的图像格式支持"/>
+<meta name="twitter:description" content="在中提供了cvSaveImage/cvLoadImage两个 函数用来读写影像。opencv本身支持一些常见的格式。 但是如果是自己定义的特殊影"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">给OpenCV增加新的图像格式支持</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2009-12-06 </span>
+        <div class="post-category">
+            
+              <a href="/categories/opencv/"> opencv </a>
+            
+          </div>
+        <span class="more-meta"> 约 2122 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>在<highgui.h>中提供了cvSaveImage/cvLoadImage两个
+函数用来读写影像。opencv本身支持一些常见的格式。</p>
+
+<p>但是如果是自己定义的特殊影像格式，cvSaveImage/cvLoadImage则不能正确处理。</p>
+
+<p>不过opencv本身的影像读写模块设计的比较好，很容易进行扩充。而且opencv在处理
+tiff等格式的图像的时候也是借用了libtiff库。因此，我们自己也可以给opencv的
+cvSaveImage/cvLoadImage增加新的图像格式支持。</p>
+
+<p>例如，假设定义了一个txt格式的图像。那么就可以用以下代码进行读写：</p>
+
+<pre><code>IplImage *img;
+img = cvLoadImage(&quot;test.txt&quot;, 1);
+cvSaveImage(&quot;save.txt&quot;, img);
+</code></pre>
+
+<p>具体的示例代码现在没有完全写好，等完善之后会将驱动的实现细节整理出来。</p>
+
+<p>由于内容比较多，我另开了一帖 <a href="/blog/2009/12/06/opencv-image-driver-framework">OpenCV的图像读写框架</a>.</p>
+
+<p>关于cvLoadImage/cvSaveImage的读写框架已经分析过。
+现在我们来尝试自己实现一个图像格式的读写操作。</p>
+
+<p>现在，我们定义图像后缀名为bin，例如image.bin等。
+bin格式的结构和IplImage结构基本对应，具体如下：</p>
+
+<pre><code>&quot;BIN&quot;          // 文件类型，三个字节
+width          // 图像宽度，int
+height         // 图像高度，int
+depth          // 像素深度，int
+channels       // 通道数，int
+data           // 每个像素数据
+</code></pre>
+
+<p>bin格式图像文件为二进制格式。由于opencv内部实现的一些限制，
+对于文本格式的图像文件支持可能相对困难一些（后面会提到）。</p>
+
+<p>现在，参考grfmt_bmp代码，创建对应的grfmt_bin.h/grfmt_bin.cpp文件。</p>
+
+<p>grfmt_bin.h内容如下：</p>
+
+<pre><code>#ifndef _GRFMT_BIN_H_
+#define _GRFMT_BIN_H_
+
+#include &quot;grfmt_base.h&quot;
+
+// 测试：自己实现的图像格式
+
+// 采用内存格式
+// 内部保存一个img图像
+// IplImage
+
+class GrFmtBinReader : public GrFmtReader
+{
+public:
+
+    GrFmtBinReader( const char* filename );
+    ~GrFmtBinReader();
+
+    bool  ReadData( uchar* data, int step, int color );
+    bool  ReadHeader();
+    void  Close();
+
+protected:
+
+FILE*   m_fp;        // 文件指针
+int     m_channels;  // 通道数
+};
+
+
+// ... writer
+class GrFmtBinWriter : public GrFmtWriter
+{
+public:
+
+    GrFmtBinWriter( const char* filename );
+    ~GrFmtBinWriter();
+
+    bool  WriteImage( const uchar* data, int step,
+                    int width, int height, int depth, int channels );
+protected:
+
+FILE*   m_fp;  // 文件指针
+};
+
+
+// ... and filter factory
+class GrFmtBin : public GrFmtFilterFactory
+{
+public:
+
+    GrFmtBin();
+    ~GrFmtBin();
+
+    GrFmtReader* NewReader( const char* filename );
+    GrFmtWriter* NewWriter( const char* filename );
+
+};
+
+#endif/*_GRFMT_BIN_H_*/
+</code></pre>
+
+<p>grfmt_bin.cpp对应各个成员函数的实现。首先包含必要的头文件：</p>
+
+<pre><code>#include &quot;_highgui.h&quot;
+#include &quot;grfmt_bin.h&quot;
+</code></pre>
+
+<p>GrFmtBin对应bin格式的对象工厂，其中NewReader/NewWriter用于创建
+用于读/写bin格式图像的驱动。</p>
+
+<pre><code>GrFmtBin::GrFmtBin()
+{
+    // 文件标志在开头，对应3个字节
+    m_sign_len = 3;
+
+    // 文件标志为&quot;BIN&quot;
+    m_signature = &quot;BIN&quot;;
+
+    // 图像文件名描述，小括弧中的为后缀名
+    m_description = &quot;Bin image (*.bin)&quot;;
+
+    // 只有后缀名为bin，并且以&quot;BIN&quot;3个字节开头的
+    // 文件才会被当作bin格式图像。
+}
+
+GrFmtBin::~GrFmtBin()
+{
+}
+
+// 构造读驱动
+GrFmtReader* GrFmtBin::NewReader( const char* filename )
+{
+    return new GrFmtBinReader( filename );
+}
+
+// 构造写驱动
+GrFmtWriter* GrFmtBin::NewWriter( const char* filename )
+{
+    return new GrFmtBinWriter( filename );
+}
+</code></pre>
+
+<p>读驱动为GrFmtBinReader，从GrFmtReader派生：</p>
+
+<pre><code>GrFmtBinReader::GrFmtBinReader( const char* filename ) : GrFmtReader( filename )
+{
+    m_fp = NULL;
+}
+
+GrFmtBinReader::~GrFmtBinReader()
+{
+}
+
+// 关闭图像文件
+void  GrFmtBinReader::Close()
+{
+    if(m_fp) fclose(m_fp);
+    GrFmtReader::Close();
+}
+
+// 读图像的属性
+bool  GrFmtBinReader::ReadHeader()
+{
+    // 打开图像文件
+    m_fp = fopen(m_filename, &quot;rb&quot;);
+    if(!m_fp) return false;
+
+    // 跳过图像格式&quot;BIN&quot;
+    char signature[3];
+    fread(signature, 1, 3, m_fp);
+
+    // int t[] = { width, height, depth, channels };
+    // fwrite(t, sizeof(t), 1, m_fp);
+
+    int t[4];
+    fread(t, sizeof(t), 1, m_fp);
+
+    m_width      = t[0];
+    m_height   = t[1];
+    m_bit_depth   = t[2];
+    m_channels   = t[3];
+
+    m_iscolor   = (m_channels&gt;1)? true: false;
+
+    assert(m_height &gt; 0 &amp;&amp; m_width &gt; 0);
+    return true;
+}
+
+// 图像的像素数据
+bool  GrFmtBinReader::ReadData( uchar* data, int step, int color)
+{
+    if(color &amp;&amp; m_channels == 1)
+    {
+        // 转换为彩色
+        int y;
+        for( y = 0; y &lt; m_height; y++, data += step )
+        {
+            int x;
+            for(x = 0; x &lt; m_width; ++x)
+            {
+                int size = m_channels*m_bit_depth/8;
+
+                char buf[8];
+                fread(buf, 1, size, m_fp);
+
+                data[size*x+0] = buf[0];
+                data[size*x+1] = buf[1];
+                data[size*x+2] = buf[2];
+            }
+        }
+    }
+    else
+    {
+        // 这里有待完善
+        int y;
+        for( y = 0; y &lt; m_height; y++, data += step )
+        {
+            int size = m_channels*m_bit_depth*m_width/8;
+            fread(data, 1, size, m_fp);
+        }
+    }
+
+    return true;
+}
+</code></pre>
+
+<p>写驱动为GrFmtBinWriter，从GrFmtWriter派生：</p>
+
+<pre><code>GrFmtBinWriter::GrFmtBinWriter( const char* filename ) : GrFmtWriter( filename )
+{
+}
+
+GrFmtBinWriter::~GrFmtBinWriter()
+{
+}
+
+bool  GrFmtBinWriter::WriteImage( const uchar* data, int step,
+                                int width, int height, int depth, int channels )
+{
+    m_fp = fopen(m_filename, &quot;wb&quot;);
+    if(!m_fp) return false;
+
+    const char *signature = fmtSignBin;
+    fwrite(signature, 1, 3, m_fp);
+
+    {
+        int t[] = { width, height, depth, channels };
+        fwrite(t, sizeof(t), 1, m_fp);
+    }
+
+    int i;
+    for(i = 0; i &lt; height; ++i, data += step)
+    {
+        fwrite(data, depth*channels/8, width, m_fp);
+    }
+
+    fclose(m_fp);
+
+    return true;
+}
+</code></pre>
+
+<p>到这里bin格式的驱动已经基本实现。下面还需要将驱动集成到opencv中。</p>
+
+<p><strong>1. 在grfmts.h包含bin格式图像驱动</strong></p>
+
+<pre><code>#include &quot;grfmt_bin.h&quot;
+</code></pre>
+
+<p><strong>2. 在loadsave.cpp中构造g_Filters的时候，添加驱动到链表</strong></p>
+
+<p>具体代码在CvImageFilters构造函数中完成：</p>
+
+<pre><code>CvImageFilters::CvImageFilters()
+{
+    m_factories = new GrFmtFactoriesList;
+
+    m_factories-&gt;AddFactory( new GrFmtBmp() );
+    m_factories-&gt;AddFactory( new GrFmtJpeg() );
+    m_factories-&gt;AddFactory( new GrFmtSunRaster() );
+    m_factories-&gt;AddFactory( new GrFmtPxM() );
+    m_factories-&gt;AddFactory( new GrFmtTiff() );
+#ifdef HAVE_PNG
+    m_factories-&gt;AddFactory( new GrFmtPng() );
+#endif
+#ifdef HAVE_JASPER
+    m_factories-&gt;AddFactory( new GrFmtJpeg2000() );
+#endif
+#ifdef HAVE_ILMIMF
+    m_factories-&gt;AddFactory( new GrFmtExr() );
+#endif
+
+    // Bin格式图像驱动
+    m_factories-&gt;AddFactory( new GrFmtBin() );
+}
+</code></pre>
+
+<p>这里需要补充的是，m_factories链表中的顺序可能会影响
+FindReader/FindWriter查找结果。在默认实现中是顺序查找，
+因此链表中排在前面的驱动被优先查找。</p>
+
+<p>现在bin格式图像的驱动已经全部实现，重新编译highgui工程。</p>
+
+<p>下一节将讲述cvLoadImage/cvSaveImage的具体执行流程。</p>
+
+<p>测试bin格式的驱动代码：</p>
+
+<pre><code>#include &lt;assert.h&gt;
+#include &lt;highgui.h&gt;
+
+int main()
+{
+    const char *file_bmp = &quot;E:\\TestXX\\gtalk-Alien.bmp&quot;;
+    const char *file_bin = &quot;E:\\TestXX\\gtalk-Alien.bin&quot;;
+
+    // 将bmp转换为bin格式
+
+    IplImage *img_bmp = cvLoadImage(file_bmp, 1);
+    assert(img_bmp != NULL);
+
+    cvSaveImage(file_bin, img_bmp);
+
+    // 从bin格式装载图像
+    // 目前bin驱动还不完善，第二个参数需设置为1
+
+    IplImage *img_bin = cvLoadImage(file_bin, 1);
+    assert(img_bin != NULL);
+
+    // 创建窗口，用于显示图像
+
+    const char *win_bmp = &quot;Bmp Image&quot;;
+    const char *win_bin = &quot;Bin Image&quot;;
+
+    cvNamedWindow(win_bmp);
+    cvNamedWindow(win_bin);
+
+    // 显示2个图像
+    cvShowImage(win_bmp, img_bmp);
+    cvShowImage(win_bin, img_bin);
+
+    // 等待
+    cvWaitKey(0);
+
+    // 释放资源
+    cvDestroyAllWindows();
+
+    cvReleaseImage(&amp;img_bmp);
+    cvReleaseImage(&amp;img_bin);
+
+    return 0;
+}
+</code></pre>
+
+<p>转换后的bin格式图像见附件，用户可以自己尝试打开bin图像文件。</p>
+
+<p>调试驱动：</p>
+
+<p>假设上面的测试对应的程序为C:\testBin.exe。
+用VC6打开opencv的工程，设置highgui工程的属性：在调试可以执行栏中输入C:\testBin.exe。</p>
+
+<p>现在就可以调试highgui了。可以单步调试，也可以在bin的相关位置设置断点。
+需要注意的是，highgui工程和testBin工程默认的路径可能不同，因此在打开/保存图像的时候
+最好使用绝对路径。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2009-12-06</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/opencv/">opencv</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2009/pyqt-opencv-edge/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">PyQt&amp;OpenCV实现边缘检测</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2009/josephus-reseach/">
+            <span class="next-text nav-default">Josephus问题</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

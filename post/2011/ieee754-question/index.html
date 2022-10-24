@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>解浮点数方程: X&#43;1=X - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="不是纯数学意义上的方程, 对应计算机的一个浮点数问题: if((float)(x&#43;1.0) == (float)(x)) { x = ? } 简单分析, ieee754中float采用23bit表示有效位, 再加省略的" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2011/ieee754-question/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="解浮点数方程: X&#43;1=X" />
+<meta property="og:description" content="不是纯数学意义上的方程, 对应计算机的一个浮点数问题: if((float)(x&#43;1.0) == (float)(x)) { x = ? } 简单分析, ieee754中float采用23bit表示有效位, 再加省略的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2011/ieee754-question/" />
+
+
+
+<meta property="article:published_time" content="2011-12-08T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2011-12-08T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="解浮点数方程: X&#43;1=X">
+<meta itemprop="description" content="不是纯数学意义上的方程, 对应计算机的一个浮点数问题: if((float)(x&#43;1.0) == (float)(x)) { x = ? } 简单分析, ieee754中float采用23bit表示有效位, 再加省略的">
+
+
+<meta itemprop="datePublished" content="2011-12-08T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2011-12-08T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="290">
+
+
+
+<meta itemprop="keywords" content="算法,浮点数," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="解浮点数方程: X&#43;1=X"/>
+<meta name="twitter:description" content="不是纯数学意义上的方程, 对应计算机的一个浮点数问题: if((float)(x&#43;1.0) == (float)(x)) { x = ? } 简单分析, ieee754中float采用23bit表示有效位, 再加省略的"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">解浮点数方程: X&#43;1=X</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2011-12-08 </span>
+        <div class="post-category">
+            
+              <a href="/categories/%E7%AE%97%E6%B3%95/"> 算法 </a>
+            
+          </div>
+        <span class="more-meta"> 约 290 字 </span>
+        <span class="more-meta"> 预计阅读 1 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>不是纯数学意义上的方程, 对应计算机的一个浮点数问题:</p>
+
+<pre><code>if((float)(x+1.0) == (float)(x)) { x = ? }
+</code></pre>
+
+<p>简单分析, ieee754中float采用23bit表示有效位, 再加省略的1, 共有24bit.
+当结果超出24bit时, 小数部分被被丢失.</p>
+
+<p>大于 <code>2^24 = 16777216</code> 的x, 满足 <code>x+1.0==x</code>.</p>
+
+<p>测试程序:</p>
+
+<pre><code>#include &lt;stdio.h&gt;
+
+// Little endian
+union ieee754_float {
+    float f;
+
+    /* This is the IEEE 754 single-precision format.  */
+    struct {
+        unsigned int mantissa:23;
+        unsigned int exponent:8;
+        unsigned int negative:1;
+    } ieee;
+
+    /* This format makes it easier to see if a NaN is a signalling NaN.  */
+    struct {
+        unsigned int mantissa:22;
+        unsigned int quiet_nan:1;
+        unsigned int exponent:8;
+        unsigned int negative:1;
+    } ieee_nan;
+};
+
+int main()
+{
+    union ieee754_float f = { 0.0f };
+
+    // Find a positive floating point value x, for which x+1.0=x.
+    for(f.ieee.exponent = 127; f.ieee.exponent &lt; 255; f.ieee.exponent++) {
+        if((float)(f.f + 1.f) == f.f) {
+            printf(&quot;%f: exponent = %d\n&quot;, f.f, f.ieee.exponent);
+        }
+    }
+    return 0;
+}
+
+// output:
+// 16777216.000000: exponent = 151
+// 33554432.000000: exponent = 152
+// 67108864.000000: exponent = 153
+// 134217728.000000: exponent = 154
+//
+// ... ...
+//
+// 21267647932558654000000000000000000000.000000: exponent = 251
+// 42535295865117308000000000000000000000.000000: exponent = 252
+// 85070591730234616000000000000000000000.000000: exponent = 253
+// 170141183460469230000000000000000000000.000000: exponent = 254
+</code></pre>
+
+<p>IEEE754相关资源:</p>
+
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/IEEE_754-2008">http://en.wikipedia.org/wiki/IEEE_754-2008</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Single_precision">http://en.wikipedia.org/wiki/Single_precision</a></li>
+<li><a href="http://www.h-schmidt.net/FloatApplet/IEEE754.html">http://www.h-schmidt.net/FloatApplet/IEEE754.html</a></li>
+<li><a href="http://babbage.cs.qc.edu/IEEE-754/">http://babbage.cs.qc.edu/IEEE-754/</a></li>
+<li><a href="http://www.scs.stanford.edu/histar/src/pkg/uclibc/include/ieee754.h">http://www.scs.stanford.edu/histar/src/pkg/uclibc/include/ieee754.h</a></li>
+</ul>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2011-12-08</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+          
+          <a href="/tags/%E6%B5%AE%E7%82%B9%E6%95%B0/">浮点数</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/2012/book-go-program-bugs/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">关于《Go语言编程》中的一些问题</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/2011/fopen-max-num/">
+            <span class="next-text nav-default">fopen打开的最大文件数目</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

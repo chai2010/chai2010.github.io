@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tenary on chai2010 的博客</title>
+    <link>https://chai2010.cn/tags/tenary/</link>
+    <description>Recent content in Tenary on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 25 Feb 2014 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/tags/tenary/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Go语言的三元表达式</title>
+      <link>https://chai2010.cn/post/golang/go-tenary/</link>
+      <pubDate>Tue, 25 Feb 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/golang/go-tenary/</guid>
+      
+        <description>&lt;p&gt;三元表达式的介绍在这里:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/%3F:&#34;&gt;http://en.wikipedia.org/wiki/%3F:&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/IIf&#34;&gt;http://en.wikipedia.org/wiki/IIf&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Go语言明确不支持三元表达式，这里是相关的讨论：
+&lt;a href=&#34;https://groups.google.com/d/msg/golang-nuts/dbyqx_LGUxM/tLFFSXSfOdQJ&#34;&gt;https://groups.google.com/d/msg/golang-nuts/dbyqx_LGUxM/tLFFSXSfOdQJ&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;官方FAQ的说明在这里：
+&lt;a href=&#34;http://golang.org/doc/faq#Does_Go_have_a_ternary_form&#34;&gt;http://golang.org/doc/faq#Does_Go_have_a_ternary_form&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;官方FAQ推荐的做法是用 &lt;code&gt;if&lt;/code&gt; 代替：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if expr {
+    n = trueVal
+} else {
+    n = falseVal
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不过用 &lt;code&gt;if&lt;/code&gt; 的问题是变量 &lt;code&gt;n&lt;/code&gt; 有作用域问题.
+我们需要在 &lt;code&gt;if&lt;/code&gt; 之前先定义变量 &lt;code&gt;n&lt;/code&gt;，这样才可以在 &lt;code&gt;if&lt;/code&gt; 语句之后使用变量 &lt;code&gt;n&lt;/code&gt;。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var n int
+if expr {
+    n = trueVal
+} else {
+    n = falseVal
+}
+println(n)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本来一个简单的 &lt;code&gt;n := expr? trueVal: falseVal&lt;/code&gt; 就能够表达的问题，变的复杂了很多。
+这和Go所追求的简单思路是有冲突的。&lt;/p&gt;
+
+&lt;p&gt;类似的有 &lt;code&gt;max&lt;/code&gt;/&lt;code&gt;min&lt;/code&gt; 等函数。因为这类函数使用频度比较高，在很多pkg的内部都定义了私有的实现。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func max(a, b int) int {
+    if a &amp;lt; b {
+        return b
+    }
+    return a
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;熟悉Go语言的用户应该可以发现，这个 &lt;code&gt;max&lt;/code&gt; 只支持 &lt;code&gt;int&lt;/code&gt; 类型。
+对于支持泛型的C++语言来说，&lt;code&gt;max&lt;/code&gt; 一般被实现为一个模板函数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;template &amp;lt;class T&amp;gt;
+const T&amp;amp; max (const T&amp;amp; a, const T&amp;amp; b) {
+    return (a&amp;lt;b)?b:a;     // or: return comp(a,b)?b:a; for version (2)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在C++版本中，不仅用到的泛型&lt;code&gt;T&lt;/code&gt;，还依赖 &lt;code&gt;a&amp;lt;b&lt;/code&gt; 的运算符重载特性。
+在C语言中，虽然没有泛型和运算符重载，但是三元表达式也具备全部的特性（因为表达式天生就是支持泛型的）。&lt;/p&gt;
+
+&lt;p&gt;而这些都是Go语言中缺少的特性。
+不过在Go语言中可以模拟一个更普通的函数(&lt;code&gt;If&lt;/code&gt; 的首字母大写，是函数名，不是 &lt;code&gt;if&lt;/code&gt; 关键字)：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func If(condition bool, trueVal, falseVal interface{}) interface{} {
+    if condition {
+        return trueVal
+    }
+    return falseVal
+}
+
+a, b := 2, 3
+max := If(a &amp;gt; b, a, b).(int)
+println(max)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;有几个关键点：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Go不支持运算符重载，因此需要先将 &lt;code&gt;a&amp;lt;b&lt;/code&gt; 在函数外转换为 &lt;code&gt;bool&lt;/code&gt; 条件&lt;/li&gt;
+&lt;li&gt;Go不支持泛型，只能用 &lt;code&gt;interface{}&lt;/code&gt; 模拟&lt;/li&gt;
+&lt;li&gt;返回的类型安全需要用户自己保证，&lt;code&gt;.(type)&lt;/code&gt; 的类型必须匹配&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;interface{}&lt;/code&gt; 是运行时泛型，性能没有编译时泛型高&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;由此可见，&lt;code&gt;?:&lt;/code&gt; 不仅仅是一个简单的三元表达式。其实它更像一个内置的泛型版的函数（因为表达式天生就是支持泛型的）。&lt;/p&gt;
+
+&lt;p&gt;期望未来的Go版本中，能完善对 &lt;code&gt;?:&lt;/code&gt; 三元表达式 和 编译时的泛型 的支持。&lt;/p&gt;
+
+&lt;p&gt;补充：
+星星 同学的提示：可能会导致深入嵌套的滥用： &lt;code&gt;c?d?e?0:1:2:3&lt;/code&gt; 。
+因为三元表达式是一个表达式，必然是允许嵌套的。&lt;/p&gt;
+
+&lt;p&gt;不过我觉得嵌套不是问题的本质，函数也能导致嵌套的滥用。
+但是不能因为滥用的行为来排斥有存在价值的语法（比如三元表达式）。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+  </channel>
+</rss>

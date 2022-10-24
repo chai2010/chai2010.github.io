@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>VC2010下Qt5的中文乱码问题 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="要搞清楚这个问题，先要弄明白编码。但是编码问题实在太复杂，这里肯定讲不开。
+我先找一个例子，比如：&amp;rdquo;中文&amp;rdquo; 的 Unicode 码点/UTF8编码/GBK 分别是多少。
+先去这个网站，输入 &amp;ldquo;中文&amp;rdquo; 查询对应的 Unicode 码点/UTF8编码：
+
+" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/misc/qt5-i18n/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="VC2010下Qt5的中文乱码问题" />
+<meta property="og:description" content="要搞清楚这个问题，先要弄明白编码。但是编码问题实在太复杂，这里肯定讲不开。
+
+我先找一个例子，比如：&rdquo;中文&rdquo; 的 Unicode 码点/UTF8编码/GBK 分别是多少。
+
+先去这个网站，输入 &ldquo;中文&rdquo; 查询对应的 Unicode 码点/UTF8编码：
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/misc/qt5-i18n/" />
+
+
+
+<meta property="article:published_time" content="2013-04-04T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2013-04-04T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="VC2010下Qt5的中文乱码问题">
+<meta itemprop="description" content="要搞清楚这个问题，先要弄明白编码。但是编码问题实在太复杂，这里肯定讲不开。
+
+我先找一个例子，比如：&rdquo;中文&rdquo; 的 Unicode 码点/UTF8编码/GBK 分别是多少。
+
+先去这个网站，输入 &ldquo;中文&rdquo; 查询对应的 Unicode 码点/UTF8编码：
+
+">
+
+
+<meta itemprop="datePublished" content="2013-04-04T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-04-04T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2159">
+
+
+
+<meta itemprop="keywords" content="qt,i18n,misc," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="VC2010下Qt5的中文乱码问题"/>
+<meta name="twitter:description" content="要搞清楚这个问题，先要弄明白编码。但是编码问题实在太复杂，这里肯定讲不开。
+
+我先找一个例子，比如：&rdquo;中文&rdquo; 的 Unicode 码点/UTF8编码/GBK 分别是多少。
+
+先去这个网站，输入 &ldquo;中文&rdquo; 查询对应的 Unicode 码点/UTF8编码：
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">VC2010下Qt5的中文乱码问题</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-04-04 </span>
+        <div class="post-category">
+            
+              <a href="/categories/misc/"> misc </a>
+            
+          </div>
+        <span class="more-meta"> 约 2159 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-先看-无-bom-的-utf8-编码的代码-utf8-no-bom-cpp">1. 先看 无 BOM 的 UTF8 编码的代码 (utf8_no_bom.cpp)</a></li>
+<li><a href="#2-再看带bom的utf8是怎么处理的-utf8-with-bom-cpp">2. 再看带BOM的UTF8是怎么处理的 (utf8_with_bom.cpp)</a></li>
+<li><a href="#3-在看看真的gbk是怎么处理的-gbk-cpp">3. 在看看真的GBK是怎么处理的 (gbk.cpp)</a></li>
+<li><a href="#4-看看vc2010是怎么处理带bom的utf8的-utf8-with-bom-2010-cpp">4. 看看VC2010是怎么处理带BOM的UTF8的 (utf8_with_bom_2010.cpp)</a></li>
+</ul></li>
+<li><a href="#回到-qt5-的中文输出问题">回到 Qt5 的中文输出问题。</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <p>要搞清楚这个问题，先要弄明白编码。但是编码问题实在太复杂，这里肯定讲不开。</p>
+
+<p>我先找一个例子，比如：&rdquo;中文&rdquo; 的 Unicode 码点/UTF8编码/GBK 分别是多少。</p>
+
+<p>先去这个网站，输入 &ldquo;中文&rdquo; 查询对应的 Unicode 码点/UTF8编码：</p>
+
+<p></p>
+
+<p><a href="http://www.mytju.com/classcode/tools/encode_utf8.asp">http://www.mytju.com/classcode/tools/encode_utf8.asp</a></p>
+
+<p>Unicode的码点分别是(十进制)：中(20013)，文(25991)。
+对应的UTF8编码分别(16进制): 中(E4B8AD)，文(E69687)。</p>
+
+<p>然后再去下面这个网站，输入 &ldquo;中文&rdquo; 查询对应的 GBK 编码：
+<a href="http://www.mytju.com/classcode/tools/encode_gb2312.asp">http://www.mytju.com/classcode/tools/encode_gb2312.asp</a></p>
+
+<p>GBK编码16进制(GBK内码)分别是：中(D6D0)，文(CEC4)。</p>
+
+<p>现在已经知道了&rdquo;中文&rdquo;的UTF8和GBK编码的具体值。
+我们再看看VC2010是怎么处理的。</p>
+
+<h2 id="1-先看-无-bom-的-utf8-编码的代码-utf8-no-bom-cpp">1. 先看 无 BOM 的 UTF8 编码的代码 (utf8_no_bom.cpp)</h2>
+
+<pre><code>// utf8 no bom
+// 文件中包含不能在当前代码页（936）中表示的字符
+#include &lt;stdio.h&gt;
+
+int main() {
+    const char* str = &quot;中文&quot;;
+    for(int i = 0; i &lt; sizeof(str); ++i) {
+        printf(&quot;0x%x &quot;, str[i]&amp;0xFF);
+    }
+    return 0;
+    // Output:
+    // 0xe4 0xb8 0xad 0xe6
+}
+</code></pre>
+
+<p>输出是：0xe4 0xb8 0xad 0xe6。
+感觉好像是对的。</p>
+
+<p>但是，先别急：VC编译时输出了一条警告信息：
+utf8_no_bom.cpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。
+请将该文件保存为 Unicode 格式以防止数据丢失。</p>
+
+<p>潜台词就是，你这个代码有GBK不能表示的字符，请用Unicode方式保存。
+VC根本就没把 代码(utf8_no_bom.cpp) 当作UTF8，VC只是把它作为GBK处理罢了。</p>
+
+<p>那为什么又输出了正确的结果呢？</p>
+
+<p>因为 VC 把 (utf8_no_bom.cpp) 当作 GBK，而编译时也要转换为本地编码(也是GBK)。
+因此，UTF8编码的 &ldquo;中文&rdquo;，被VC当作编码为 &ldquo;0xe4 0xb8 0xad 0xe6&rdquo; 的其他中文处理了。
+VC已经不知道 &ldquo;0xe4 0xb8 0xad 0xe6&rdquo; 是对应 &ldquo;中文&rdquo; 字面值了。</p>
+
+<p>但是在GBK(实际是无BOM的UTF8)转GBK的过程中，发现了一些UTF8编码的字符并不是
+GBK能表达的合理方式，因此就出现了那个C4819编译警告。</p>
+
+<h2 id="2-再看带bom的utf8是怎么处理的-utf8-with-bom-cpp">2. 再看带BOM的UTF8是怎么处理的 (utf8_with_bom.cpp)</h2>
+
+<pre><code>// utf8 with bom
+#include &lt;stdio.h&gt;
+
+int main() {
+    const char* str = &quot;中文&quot;;
+    for(int i = 0; i &lt; sizeof(str); ++i) {
+        printf(&quot;0x%x &quot;, str[i]&amp;0xFF);
+    }
+    return 0;
+    // Output:
+    // 0xd6 0xd0 0xce 0xc4
+}
+</code></pre>
+
+<p>编译没有警告，但是输出有问题：0xd6 0xd0 0xce 0xc4。</p>
+
+<p>源文件明明是 UTF8 编码的格式&rdquo;0xe4 0xb8 0xad 0xe6&rdquo;，
+怎么变成了 &ldquo;0xd6 0xd0 0xce 0xc4&rdquo; (这个是GBK编码)？</p>
+
+<p>这就是VC私下干的好事：它自作聪明的将UTF8源代码转换为GBK处理了！</p>
+
+<p>VC为何要做这样蠢事？</p>
+
+<p>原因是为了兼容老的VC版本。
+因为以前的VC不能处理UTF8，都是用本地编码处理的。</p>
+
+<h2 id="3-在看看真的gbk是怎么处理的-gbk-cpp">3. 在看看真的GBK是怎么处理的 (gbk.cpp)</h2>
+
+<pre><code>// gbk
+#include &lt;stdio.h&gt;
+
+int main() {
+    const char* str = &quot;中文&quot;;
+    for(int i = 0; i &lt; sizeof(str); ++i) {
+        printf(&quot;0x%x &quot;, str[i]&amp;0xFF);
+    }
+    return 0;
+    // Output:
+    // 0xd6 0xd0 0xce 0xc4
+}
+</code></pre>
+
+<p>没有编译错误，输出也和源代码一致：&rdquo;0xd6 0xd0 0xce 0xc4&rdquo;。</p>
+
+<p>因为源文件就是GBK，cl在编译时GBK转化为GBK，没有改变字符串。</p>
+
+<p>只是，现在很多人不想用GBK了（因为只能在中国地区用，不能表示全球字符）。</p>
+
+<hr />
+
+<p>到这里，可以初步小结一下：</p>
+
+<ol>
+<li>VC编辑器和VC编译器是2个概念，VC编辑器支持UTF8并不能表示VC编译器也支持UTF8</li>
+<li>VC编辑器从2008?开始支持带BOM的UTF8(不带BOM的暂时没戏，因为会本地编码冲突)</li>
+<li>VC编译器从2010开始重要可以支持UTF8了(虽然支持方式很不优雅)</li>
+</ol>
+
+<hr />
+
+<h2 id="4-看看vc2010是怎么处理带bom的utf8的-utf8-with-bom-2010-cpp">4. 看看VC2010是怎么处理带BOM的UTF8的 (utf8_with_bom_2010.cpp)</h2>
+
+<p>VC2010重要增加了UTF8的编译支持(<code>#pragma execution_character_set(&quot;utf-8&quot;)</code>),
+具体查看:</p>
+
+<p><a href="http://social.msdn.microsoft.com/Forums/en-US/vcgeneral/thread/2f328917-4e99-40be-adfa-35cc17c9cdec">http://social.msdn.microsoft.com/Forums/en-US/vcgeneral/thread/2f328917-4e99-40be-adfa-35cc17c9cdec</a></p>
+
+<pre><code>// utf8 with bom (VC2010), 这句是重点！
+#pragma execution_character_set(&quot;utf-8&quot;)
+
+#include &lt;stdio.h&gt;
+
+int main() {
+    const char* str = &quot;中文&quot;;
+    for(int i = 0; i &lt; sizeof(str); ++i) {
+        printf(&quot;0x%x &quot;, str[i]&amp;0xFF);
+    }
+    return 0;
+    // Output:
+    // 0xe4 0xb8 0xad 0xe6
+}
+</code></pre>
+
+<p>没有编译错误，输出也和源代码一致：&rdquo;0xe4 0xb8 0xad 0xe6&rdquo;。</p>
+
+<p>UTF8编码，UTF8输出。完美!</p>
+
+<hr />
+
+<h1 id="回到-qt5-的中文输出问题">回到 Qt5 的中文输出问题。</h1>
+
+<p>Qt默认支持 VS2010/MinGW/Gcc 等编译器，而它们现在都已经真正支持UTF8了。</p>
+
+<p>当然，VS2010 对UTF8的支持会入侵代码(<code>#pragma execution_character_set(&quot;utf-8&quot;)</code>)。</p>
+
+<p>看看Qt官方论坛别人是怎么说的：
+<a href="http://qt-project.org/forums/viewthread/17617">http://qt-project.org/forums/viewthread/17617</a></p>
+
+<blockquote>
+<p>Nothing special need to do, it will works by default.
+If the exec-charset of your your compiler is UTF-8.</p>
+</blockquote>
+
+<p>简单的说，从Qt5开始，源代码就是默认UTF8编码的。</p>
+
+<p>当然，VC2010编辑器对带BOM的UTF8也是认识，只可惜VC2010编译器根本承认它是UTF8！</p>
+
+<p>在继续看官方论坛的回复：</p>
+
+<blockquote>
+<p>You can write a simple example like this</p>
+
+<pre><code>  #include &lt;QApplication&gt;
+  #include &lt;QLabel&gt;
+
+  #if _MSC_VER &gt;= 1600
+  #pragma execution_character_set(&quot;utf-8&quot;)
+  #endif
+
+  int main(int argc, char *argv[])
+  {
+      QApplication a(argc, argv);
+      QLabel label(&quot;ąśćółęńżź&quot;);
+      label.show();
+
+      return a.exec();
+  }
+</code></pre>
+
+<p>If other people can reproduce your problem, you can file a bug.</p>
+</blockquote>
+
+<p>教完整的解决方案(增加了Qt4/Qt5和非VC环境的判断):</p>
+
+<pre><code>// Coding: UTF-8(BOM)
+#if defined(_MSC_VER) &amp;&amp; (_MSC_VER &gt;= 1600)
+# pragma execution_character_set(&quot;utf-8&quot;)
+#endif
+
+#include &lt;QApplication&gt;
+#include &lt;QTextCodec&gt;
+#include &lt;QLabel&gt;
+
+int main(int argc, char* argv[])
+{
+    QApplication app(argc, argv);
+
+#if QT_VERSION &lt; QT_VERSION_CHECK(5,0,0)
+#if defined(_MSC_VER) &amp;&amp; (_MSC_VER &lt; 1600)
+    QTextCodec::setCodecForTr(QTextCodec::codecForName(&quot;GB18030-0&quot;));
+#else
+    QTextCodec::setCodecForTr(QTextCodec::codecForName(&quot;UTF-8&quot;));
+#endif
+#endif
+
+    QLabel *label = new QLabel(QObject::tr(&quot;你好！&quot;));
+    label-&gt;show();
+
+    return app.exec();
+}
+</code></pre>
+
+<p>有以下几种类型(源代码必须是带BOM的UTF8):</p>
+
+<ul>
+<li>Qt5+/VC2010+: 包含了 <code># pragma execution_character_set(&quot;utf-8&quot;)</code> 已经支持中文</li>
+<li>Qt5/VC2008-: 这个暂时误解(我还没找到方法)</li>
+<li>Qt4+/VC2008-: 采用以前老的方式, 指定代码为 &ldquo;GB18030-0&rdquo; 编码</li>
+<li>Qt4/Qt5/Linux: 只要是默认的UTF8环境, 应该都没问题</li>
+</ul>
+
+<p>其实这个问题不是Qt特有的, 追根溯源还是C/C++和编译器的问题.</p>
+
+<p>即使是支持UTF16的Java也同样难逃此问题.</p>
+
+<p>不过还好, <a href="http://golang.org">Go语言</a> 算是彻底了解决了这个问题.
+以后转向 <a href="http://golang.org">Go语言</a> 了 !</p>
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2013-04-04</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/qt/">qt</a>
+          
+          <a href="/tags/i18n/">i18n</a>
+          
+          <a href="/tags/misc/">misc</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/goweb2013/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">用Go语言开发Web程序[翻译]</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/slice2013/">
+            <span class="next-text nav-default">切片：用法和本质[翻译]</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

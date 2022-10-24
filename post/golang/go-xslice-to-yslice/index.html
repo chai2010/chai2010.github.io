@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go语言中不同类型切片之间的相互转换 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="将 []T 切片转换为 []byte 类似C语言中将其他类型的数组转换为char数组： func ByteSlice(slice interface{}) (data []byte) { sv := reflect.ValueOf(slice) if sv.Kind() != reflect.Slice { panic(fmt.Sprintf(&amp;quot;ByteSlice called with non-slice value of type %T&amp;quot;, slice)) } h := (*reflect.SliceHeader)((unsafe.Pointer(&amp;amp;data))) h.Cap = sv.Cap() * int(sv.Type().Elem().Size()) h.Len = sv.Len() * int(sv.Type().Elem().Size()) h.Data" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-xslice-to-yslice/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go语言中不同类型切片之间的相互转换" />
+<meta property="og:description" content="将 []T 切片转换为 []byte 类似C语言中将其他类型的数组转换为char数组： func ByteSlice(slice interface{}) (data []byte) { sv := reflect.ValueOf(slice) if sv.Kind() != reflect.Slice { panic(fmt.Sprintf(&quot;ByteSlice called with non-slice value of type %T&quot;, slice)) } h := (*reflect.SliceHeader)((unsafe.Pointer(&amp;data))) h.Cap = sv.Cap() * int(sv.Type().Elem().Size()) h.Len = sv.Len() * int(sv.Type().Elem().Size()) h.Data" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-xslice-to-yslice/" />
+
+
+
+<meta property="article:published_time" content="2014-05-20T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2014-05-20T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go语言中不同类型切片之间的相互转换">
+<meta itemprop="description" content="将 []T 切片转换为 []byte 类似C语言中将其他类型的数组转换为char数组： func ByteSlice(slice interface{}) (data []byte) { sv := reflect.ValueOf(slice) if sv.Kind() != reflect.Slice { panic(fmt.Sprintf(&quot;ByteSlice called with non-slice value of type %T&quot;, slice)) } h := (*reflect.SliceHeader)((unsafe.Pointer(&amp;data))) h.Cap = sv.Cap() * int(sv.Type().Elem().Size()) h.Len = sv.Len() * int(sv.Type().Elem().Size()) h.Data">
+
+
+<meta itemprop="datePublished" content="2014-05-20T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2014-05-20T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="496">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go语言中不同类型切片之间的相互转换"/>
+<meta name="twitter:description" content="将 []T 切片转换为 []byte 类似C语言中将其他类型的数组转换为char数组： func ByteSlice(slice interface{}) (data []byte) { sv := reflect.ValueOf(slice) if sv.Kind() != reflect.Slice { panic(fmt.Sprintf(&quot;ByteSlice called with non-slice value of type %T&quot;, slice)) } h := (*reflect.SliceHeader)((unsafe.Pointer(&amp;data))) h.Cap = sv.Cap() * int(sv.Type().Elem().Size()) h.Len = sv.Len() * int(sv.Type().Elem().Size()) h.Data"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go语言中不同类型切片之间的相互转换</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2014-05-20 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 496 字 </span>
+        <span class="more-meta"> 预计阅读 1 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#将-t-切片转换为-byte">将 <code>[]T</code> 切片转换为 <code>[]byte</code></a></li>
+<li><a href="#将-x-转换为-y-切片">将 <code>[]X</code> 转换为 <code>[]Y</code> 切片</a></li>
+<li><a href="#注意事项">注意事项</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<h1 id="将-t-切片转换为-byte">将 <code>[]T</code> 切片转换为 <code>[]byte</code></h1>
+
+<p>类似C语言中将其他类型的数组转换为<code>char</code>数组：</p>
+
+<pre><code>func ByteSlice(slice interface{}) (data []byte) {
+    sv := reflect.ValueOf(slice)
+    if sv.Kind() != reflect.Slice {
+        panic(fmt.Sprintf(&quot;ByteSlice called with non-slice value of type %T&quot;, slice))
+    }
+    h := (*reflect.SliceHeader)((unsafe.Pointer(&amp;data)))
+    h.Cap = sv.Cap() * int(sv.Type().Elem().Size())
+    h.Len = sv.Len() * int(sv.Type().Elem().Size())
+    h.Data = sv.Pointer()
+    return
+}
+</code></pre>
+
+<p>基于该函数，我们可以方便调用 <code>[]byte</code> 类型参数的函数：</p>
+
+<pre><code>func SaveImageData(name string, data []color.RGBA) error {
+    return ioutil.WriteFile(name, ByteSlice(data), 0666)
+}
+</code></pre>
+
+<h1 id="将-x-转换为-y-切片">将 <code>[]X</code> 转换为 <code>[]Y</code> 切片</h1>
+
+<p>类似C语言中将不同类型的数组转之间的相互转换：</p>
+
+<pre><code>func Slice(slice interface{}, newSliceType reflect.Type) interface{} {
+    sv := reflect.ValueOf(slice)
+    if sv.Kind() != reflect.Slice {
+        panic(fmt.Sprintf(&quot;Slice called with non-slice value of type %T&quot;, slice))
+    }
+    if newSliceType.Kind() != reflect.Slice {
+        panic(fmt.Sprintf(&quot;Slice called with non-slice type of type %T&quot;, newSliceType))
+    }
+    newSlice := reflect.New(newSliceType)
+    hdr := (*reflect.SliceHeader)(unsafe.Pointer(newSlice.Pointer()))
+    hdr.Cap = sv.Cap() * int(sv.Type().Elem().Size()) / int(newSliceType.Elem().Size())
+    hdr.Len = sv.Len() * int(sv.Type().Elem().Size()) / int(newSliceType.Elem().Size())
+    hdr.Data = uintptr(sv.Pointer())
+    return newSlice.Elem().Interface()
+}
+</code></pre>
+
+<p>转换时需要传入一个期望的目标切片类型，以 <code>interface{}</code> 形式返回转换后的切片。</p>
+
+<p>比如，在图像处理中，转换 RGB 格式为 BGR 格式：</p>
+
+<pre><code>type RGB struct {
+    R, G, B uint8
+}
+type BGR struct {
+    B, G, R uint8
+}
+
+func RGB2BGR(data []RGB) []BGR {
+    d := Slice(data, reflect.TypeOf([]BGR(nil)))
+    return d.([]BGR)
+}
+</code></pre>
+
+<p>类似于C语言中，将<code>RGB</code>指针转换为<code>BGR</code>指针的思路。 数据的底层结构并没有变化。</p>
+
+<h1 id="注意事项">注意事项</h1>
+
+<p>该转换操作有一定的风险，用户需要自己保证安全。主要涉及以下几种类型：</p>
+
+<ul>
+<li>当结构体中含有指针时，转换会导致垃圾回收的问题。</li>
+<li>如果是 <code>[]byte</code> 转 <code>[]T</code> 可能会导致起始地址未对齐的问题 （<code>[]byte</code> 有可能从奇数位置切片）。</li>
+<li>该转换操作可能依赖当前系统，不同类型的处理器之间有差异。</li>
+</ul>
+
+<p>该转换操作的优势是性能和类似<code>void*</code>的泛型，与<code>cgo</code>接口配合使用会更加理想。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2014-05-20</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go-safe-interface/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go语言中隐式接口的冲突问题</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/golang/go-tenary/">
+            <span class="next-text nav-default">Go语言的三元表达式</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

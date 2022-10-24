@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gopherchina on chai2010 的博客</title>
+    <link>https://chai2010.cn/categories/gopherchina/</link>
+    <description>Recent content in Gopherchina on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 08 Mar 2018 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/categories/gopherchina/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Gopher China 2018 讲师专访: 柴树杉</title>
+      <link>https://chai2010.cn/post/gopherchina/gopherchina2018-chai2010/</link>
+      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/gopherchina/gopherchina2018-chai2010/</guid>
+      
+        <description>&lt;h2 id=&#34;自我介绍&#34;&gt;自我介绍&lt;/h2&gt;
+
+&lt;p&gt;Go 语言代码的贡献者，《Go 语言圣经》翻译者，《Go 语言高级编程》开源免费图书作者，非主流Go语言码农。2010年入坑 Go 语言，因此我的网络 ID 是 chai2010（其实是王小波的一个的小说的名字）。其实我想说的是，即使当歌曲和传说都已经哑巴的时候，Go 语言代码也不会消失。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/gopherchina2018-chai2010.jpg&#34; alt=&#34;Gopher China 2018 讲师专访－柴树杉&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;什么原因-什么时候与-go-结缘&#34;&gt;什么原因，什么时候与 Go 结缘？&lt;/h2&gt;
+
+&lt;p&gt;绝大部分人第一次听说 Go 语言都是因为它是 Google 发明的语言。但是我更感兴趣的是 Go 语言背后的故事：汤普森、派克、Plan9、UTF8、Alef 等等。2010年在深圳参与了一个可能是国内第一个 Go 语言交流会，聆听了韦京光大牛的分享（独立实现 cgo 对 windows 平台的支持）。2010年网上看到边疆同学号召翻译 Go 语言文档正式入坑。现在还记得叫《胡文 Go.ogle》的 Go 语言小说，感谢 fango。&lt;/p&gt;
+
+&lt;h2 id=&#34;在工作中遇到哪些挑战&#34;&gt;在工作中遇到哪些挑战？&lt;/h2&gt;
+
+&lt;p&gt;Go 还是比较新的语言，深度使用时会发现轮子严重不足。比如，如何解码一个视频，如何最大压缩比保持一个TIFF格式的图像？用 Go 语言实现重新全部显然是不切实际的，而通过 CGO 技术就可以轻松利用 C/C++ 已有的解决方案。因此，CGO 虽然不能解决全部问题，但是绝对是一个值得拥有的后备技术。&lt;/p&gt;
+
+&lt;h2 id=&#34;有什么想对-gopher-说的话和建议&#34;&gt;有什么想对 Gopher 说的话和建议？&lt;/h2&gt;
+
+&lt;p&gt;Go 语言是一门短小精悍的语言，它只有25个关键字，整个语言规范也就50来页，我们完全可以像 C/Lua 语言那样完整掌握它的一切，甚至包括 CGO 和 Go 汇编语言等非主流的特性。作为一件工业级的软件艺术品，你值得拥有。&lt;/p&gt;
+
+&lt;h2 id=&#34;有什么学习-go-的方法和书籍推荐&#34;&gt;有什么学习 Go 的方法和书籍推荐？&lt;/h2&gt;
+
+&lt;p&gt;先走马观花快速浏览一遍《Go 语言圣经》，这是为了快速简历对 Go 语言的总体框架，不需要背诵，以后遇到问题有影响慢慢回头查阅。然后是深入挖掘Go语言的相关八卦（比如 issue9 到底是什么，creat 怎么改的名字，是谁什么时候提交了第一次提交代码），这是为了培养对技术持续的热情感受 Go 语言的文化。同时尝试使用 Go 语言解决一切问题，这不仅仅是为了实践语言本身，也是为了探索 Go 语言的边界和不足。多参与 Gopher China 大会，营造全方位的 Go 语言环境，这样不知不觉中你就已经是一个 Gopher 了。&lt;/p&gt;
+
+&lt;h2 id=&#34;如何看待-go-在中国的发展-预计未来是什么样&#34;&gt;如何看待 Go 在中国的发展，预计未来是什么样？&lt;/h2&gt;
+
+&lt;p&gt;中国有着世界上最大的 Go 语言社区，同时也为 Go 语言的发展作出了巨大贡献（cgo/ios/beego 等），因此 Go 在中国的发展也完全可以代表在世界的发展趋势。目前是21世纪云计算百家争鸣的时期，而 Go 语言正是21世纪的互联网时代的 C 语言，其中 Go 语言实现的 Docker 和 K8s 平台均已成员云计算时代事实上的标准。虽然如某些网红所言，Docker 完全也可以用 shell 等任何语言实现，但是为何就选择了 Go 语言呢？大家都不是傻瓜，群众的眼睛是雪亮的，目前云计算时代新出现的很多基础系统软件都已首选 Go 语言实现。Go 语言不是银弹，但是它已经是互联网时代的 C 语言，这就足够了。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/gopherchina2018-chai2010-cgo.jpg&#34; alt=&#34;深入CGO编程&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;提示：报告内容将会在大会前一天公开，敬请关注！&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;第四届 Gopher China 大会4月将在上海举办，今年也是第一次增加了会前的 培训 。本届的大会无论从规模，内容都将有更多值得大家期待的！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://2018.gopherchina.org/&#34;&gt;http://2018.gopherchina.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mp.weixin.qq.com/s?__biz=MjM5OTcxMzE0MQ==&amp;amp;mid=2653370698&amp;amp;idx=1&amp;amp;sn=478c53ece8a715d96aeb0027e7ad772f&amp;amp;chksm=bce4d9508b935046d25532c0ce65d2ebcfa9158ddd6ad5a04a49c2a8f29a7c8662e6842f6d16&amp;amp;scene=38#wechat_redirect&#34;&gt;原文在这里&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

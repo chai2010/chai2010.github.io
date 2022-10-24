@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go中error类型的nil值和nil - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="先看C语言中的类似问题：空字符串。 const char* empty_str0 = &amp;quot;&amp;quot;; const char* empty_str1 = &amp;quot;\0empty&amp;quot;; const char* empty_str2 = NULL; 以上3个字符串并不相等，但是从某种角度看，它们都是对应空的字符串。 empty_str0 指向一个" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/golang/go-nil/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go中error类型的nil值和nil" />
+<meta property="og:description" content="先看C语言中的类似问题：空字符串。 const char* empty_str0 = &quot;&quot;; const char* empty_str1 = &quot;\0empty&quot;; const char* empty_str2 = NULL; 以上3个字符串并不相等，但是从某种角度看，它们都是对应空的字符串。 empty_str0 指向一个" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/golang/go-nil/" />
+
+
+
+<meta property="article:published_time" content="2013-03-27T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2013-03-27T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go中error类型的nil值和nil">
+<meta itemprop="description" content="先看C语言中的类似问题：空字符串。 const char* empty_str0 = &quot;&quot;; const char* empty_str1 = &quot;\0empty&quot;; const char* empty_str2 = NULL; 以上3个字符串并不相等，但是从某种角度看，它们都是对应空的字符串。 empty_str0 指向一个">
+
+
+<meta itemprop="datePublished" content="2013-03-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2013-03-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1054">
+
+
+
+<meta itemprop="keywords" content="golang," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go中error类型的nil值和nil"/>
+<meta name="twitter:description" content="先看C语言中的类似问题：空字符串。 const char* empty_str0 = &quot;&quot;; const char* empty_str1 = &quot;\0empty&quot;; const char* empty_str2 = NULL; 以上3个字符串并不相等，但是从某种角度看，它们都是对应空的字符串。 empty_str0 指向一个"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go中error类型的nil值和nil</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2013-03-27 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+          </div>
+        <span class="more-meta"> 约 1054 字 </span>
+        <span class="more-meta"> 预计阅读 3 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <!-- Go中error类型的nil值和nil -->
+
+<p>先看C语言中的类似问题：空字符串。</p>
+
+<pre><code>const char* empty_str0 = &quot;&quot;;
+const char* empty_str1 = &quot;\0empty&quot;;
+const char* empty_str2 = NULL;
+</code></pre>
+
+<p>以上3个字符串并不相等，但是从某种角度看，它们都是对应空的字符串。</p>
+
+<ul>
+<li>empty_str0 指向一个空的字符串，但是empty_str0本身的值是有效的。</li>
+<li>empty_str1 指向一个非空的字符串，但是字符串的第一个字符是&rsquo;\0&rsquo;。</li>
+<li>empty_str2 本身是一个空的指针。</li>
+</ul>
+
+<p>Go的error是一个interface类型，error的nil问题和C语言的字符串类似。</p>
+
+<p>参考官方的error文档说明：</p>
+
+<ul>
+<li><a href="http://golang.org/doc/go_faq.html#nil_error">http://golang.org/doc/go_faq.html#nil_error</a></li>
+</ul>
+
+<p>在底层，interface作为两个成员实现：一个类型和一个值。该值被称为接口的动态值， 它是一个任意的具体值，而该接口的类型则为该值的类型。对于 int 值3， 一个接口值示意性地包含(int, 3)。</p>
+
+<p>只有在内部值和类型都未设置时(nil, nil)，一个接口的值才为 nil。特别是，一个 nil 接口将总是拥有一个 nil 类型。若我们在一个接口值中存储一个 *int 类型的指针，则内部类型将为 *int，无论该指针的值是什么：(*int, nil)。 因此，这样的接口值会是非 nil 的，即使在该指针的内部为 nil。</p>
+
+<p>下面是一个错误的错误返回方式：</p>
+
+<pre><code>func returnsError() error {
+    var p *MyError = nil
+    if bad() {
+        p = ErrBad
+    }
+    return p // Will always return a non-nil error.
+}
+</code></pre>
+
+<p>这里 p 返回的是一个有效值（非nil），值为 nil。
+类似上面的 empty_str0。</p>
+
+<p>因此，下面判断错误的代码会有问题：</p>
+
+<pre><code>func main() {
+    if err := returnsError(); err != nil {
+        panic(nil)
+    }
+}
+</code></pre>
+
+<p>针对 returnsError 的问题，可以这样处理（不建议的方式）：</p>
+
+<pre><code>func main() {
+    if err := returnsError(); err.(*MyError) != nil {
+        panic(nil)
+    }
+}
+</code></pre>
+
+<p>在判断前先将err转型为*MyError，然后再判断err的值。
+类似的C语言空字符串可以这样判断：</p>
+
+<pre><code>bool IsEmptyStr(const char* str) {
+    return !(str &amp;&amp; str[0] != '\0');
+}
+</code></pre>
+
+<p>但是Go语言中标准的错误返回方式不是returnsError这样。
+下面是改进的returnsError：</p>
+
+<pre><code>func returnsError() error {
+    if bad() {
+        return (*MyError)(err)
+    }
+    return nil
+}
+</code></pre>
+
+<p>因此，在处理错误返回值的时候，一定要将正常的错误值转换为 nil。</p>
+
+<p>比如，syscall中就有一个bug是由于没有处理好error导致的：</p>
+
+<pre><code>// syscall: (*Proc).Call always returns non-nil err
+// http://code.google.com/p/go/issues/detail?id=4686
+package main
+
+import &quot;syscall&quot;
+
+func main() {
+    h := syscall.MustLoadDLL(&quot;kernel32.dll&quot;)
+    proc := h.MustFindProc(&quot;GetVersion&quot;)
+    r, _, err := proc.Call()
+    major := byte(r)
+    minor := uint8(r &gt;&gt; 8)
+    build := uint16(r &gt;&gt; 16)
+    print(&quot;windows version &quot;, major, &quot;.&quot;, minor, &quot; (Build &quot;, build, &quot;)\n&quot;)
+   if err != nil {
+       e := err.(syscall.Errno)
+       println(err.Error(), &quot;errno =&quot;, e)
+   }
+}
+</code></pre>
+
+<p>目前issues4686这个bug已经在修复中。</p>
+
+<p>作为用户，临时可以用前面的方法回避这个bug：</p>
+
+<pre><code>// Issue 4686: syscall: (*Proc).Call always returns non-nil err
+// https://code.google.com/p/go/issues/detail?id=4686
+func call(h *syscall.LazyDLL, name string,
+    a ...uintptr) (r1, r2 uintptr, err error) {
+    r1, r2, err = h.NewProc(name).Call(a...)
+    if err.(syscall.Errno) == 0 {
+        return r1, r2, nil
+    }
+    return
+}
+</code></pre>
+
+<p>Go作为一个强类型语言，不同类型之前必须要显示的转换（而且必须是基础类型相同）。
+这样可以回避很多类似C语言中因为隐式类型转换引入的bug。</p>
+
+<p>但是，Go中interface是一个例外：type到interface和interface之间可能是隐式转换的。
+或许，这是Go做得不太好的地方吧。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2013-03-27</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go11-intro/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Go1.1有哪些改进?</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/misc/pwdgen/">
+            <span class="next-text nav-default">PwdGen - 用Go语言实现的密码生成工具</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

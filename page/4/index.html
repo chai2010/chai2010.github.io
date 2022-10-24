@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="chai2010 的博客" />
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/" />
+<link href="https://chai2010.cn/index.xml" rel="alternate" type="application/rss+xml" title="chai2010 的博客" />
+  <link href="https://chai2010.cn/index.xml" rel="feed" type="application/rss+xml" title="chai2010 的博客" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="chai2010 的博客" />
+<meta property="og:description" content="chai2010 的博客" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://chai2010.cn/" />
+
+
+
+<meta property="og:updated_time" content="2018-08-25T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="chai2010 的博客">
+<meta itemprop="description" content="chai2010 的博客">
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="chai2010 的博客"/>
+<meta name="twitter:description" content="chai2010 的博客"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          
+  <section id="posts" class="posts">
+    
+    
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/2018/go1.11-and-wasm/">Go1.11和WebAssembly</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-08-25 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+            <a href="/categories/wasm/"> wasm </a>
+          
+        </div>
+      <span class="more-meta"> 约 1234 字 </span>
+      <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>Go1.11已经正式发布，最大的一个亮点是增加了对WebAssembly的实验性支持。这也再一次验证了Ending定律的预言：所有可以编译到WebAssembly平台的软件终将会被编译到WebAssembly平台。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/2018/go1.11-and-wasm/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/2018/advanced-go-programming-book-done/">《Go高级编程》初稿完成</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-08-08 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+        </div>
+      <span class="more-meta"> 约 490 字 </span>
+      <span class="more-meta"> 预计阅读 1 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>《Go高级编程》从2016年就开始计划写作。2016年底因为开始学习《Go语言圣经》临时搁置了《Go高级编程》的写作。到了2018年决定重启项目，为了回馈Go语言中国社区，我们尝试以开源的模式进行创作。项目开源后，在不到半年的时间内就已经获得近3k个star，有几十个贡献者帮忙改进内容和代码。感谢中国广大的Go语言爱好者，感谢开源的创作模式，让我们在半年多的时间内成功完成了写作任务。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/2018/advanced-go-programming-book-done/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/2018/chai2010-cn/">已启用 https://chai2010.cn, 欢迎访问!</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-03-11 </span>
+      
+      <span class="more-meta"> 约 286 字 </span>
+      <span class="more-meta"> 预计阅读 1 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p><a href="https://chai2010.cn">https://chai2010.cn</a> 只是目前的入口. 网址名称并不重要, 关键是内容需要永生.</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/2018/chai2010-cn/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/gopherchina/gopherchina2018-chai2010/">Gopher China 2018 讲师专访: 柴树杉</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-03-08 </span>
+      <div class="post-category">
+          
+            <a href="/categories/gopherchina/"> gopherchina </a>
+          
+        </div>
+      <span class="more-meta"> 约 1197 字 </span>
+      <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h2 id="自我介绍">自我介绍</h2>
+
+<p>Go 语言代码的贡献者，《Go 语言圣经》翻译者，《Go 语言高级编程》开源免费图书作者，非主流Go语言码农。2010年入坑 Go 语言，因此我的网络 ID 是 chai2010（其实是王小波的一个的小说的名字）。其实我想说的是，即使当歌曲和传说都已经哑巴的时候，Go 语言代码也不会消失。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/gopherchina/gopherchina2018-chai2010/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/lua/gopherlua-strings/">lua中也能用上Go语言的strings包</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-12-22 </span>
+      <div class="post-category">
+          
+            <a href="/categories/lua/"> lua </a>
+          
+        </div>
+      <span class="more-meta"> 约 107 字 </span>
+      <span class="more-meta"> 预计阅读 1 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>lua内置的库非常小，我们可以将Go语言的strings包引入到Lua环境。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/lua/gopherlua-strings/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+  </section>
+  
+  <nav class="pagination">
+    
+      <a class="prev" href="/page/3/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    
+      <a class="next" href="/page/5/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+  </nav>
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

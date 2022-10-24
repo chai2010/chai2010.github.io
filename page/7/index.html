@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="chai2010 的博客" />
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/" />
+<link href="https://chai2010.cn/index.xml" rel="alternate" type="application/rss+xml" title="chai2010 的博客" />
+  <link href="https://chai2010.cn/index.xml" rel="feed" type="application/rss+xml" title="chai2010 的博客" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="chai2010 的博客" />
+<meta property="og:description" content="chai2010 的博客" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://chai2010.cn/" />
+
+
+
+<meta property="og:updated_time" content="2014-05-20T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="chai2010 的博客">
+<meta itemprop="description" content="chai2010 的博客">
+
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="chai2010 的博客"/>
+<meta name="twitter:description" content="chai2010 的博客"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          
+  <section id="posts" class="posts">
+    
+    
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/go-xslice-to-yslice/">Go语言中不同类型切片之间的相互转换</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2014-05-20 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+        </div>
+      <span class="more-meta"> 约 496 字 </span>
+      <span class="more-meta"> 预计阅读 1 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      将 []T 切片转换为 []byte 类似C语言中将其他类型的数组转换为char数组： func ByteSlice(slice interface{}) (data []byte) { sv := reflect.ValueOf(slice) if sv.Kind() != reflect.Slice { panic(fmt.Sprintf(&quot;ByteSlice called with non-slice value of type %T&quot;, slice)) } h := (*reflect.SliceHeader)((unsafe.Pointer(&amp;data))) h.Cap = sv.Cap() * int(sv.Type().Elem().Size()) h.Len = sv.Len() * int(sv.Type().Elem().Size()) h.Data
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/go-xslice-to-yslice/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/go-tenary/">Go语言的三元表达式</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2014-02-25 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+        </div>
+      <span class="more-meta"> 约 796 字 </span>
+      <span class="more-meta"> 预计阅读 2 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      三元表达式的介绍在这里: http://en.wikipedia.org/wiki/%3F: http://en.wikipedia.org/wiki/IIf Go语言明确不支持三元表达式，这里是相关的讨论： https://groups.google.com/d/msg/golang-nuts/dbyqx_LGUxM/tLFFSXSfOdQJ 官方FAQ的说明在这里： http://golang.org/doc/faq#Does_Go_have_a_ternary_form 官方FAQ推荐的做法是用 if 代替： if expr
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/go-tenary/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/go-gettext-2014/">Go语言的国际化支持(资源文件翻译)</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2014-01-27 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+        </div>
+      <span class="more-meta"> 约 1109 字 </span>
+      <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      在之前的 Go语言的国际化支持(基于gettext-go) 中, 讲到了如何翻译源代码中的字符串. 项目地址在: http://code.google.com/p/gettext-go. 文档在 godoc.org 或 gowalker.org . 根据评论的反馈(@羊
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/go-gettext-2014/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/go-protorpc-2014/">Go语言的RPC介绍(含Protobuf-RPC)</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2014-01-08 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+        </div>
+      <span class="more-meta"> 约 2852 字 </span>
+      <span class="more-meta"> 预计阅读 6 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      本文在 Golang中国博客 的地址: http://blog.go-china.org/09-protorpc 标准库的RPC RPC是远程调用的简称, 简单的说就是要像调用本地函数一样调用服务器的函数. Go语言的标准库
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/go-protorpc-2014/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/go-gettext/">Go语言的国际化支持(基于gettext-go)</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2014-01-07 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+        </div>
+      <span class="more-meta"> 约 1595 字 </span>
+      <span class="more-meta"> 预计阅读 4 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      本文在 Golang中国博客 的地址: http://blog.go-china.org/07-gettext hello, world! 假设有以下的程序, 输出: &ldquo;Hello, world!&rdquo;. package main import ( &quot;fmt&quot; ) func main() { fmt.Println(&quot;Hello, world!&quot;) } 现在要让改程序支持不同语言的用户, 然后以本地语言
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/go-gettext/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+  </section>
+  
+  <nav class="pagination">
+    
+      <a class="prev" href="/page/6/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text">上一页</span>
+      </a>
+    
+      <a class="next" href="/page/8/">
+        <span class="next-text">下一页</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+  </nav>
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>

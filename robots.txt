@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://chai2010.cn/sitemap.xml

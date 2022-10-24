@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Bazel教程：构建iOS应用[翻译] - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="Bazel教程：构建iOS应用  原文：http://bazel.io/docs/tutorial/ios-app.html 译者：chai2010  本教程包含以下步骤（Bazel新用户请先参考: Bazel入门教程）：
+ 代码预览 创建BUILD构建文件 针对模拟器构建应用 查看构建输出 在模拟器环境运行／调试应用 针对设备构建应用 安装应用到设备  需要在 Mac OS X 环境，WORKSPACE 不用配置。
+
+" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/bazel/bazel-ios-app/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Bazel教程：构建iOS应用[翻译]" />
+<meta property="og:description" content="Bazel教程：构建iOS应用
+
+
+原文：http://bazel.io/docs/tutorial/ios-app.html
+译者：chai2010
+
+
+本教程包含以下步骤（Bazel新用户请先参考: Bazel入门教程）：
+
+
+代码预览
+创建BUILD构建文件
+针对模拟器构建应用
+查看构建输出
+在模拟器环境运行／调试应用
+针对设备构建应用
+安装应用到设备
+
+
+需要在 Mac OS X 环境，WORKSPACE 不用配置。
+
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/bazel/bazel-ios-app/" />
+
+
+
+<meta property="article:published_time" content="2016-05-19T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2016-05-19T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Bazel教程：构建iOS应用[翻译]">
+<meta itemprop="description" content="Bazel教程：构建iOS应用
+
+
+原文：http://bazel.io/docs/tutorial/ios-app.html
+译者：chai2010
+
+
+本教程包含以下步骤（Bazel新用户请先参考: Bazel入门教程）：
+
+
+代码预览
+创建BUILD构建文件
+针对模拟器构建应用
+查看构建输出
+在模拟器环境运行／调试应用
+针对设备构建应用
+安装应用到设备
+
+
+需要在 Mac OS X 环境，WORKSPACE 不用配置。
+
+">
+
+
+<meta itemprop="datePublished" content="2016-05-19T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2016-05-19T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1714">
+
+
+
+<meta itemprop="keywords" content="bazel,ios," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Bazel教程：构建iOS应用[翻译]"/>
+<meta name="twitter:description" content="Bazel教程：构建iOS应用
+
+
+原文：http://bazel.io/docs/tutorial/ios-app.html
+译者：chai2010
+
+
+本教程包含以下步骤（Bazel新用户请先参考: Bazel入门教程）：
+
+
+代码预览
+创建BUILD构建文件
+针对模拟器构建应用
+查看构建输出
+在模拟器环境运行／调试应用
+针对设备构建应用
+安装应用到设备
+
+
+需要在 Mac OS X 环境，WORKSPACE 不用配置。
+
+"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Bazel教程：构建iOS应用[翻译]</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2016-05-19 </span>
+        <div class="post-category">
+            
+              <a href="/categories/bazel/"> bazel </a>
+            
+          </div>
+        <span class="more-meta"> 约 1714 字 </span>
+        <span class="more-meta"> 预计阅读 4 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#bazel教程-构建ios应用">Bazel教程：构建iOS应用</a>
+<ul>
+<li><a href="#查看源文件结构">查看源文件结构</a></li>
+<li><a href="#创建build文件">创建BUILD文件</a></li>
+<li><a href="#添加一个-objc-library-规则">添加一个<code>objc_library</code>规则</a></li>
+<li><a href="#添加-objc-binary-规则">添加<code>objc_binary</code>规则</a></li>
+<li><a href="#添加-ios-application-规则">添加<code>ios_application</code>规则</a></li>
+<li><a href="#构建模拟器环境的应用">构建模拟器环境的应用</a></li>
+<li><a href="#查找构建的输出">查找构建的输出</a></li>
+<li><a href="#模拟器环境运行-调试应用">模拟器环境运行／调试应用</a></li>
+<li><a href="#针对设备构建应用">针对设备构建应用</a></li>
+<li><a href="#安装应用到设备上">安装应用到设备上</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <h1 id="bazel教程-构建ios应用">Bazel教程：构建iOS应用</h1>
+
+<ul>
+<li>原文：<a href="http://bazel.io/docs/tutorial/ios-app.html">http://bazel.io/docs/tutorial/ios-app.html</a></li>
+<li>译者：<a href="http://github.com/chai2010">chai2010</a></li>
+</ul>
+
+<p>本教程包含以下步骤（Bazel新用户请先参考: <a href="http://my.oschina.net/chai2010/blog/674110">Bazel入门教程</a>）：</p>
+
+<ul>
+<li>代码预览</li>
+<li>创建BUILD构建文件</li>
+<li>针对模拟器构建应用</li>
+<li>查看构建输出</li>
+<li>在模拟器环境运行／调试应用</li>
+<li>针对设备构建应用</li>
+<li>安装应用到设备</li>
+</ul>
+
+<p>需要在 Mac OS X 环境，<code>WORKSPACE</code> 不用配置。</p>
+
+<p></p>
+
+<h2 id="查看源文件结构">查看源文件结构</h2>
+
+<p>iOS应用源文件在<code>$WORKSPACE/ios-app/UrlGet</code>目录。</p>
+
+<p>代码在这里：<a href="https://github.com/bazelbuild/examples/tree/master/tutorial/ios-app/UrlGet">https://github.com/bazelbuild/examples/tree/master/tutorial/ios-app/UrlGet</a></p>
+
+<h2 id="创建build文件">创建BUILD文件</h2>
+
+<p>在命令行用vi创建并编辑BUILD文件（其它编辑器也可以）：</p>
+
+<pre><code class="language-bash">$ vi $WORKSPACE/ios-app/BUILD
+</code></pre>
+
+<h2 id="添加一个-objc-library-规则">添加一个<code>objc_library</code>规则</h2>
+
+<p>Bazel针对构建iOS应用提供了诸多规则命令。在这里，我们首先使用
+<a href="http://bazel.io/docs/be/objective-c.html#objc_library"><code>objc_library</code></a>
+规则从源文件和Xib文件构建 <a href="https://developer.apple.com/library/ios/technotes/iOSStaticLibraries/Introduction.html">静态库</a>。
+（这个只是最小的规则，此外还有<code>ios_application</code>规则可以用于构建多架构的iOS应用。）</p>
+
+<p>BUILD的内容如下：</p>
+
+<pre><code class="language-python">objc_library(
+    name = &quot;UrlGetClasses&quot;,
+    srcs = [
+        &quot;UrlGet/AppDelegate.m&quot;,
+        &quot;UrlGet/UrlGetViewController.m&quot;,
+    ],
+    hdrs = glob([&quot;UrlGet/*.h&quot;]),
+    xibs = [&quot;UrlGet/UrlGetViewController.xib&quot;],
+)
+</code></pre>
+
+<p>规则对应的目标名字是<code>UrlGetClasses</code>。</p>
+
+<h2 id="添加-objc-binary-规则">添加<code>objc_binary</code>规则</h2>
+
+<p><a href="http://bazel.io/docs/be/objective-c.html#objc_binary"><code>objc_binary</code></a> 创建一个
+bundled应用中的二进制可执行程序。</p>
+
+<p>BUILD文件添加如下内容：</p>
+
+<pre><code class="language-python">objc_binary(
+    name = &quot;ios-app-binary&quot;,
+    srcs = [
+        &quot;UrlGet/main.m&quot;,
+    ],
+    deps = [
+        &quot;:UrlGetClasses&quot;,
+    ],
+)
+
+</code></pre>
+
+<p>其中<code>deps</code>属性引用了前面的<code>UrlGetClasses</code>静态库。</p>
+
+<h2 id="添加-ios-application-规则">添加<code>ios_application</code>规则</h2>
+
+<p><a href="/docs/be/objective-c.html#ios_application"><code>ios_application</code></a> 规则用于创建<code>.ipa</code>打包应用，
+同时生成Xcode过程文件。</p>
+
+<p>BUILD文件添加如下内容：</p>
+
+<pre><code class="language-python">ios_application(
+    name = &quot;ios-app&quot;,
+    binary = &quot;:ios-app-binary&quot;,
+    infoplist = &quot;UrlGet/UrlGet-Info.plist&quot;,
+)
+</code></pre>
+
+<p>完整的BUILD文件在这里：<a href="https://github.com/bazelbuild/examples/blob/master/tutorial/ios-app/BUILD">https://github.com/bazelbuild/examples/blob/master/tutorial/ios-app/BUILD</a></p>
+
+<h2 id="构建模拟器环境的应用">构建模拟器环境的应用</h2>
+
+<p>命令行环境，确保当前目录对应Bazel的workspace：</p>
+
+<pre><code class="language-bash">$ cd $WORKSPACE
+</code></pre>
+
+<p>输入以下命令构建应用：</p>
+
+<pre><code class="language-bash">$ bazel build //ios-app:ios-app
+</code></pre>
+
+<p>Bazel将启动构建工作。当构建完成时，输出类似下面的信息：</p>
+
+<pre><code class="language-bash">INFO: Found 1 target...
+Target //ios-app:ios-app up-to-date:
+  bazel-bin/ios-app/ios-app.ipa
+  bazel-bin/ios-app/ios-app.xcodeproj/project.pbxproj
+INFO: Elapsed time: 3.765s, Critical Path: 3.44s
+</code></pre>
+
+<h2 id="查找构建的输出">查找构建的输出</h2>
+
+<p>输出的<code>.ipa</code>和其它文件在<code>$WORKSPACE/bazel-bin/ios-app</code>目录。</p>
+
+<h2 id="模拟器环境运行-调试应用">模拟器环境运行／调试应用</h2>
+
+<p>现在可以从Xcode环境的模拟器来运行应用。先打开<code>$WORKSPACE/bazel-bin/ios-app/ios-app.xcodeproj</code>工程文件，
+然后选择相应版本的iOS模拟器，然后点击 <strong>Run</strong> 按钮运行。</p>
+
+<p><strong>注意：</strong> 如果要Xcode工程中的任何信息发生变化（比如删除文件或添加／改变依赖），必须使用Bazel重新生成Xcode工程文件。</p>
+
+<h2 id="针对设备构建应用">针对设备构建应用</h2>
+
+<p>针对设备构建应用，需要设置bazel以找到目标对应设备的provisioning profile配置文件。
+根据以下步骤设置：</p>
+
+<ol>
+<li>打开网页 <a href="https://developer.apple.com/account/ios/profile/profileList.action">Apple Profiles</a>
+  下载设备对应的provisioning profile配置文件。
+  如果又疑问，请参考 <a href="https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/MaintainingProfiles/MaintainingProfiles.html">Apple&rsquo;s documentation</a>。</li>
+<li>将profile配置文件放到<code>$WORKSPACE/tools/objc</code>目录。</li>
+<li>可选操作 － 可以在<code>.gitignore</code>中忽略配置文件。</li>
+
+<li><p>编辑 <code>$WORKSPACE/tools/objc/BUILD</code> 文件，添加：</p>
+
+<pre><code class="language-python">  filegroup(
+      name = &quot;default_provisioning_profile&quot;,
+      srcs = [&quot;&lt;NAME OF YOUR PROFILE&gt;.mobileprovision&quot;],
+  )
+</code></pre></li>
+</ol>
+
+<p>现在可以构建针对设备的应用了：</p>
+
+<pre><code class="language-bash">$ bazel build //ios-app:ios-app --ios_multi_cpus=armv7,arm64
+</code></pre>
+
+<p>上面的命令将构建针对多个类型的设备应用。如果只需要构建真的特定类型的应用，
+可以指定一个特定的设备架构体系结构。</p>
+
+<p>如果需要选择一个特定版本的Xcode或特定版本的SDK，可以通过<code>--xcode_version=7.2 --ios_sdk_version=9.2</code>指定。
+要确保选定版本的SDK对应的Xcode已经安装到本机。</p>
+
+<p>如果需要指定一个能够运行的最小iOS版本，可以通过<code>--ios_minimum_os=7.0</code>指定。</p>
+
+<h2 id="安装应用到设备上">安装应用到设备上</h2>
+
+<p>安装应用到设备最简单的方法是打开Xcode，然后点击<code>Windows &gt; Devices</code>菜单。
+从左边列表选择相应的设备，点击 &ldquo;+&rdquo; 按钮并选择生成的 <code>.ipa</code> 文件。</p>
+
+<p>如果程序没有运行，请检查设备和provisioning profile配置是否匹配。
+点击<code>Devices</code>下面的<code>View Device Logs</code>按钮，可以查看到相关的错误信息。</p>
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2016-05-19</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/bazel/">bazel</a>
+          
+          <a href="/tags/ios/">ios</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/golang/go-ios-app/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">使用Go语言开发iOS应用(Swift版)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+          <a class="next" href="/post/bazel/bazel-guide/">
+            <span class="next-text nav-default">Bazel入门[翻译]</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>
