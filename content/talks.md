@@ -18,8 +18,6 @@ mathjax: false
 - [精彩回顾｜云原生 Meetup 广州站 2022.08.06](https://mp.weixin.qq.com/s/XgU8GRy2kaykunoZWj5asQ)
 - [KusionStack实践探秘(PDF)](http://chai2010.cn/static-public/talks/KusionStack-talk-2022-08-06-gz.pdf)
 
-Go+ 公开课第9期｜如何基于Go语言和Go编译器定制语言
-
 
 #### 2021 - Go+ 公开课第9期｜如何基于Go语言和Go编译器定制语言
 
