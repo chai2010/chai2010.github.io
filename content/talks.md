@@ -13,7 +13,7 @@ mathjax: false
 #### 2022 - KusionStack实践探秘 - 广州·08-06
 
 
-[![](/images/talks-ieee754.jpg)](http://chai2010.cn/static-public/talks/KusionStack-talk-2022-08-06-gz.pdf)
+[![](/images/talks-kusion-gz2022.png)](http://chai2010.cn/static-public/talks/KusionStack-talk-2022-08-06-gz.pdf)
 
 - [精彩回顾｜云原生 Meetup 广州站 2022.08.06](https://mp.weixin.qq.com/s/XgU8GRy2kaykunoZWj5asQ)
 - [KusionStack实践探秘(PDF)](http://chai2010.cn/static-public/talks/KusionStack-talk-2022-08-06-gz.pdf)
