@@ -6,10 +6,274 @@
     <description>Recent content in Golang on chai2010 的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 10 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 26 Oct 2022 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://chai2010.cn/categories/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go 语言 CGO 用户深度定制 SQLite 代码</title>
+      <link>https://chai2010.cn/post/2022/making-a-change-to-sqlite-source-code/</link>
+      <pubDate>Wed, 26 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/making-a-change-to-sqlite-source-code/</guid>
+      
+        <description>
+
+&lt;p&gt;本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;作者：&lt;a href=&#34;https://brunocalza.me/author/brunocalza&#34;&gt;BRUNO CALZA&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;译者：柴树杉，&lt;a href=&#34;https://github.com/wa-lang/wa&#34;&gt;凹语言&lt;/a&gt; 作者、Go语言贡献者、多本Go语言图书作者，目前在蚂蚁从事 &lt;a href=&#34;https://github.com/kusionStack/kusion&#34;&gt;KusionStack&lt;/a&gt; 和 KCL 开发。&lt;/li&gt;
+&lt;li&gt;原文：&lt;a href=&#34;https://brunocalza.me/making-a-change-to-sqlite-source-code/&#34;&gt;https://brunocalza.me/making-a-change-to-sqlite-source-code/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;1-背景&#34;&gt;1. 背景&lt;/h2&gt;
+
+&lt;p&gt;有一天，我正在考虑如何在 SQLite 中获取最近插入或更新的行记录的数据。这样做的动机是我想创建该行的 hash，本质上是为了在插入或更新行时能够构建相应表的 &lt;a href=&#34;https://en.wikipedia.org/wiki/Merkle_tree&#34;&gt;Merkle 树&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;SQLite 提供的最符合的 API 可能是 &lt;a href=&#34;https://www.sqlite.org/c3ref/update_hook.html&#34;&gt;&lt;code&gt;sqlite3_update_hook&lt;/code&gt;&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;sqlite3_update_hook()&lt;/code&gt; 函数为数据库连接注册一个回调函数，该数据库连接由第一个参数标识，在 rowwid 表中更新、插入或删除行时调用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这个 API 的问题是它只返回行的 &lt;a href=&#34;https://sqlite.org/lang_createtable.html#rowid&#34;&gt;rowid&lt;/a&gt;。这意味着还需要为列内的行获取所有列。即使使用这种方法，我仍然无法获得行记录的原始数据。只能得到那一行的驱动信息。&lt;/p&gt;
+
+&lt;p&gt;关于如何构建这样的树可能有很多方法，但就我而言 SQLite API 并没有提供真正想要的东西。因此，我决定趁此机会更深入地挖掘下源代码，同时看看内部实现的细节。不仅如此，我希望可以对它进行一些修改和测试，看看能否满足需求。&lt;/p&gt;
+
+&lt;p&gt;因为对 C 语言的畏惧，开始我只是想假装看下几个源文件就跑路。没想到这次真的有惊喜。&lt;/p&gt;
+
+&lt;h2 id=&#34;2-看看-sqlite-的代码结构&#34;&gt;2. 看看 SQLite 的代码结构&lt;/h2&gt;
+
+&lt;p&gt;首先使用 &lt;code&gt;fossil&lt;/code&gt; 工具克隆了 &lt;a href=&#34;https://sqlite.org/src/doc/trunk/README.md&#34;&gt;SQLite源代码&lt;/a&gt;，下面是文件。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/making-a-change-to-sqlite-source-code/01.png&#34; alt=&#34;SQLite 代码目录&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果你对数据库比较熟悉，或许可以猜测出一些文件对应的操作。因此，我决定直接跳到 &lt;code&gt;insert.c&lt;/code&gt; 文件，看看能不能找到一些有趣的东西。&lt;/p&gt;
+
+&lt;p&gt;遍历函数名列表，路过 &lt;a href=&#34;https://github.com/sqlite/sqlite/blob/version-3.39.4/src/insert.c#L671&#34;&gt;&lt;code&gt;sqlite3Insert&lt;/code&gt;&lt;/a&gt; 函数，看到以下注释：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;** This routine is called to handle SQL of the following forms:
+**
+**    insert into TABLE (IDLIST) values(EXPRLIST),(EXPRLIST),...
+**    insert into TABLE (IDLIST) select
+**    insert into TABLE (IDLIST) default values
+**
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;也许在这个函数中有一些可鼓捣的地方。我能够对其中发生的情况进行一些猜测，但引起我注意的是对名称类似于 &lt;code&gt;sqlite3vdbeXXX&lt;/code&gt; 的函数的函数调用的数量。&lt;/p&gt;
+
+&lt;p&gt;这让我想起 SQLite 底层使用了一个名为 &lt;a href=&#34;https://www.sqlite.org/opcode.html&#34;&gt;vdbe&lt;/a&gt; 的虚拟机。这意味着所有SQL语句都首先被翻译成该虚拟机的语言。然后，执行引擎执行虚拟机代码。让我们看一个简单的 &lt;code&gt;INSERT&lt;/code&gt; 语句如何被翻译成字节码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sqlite&amp;gt; create table a (a int, b text);
+sqlite&amp;gt; explain INSERT INTO a VALUES (1, &#39;Hello&#39;);
+addr  opcode         p1    p2    p3    p4             p5  comment      
+----  -------------  ----  ----  ----  -------------  --  -------------
+0     Init           0     8     0                    0   Start at 8
+1     OpenWrite      0     2     0     2              0   root=2 iDb=0; a
+2     Integer        1     2     0                    0   r[2]=1
+3     String8        0     3     0     Hello          0   r[3]=&#39;Hello&#39;
+4     NewRowid       0     1     0                    0   r[1]=rowid
+5     MakeRecord     2     2     4     DB             0   r[4]=mkrec(r[2..3])
+6     Insert         0     4     1     a              57  intkey=r[1] data=r[4]
+7     Halt           0     0     0                    0   
+8     Transaction    0     1     1     0              1   usesStmtJournal=0
+9     Goto           0     1     0                    0   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我得出的结论是 &lt;a href=&#34;https://github.com/sqlite/sqlite/blob/version-3.39.4/src/insert.c#L671&#34;&gt;&lt;code&gt;sqlite3Insert&lt;/code&gt;&lt;/a&gt; 实际上是根据SQLite插入规则，将解析后的 &lt;code&gt;INSERT&lt;/code&gt; 语句转换为一系列虚拟机字节码指令。&lt;/p&gt;
+
+&lt;p&gt;因此这并不是我要找的地方。我真正需要的是在插入之前创建记录的位置。我猜测那只能是执行虚拟机代码的地方，可能是执行 &lt;code&gt;Insert (OP_INSERT)&lt;/code&gt; 操作码的地方。&lt;/p&gt;
+
+&lt;p&gt;根据上图我直接找到了 &lt;code&gt;vdbe.c&lt;/code&gt; 文件的位置，直奔主题。&lt;/p&gt;
+
+&lt;p&gt;我发现有一个有 8000行代码的 &lt;code&gt;switch( pOp-&amp;gt;opcode )&lt;/code&gt; 语句，通过 &lt;code&gt;OP_INSERT&lt;/code&gt; 关键字找到插入操作对应的代码位置。&lt;/p&gt;
+
+&lt;p&gt;在对应分支的第一行中，总算找到了相关的线索:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt; Mem *pData;       /* MEM cell holding data for the record to be inserted */
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以 &lt;code&gt;pData&lt;/code&gt; 指向要插入的记录数据。您可以在 &lt;code&gt;L5402&lt;/code&gt; 中看到&lt;code&gt;pData = &amp;amp;aMem[pOp-&amp;gt;p2];&lt;/code&gt;，它是如何将 &lt;code&gt;pData&lt;/code&gt; 值设置为虚拟机内存 &lt;code&gt;aMem&lt;/code&gt; 地址的，该地址位于虚拟机寄存器 &lt;code&gt;p2&lt;/code&gt; 所指向的位置。&lt;/p&gt;
+
+&lt;p&gt;快速回顾一下: 首先在 &lt;code&gt;insert.c&lt;/code&gt; 文件我们了解到 &lt;code&gt;INSERT&lt;/code&gt; 语句被翻译成一堆虚拟机指令。然后通过 &lt;code&gt;INSERT&lt;/code&gt; 的数据通过这些&lt;code&gt;sqlite3vdbeXXX&lt;/code&gt; 调用到达虚拟机。我假设将 &lt;code&gt;OP_INSERT&lt;/code&gt; 操作码和数据注册到虚拟机是在第2593行:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;sqlite3VdbeAddOp3(v, OP_Insert, iDataCur, aRegIdx[i], regNewData);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;下面 &lt;code&gt;regNewData&lt;/code&gt; 的一个更详细的说明:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;** The regNewData parameter is the first register in a range that contains
+** the data to be inserted or the data after the update.  There will be
+** pTab-&amp;gt;nCol+1 registers in this range.  The first register (the one
+** that regNewData points to) will contain the new rowid, or NULL in the
+** case of a WITHOUT ROWID table.  The second register in the range will
+** contain the content of the first table column.  The third register will
+** contain the content of the second table column.  And so forth.
+**
+** The regOldData parameter is similar to regNewData except that it contains
+** the data prior to an UPDATE rather than afterwards.  regOldData is zero
+** for an INSERT.  This routine can distinguish between UPDATE and INSERT by
+** checking regOldData for zero.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;所以，在这一点上，我们正在用数据执行机器代码。代码向下滚动一点，让我们看看如何使用 &lt;code&gt;pData&lt;/code&gt;。在 &lt;code&gt;L5448-L5449&lt;/code&gt; 处可以看到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;  x.pData = pData-&amp;gt;z;
+  x.nData = pData-&amp;gt;n;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;x&lt;/code&gt; 的定义如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt; BtreePayload x;   /* Payload to be inserted */
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;完美。再向下滚动一点，我们看到:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;  rc = sqlite3BtreeInsert(pC-&amp;gt;uc.pCursor, &amp;amp;x,
+      (pOp-&amp;gt;p5 &amp;amp; (OPFLAG_APPEND|OPFLAG_SAVEPOSITION|OPFLAG_PREFORMAT)), 
+      seekResult
+  );
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我们终于找到了插入原始数据的位置。但是，我们怎么知道它的格式和这里记录的一样呢? 如果仔细查看示例 &lt;code&gt;INSERT&lt;/code&gt; 中的虚拟机代码，在&lt;code&gt;INSERT&lt;/code&gt; 操作码之前有一个 &lt;code&gt;MakeRecord&lt;/code&gt; 操作码，它负责构建记录。&lt;/p&gt;
+
+&lt;p&gt;你可以在 &lt;code&gt;vdb.c&lt;/code&gt; 文件中查看 &lt;code&gt;OP_MakeRecord&lt;/code&gt; 实现，并看到以下注释:&lt;/p&gt;
+
+&lt;p&gt;You can check the OP_MakeRecord implementation at vdbe.c file and see the following comment:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;将 &lt;code&gt;P1&lt;/code&gt; 开头的 &lt;code&gt;P2&lt;/code&gt; 寄存器转换为记录格式，用作数据库表中的数据记录或索引中的键。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在 &lt;code&gt;case&lt;/code&gt; 语句的最后几行看到了关键部分:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;  /* Invoke the update-hook if required. */
+  if( rc ) goto abort_due_to_error;
+  if( pTab ){
+    assert( db-&amp;gt;xUpdateCallback!=0 );
+    assert( pTab-&amp;gt;aCol!=0 );
+    db-&amp;gt;xUpdateCallback(db-&amp;gt;pUpdateArg,
+           (pOp-&amp;gt;p5 &amp;amp; OPFLAG_ISUPDATE) ? SQLITE_UPDATE : SQLITE_INSERT,
+           zDb, pTab-&amp;gt;zName, x.nKey);
+  }
+  break;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;看来我需要的东西都在这里了。更新钩子钩子和原始数据。只需要更新时传递给回调函数即可。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-开始定制-sqlite&#34;&gt;3. 开始定制 SQLite&lt;/h2&gt;
+
+&lt;p&gt;这就是我期望的 API：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c&#34;&gt;db-&amp;gt;xUpdateCallback(db-&amp;gt;pUpdateArg,
+	(pOp-&amp;gt;p5 &amp;amp; OPFLAG_ISUPDATE) ? SQLITE_UPDATE : SQLITE_INSERT,
+	zDb, pTab-&amp;gt;zName, x.nKey, pData-&amp;gt;z, pData-&amp;gt;n);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;传递的是数据（&lt;code&gt;pData-&amp;gt;z&lt;/code&gt;）和其大小(&lt;code&gt;pData-&amp;gt;n&lt;/code&gt;)。&lt;/p&gt;
+
+&lt;p&gt;为了解释函数签名的变化，还需要在多个地方进行相应的修改。&lt;/p&gt;
+
+&lt;p&gt;以下是 &lt;code&gt;fossil&lt;/code&gt; 工具提示的变化的源文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;EDITED     src/main.c
+EDITED     src/sqlite.h.in
+EDITED     src/sqlite3ext.h
+EDITED     src/sqliteInt.h
+EDITED     src/tclsqlite.c
+EDITED     src/vdbe.c
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;还有一些针对编译提示的修改。&lt;/p&gt;
+
+&lt;h2 id=&#34;4-克隆一份-go-sqlite-驱动&#34;&gt;4. 克隆一份 Go SQLite 驱动&lt;/h2&gt;
+
+&lt;p&gt;现在是时候在一个 Go 程序中创建一个简单的测试了。我比较熟悉与 SQLite 交互的 &lt;code&gt;mattn/go-sqlite3&lt;/code&gt; 驱动程序。该项目通过导入SQLite合并文件并通过CGO绑定工作。&lt;/p&gt;
+
+&lt;p&gt;因此还需要再克隆下 Go SQLite 驱动，更新被我修改的文件。并在Go API中进行了必要的更新以访问新值。&lt;/p&gt;
+
+&lt;p&gt;主要是对 &lt;code&gt;updateHookTrampoline&lt;/code&gt; 的更改，现在接收记录为 &lt;code&gt;*C.Char&lt;/code&gt; 和 &lt;code&gt;int&lt;/code&gt; 类型的数据大小，转型为字节 Slice 并将其传递给回调函数:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func updateHookTrampoline(handle unsafe.Pointer, op int, db *C.char, table *C.char, rowid int64, data *C.char, size int) {
+	callback := lookupHandle(handle).(func(int, string, string, int64, []byte))
+	callback(op, C.GoString(db), C.GoString(table), rowid, C.GoBytes(unsafe.Pointer(data), C.int(size)))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;RegisterUpdateHook&lt;/code&gt; 函数也需要做同样的调整。&lt;/p&gt;
+
+&lt;h2 id=&#34;5-改动后的效果&#34;&gt;5. 改动后的效果&lt;/h2&gt;
+
+&lt;p&gt;现在已经准备好了测试的所有东西。让我们运行一个简单的例子，灵感来自 &lt;a href=&#34;https://fly.io/blog/sqlite-internals-btree/&#34;&gt;SQLite Internals: Pages &amp;amp; B-trees&lt;/a&gt; 博客文章。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+	&amp;quot;database/sql&amp;quot;
+	&amp;quot;fmt&amp;quot;
+	&amp;quot;log&amp;quot;
+	&amp;quot;os&amp;quot;
+
+	&amp;quot;github.com/mattn/go-sqlite3&amp;quot;
+)
+
+func main() {
+	sqlite3conn := []*sqlite3.SQLiteConn{}
+	sql.Register(&amp;quot;sqlite3_with_hook_example&amp;quot;,
+		&amp;amp;sqlite3.SQLiteDriver{
+			ConnectHook: func(conn *sqlite3.SQLiteConn) error {
+				sqlite3conn = append(sqlite3conn, conn)
+				conn.RegisterUpdateHook(func(op int, db string, table string, rowid int64, data []byte) {
+					switch op {
+					case sqlite3.SQLITE_INSERT:
+						fmt.Printf(&amp;quot;%x\n&amp;quot;, data)
+					}
+				})
+				return nil
+			},
+		})
+	os.Remove(&amp;quot;./foo.db&amp;quot;)
+
+	srcDb, err := sql.Open(&amp;quot;sqlite3_with_hook_example&amp;quot;, &amp;quot;./foo.db&amp;quot;)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer srcDb.Close()
+	srcDb.Ping()
+
+	_, err = srcDb.Exec(`CREATE TABLE sandwiches (
+		id INTEGER PRIMARY KEY,
+		name TEXT,
+		length REAL,
+		count INTEGER
+	);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = srcDb.Exec(&amp;quot;INSERT INTO sandwiches (name, length, count) VALUES (&#39;Italian&#39;, 7.5, 2);&amp;quot;)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不要忘记添加更新 &lt;code&gt;go.mod&lt;/code&gt; 文件 &lt;code&gt;replace github.com/mattn/go-sqlite3 =&amp;gt; github.com/brunocalza/go-sqlite3 v0.0.0-20220926005737-36475033d841&lt;/code&gt;，重新定向驱动。&lt;/p&gt;
+
+&lt;p&gt;运行后应该得到以下的结果：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;05001b07014974616c69616e401e00000000000002
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这正是 &lt;code&gt;(&#39;Italian&#39;, 7.5, 2)&lt;/code&gt; 数据的 Efficient Sandwich 编码的结果，不包含主键和记录的长度(前两个字节)。&lt;/p&gt;
+
+&lt;p&gt;看到输出结果我才发现能够理解SQLite源代码的部分内容真的很有趣，尽管我不理解它的大部分。但是我做了一些更改并看到这些更改，并通过 Go 的驱动程序看到结果的变化。&lt;/p&gt;
+
+&lt;p&gt;老实说这种更改数据库源代码的方法风险太大。与新版本保持同步也是一个太大的问题，但这是一个值得记录的有趣经历。&lt;/p&gt;
+</description>
+      
+    </item>
     
     <item>
       <title>Go 语言十年而立，Go2 蓄势待发</title>
@@ -3892,167 +4156,6 @@ int main() {
 &lt;/ul&gt;
 
 &lt;p&gt;因为Go1需要保证API的兼容性, 因此上述的问题只能希望在未来的Go2能得到改善.&lt;/p&gt;
-</description>
-      
-    </item>
-    
-    <item>
-      <title>Go语言的国际化支持(基于gettext-go)</title>
-      <link>https://chai2010.cn/post/golang/go-gettext/</link>
-      <pubDate>Tue, 07 Jan 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/post/golang/go-gettext/</guid>
-      
-        <description>
-
-&lt;p&gt;本文在 &lt;a href=&#34;http://blog.go-china.org/07-gettext&#34;&gt;Golang中国博客&lt;/a&gt; 的地址: &lt;a href=&#34;http://blog.go-china.org/07-gettext&#34;&gt;http://blog.go-china.org/07-gettext&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;hello-world&#34;&gt;hello, world!&lt;/h2&gt;
-
-&lt;p&gt;假设有以下的程序, 输出: &amp;ldquo;Hello, world!&amp;rdquo;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;package main
-
-import (
-    &amp;quot;fmt&amp;quot;
-)
-
-func main() {
-    fmt.Println(&amp;quot;Hello, world!&amp;quot;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;现在要让改程序支持不同语言的用户, 然后以本地语言输出相同意思的信息. 这就是很多程序面临的国际化问题.&lt;/p&gt;
-
-&lt;h2 id=&#34;go语言的国际化思路&#34;&gt;Go语言的国际化思路&lt;/h2&gt;
-
-&lt;p&gt;程序的国际化一般涉及到编码和翻译两个概念. 其中编码一般采用UTF8编码标准, Go语言已经完美支持. 而目前常见翻译技术是Qt的&lt;code&gt;tr&lt;/code&gt;函数和GNU gettext提供的&lt;code&gt;gettext&lt;/code&gt;函数, 另外微软的&lt;code&gt;MFC&lt;/code&gt;也有自己的多国语言支持方式.&lt;/p&gt;
-
-&lt;p&gt;Go语言目前还没有标准的多国语言翻译方式. 不过笔者已经初步将&lt;code&gt;gettext&lt;/code&gt;的运行时环境移植到了Go语言(采用纯Go实现, 无其他依赖).&lt;/p&gt;
-
-&lt;p&gt;Go语言版的&lt;code&gt;gettext&lt;/code&gt;名字为&lt;code&gt;gettext-go&lt;/code&gt;, 项目地址在: &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;http://code.google.com/p/gettext-go&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 同时也借鉴了 Qt 的翻译上下文特性. 在 GNU gettext 的 &lt;code&gt;po&lt;/code&gt; 和 &lt;code&gt;mo&lt;/code&gt; 翻译文件中都是含有 &lt;code&gt;msgctxt&lt;/code&gt; 上下文信息的, 但是 C/C++ 的翻译接口函数并没有上下文的参数, 因此 传统的 &lt;code&gt;gettext&lt;/code&gt; 函数没有设置上下文的参数.&lt;/p&gt;
-
-&lt;p&gt;可以去 &lt;a href=&#34;http://godoc.org/code.google.com/p/gettext-go/gettext&#34;&gt;godoc.org&lt;/a&gt; 或 &lt;a href=&#34;http://gowalker.org/code.google.com/p/gettext-go/gettext&#34;&gt;gowalker.org&lt;/a&gt; 查看 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 的文档.&lt;/p&gt;
-
-&lt;h2 id=&#34;go语言的多国语言支持&#34;&gt;Go语言的多国语言支持&lt;/h2&gt;
-
-&lt;p&gt;基于 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; , 我们可以很容易给Go程序增加多国语言的支持:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;package main
-
-import (
-    &amp;quot;fmt&amp;quot;
-
-    &amp;quot;code.google.com/p/gettext-go/gettext&amp;quot;
-)
-
-func main() {
-    gettext.BindTextdomain(&amp;quot;hello&amp;quot;, &amp;quot;local&amp;quot;, nil)
-    gettext.Textdomain(&amp;quot;hello&amp;quot;)
-
-    fmt.Println(gettext.Gettext(&amp;quot;Hello, world!&amp;quot;))
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中 &lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 是绑定翻译的空间, 其中 &lt;code&gt;&amp;quot;hello&amp;quot;&lt;/code&gt; 是对应翻译一类信息的翻译, &lt;code&gt;&amp;quot;local&amp;quot;&lt;/code&gt; 为翻译文件的所在路径(这里当前目录下的&amp;rdquo;local&amp;rdquo;)子目录.&lt;/p&gt;
-
-&lt;p&gt;按照 GNU gettext 的习惯, 简体中文对应的翻译文件为 &lt;code&gt;&amp;quot;local/zh_CN/LC_MESSAGES/hello.mo&amp;quot;&lt;/code&gt;. 不同语言的命名有一个国际规范, 比如繁体中文对应&lt;code&gt;&amp;quot;zh_TW&amp;quot;&lt;/code&gt;, 美国英文对应&lt;code&gt;&amp;quot;en_US&amp;quot;&lt;/code&gt;等等. 但是 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 对名字并没有特殊的要求.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 可以绑定多个翻译空间, 但是同一个时刻只能使用一个翻译空间.&lt;/p&gt;
-
-&lt;p&gt;这里我们使用 &lt;code&gt;gettext.Textdomain&lt;/code&gt; 指定当前的翻译空间为 &lt;code&gt;&amp;quot;hello&amp;quot;&lt;/code&gt; .&lt;/p&gt;
-
-&lt;p&gt;运行新的程序程序, 发现输出还是: &amp;ldquo;Hello, world!&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;这是因为缺少翻译文件&amp;hellip;&lt;/p&gt;
-
-&lt;h2 id=&#34;生成翻译文件&#34;&gt;生成翻译文件&lt;/h2&gt;
-
-&lt;p&gt;未来, &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 会开发一个  GNU gettext 工具集 中 的 &lt;code&gt;xgettext&lt;/code&gt; 类似工具, 用于从程序中提取要翻译的字符串.&lt;/p&gt;
-
-&lt;p&gt;不过目前, 我们只能手工支持翻译文件了(还好这个例子只有一个字符串需要翻译).&lt;/p&gt;
-
-&lt;p&gt;创建 &lt;code&gt;&amp;quot;local/zh_CN/LC_MESSAGES/hello.po&amp;quot;&lt;/code&gt; 文件, 内容如下:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;msgid &amp;quot;&amp;quot;
-msgstr &amp;quot;&amp;quot;
-
-msgctxt &amp;quot;main.main&amp;quot;
-msgid &amp;quot;Hello, world!&amp;quot;
-msgstr &amp;quot;你好, 世界!&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;保存为&lt;strong&gt;UTF8&lt;/strong&gt;编码格式.&lt;/p&gt;
-
-&lt;p&gt;然后用 GNU gettext 工具集中的 &lt;code&gt;msgfmt&lt;/code&gt; 命令将 &lt;code&gt;hello.po&lt;/code&gt; 文件编译为 &lt;code&gt;hello.mo&lt;/code&gt; 文件(&lt;em&gt;注:如果缺少mo文件的话,也尝试用同名的po文件代替.&lt;/em&gt;):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;msgfmt -o hello.mo hello.po
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如果是Windows用户, 可以下载 &lt;a href=&#34;http://www.poedit.net/&#34;&gt;poedit&lt;/a&gt; 翻译工具. 然后用 &lt;a href=&#34;http://www.poedit.net/&#34;&gt;poedit&lt;/a&gt; 打开 &lt;code&gt;hello.po&lt;/code&gt; 文件, 点击保存后会自动生成 &lt;code&gt;hello.mo&lt;/code&gt; 文件(也是&lt;a href=&#34;http://www.poedit.net/&#34;&gt;poedit&lt;/a&gt;的bin目录下自带的&lt;code&gt;msgfmt&lt;/code&gt; 命令生成的).&lt;/p&gt;
-
-&lt;p&gt;重新运行新的程序程序, &lt;strong&gt;还是输出: &amp;ldquo;Hello, world!&amp;rdquo; ?&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;本地的语言环境&#34;&gt;本地的语言环境&lt;/h2&gt;
-
-&lt;p&gt;在上一节, 我们已经制作了简体中文的翻译文件 &lt;code&gt;&amp;quot;local/zh_CN/LC_MESSAGES/hello.mo&amp;quot;&lt;/code&gt;, 然后输出依然是英文.&lt;/p&gt;
-
-&lt;p&gt;这是因为 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 翻译时不仅要依赖对应语言的翻译文件, 还需要知道要范围为哪种语言(和网上翻译类似, 需要知道翻译的目标语言).&lt;/p&gt;
-
-&lt;p&gt;如果没有指定翻译语言, &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 会尝试获取本地的默认语言环境, 主要是通过检查 &lt;code&gt;$(LC_MESSAGES)&lt;/code&gt; 和 &lt;code&gt;$(LANG)&lt;/code&gt; 两个环境变量. 如果两个环境变量都没有设置, 那么默认是不进行翻译的.&lt;/p&gt;
-
-&lt;p&gt;我们设置环境变量后重新运行程序(Windows):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;set LANG=zh_CN
-go run hello.go
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这里时候应该可以输出中文了.&lt;/p&gt;
-
-&lt;h2 id=&#34;动态切换语言&#34;&gt;动态切换语言&lt;/h2&gt;
-
-&lt;p&gt;如果不想使用默认的本地语言环境, 也可以用 &lt;code&gt;gettext.SetLocale&lt;/code&gt; 接口设置本地语言环境.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;func main() {
-    gettext.BindTextdomain(&amp;quot;hello&amp;quot;, &amp;quot;local&amp;quot;, nil)
-    gettext.Textdomain(&amp;quot;hello&amp;quot;)
-
-    // 切换到简体中文
-    gettext.SetLocale(&amp;quot;zh_CN&amp;quot;)
-    fmt.Println(gettext.Gettext(&amp;quot;Hello, world!&amp;quot;))
-    // 切换到繁体中文
-    gettext.SetLocale(&amp;quot;zh_TW&amp;quot;)
-    fmt.Println(gettext.Gettext(&amp;quot;Hello, world!&amp;quot;))
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这样可以根据需要采用合适的语言翻译文件.&lt;/p&gt;
-
-&lt;h2 id=&#34;翻译的上下文&#34;&gt;翻译的上下文&lt;/h2&gt;
-
-&lt;p&gt;Go语言版的 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 的每个 &lt;code&gt;gettext.Gettext&lt;/code&gt; 调用都有一个隐含的上下文信息(如果想自己指定上下文可以使用&lt;code&gt;gettext.PGettext&lt;/code&gt;).&lt;/p&gt;
-
-&lt;p&gt;默认的上下文为包含&lt;code&gt;gettext.Gettext&lt;/code&gt;调用的函数名称, 比如:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;如果是main包的全局函数初始化调用, 则为 &lt;code&gt;main.init&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;如果是main包的init函数调用, 则为 &lt;code&gt;main.init&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;如果是main包的main函数调用, 则为 &lt;code&gt;main.main&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;如果是main包中的闭包调用, 则为 &lt;code&gt;main.func&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;如果是非main包的函数, 则还需要包含包的完全路径名&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;上下文对应Go的运行时调用者名称, 具体实现在这里: &lt;a href=&#34;https://code.google.com/p/gettext-go/source/browse/gettext/caller.go&#34;&gt;caller.go&lt;/a&gt; .&lt;/p&gt;
-
-&lt;h2 id=&#34;练习题&#34;&gt;练习题&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;给前面的程序增加 繁体/日文/韩文/克林贡语 等语言的支持&lt;/li&gt;
-&lt;li&gt;增加一个 &lt;code&gt;-local&lt;/code&gt; 参数, 用于设置本地语言&lt;/li&gt;
-&lt;li&gt;提交改进建议或其他反馈意见&lt;/li&gt;
-&lt;/ol&gt;
 </description>
       
     </item>

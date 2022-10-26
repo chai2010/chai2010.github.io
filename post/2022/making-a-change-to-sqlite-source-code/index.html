@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Go 语言 CGO 用户深度定制 SQLite 代码 - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2022/making-a-change-to-sqlite-source-code/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="Go 语言 CGO 用户深度定制 SQLite 代码" />
+<meta property="og:description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2022/making-a-change-to-sqlite-source-code/" />
+
+
+
+<meta property="article:published_time" content="2022-10-26T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2022-10-26T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="Go 语言 CGO 用户深度定制 SQLite 代码">
+<meta itemprop="description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是">
+
+
+<meta itemprop="datePublished" content="2022-10-26T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2022-10-26T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2656">
+
+
+
+<meta itemprop="keywords" content="golang,sqlite," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go 语言 CGO 用户深度定制 SQLite 代码"/>
+<meta name="twitter:description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go 语言 CGO 用户深度定制 SQLite 代码</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-10-26 </span>
+        <div class="post-category">
+            
+              <a href="/categories/golang/"> golang </a>
+            
+              <a href="/categories/sqlite/"> sqlite </a>
+            
+          </div>
+        <span class="more-meta"> 约 2656 字 </span>
+        <span class="more-meta"> 预计阅读 6 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-背景">1. 背景</a></li>
+<li><a href="#2-看看-sqlite-的代码结构">2. 看看 SQLite 的代码结构</a></li>
+<li><a href="#3-开始定制-sqlite">3. 开始定制 SQLite</a></li>
+<li><a href="#4-克隆一份-go-sqlite-驱动">4. 克隆一份 Go SQLite 驱动</a></li>
+<li><a href="#5-改动后的效果">5. 改动后的效果</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。</p>
+
+<ul>
+<li>作者：<a href="https://brunocalza.me/author/brunocalza">BRUNO CALZA</a></li>
+<li>译者：柴树杉，<a href="https://github.com/wa-lang/wa">凹语言</a> 作者、Go语言贡献者、多本Go语言图书作者，目前在蚂蚁从事 <a href="https://github.com/kusionStack/kusion">KusionStack</a> 和 KCL 开发。</li>
+<li>原文：<a href="https://brunocalza.me/making-a-change-to-sqlite-source-code/">https://brunocalza.me/making-a-change-to-sqlite-source-code/</a></li>
+</ul>
+
+<h2 id="1-背景">1. 背景</h2>
+
+<p>有一天，我正在考虑如何在 SQLite 中获取最近插入或更新的行记录的数据。这样做的动机是我想创建该行的 hash，本质上是为了在插入或更新行时能够构建相应表的 <a href="https://en.wikipedia.org/wiki/Merkle_tree">Merkle 树</a>。</p>
+
+<p>SQLite 提供的最符合的 API 可能是 <a href="https://www.sqlite.org/c3ref/update_hook.html"><code>sqlite3_update_hook</code></a>:</p>
+
+<blockquote>
+<p><code>sqlite3_update_hook()</code> 函数为数据库连接注册一个回调函数，该数据库连接由第一个参数标识，在 rowwid 表中更新、插入或删除行时调用。</p>
+</blockquote>
+
+<p>这个 API 的问题是它只返回行的 <a href="https://sqlite.org/lang_createtable.html#rowid">rowid</a>。这意味着还需要为列内的行获取所有列。即使使用这种方法，我仍然无法获得行记录的原始数据。只能得到那一行的驱动信息。</p>
+
+<p>关于如何构建这样的树可能有很多方法，但就我而言 SQLite API 并没有提供真正想要的东西。因此，我决定趁此机会更深入地挖掘下源代码，同时看看内部实现的细节。不仅如此，我希望可以对它进行一些修改和测试，看看能否满足需求。</p>
+
+<p>因为对 C 语言的畏惧，开始我只是想假装看下几个源文件就跑路。没想到这次真的有惊喜。</p>
+
+<h2 id="2-看看-sqlite-的代码结构">2. 看看 SQLite 的代码结构</h2>
+
+<p>首先使用 <code>fossil</code> 工具克隆了 <a href="https://sqlite.org/src/doc/trunk/README.md">SQLite源代码</a>，下面是文件。</p>
+
+<p><img src="/images/2022/making-a-change-to-sqlite-source-code/01.png" alt="SQLite 代码目录" /></p>
+
+<p>如果你对数据库比较熟悉，或许可以猜测出一些文件对应的操作。因此，我决定直接跳到 <code>insert.c</code> 文件，看看能不能找到一些有趣的东西。</p>
+
+<p>遍历函数名列表，路过 <a href="https://github.com/sqlite/sqlite/blob/version-3.39.4/src/insert.c#L671"><code>sqlite3Insert</code></a> 函数，看到以下注释：</p>
+
+<pre><code>** This routine is called to handle SQL of the following forms:
+**
+**    insert into TABLE (IDLIST) values(EXPRLIST),(EXPRLIST),...
+**    insert into TABLE (IDLIST) select
+**    insert into TABLE (IDLIST) default values
+**
+</code></pre>
+
+<p>也许在这个函数中有一些可鼓捣的地方。我能够对其中发生的情况进行一些猜测，但引起我注意的是对名称类似于 <code>sqlite3vdbeXXX</code> 的函数的函数调用的数量。</p>
+
+<p>这让我想起 SQLite 底层使用了一个名为 <a href="https://www.sqlite.org/opcode.html">vdbe</a> 的虚拟机。这意味着所有SQL语句都首先被翻译成该虚拟机的语言。然后，执行引擎执行虚拟机代码。让我们看一个简单的 <code>INSERT</code> 语句如何被翻译成字节码:</p>
+
+<pre><code>sqlite&gt; create table a (a int, b text);
+sqlite&gt; explain INSERT INTO a VALUES (1, 'Hello');
+addr  opcode         p1    p2    p3    p4             p5  comment      
+----  -------------  ----  ----  ----  -------------  --  -------------
+0     Init           0     8     0                    0   Start at 8
+1     OpenWrite      0     2     0     2              0   root=2 iDb=0; a
+2     Integer        1     2     0                    0   r[2]=1
+3     String8        0     3     0     Hello          0   r[3]='Hello'
+4     NewRowid       0     1     0                    0   r[1]=rowid
+5     MakeRecord     2     2     4     DB             0   r[4]=mkrec(r[2..3])
+6     Insert         0     4     1     a              57  intkey=r[1] data=r[4]
+7     Halt           0     0     0                    0   
+8     Transaction    0     1     1     0              1   usesStmtJournal=0
+9     Goto           0     1     0                    0   
+</code></pre>
+
+<p>我得出的结论是 <a href="https://github.com/sqlite/sqlite/blob/version-3.39.4/src/insert.c#L671"><code>sqlite3Insert</code></a> 实际上是根据SQLite插入规则，将解析后的 <code>INSERT</code> 语句转换为一系列虚拟机字节码指令。</p>
+
+<p>因此这并不是我要找的地方。我真正需要的是在插入之前创建记录的位置。我猜测那只能是执行虚拟机代码的地方，可能是执行 <code>Insert (OP_INSERT)</code> 操作码的地方。</p>
+
+<p>根据上图我直接找到了 <code>vdbe.c</code> 文件的位置，直奔主题。</p>
+
+<p>我发现有一个有 8000行代码的 <code>switch( pOp-&gt;opcode )</code> 语句，通过 <code>OP_INSERT</code> 关键字找到插入操作对应的代码位置。</p>
+
+<p>在对应分支的第一行中，总算找到了相关的线索:</p>
+
+<pre><code class="language-c"> Mem *pData;       /* MEM cell holding data for the record to be inserted */
+</code></pre>
+
+<p>所以 <code>pData</code> 指向要插入的记录数据。您可以在 <code>L5402</code> 中看到<code>pData = &amp;aMem[pOp-&gt;p2];</code>，它是如何将 <code>pData</code> 值设置为虚拟机内存 <code>aMem</code> 地址的，该地址位于虚拟机寄存器 <code>p2</code> 所指向的位置。</p>
+
+<p>快速回顾一下: 首先在 <code>insert.c</code> 文件我们了解到 <code>INSERT</code> 语句被翻译成一堆虚拟机指令。然后通过 <code>INSERT</code> 的数据通过这些<code>sqlite3vdbeXXX</code> 调用到达虚拟机。我假设将 <code>OP_INSERT</code> 操作码和数据注册到虚拟机是在第2593行:</p>
+
+<pre><code class="language-c">sqlite3VdbeAddOp3(v, OP_Insert, iDataCur, aRegIdx[i], regNewData);
+</code></pre>
+
+<p>下面 <code>regNewData</code> 的一个更详细的说明:</p>
+
+<pre><code>** The regNewData parameter is the first register in a range that contains
+** the data to be inserted or the data after the update.  There will be
+** pTab-&gt;nCol+1 registers in this range.  The first register (the one
+** that regNewData points to) will contain the new rowid, or NULL in the
+** case of a WITHOUT ROWID table.  The second register in the range will
+** contain the content of the first table column.  The third register will
+** contain the content of the second table column.  And so forth.
+**
+** The regOldData parameter is similar to regNewData except that it contains
+** the data prior to an UPDATE rather than afterwards.  regOldData is zero
+** for an INSERT.  This routine can distinguish between UPDATE and INSERT by
+** checking regOldData for zero.
+</code></pre>
+
+<p>所以，在这一点上，我们正在用数据执行机器代码。代码向下滚动一点，让我们看看如何使用 <code>pData</code>。在 <code>L5448-L5449</code> 处可以看到:</p>
+
+<pre><code class="language-c">  x.pData = pData-&gt;z;
+  x.nData = pData-&gt;n;
+</code></pre>
+
+<p><code>x</code> 的定义如下：</p>
+
+<pre><code class="language-c"> BtreePayload x;   /* Payload to be inserted */
+</code></pre>
+
+<p>完美。再向下滚动一点，我们看到:</p>
+
+<pre><code class="language-c">  rc = sqlite3BtreeInsert(pC-&gt;uc.pCursor, &amp;x,
+      (pOp-&gt;p5 &amp; (OPFLAG_APPEND|OPFLAG_SAVEPOSITION|OPFLAG_PREFORMAT)), 
+      seekResult
+  );
+</code></pre>
+
+<p>我们终于找到了插入原始数据的位置。但是，我们怎么知道它的格式和这里记录的一样呢? 如果仔细查看示例 <code>INSERT</code> 中的虚拟机代码，在<code>INSERT</code> 操作码之前有一个 <code>MakeRecord</code> 操作码，它负责构建记录。</p>
+
+<p>你可以在 <code>vdb.c</code> 文件中查看 <code>OP_MakeRecord</code> 实现，并看到以下注释:</p>
+
+<p>You can check the OP_MakeRecord implementation at vdbe.c file and see the following comment:</p>
+
+<blockquote>
+<p>将 <code>P1</code> 开头的 <code>P2</code> 寄存器转换为记录格式，用作数据库表中的数据记录或索引中的键。</p>
+</blockquote>
+
+<p>在 <code>case</code> 语句的最后几行看到了关键部分:</p>
+
+<pre><code class="language-c">  /* Invoke the update-hook if required. */
+  if( rc ) goto abort_due_to_error;
+  if( pTab ){
+    assert( db-&gt;xUpdateCallback!=0 );
+    assert( pTab-&gt;aCol!=0 );
+    db-&gt;xUpdateCallback(db-&gt;pUpdateArg,
+           (pOp-&gt;p5 &amp; OPFLAG_ISUPDATE) ? SQLITE_UPDATE : SQLITE_INSERT,
+           zDb, pTab-&gt;zName, x.nKey);
+  }
+  break;
+</code></pre>
+
+<p>看来我需要的东西都在这里了。更新钩子钩子和原始数据。只需要更新时传递给回调函数即可。</p>
+
+<h2 id="3-开始定制-sqlite">3. 开始定制 SQLite</h2>
+
+<p>这就是我期望的 API：</p>
+
+<pre><code class="language-c">db-&gt;xUpdateCallback(db-&gt;pUpdateArg,
+	(pOp-&gt;p5 &amp; OPFLAG_ISUPDATE) ? SQLITE_UPDATE : SQLITE_INSERT,
+	zDb, pTab-&gt;zName, x.nKey, pData-&gt;z, pData-&gt;n);
+</code></pre>
+
+<p>传递的是数据（<code>pData-&gt;z</code>）和其大小(<code>pData-&gt;n</code>)。</p>
+
+<p>为了解释函数签名的变化，还需要在多个地方进行相应的修改。</p>
+
+<p>以下是 <code>fossil</code> 工具提示的变化的源文件：</p>
+
+<pre><code>EDITED     src/main.c
+EDITED     src/sqlite.h.in
+EDITED     src/sqlite3ext.h
+EDITED     src/sqliteInt.h
+EDITED     src/tclsqlite.c
+EDITED     src/vdbe.c
+</code></pre>
+
+<p>还有一些针对编译提示的修改。</p>
+
+<h2 id="4-克隆一份-go-sqlite-驱动">4. 克隆一份 Go SQLite 驱动</h2>
+
+<p>现在是时候在一个 Go 程序中创建一个简单的测试了。我比较熟悉与 SQLite 交互的 <code>mattn/go-sqlite3</code> 驱动程序。该项目通过导入SQLite合并文件并通过CGO绑定工作。</p>
+
+<p>因此还需要再克隆下 Go SQLite 驱动，更新被我修改的文件。并在Go API中进行了必要的更新以访问新值。</p>
+
+<p>主要是对 <code>updateHookTrampoline</code> 的更改，现在接收记录为 <code>*C.Char</code> 和 <code>int</code> 类型的数据大小，转型为字节 Slice 并将其传递给回调函数:</p>
+
+<pre><code class="language-go">func updateHookTrampoline(handle unsafe.Pointer, op int, db *C.char, table *C.char, rowid int64, data *C.char, size int) {
+	callback := lookupHandle(handle).(func(int, string, string, int64, []byte))
+	callback(op, C.GoString(db), C.GoString(table), rowid, C.GoBytes(unsafe.Pointer(data), C.int(size)))
+}
+</code></pre>
+
+<p><code>RegisterUpdateHook</code> 函数也需要做同样的调整。</p>
+
+<h2 id="5-改动后的效果">5. 改动后的效果</h2>
+
+<p>现在已经准备好了测试的所有东西。让我们运行一个简单的例子，灵感来自 <a href="https://fly.io/blog/sqlite-internals-btree/">SQLite Internals: Pages &amp; B-trees</a> 博客文章。</p>
+
+<pre><code class="language-go">package main
+
+import (
+	&quot;database/sql&quot;
+	&quot;fmt&quot;
+	&quot;log&quot;
+	&quot;os&quot;
+
+	&quot;github.com/mattn/go-sqlite3&quot;
+)
+
+func main() {
+	sqlite3conn := []*sqlite3.SQLiteConn{}
+	sql.Register(&quot;sqlite3_with_hook_example&quot;,
+		&amp;sqlite3.SQLiteDriver{
+			ConnectHook: func(conn *sqlite3.SQLiteConn) error {
+				sqlite3conn = append(sqlite3conn, conn)
+				conn.RegisterUpdateHook(func(op int, db string, table string, rowid int64, data []byte) {
+					switch op {
+					case sqlite3.SQLITE_INSERT:
+						fmt.Printf(&quot;%x\n&quot;, data)
+					}
+				})
+				return nil
+			},
+		})
+	os.Remove(&quot;./foo.db&quot;)
+
+	srcDb, err := sql.Open(&quot;sqlite3_with_hook_example&quot;, &quot;./foo.db&quot;)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer srcDb.Close()
+	srcDb.Ping()
+
+	_, err = srcDb.Exec(`CREATE TABLE sandwiches (
+		id INTEGER PRIMARY KEY,
+		name TEXT,
+		length REAL,
+		count INTEGER
+	);`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = srcDb.Exec(&quot;INSERT INTO sandwiches (name, length, count) VALUES ('Italian', 7.5, 2);&quot;)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+</code></pre>
+
+<p>不要忘记添加更新 <code>go.mod</code> 文件 <code>replace github.com/mattn/go-sqlite3 =&gt; github.com/brunocalza/go-sqlite3 v0.0.0-20220926005737-36475033d841</code>，重新定向驱动。</p>
+
+<p>运行后应该得到以下的结果：</p>
+
+<pre><code>05001b07014974616c69616e401e00000000000002
+</code></pre>
+
+<p>这正是 <code>('Italian', 7.5, 2)</code> 数据的 Efficient Sandwich 编码的结果，不包含主键和记录的长度(前两个字节)。</p>
+
+<p>看到输出结果我才发现能够理解SQLite源代码的部分内容真的很有趣，尽管我不理解它的大部分。但是我做了一些更改并看到这些更改，并通过 Go 的驱动程序看到结果的变化。</p>
+
+<p>老实说这种更改数据库源代码的方法风险太大。与新版本保持同步也是一个太大的问题，但这是一个值得记录的有趣经历。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2022-10-26</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/golang/">golang</a>
+          
+          <a href="/tags/sqlite/">sqlite</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+        
+          <a class="next" href="/post/2022/glcc-done/">
+            <span class="next-text nav-default">1024・GLCC 开源夏令营 KusionStack 顺利结题</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>
