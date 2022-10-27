@@ -3,8 +3,8 @@ title: "Go 语言 CGO 用户深度定制 SQLite 代码"
 date: 2022-10-26
 draft: false
 
-tags: ["golang", "sqlite"]
-categories: ["golang", "sqlite"]
+tags: ["golang", "sqlite", "cgo"]
+categories: ["golang", "sqlite", "cgo"]
 ---
 
 本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。
