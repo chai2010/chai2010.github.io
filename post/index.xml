@@ -6,10 +6,32 @@
     <description>Recent content in Posts on chai2010 的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 26 Oct 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 27 Oct 2022 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://chai2010.cn/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>KCL 论文被 SETTA 2022 会议录用</title>
+      <link>https://chai2010.cn/post/2022/kcl_paper/</link>
+      <pubDate>Thu, 27 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/kcl_paper/</guid>
+      
+        <description>&lt;p&gt;近日，由 KusionStack 团队成员撰写的关于 KCL 创新论文被 SETTA 2022 国际会议长文录用。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/kcl_paper/kcl_paper_setta.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Symposium on Dependable Software Engineering（以下简称 SETTA）可靠软件工程研讨会旨在将国际研究人员聚集在一起，就缩小形式化方法与软件工程之间的差距交流研究成果和想法。例如，将形式化技术和工具应用于工程大型系统（如网络物理系统 (CPS)、物联网 (IoT)、企业系统、基于云的系统等）。&lt;/p&gt;
+
+&lt;p&gt;此次被录用的论文为《KCL: A Declarative Language for Large-scale Configuration and Policy Management》，该论文的核心创新点是提出了 KCL 声明式语言、开发机制以及一致的工作流程。通过语言的建模及约束能力，可以提升运维开发过程中的多团队协作生产力以及效率，同时确保大规模配置和策略管理的稳定性。&lt;/p&gt;
+
+&lt;p&gt;此外，SETTA 2022 将在北京时间 10 月 27 日至 10 月 28 日举办线上会议，届时会分享 KCL 论文详细内容，欢迎加入 &lt;a href=&#34;https://github.com/KusionStack/community&#34;&gt;KusionStack 社区&lt;/a&gt; 进行围观。SETTA 2022 会议议程详情请参考：&lt;a href=&#34;https://lcs.ios.ac.cn/setta2022/program.php。&#34;&gt;https://lcs.ios.ac.cn/setta2022/program.php。&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;注：目前 KCL 已在 Github 开源，欢迎访问 &lt;a href=&#34;https://github.com/KusionStack/KCLVM&#34;&gt;https://github.com/KusionStack/KCLVM&lt;/a&gt; 获得更多信息。&lt;/p&gt;
+</description>
+      
+    </item>
     
     <item>
       <title>Go 语言 CGO 用户深度定制 SQLite 代码</title>
@@ -3249,44 +3271,6 @@ func main() {
 &lt;p&gt;项目地址：&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;https://github.com/chai2010/advanced-go-programming-book&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;最后感谢各位同学的鼓励和支持，谢谢大家🙏&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>已启用 https://chai2010.cn, 欢迎访问!</title>
-      <link>https://chai2010.cn/post/2018/chai2010-cn/</link>
-      <pubDate>Sun, 11 Mar 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/post/2018/chai2010-cn/</guid>
-      
-        <description>&lt;p&gt;&lt;a href=&#34;https://chai2010.cn&#34;&gt;https://chai2010.cn&lt;/a&gt; 只是目前的入口. 网址名称并不重要, 关键是内容需要永生.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;为何要启用新站点&#34;&gt;为何要启用新站点？&lt;/h3&gt;
-
-&lt;p&gt;10+年前的很多网址和内容已经彻底死掉并且被遗忘了（校友录/bbs/Go中国 等）。&lt;/p&gt;
-
-&lt;p&gt;谁能保证 10 年后 osc/微信/微博 公众号 等文章都还活着，并且自己还是更新的权限？&lt;/p&gt;
-
-&lt;p&gt;osc 以前都很多文章中的图片已经失效了，期间网址升级还导致了一些md的格式问题。&lt;/p&gt;
-
-&lt;p&gt;关键是之前个人空间保存的一些友情链接也被 osc 彻底隐藏了(每个托管都网址都差不多, 都会逐步插入光谷)。&lt;/p&gt;
-
-&lt;p&gt;新站点只是一个壳子，只是用来发布hugo生成的静态内容, 即使这个域名死了, 内容依然存在。&lt;/p&gt;
-
-&lt;p&gt;用git仓库管理内容, 希望它能比我活的更久.&lt;/p&gt;
-
-&lt;h3 id=&#34;纪念下曾经的炮灰们&#34;&gt;纪念下曾经的炮灰们:&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://chaishushan.googlepages.com/&#34;&gt;http://chaishushan.googlepages.com/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://sites.google.com/site/chaishushan/&#34;&gt;http://sites.google.com/site/chaishushan/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.csdn.net/chai2010/&#34;&gt;http://blog.csdn.net/chai2010/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://chaishushan.blog.163.com/&#34;&gt;http://chaishushan.blog.163.com/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://my.oschina.net/chai2010/&#34;&gt;http://my.oschina.net/chai2010/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://chai2010.github.io&#34;&gt;http://chai2010.github.io&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description>
       
     </item>
     

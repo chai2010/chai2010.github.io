@@ -24,6 +24,13 @@
   </url>
   
   <url>
+    <loc>https://chai2010.cn/post/2022/kcl_paper/</loc>
+    <lastmod>2022-10-27T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://chai2010.cn/post/2022/making-a-change-to-sqlite-source-code/</loc>
     <lastmod>2022-10-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -718,7 +725,14 @@
   
   <url>
     <loc>https://chai2010.cn/tags/cgo/</loc>
-    <lastmod>2016-05-25T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-26T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/categories/cgo/</loc>
+    <lastmod>2022-10-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -893,14 +907,14 @@
   
   <url>
     <loc>https://chai2010.cn/tags/kclvm/</loc>
-    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://chai2010.cn/categories/kclvm/</loc>
-    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -998,7 +1012,7 @@
   
   <url>
     <loc>https://chai2010.cn/post/</loc>
-    <lastmod>2022-10-26T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -1286,6 +1300,20 @@
   <url>
     <loc>https://chai2010.cn/categories/%E7%BF%BB%E8%AF%91/</loc>
     <lastmod>2022-10-23T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/tags/%E8%AE%BA%E6%96%87/</loc>
+    <lastmod>2022-10-27T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/categories/%E8%AE%BA%E6%96%87/</loc>
+    <lastmod>2022-10-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
