@@ -6,10 +6,63 @@
     <description>Recent content in Posts on chai2010 的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Thu, 27 Oct 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 31 Oct 2022 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://chai2010.cn/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>SQLite3 官方支持 WebAssembly！</title>
+      <link>https://chai2010.cn/post/2022/sqlite3-wasm/</link>
+      <pubDate>Mon, 31 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/sqlite3-wasm/</guid>
+      
+        <description>
+
+&lt;p&gt;SQLite 官方的 wasm 项目终于来了！这表示 WebAssembly 在 SQLite 社区完全进入工业级应用阶段！&lt;/p&gt;
+
+&lt;h2 id=&#34;1-wasm-是什么&#34;&gt;1. WASM 是什么&lt;/h2&gt;
+
+&lt;p&gt;WebAssembly，又名 WASM，是一种标准，它定义了一种低级编程语言，适合 (A) 作为与许多其他语言交叉编译的目标，以及 (B) 通过浏览器中的虚拟机运行。它在设计时考虑了通过 JavaScript 编写脚本，它提供了一种将 C 代码（以及其他代码）编译为 WASM 并通过 JavaScript 编写脚本的方法，尽管 JavaScript 和 C 之间还存在巨大的编程模型差异，但它为不同语言和 JS 的交互带来了标准桥梁。&lt;/p&gt;
+
+&lt;p&gt;根据 &lt;a href=&#34;https://zh.wikipedia.org/wiki/WebAssembly&#34;&gt;Ending 定律&lt;/a&gt;：“所有可以用WebAssembly实现的终将会用WebAssembly实现”。SQLite 官方支持 WASM 只是再次证明和强化了定律有效性。实际上，在很早之前网上就有很多基于 LLVM 或 Emscripten 构建的 SQLite 库，它们最终可以被包装为 JS 库。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;扩展阅读：WASM 作为 W3C 的 第 4 个标准，已经在不同的领域取得巨大的进展。比如 Docker 发布集成 WebAssembly 的首个技术预览版。同时大量编程语言已经开始支持 WASM 平台（完整列表可参考 &lt;a href=&#34;https://wasmlang.org/&#34;&gt;https://wasmlang.org/&lt;/a&gt; ），国内的 Go+、凹语言、KCL 配置语言 等都把对 WASM 的支持作为较高的优先级。关于 WASM 的更多信息可以关注 《WebAssembly标准入门》。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;2-sqlite-官方支持-webassembly&#34;&gt;2. SQLite 官方支持 WebAssembly&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sqlite.org/wasm/doc/ckout/index.md&#34;&gt;https://sqlite.org/wasm/doc/ckout/index.md&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/sqlite3-wasm/01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其实早在 2022 年 9 月，Google 的 Chrome 开发团队宣布与 SQLite 开发团队合作，并开发了 SQLite 的 WebAssembly 版本，作为替代的 Web SQL 数据库 API。WebAssembly 起源于 SQLite 开发团队的努力。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-在浏览器体验-sqlite&#34;&gt;3. 在浏览器体验 SQLite&lt;/h2&gt;
+
+&lt;p&gt;打开网址 &lt;a href=&#34;https://sqlite.org/fiddle/&#34;&gt;https://sqlite.org/fiddle/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/sqlite3-wasm/03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;4-项目的具体目标&#34;&gt;4. 项目的具体目标&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/sqlite3-wasm/02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;根据官网介绍，主要有 4 个目标：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;绑定一个低级的 sqlite3 API，在使用方面尽可能接近原生 API。&lt;/li&gt;
+&lt;li&gt;更高级别的面向对象风格 API，类似于 sql.js 和 node.js 样式的实现。&lt;/li&gt;
+&lt;li&gt;基于 Worker 的 API，以支持多线程环境更容易使用 SQLite 功能。&lt;/li&gt;
+&lt;li&gt;基于 Worker API 的 Promise 包装，对用户完全隐藏了跨线程通信方面复杂性&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;简而言之，在提供底层 API 能力的同时，针对面向对象、多线程等环节提供简单易用的 API。&lt;/p&gt;
+</description>
+      
+    </item>
     
     <item>
       <title>KCL 论文被 SETTA 2022 会议录用</title>
@@ -3248,29 +3301,6 @@ func main() {
 &lt;p&gt;如果对WebAssembly技术感兴趣，可以关注Github上的WebAssembly(wasm)资源精选项目：&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-wasm-zh&#34;&gt;https://github.com/chai2010/awesome-wasm-zh&lt;/a&gt;&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>《Go高级编程》初稿完成</title>
-      <link>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</link>
-      <pubDate>Wed, 08 Aug 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/post/2018/advanced-go-programming-book-done/</guid>
-      
-        <description>&lt;p&gt;《Go高级编程》从2016年就开始计划写作。2016年底因为开始学习《Go语言圣经》临时搁置了《Go高级编程》的写作。到了2018年决定重启项目，为了回馈Go语言中国社区，我们尝试以开源的模式进行创作。项目开源后，在不到半年的时间内就已经获得近3k个star，有几十个贡献者帮忙改进内容和代码。感谢中国广大的Go语言爱好者，感谢开源的创作模式，让我们在半年多的时间内成功完成了写作任务。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/advanced-go-programming-book/master/cover.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;《Go高级编程》一书涵盖了CGO、Go汇编语言、RPC实现、Web框架实现、分布式系统等高阶主题，主要针对Go语言有一定经验想深入了解Go语言各种高级用法的开发人员。&lt;/p&gt;
-
-&lt;p&gt;为了便于和大家交流和分享，我们新创建了“Go高级编程”公众号。公众号的ID为golang-china，保持和Go语言中国社区名字一致。公众号重点和大家分享《Go高级编程》、《Go语言圣经》以及Go语言中诸多高级编程问题。大家有任何Go语言相关的问题都可以给我们留言。&lt;/p&gt;
-
-&lt;p&gt;项目地址：&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;https://github.com/chai2010/advanced-go-programming-book&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;最后感谢各位同学的鼓励和支持，谢谢大家🙏&lt;/p&gt;</description>
       
     </item>
     

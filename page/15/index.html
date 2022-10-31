@@ -157,6 +157,32 @@ ga('send', 'pageview');
     
       <article class="post bg-white">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/go-nil/">Go中error类型的nil值和nil</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2013-03-27 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+        </div>
+      <span class="more-meta"> 约 1054 字 </span>
+      <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      先看C语言中的类似问题：空字符串。 const char* empty_str0 = &quot;&quot;; const char* empty_str1 = &quot;\0empty&quot;; const char* empty_str2 = NULL; 以上3个字符串并不相等，但是从某种角度看，它们都是对应空的字符串。 empty_str0 指向一个
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/go-nil/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/misc/pwdgen/">PwdGen - 用Go语言实现的密码生成工具</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2013-03-27 </span>
@@ -256,28 +282,6 @@ ga('send', 'pageview');
     </div>
     <div class="read-more">
       <a href="/post/2011/ieee754-question/" class="read-more-link">阅读全文</a>
-    </div>
-  </div>
-</article>
-
-    
-      <article class="post bg-white">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/2011/fopen-max-num/">fopen打开的最大文件数目</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2011-07-28 </span>
-      
-      <span class="more-meta"> 约 116 字 </span>
-      <span class="more-meta"> 预计阅读 1 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Windows环境 可以用_getmaxstdio/_setmaxstdio 查询/设置. // crt_setmaxstdio.c #include &lt;stdio.h&gt; int main() { printf(&quot;%d\n&quot;,_getmaxstdio()); _setmaxstdio(2048); printf(&quot;%d\n&quot;,_getmaxstdio()); } XP默认好像是512, 其中包含s
-    </div>
-    <div class="read-more">
-      <a href="/post/2011/fopen-max-num/" class="read-more-link">阅读全文</a>
     </div>
   </div>
 </article>

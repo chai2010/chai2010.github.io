@@ -54,7 +54,7 @@
 
 
 
-<meta property="og:updated_time" content="2013-03-28T00:00:00&#43;00:00"/>
+<meta property="og:updated_time" content="2013-03-29T00:00:00&#43;00:00"/>
 
 
 
@@ -154,6 +154,32 @@ ga('send', 'pageview');
   <section id="posts" class="posts">
     
     
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/go-quine/">Go语言的自重写程序</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2013-03-29 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+        </div>
+      <span class="more-meta"> 约 221 字 </span>
+      <span class="more-meta"> 预计阅读 1 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      UNIX/Go语言之父 Ken Thompson 在1983年的图灵奖演讲 Reflections on Trusting Trust 就给出了一个C语言的自重写程序. 最短的C语言自重写程序是 Vlad Taeerov 和 Rashit Fakhreyev 的版本: main(a){printf(a=&quot;main(a){printf(a=%c%s%c,34,a,34);}&quot;,34,a,34);} 下面的
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/go-quine/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
     
       <article class="post bg-white">
   <header class="post-header">
@@ -260,32 +286,6 @@ ga('send', 'pageview');
     </div>
     <div class="read-more">
       <a href="/post/golang/go11-intro/" class="read-more-link">阅读全文</a>
-    </div>
-  </div>
-</article>
-
-    
-      <article class="post bg-white">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/go-nil/">Go中error类型的nil值和nil</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2013-03-27 </span>
-      <div class="post-category">
-          
-            <a href="/categories/golang/"> golang </a>
-          
-        </div>
-      <span class="more-meta"> 约 1054 字 </span>
-      <span class="more-meta"> 预计阅读 3 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      先看C语言中的类似问题：空字符串。 const char* empty_str0 = &quot;&quot;; const char* empty_str1 = &quot;\0empty&quot;; const char* empty_str2 = NULL; 以上3个字符串并不相等，但是从某种角度看，它们都是对应空的字符串。 empty_str0 指向一个
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/go-nil/" class="read-more-link">阅读全文</a>
     </div>
   </div>
 </article>
