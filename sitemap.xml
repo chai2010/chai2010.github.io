@@ -668,14 +668,14 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/10year/</loc>
+    <loc>https://chai2010.cn/categories/10year/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://chai2010.cn/categories/10year/</loc>
+    <loc>https://chai2010.cn/tags/10year/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -696,13 +696,6 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/bazel/</loc>
-    <lastmod>2016-06-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://chai2010.cn/categories/bazel/</loc>
     <lastmod>2016-06-28T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -710,14 +703,21 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/c&#43;&#43;/</loc>
-    <lastmod>2017-01-27T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/bazel/</loc>
+    <lastmod>2016-06-28T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://chai2010.cn/categories/c&#43;&#43;/</loc>
+    <lastmod>2017-01-27T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/tags/c&#43;&#43;/</loc>
     <lastmod>2017-01-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -731,14 +731,14 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/cgo/</loc>
+    <loc>https://chai2010.cn/categories/cgo/</loc>
     <lastmod>2022-10-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://chai2010.cn/categories/cgo/</loc>
+    <loc>https://chai2010.cn/tags/cgo/</loc>
     <lastmod>2022-10-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -766,14 +766,14 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/eof/</loc>
+    <loc>https://chai2010.cn/categories/eof/</loc>
     <lastmod>2019-05-14T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://chai2010.cn/categories/eof/</loc>
+    <loc>https://chai2010.cn/tags/eof/</loc>
     <lastmod>2019-05-14T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -808,13 +808,6 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/glcc/</loc>
-    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://chai2010.cn/categories/glcc/</loc>
     <lastmod>2022-10-24T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -822,8 +815,8 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/golang/</loc>
-    <lastmod>2022-10-26T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/glcc/</loc>
+    <lastmod>2022-10-24T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -836,14 +829,21 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/gopherchina/</loc>
-    <lastmod>2018-03-08T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/golang/</loc>
+    <lastmod>2022-10-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://chai2010.cn/categories/gopherchina/</loc>
+    <lastmod>2018-03-08T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/tags/gopherchina/</loc>
     <lastmod>2018-03-08T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -864,14 +864,14 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/ios/</loc>
+    <loc>https://chai2010.cn/categories/ios/</loc>
     <lastmod>2016-05-25T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://chai2010.cn/categories/ios/</loc>
+    <loc>https://chai2010.cn/tags/ios/</loc>
     <lastmod>2016-05-25T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -885,13 +885,6 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/js/</loc>
-    <lastmod>2017-07-06T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://chai2010.cn/categories/js/</loc>
     <lastmod>2017-07-06T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -899,8 +892,8 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/kcl/</loc>
-    <lastmod>2021-08-10T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/js/</loc>
+    <lastmod>2017-07-06T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -913,8 +906,8 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/kclvm/</loc>
-    <lastmod>2022-10-27T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/kcl/</loc>
+    <lastmod>2021-08-10T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -927,8 +920,8 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/kusion/</loc>
-    <lastmod>2021-08-10T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/kclvm/</loc>
+    <lastmod>2022-10-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -941,8 +934,8 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/lua/</loc>
-    <lastmod>2017-12-22T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/kusion/</loc>
+    <lastmod>2021-08-10T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -955,8 +948,8 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/mfc/</loc>
-    <lastmod>2006-03-20T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/lua/</loc>
+    <lastmod>2017-12-22T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -969,14 +962,21 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/misc/</loc>
-    <lastmod>2017-11-15T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/mfc/</loc>
+    <lastmod>2006-03-20T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://chai2010.cn/categories/misc/</loc>
+    <lastmod>2017-11-15T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/tags/misc/</loc>
     <lastmod>2017-11-15T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -990,14 +990,14 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/opencv/</loc>
+    <loc>https://chai2010.cn/categories/opencv/</loc>
     <lastmod>2009-12-06T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://chai2010.cn/categories/opencv/</loc>
+    <loc>https://chai2010.cn/tags/opencv/</loc>
     <lastmod>2009-12-06T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -1046,14 +1046,14 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/python/</loc>
+    <loc>https://chai2010.cn/categories/python/</loc>
     <lastmod>2018-10-01T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://chai2010.cn/categories/python/</loc>
+    <loc>https://chai2010.cn/tags/python/</loc>
     <lastmod>2018-10-01T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -1088,13 +1088,6 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/sqlite/</loc>
-    <lastmod>2022-10-26T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://chai2010.cn/categories/sqlite/</loc>
     <lastmod>2022-10-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -1102,14 +1095,21 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/sqlite3/</loc>
-    <lastmod>2022-10-31T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/sqlite/</loc>
+    <lastmod>2022-10-26T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://chai2010.cn/categories/sqlite3/</loc>
+    <lastmod>2022-10-31T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/tags/sqlite3/</loc>
     <lastmod>2022-10-31T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -1158,14 +1158,14 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/wasm/</loc>
+    <loc>https://chai2010.cn/categories/wasm/</loc>
     <lastmod>2022-10-31T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://chai2010.cn/categories/wasm/</loc>
+    <loc>https://chai2010.cn/tags/wasm/</loc>
     <lastmod>2022-10-31T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -1179,13 +1179,6 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/webassembly/</loc>
-    <lastmod>2022-10-23T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://chai2010.cn/categories/webassembly/</loc>
     <lastmod>2022-10-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -1193,8 +1186,8 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/webdav/</loc>
-    <lastmod>2018-10-24T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/webassembly/</loc>
+    <lastmod>2022-10-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -1207,14 +1200,21 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/windows/</loc>
-    <lastmod>2018-10-21T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/webdav/</loc>
+    <lastmod>2018-10-24T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://chai2010.cn/categories/windows/</loc>
+    <lastmod>2018-10-21T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/tags/windows/</loc>
     <lastmod>2018-10-21T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -1235,14 +1235,14 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/%E5%85%AB%E5%8D%A6/</loc>
+    <loc>https://chai2010.cn/categories/%E5%85%AB%E5%8D%A6/</loc>
     <lastmod>2013-01-04T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://chai2010.cn/categories/%E5%85%AB%E5%8D%A6/</loc>
+    <loc>https://chai2010.cn/tags/%E5%85%AB%E5%8D%A6/</loc>
     <lastmod>2013-01-04T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -1284,13 +1284,6 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/%E7%A1%AC%E4%BB%B6/</loc>
-    <lastmod>2009-05-12T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://chai2010.cn/categories/%E7%A1%AC%E4%BB%B6/</loc>
     <lastmod>2009-05-12T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -1298,14 +1291,21 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2011-12-08T00:00:00+00:00</lastmod>
+    <loc>https://chai2010.cn/tags/%E7%A1%AC%E4%BB%B6/</loc>
+    <lastmod>2009-05-12T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://chai2010.cn/categories/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2011-12-08T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://chai2010.cn/tags/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2011-12-08T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
@@ -1326,14 +1326,14 @@
   </url>
   
   <url>
-    <loc>https://chai2010.cn/tags/%E8%AE%BA%E6%96%87/</loc>
+    <loc>https://chai2010.cn/categories/%E8%AE%BA%E6%96%87/</loc>
     <lastmod>2022-10-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://chai2010.cn/categories/%E8%AE%BA%E6%96%87/</loc>
+    <loc>https://chai2010.cn/tags/%E8%AE%BA%E6%96%87/</loc>
     <lastmod>2022-10-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
