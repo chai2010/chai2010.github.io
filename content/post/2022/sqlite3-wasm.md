@@ -44,5 +44,11 @@ https://sqlite.org/wasm/doc/ckout/index.md
 - 基于 Worker 的 API，以支持多线程环境更容易使用 SQLite 功能。
 - 基于 Worker API 的 Promise 包装，对用户完全隐藏了跨线程通信方面复杂性
 
+不在此列的特性：
+
+- WASM 作为 Web 标准，我们只认 UTF8 一种编码格式，UTF16 支持暂无计划
+- WASM 虽然不局限于 Web 环境，但是 WASM 版本的 SQLite 依然是聚焦 Web 环境的场景
+- WASM 只支持较新的特性，老旧特性将被乘机清除掉
+
 简而言之，在提供底层 API 能力的同时，针对面向对象、多线程等环节提供简单易用的 API。
 
