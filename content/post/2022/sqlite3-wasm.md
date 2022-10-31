@@ -1,6 +1,6 @@
 ---
 title: "SQLite3 官方支持 WebAssembly！"
-date: 2022-11-31
+date: 2022-10-31
 draft: false
 
 tags: ["sqlite3", "wasm"]
