@@ -298,6 +298,175 @@ https://toutiao.io/subjects/318517
     </item>
     
     <item>
+      <title>凹语言开源季度总结-CSDN</title>
+      <link>https://chai2010.cn/post/2022/wa-zongjie/</link>
+      <pubDate>Sat, 05 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/wa-zongjie/</guid>
+      
+        <description>
+
+&lt;ul&gt;
+&lt;li&gt;责编 | 梦依丹&lt;/li&gt;
+&lt;li&gt;出品 | 凹语言技术团队官方投稿&lt;/li&gt;
+&lt;li&gt;CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？&lt;/li&gt;
+&lt;li&gt;CSDN首发地址：&lt;a href=&#34;https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q&#34;&gt;https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;凹语言最近刚刚发布 v0.3.0，而正式开源不知不觉已经过去一个季度，这是凹语言开源的第一个季度的非正式总结，也是对未来的计划和展望。&lt;/p&gt;
+
+&lt;h2 id=&#34;1-凹语言简介&#34;&gt;1. 凹语言简介&lt;/h2&gt;
+
+&lt;p&gt;凹语言（凹读音“wā”）是 国内 Gopher 针对 WASM 平台设计的通用编程语言。凹语言作为WASM原生 的编程语言，天然对浏览器环境亲和，同时支持 Linux、macOS 和 Windows 等主流操作系统，此外通过 LLVM 后端对本地应用和单片机等环境提供支持。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;官网：&lt;a href=&#34;https://wa-lang.org/&#34;&gt;https://wa-lang.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;仓库：&lt;a href=&#34;https://github.com/wa-lang/wa/&#34;&gt;https://github.com/wa-lang/wa/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Play：&lt;a href=&#34;https://wa-lang.org/playground/&#34;&gt;https://wa-lang.org/playground/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;下面是凹语言的Logo：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0011-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;从形状上看，“凹”字形似 WASM 图标（方块上部缺个口）；从读音上看，“凹”正好是 WASM 的前半部；从结构上看，实心的“凹”字约等于字母“C”逆时针旋转 90 度——C 可以理解为 C 语言，也可以理解为 Coder，那么“凹”也可以暗示躺平的的 C/躺平的 Coder……&lt;/p&gt;
+
+&lt;h2 id=&#34;2-凹语言项目发起人&#34;&gt;2. 凹语言项目发起人&lt;/h2&gt;
+
+&lt;p&gt;该项目的发起人柴树杉、丁尔男、史斌均是国内资深 Gopher。其中柴树杉是《Go 语言高级编程》等多本 Go 畅销书作者，目前在蚂蚁从事 KusionStack 和 KCL 语言的设计和开发工作。丁尔男是《WebAssembly 标准入门》等多本 WASM 专著作者，长年从事 3D 开发热衷于性能优化，目前在航天远景科技股份有限公司分管 3D 相关产品开发工作。史斌是编译器领域专家，曾为 Go 编译器提交过 127 个优化补丁，在 Go 全球贡献者排名中长期处于前 50 名，同时拥有 Go 与 LLVM 官方 Git 仓库的提交权限，同时也是《Go 语言定制指南》图书的作者。&lt;/p&gt;
+
+&lt;p&gt;在开发实践中，因为不同的原因，先后萌生了发展一门新语言的想法，Go 语言克制的风格是我们对于编程语言审美的最大公约数，因此选择它作为初始的蓝本。不必讳言：本项目启动时大量借鉴了 Go 的设计思想和具体实现——这是在有限投入下不得不作出的折衷，我们希望随着项目的发展，积累更多原创的设计，为自主创新的大潮贡献一点力量。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-设计哲学和开发计划&#34;&gt;3. 设计哲学和开发计划&lt;/h2&gt;
+
+&lt;p&gt;凹语言的整体设计，是围绕着“对开发人员友好”来进行的。字符串/切片作为基本类型、无需（也不能）手动管理内存、视觉上更显著的变量类型定义等均是这一核心思想的具体体现。&lt;/p&gt;
+
+&lt;p&gt;2022 年 7 月，凹语言正式开源，并公布了半年度的线路图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;随着项目的公开，有了更多的同学加入了凹语言开发组，讨论组社区也逐渐形成并保持活跃。感谢开发组的同学协同努力，第一季度的目标全部达成！&lt;/p&gt;
+
+&lt;h2 id=&#34;4-取得了哪些进展&#34;&gt;4. 取得了哪些进展&lt;/h2&gt;
+
+&lt;p&gt;首先，经过多次讨论，开发组慎重决定凹语言采用 AGPLv3 开源协议，并制定了对应的了凹语言贡献协议。目前已经有外部同学通过新的流程贡献了代码。此外还取得了以下重大进展。&lt;/p&gt;
+
+&lt;h3 id=&#34;4-1-发布第三版网站&#34;&gt;4.1 发布第三版网站&lt;/h3&gt;
+
+&lt;p&gt;从 2018 年起，网站经过 3 次较大更新。最开始第一版的网站只有一个静态页面（2018），第二版是刚开源时基于 MDBoo k构建（2022年7月），最新版本于 2022 年 9 月开发到 10 月底正式上线。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0011-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;该版本网站由子项目负责人扈梦明开发，他还是凹语言 VSCode 插件和 Playground 的负责人。&lt;/p&gt;
+
+&lt;h3 id=&#34;4-2-发布纯浏览器环境的的-playground&#34;&gt;4.2 发布纯浏览器环境的的 Playground&lt;/h3&gt;
+
+&lt;p&gt;Playground 是一套在线编译凹源代码并执行的环境。该环境的编译、执行没有调用后端服务，完全在页面中运行；是一个非常便捷的体验、测试凹语言的入口。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0011-03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Playground 地址：[&lt;a href=&#34;https://wa-lang.org/playground/](Playground&#34;&gt;https://wa-lang.org/playground/](Playground&lt;/a&gt; 地址：&lt;a href=&#34;https://wa-lang.org/playground/&#34;&gt;https://wa-lang.org/playground/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;4-3-创建-vscode-fleet-vim-等高亮插件&#34;&gt;4.3 创建 VSCode/Fleet/Vim 等高亮插件&lt;/h3&gt;
+
+&lt;p&gt;VSCode 插件提供了语法高亮、代码片段补全、补全建议等功能，支持纯 Web 环境安装：)&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0011-04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;9 月 JetBrains Fleet 发布了预览版本，凹语言第一时间开发了高亮插件：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0011-05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;当然，传统的 Vim 插件也不能少：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0011-06.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;更多和插件和功能完善希望社区同学参与共建。&lt;/p&gt;
+
+&lt;h3 id=&#34;4-4-wasm-后端原型如期发布&#34;&gt;4.4 WASM 后端原型如期发布&lt;/h3&gt;
+
+&lt;p&gt;WASM 后端原型如期发布，已支持数值/字符串基本类型、结构体、方法、数组、切片等常用特性，项目组开始着手以此为基础开发贪吃蛇等带有交互功能的网页小游戏。&lt;/p&gt;
+
+&lt;p&gt;可以通过以下方式测试：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;go install github.com/wa-lang/wa@latest&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;wa init -name=_examples/hi&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;wa run _examples/hi&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;或者创建以 &lt;code&gt;hello.wa&lt;/code&gt; 文件，包含下代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-wa&#34;&gt;fn main {
+    println(&amp;quot;你好，凹语言！&amp;quot;)
+    println(add(40, 2))
+}
+
+fn add(a: i32, b: i32) =&amp;gt; i32 {
+    return a+b
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;运行并输出结果:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ go run main.go hello.wa 
+你好，凹语言！
+42
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;程序默认会基于WAT后端编译并执行，看到以上输出表示一切正常！&lt;/p&gt;
+
+&lt;h3 id=&#34;4-5-作为嵌入-go-程序脚本&#34;&gt;4.5 作为嵌入 Go 程序脚本&lt;/h3&gt;
+
+&lt;p&gt;凹语言也可以作为 Go 语言包被导入，然后以脚本方式执行：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
+
+import (
+    &amp;quot;fmt&amp;quot;
+    &amp;quot;github.com/wa-lang/wa/api&amp;quot;
+)
+
+func main() {
+    output, err := api.RunCode(&amp;quot;hello.wa&amp;quot;, &amp;quot;fn main() { println(40+2) }&amp;quot;)
+    fmt.Print(string(output), err)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;4-6-llvm-后端提前启动&#34;&gt;4.6 LLVM 后端提前启动&lt;/h3&gt;
+
+&lt;p&gt;原定于 2023 年春节后启动的 LLVM 后端，提前启动。LLVM 后端的主战场在本地和嵌入式环境，下面是凹程序翻译到 LLVM-IR 的效果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0011-07.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;目前已经支持素数例子的执行：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0011-08.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;更新路线图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wa-zongjie/st0011-09.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;5-展望&#34;&gt;5. 展望&lt;/h2&gt;
+
+&lt;p&gt;目前，凹语言是一个爱好者共建的业余项目，没有设置 KPI。一门新语言真正达到实用化，所需的工作量极其巨大，我们热切的期望更多有兴趣的同学能参与共建，尤其是承担子项目负责人的职责。&lt;/p&gt;
+
+&lt;p&gt;与普通贡献者相比，子项目负责人可以直接参与决策，在项目发展中获得上不封顶的话语权。由于尚处于起步阶段，可以单独成为子项目的模块遍地都是：一组堆管理函数、一个wat转二进制wasm的包、一种与其他语言交互的接口……&lt;/p&gt;
+
+&lt;p&gt;出名要趁早，参与开源同样需要趁早，欢迎参与共建。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
       <title>SQLite3 官方支持 WebAssembly！</title>
       <link>https://chai2010.cn/post/2022/sqlite3-wasm/</link>
       <pubDate>Mon, 31 Oct 2022 00:00:00 +0000</pubDate>
@@ -3189,201 +3358,6 @@ func main() {
 &lt;p&gt;注意：Goroutine是一种资源，也有泄露的风险！&lt;/p&gt;
 
 &lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
-
-&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;幻灯片源文件：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Go语言并发编程02 - 你好，并发</title>
-      <link>https://chai2010.cn/post/2018/go-concurrency-02/</link>
-      <pubDate>Fri, 21 Sep 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/post/2018/go-concurrency-02/</guid>
-      
-        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
-
-&lt;p&gt;本次整理“你好，并发”部分的内容。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;并发很简单也很强大&#34;&gt;并发很简单也很强大&lt;/h2&gt;
-
-&lt;p&gt;Go语言通过&lt;code&gt;go&lt;/code&gt;关键字可以将调用的函数直接在新的Goroutine上启动：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;// 普通版本
-func main() {
-    println(&amp;quot;你好, 并发!&amp;quot;)
-}
-
-// 并发版本
-func main() {
-    go println(&amp;quot;你好, 并发!&amp;quot;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;相比于传统的通过库的方式启动进程、线程等，&lt;code&gt;go&lt;/code&gt;关键字丢弃了很多心智包袱，降低了并发入门等门槛。当一个新技术随手可得，随便一个按钮开关或一个指令就可以尝试使用等时候，用户总会在下意识中就掌握了改技术。&lt;/p&gt;
-
-&lt;p&gt;Go的并发不仅仅启动简单，而且功能确实很强大。首先是每个 Goroutine 栈很小，切换代价很低，很容易就可以实现海量并发。其次，每个 Goroutine 栈又可以动态扩展到很大，基本可以近似做到无限递归了。Go语言的并发从横向和纵向都可以无限扩展，用户在编写并发程序时不在需要时刻关心栈够不够用、并发数量是否太多等非核心逻辑等问题，极大地释放了并发编程等自由度：&lt;/p&gt;
-
-&lt;p&gt;我们看看如何编写一个海量并发，并且深度递归等程序：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    for i := 0; i &amp;lt; 10000*100; i++ {
-        go printsum(i)
-    }
-}
-
-func printsum(n int) {
-    fmt.Println(&amp;quot;sum(%[1]d): %[1]d\n&amp;quot;, n)
-}
-
-func sum(n int) int {
-    return sum(n-1) + n
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上述代码中，printsum函数通过递归计算1到n的和，基本不用太考虑爆栈的问题。同时在main函数中，在for循环内部通过go关键字启动了海量的并发来打印sum的结果。&lt;/p&gt;
-
-&lt;h2 id=&#34;并发中的小问题&#34;&gt;并发中的小问题&lt;/h2&gt;
-
-&lt;p&gt;GO语言并发很简单其实是一个表象，是为了忽悠不懂并发的新手的口号。随便运行下程序就可以戳穿这个纸做的口号：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;package main
-
-func main() {
-    go println(&amp;quot;你好, 并发!&amp;quot;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上面等程序需要有中彩票特大奖的运气才能有机会执行成功。大部分普通用户将无法看到输出信息！&lt;/p&gt;
-
-&lt;p&gt;针对这个代码，网上有很多不负责任的Go语言教程教你如何通过调用&lt;code&gt;time.Sleep&lt;/code&gt;或&lt;code&gt;runtime.Gosched&lt;/code&gt;假装解决这个问题：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    go println(&amp;quot;你好, 并发!&amp;quot;)
-    time.Sleep(time.Second) // or runtime.Gosched()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;每一个严肃的码农在看到这种解决方案的时候，首先需要弄明白time.Sleep为何只休眠了1秒钟？如果换一种极限的思维来问这个问题就是，休眠1万年、1微妙、1纳秒、0纳秒可以吗？&lt;/p&gt;
-
-&lt;p&gt;没有人能够回答为何刚好需要休眠1秒钟就看似能工作了，其实这只是他们常识测试的一个经验值。我们把这种尝试通过调整某些随机的经验值来写代码的方式叫 &lt;strong&gt;“撞大运编程模式”&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;p&gt;打败这个“撞大运编程模式”写的并发程序很简单，只需要一个或一次反例即可：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    go println(&amp;quot;你好, 并发!&amp;quot;)
-    time.Sleep(time.Second)
-}
-
-func println(s string) {
-    time.Sleep(time.Second*2)
-    print(s+&amp;quot;\n&amp;quot;)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上面的反例中，我们在不改变println函数输出的前提下，休眠了2秒钟（一定要大于前面的1秒钟）。另一种反面的证明是假设，输出的字符串足够大，输出的设备足够慢。因此println很可能需要1万年才能完成工作。因为main函数作为println的使用者，不能也无法要求println函数在几个时钟周期内完成任务（毕竟Go语言无法做到实时编程），因此当println函数执行的时间稍微出现波动时就将影响上述代码的正确性！&lt;/p&gt;
-
-&lt;p&gt;Go语言并发编程的学习一般要经过2个阶段：第一阶段是这个并发程序终于可以产生正确的输出了；第二个阶段是这个并发程序不会产生错误的输出！通过撞大运编程模式编写的代码一般至少处于第一个阶段。&lt;/p&gt;
-
-&lt;p&gt;每一个严禁的并发编程码农，我们的并发程序不仅仅要可以产生正确的输出，而且要保证不会产生错误的输出！&lt;/p&gt;
-
-&lt;h2 id=&#34;并发小问题的解决思路&#34;&gt;并发小问题的解决思路&lt;/h2&gt;
-
-&lt;p&gt;前面代码运行有一定的随机性，无法保证并发程序的正确运行。导致可能产生错误结果的原因有2个：第一个是go启动Goroutine时无法保证新线程马上运行（它的启动是并发的）；第二个是main函数代表的主Goroutine退出将直接退出进程。&lt;/p&gt;
-
-&lt;p&gt;在了解了原因之后，并发小问题的解决思路也就清晰了：在后台Goroutine完成任务之前，main函数代表的主Goroutine不能退出！&lt;/p&gt;
-
-&lt;p&gt;阻止main函数退出的方式有很多：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    go println(&amp;quot;你好, 并发!&amp;quot;)
-
-    for {}
-    select {}
-    &amp;lt;-make(chan bool)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;在这个代码中，for、select或管道，任何一个方式都可以阻止在完成任务前退出（其实main函数根本无法退出），因此这个程序好像是可以完成输出任务的（虽然解决方案不太完美）！&lt;/p&gt;
-
-&lt;p&gt;在上述的方案中，for循环阻止main退出是比较特色的一个方案。for其实执行的是一个死循环、忙等待，它会消耗大量的CPU资源。特别是，当只有一个系统线程资源时，main 将独占活跃的 系统线程，其它线程将有被饿死风险！&lt;/p&gt;
-
-&lt;p&gt;因此for循环的方案在单核系统中依然是有问题的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    runtime.GOMAXPROCS(1)
-    go println(&amp;quot;你好, 并发!&amp;quot;)
-    for {}
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;通过&lt;code&gt;runtime.GOMAXPROCS(1)&lt;/code&gt;将系统线程限制为一个。然后println函数还没有启动前如果进入了for循环的话，后台的println函数将没有机会再次被执行（被饿死）！&lt;/p&gt;
-
-&lt;p&gt;其实每个已经获取CPU资源的Goroutine都可以霸占CPU：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    runtime.GOMAXPROCS(1)
-    go func() { for {} }()
-    time.Sleep(time.Second)
-
-    fmt.Println(&amp;quot;the answer to life:&amp;quot;, 42)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;在这个例子中，Goroutine霸占了CPU，main函数可能被饿死在&lt;code&gt;time.Sleep&lt;/code&gt;行代码，因此宇宙的秘密也就永远无法揭晓！&lt;/p&gt;
-
-&lt;p&gt;既然for循环霸占CPU，那我们换个不占用CPU的方式好了。select和管道都可以：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    runtime.GOMAXPROCS(1)
-    go println(&amp;quot;你好, 并发!&amp;quot;)
-    select {}
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;目前的代码确实更改进了一步，单核心也可以保证输出结果了！不过这个暴力的解决方法依然有点问题，这个程序退出前出现了异常：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;你好, 并发!
-fatal error: all goroutines are asleep - deadlock!
-
-goroutine 1 [select (no cases)]:
-main.main()
-        /path/to/main.go:8 +0x5c
-exit status 2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;我首先要强调的是，这个异常其实不是问题。我们的首要目标是输出字符串，而且这个目标我们已经顺利完成了。出现异常的原因只是程序退出的善后工作处理不太完美（和C语言程序退出前并不需要释放全部的内存资源类似）。&lt;/p&gt;
-
-&lt;p&gt;异常的提示是，系统中没有其它可运行的goroutine，这就是一种死锁状态。其实如果换会for死循环的话是不会提示死锁的（因为runtime会将for循环当作一个正常执行的goroutine看待）。&lt;/p&gt;
-
-&lt;p&gt;理解的解决方案是：main函数在println完成输出任务前不退出，但是在println完成任务后可以正确退出。改进代码如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    done := make(chan bool)
-    go func() {
-        println(&amp;quot;你好, 并发!&amp;quot;)
-        done &amp;lt;- true
-    }()
-
-    &amp;lt;-done
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;main函数在退出前需要从done管道取一个消息，后台任务在将消息放入done管道前必须先完成自己的输出任务。因此，main函数成功取到消息时，后台的输出任务确定已经完成了，main函数也就可以放心退出了。&lt;/p&gt;
-
-&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
-
-&lt;p&gt;猫友会：Go语言并发编程01 - 并发的演化历史&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://mp.weixin.qq.com/s/UaY9gJU85dq-dXlOhLYY1Q&#34;&gt;https://mp.weixin.qq.com/s/UaY9gJU85dq-dXlOhLYY1Q&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
 

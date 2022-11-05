@@ -54,7 +54,7 @@
 
 
 
-<meta property="og:updated_time" content="2014-02-25T00:00:00&#43;00:00"/>
+<meta property="og:updated_time" content="2014-05-20T00:00:00&#43;00:00"/>
 
 
 
@@ -157,6 +157,32 @@ ga('send', 'pageview');
     
       <article class="post bg-white">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang/go-xslice-to-yslice/">Go语言中不同类型切片之间的相互转换</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2014-05-20 </span>
+      <div class="post-category">
+          
+            <a href="/categories/golang/"> golang </a>
+          
+        </div>
+      <span class="more-meta"> 约 496 字 </span>
+      <span class="more-meta"> 预计阅读 1 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      将 []T 切片转换为 []byte 类似C语言中将其他类型的数组转换为char数组： func ByteSlice(slice interface{}) (data []byte) { sv := reflect.ValueOf(slice) if sv.Kind() != reflect.Slice { panic(fmt.Sprintf(&quot;ByteSlice called with non-slice value of type %T&quot;, slice)) } h := (*reflect.SliceHeader)((unsafe.Pointer(&amp;data))) h.Cap = sv.Cap() * int(sv.Type().Elem().Size()) h.Len = sv.Len() * int(sv.Type().Elem().Size()) h.Data
+    </div>
+    <div class="read-more">
+      <a href="/post/golang/go-xslice-to-yslice/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/golang/go-tenary/">Go语言的三元表达式</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2014-02-25 </span>
@@ -254,32 +280,6 @@ ga('send', 'pageview');
     </div>
     <div class="read-more">
       <a href="/post/golang/go-gettext/" class="read-more-link">阅读全文</a>
-    </div>
-  </div>
-</article>
-
-    
-      <article class="post bg-white">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/golang/go-func-call-stack/">Go语言的函数调用信息</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2014-01-04 </span>
-      <div class="post-category">
-          
-            <a href="/categories/golang/"> golang </a>
-          
-        </div>
-      <span class="more-meta"> 约 4384 字 </span>
-      <span class="more-meta"> 预计阅读 9 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      By chaishushan{AT}gmail.com 注: 本文初稿发在 Golang 中国博客, 这里的内容有部分修改. 函数的调用信息是程序中比较重要运行期信息, 在很多场合都会用到(比如调试或日志). Go语
-    </div>
-    <div class="read-more">
-      <a href="/post/golang/go-func-call-stack/" class="read-more-link">阅读全文</a>
     </div>
   </div>
 </article>

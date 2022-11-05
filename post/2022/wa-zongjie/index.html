@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>凹语言开源季度总结-CSDN - chai2010 的博客</title>
+  <link rel="alternate" hreflang="zh-CN" href="https://chai2010.cn/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="chai2010" />
+  <meta name="description" content="责编 | 梦依丹 出品 | 凹语言技术团队官方投稿 CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？ CSDN首发地址：http" />
+
+  <meta name="keywords" content="chai2010, Go, Golang" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.30.2" />
+
+
+<link rel="canonical" href="https://chai2010.cn/post/2022/wa-zongjie/" />
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+
+
+<meta property="og:title" content="凹语言开源季度总结-CSDN" />
+<meta property="og:description" content="责编 | 梦依丹 出品 | 凹语言技术团队官方投稿 CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？ CSDN首发地址：http" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://chai2010.cn/post/2022/wa-zongjie/" />
+
+
+
+<meta property="article:published_time" content="2022-11-05T00:00:00&#43;00:00"/>
+
+<meta property="article:modified_time" content="2022-11-05T00:00:00&#43;00:00"/>
+
+
+
+
+
+
+
+
+
+
+
+<meta itemprop="name" content="凹语言开源季度总结-CSDN">
+<meta itemprop="description" content="责编 | 梦依丹 出品 | 凹语言技术团队官方投稿 CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？ CSDN首发地址：http">
+
+
+<meta itemprop="datePublished" content="2022-11-05T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2022-11-05T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2268">
+
+
+
+<meta itemprop="keywords" content="wa," />
+<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="凹语言开源季度总结-CSDN"/>
+<meta name="twitter:description" content="责编 | 梦依丹 出品 | 凹语言技术团队官方投稿 CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？ CSDN首发地址：http"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-621845-14', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">chai2010 的博客</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">主页</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">全部文章</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">标签</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">分类</li>
+      </a><a href="/talks/">
+        <li class="mobile-menu-item">报告</li>
+      </a><a href="/books/">
+        <li class="mobile-menu-item">图书</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">关于</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">chai2010 的博客</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">主页</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">全部文章</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">标签</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">分类</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/talks/">报告</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/books/">图书</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">关于</a>
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">凹语言开源季度总结-CSDN</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2022-11-05 </span>
+        <div class="post-category">
+            
+              <a href="/categories/wa/"> wa </a>
+            
+          </div>
+        <span class="more-meta"> 约 2268 字 </span>
+        <span class="more-meta"> 预计阅读 5 分钟 </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#1-凹语言简介">1. 凹语言简介</a></li>
+<li><a href="#2-凹语言项目发起人">2. 凹语言项目发起人</a></li>
+<li><a href="#3-设计哲学和开发计划">3. 设计哲学和开发计划</a></li>
+<li><a href="#4-取得了哪些进展">4. 取得了哪些进展</a>
+<ul>
+<li><a href="#4-1-发布第三版网站">4.1 发布第三版网站</a></li>
+<li><a href="#4-2-发布纯浏览器环境的的-playground">4.2 发布纯浏览器环境的的 Playground</a></li>
+<li><a href="#4-3-创建-vscode-fleet-vim-等高亮插件">4.3 创建 VSCode/Fleet/Vim 等高亮插件</a></li>
+<li><a href="#4-4-wasm-后端原型如期发布">4.4 WASM 后端原型如期发布</a></li>
+<li><a href="#4-5-作为嵌入-go-程序脚本">4.5 作为嵌入 Go 程序脚本</a></li>
+<li><a href="#4-6-llvm-后端提前启动">4.6 LLVM 后端提前启动</a></li>
+</ul></li>
+<li><a href="#5-展望">5. 展望</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<ul>
+<li>责编 | 梦依丹</li>
+<li>出品 | 凹语言技术团队官方投稿</li>
+<li>CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？</li>
+<li>CSDN首发地址：<a href="https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q">https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q</a></li>
+</ul>
+
+<blockquote>
+<p>【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？</p>
+</blockquote>
+
+<hr />
+
+<p>凹语言最近刚刚发布 v0.3.0，而正式开源不知不觉已经过去一个季度，这是凹语言开源的第一个季度的非正式总结，也是对未来的计划和展望。</p>
+
+<h2 id="1-凹语言简介">1. 凹语言简介</h2>
+
+<p>凹语言（凹读音“wā”）是 国内 Gopher 针对 WASM 平台设计的通用编程语言。凹语言作为WASM原生 的编程语言，天然对浏览器环境亲和，同时支持 Linux、macOS 和 Windows 等主流操作系统，此外通过 LLVM 后端对本地应用和单片机等环境提供支持。</p>
+
+<ul>
+<li>官网：<a href="https://wa-lang.org/">https://wa-lang.org/</a></li>
+<li>仓库：<a href="https://github.com/wa-lang/wa/">https://github.com/wa-lang/wa/</a></li>
+<li>Play：<a href="https://wa-lang.org/playground/">https://wa-lang.org/playground/</a></li>
+</ul>
+
+<p>下面是凹语言的Logo：</p>
+
+<p><img src="/images/2022/wa-zongjie/st0011-01.png" alt="" /></p>
+
+<p>从形状上看，“凹”字形似 WASM 图标（方块上部缺个口）；从读音上看，“凹”正好是 WASM 的前半部；从结构上看，实心的“凹”字约等于字母“C”逆时针旋转 90 度——C 可以理解为 C 语言，也可以理解为 Coder，那么“凹”也可以暗示躺平的的 C/躺平的 Coder……</p>
+
+<h2 id="2-凹语言项目发起人">2. 凹语言项目发起人</h2>
+
+<p>该项目的发起人柴树杉、丁尔男、史斌均是国内资深 Gopher。其中柴树杉是《Go 语言高级编程》等多本 Go 畅销书作者，目前在蚂蚁从事 KusionStack 和 KCL 语言的设计和开发工作。丁尔男是《WebAssembly 标准入门》等多本 WASM 专著作者，长年从事 3D 开发热衷于性能优化，目前在航天远景科技股份有限公司分管 3D 相关产品开发工作。史斌是编译器领域专家，曾为 Go 编译器提交过 127 个优化补丁，在 Go 全球贡献者排名中长期处于前 50 名，同时拥有 Go 与 LLVM 官方 Git 仓库的提交权限，同时也是《Go 语言定制指南》图书的作者。</p>
+
+<p>在开发实践中，因为不同的原因，先后萌生了发展一门新语言的想法，Go 语言克制的风格是我们对于编程语言审美的最大公约数，因此选择它作为初始的蓝本。不必讳言：本项目启动时大量借鉴了 Go 的设计思想和具体实现——这是在有限投入下不得不作出的折衷，我们希望随着项目的发展，积累更多原创的设计，为自主创新的大潮贡献一点力量。</p>
+
+<h2 id="3-设计哲学和开发计划">3. 设计哲学和开发计划</h2>
+
+<p>凹语言的整体设计，是围绕着“对开发人员友好”来进行的。字符串/切片作为基本类型、无需（也不能）手动管理内存、视觉上更显著的变量类型定义等均是这一核心思想的具体体现。</p>
+
+<p>2022 年 7 月，凹语言正式开源，并公布了半年度的线路图：</p>
+
+<p><img src="/images/2022/wa-zongjie/st0001.png" alt="" /></p>
+
+<p>随着项目的公开，有了更多的同学加入了凹语言开发组，讨论组社区也逐渐形成并保持活跃。感谢开发组的同学协同努力，第一季度的目标全部达成！</p>
+
+<h2 id="4-取得了哪些进展">4. 取得了哪些进展</h2>
+
+<p>首先，经过多次讨论，开发组慎重决定凹语言采用 AGPLv3 开源协议，并制定了对应的了凹语言贡献协议。目前已经有外部同学通过新的流程贡献了代码。此外还取得了以下重大进展。</p>
+
+<h3 id="4-1-发布第三版网站">4.1 发布第三版网站</h3>
+
+<p>从 2018 年起，网站经过 3 次较大更新。最开始第一版的网站只有一个静态页面（2018），第二版是刚开源时基于 MDBoo k构建（2022年7月），最新版本于 2022 年 9 月开发到 10 月底正式上线。</p>
+
+<p><img src="/images/2022/wa-zongjie/st0011-02.png" alt="" /></p>
+
+<p>该版本网站由子项目负责人扈梦明开发，他还是凹语言 VSCode 插件和 Playground 的负责人。</p>
+
+<h3 id="4-2-发布纯浏览器环境的的-playground">4.2 发布纯浏览器环境的的 Playground</h3>
+
+<p>Playground 是一套在线编译凹源代码并执行的环境。该环境的编译、执行没有调用后端服务，完全在页面中运行；是一个非常便捷的体验、测试凹语言的入口。</p>
+
+<p><img src="/images/2022/wa-zongjie/st0011-03.png" alt="" /></p>
+
+<ul>
+<li>Playground 地址：[<a href="https://wa-lang.org/playground/](Playground">https://wa-lang.org/playground/](Playground</a> 地址：<a href="https://wa-lang.org/playground/">https://wa-lang.org/playground/</a></li>
+</ul>
+
+<h3 id="4-3-创建-vscode-fleet-vim-等高亮插件">4.3 创建 VSCode/Fleet/Vim 等高亮插件</h3>
+
+<p>VSCode 插件提供了语法高亮、代码片段补全、补全建议等功能，支持纯 Web 环境安装：)</p>
+
+<p><img src="/images/2022/wa-zongjie/st0011-04.png" alt="" /></p>
+
+<p>9 月 JetBrains Fleet 发布了预览版本，凹语言第一时间开发了高亮插件：</p>
+
+<p><img src="/images/2022/wa-zongjie/st0011-05.png" alt="" /></p>
+
+<p>当然，传统的 Vim 插件也不能少：</p>
+
+<p><img src="/images/2022/wa-zongjie/st0011-06.png" alt="" /></p>
+
+<p>更多和插件和功能完善希望社区同学参与共建。</p>
+
+<h3 id="4-4-wasm-后端原型如期发布">4.4 WASM 后端原型如期发布</h3>
+
+<p>WASM 后端原型如期发布，已支持数值/字符串基本类型、结构体、方法、数组、切片等常用特性，项目组开始着手以此为基础开发贪吃蛇等带有交互功能的网页小游戏。</p>
+
+<p>可以通过以下方式测试：</p>
+
+<ol>
+<li><code>go install github.com/wa-lang/wa@latest</code></li>
+<li><code>wa init -name=_examples/hi</code></li>
+<li><code>wa run _examples/hi</code></li>
+</ol>
+
+<p>或者创建以 <code>hello.wa</code> 文件，包含下代码</p>
+
+<pre><code class="language-wa">fn main {
+    println(&quot;你好，凹语言！&quot;)
+    println(add(40, 2))
+}
+
+fn add(a: i32, b: i32) =&gt; i32 {
+    return a+b
+}
+</code></pre>
+
+<p>运行并输出结果:</p>
+
+<pre><code>$ go run main.go hello.wa 
+你好，凹语言！
+42
+</code></pre>
+
+<p>程序默认会基于WAT后端编译并执行，看到以上输出表示一切正常！</p>
+
+<h3 id="4-5-作为嵌入-go-程序脚本">4.5 作为嵌入 Go 程序脚本</h3>
+
+<p>凹语言也可以作为 Go 语言包被导入，然后以脚本方式执行：</p>
+
+<pre><code class="language-go">package main
+
+import (
+    &quot;fmt&quot;
+    &quot;github.com/wa-lang/wa/api&quot;
+)
+
+func main() {
+    output, err := api.RunCode(&quot;hello.wa&quot;, &quot;fn main() { println(40+2) }&quot;)
+    fmt.Print(string(output), err)
+}
+</code></pre>
+
+<h3 id="4-6-llvm-后端提前启动">4.6 LLVM 后端提前启动</h3>
+
+<p>原定于 2023 年春节后启动的 LLVM 后端，提前启动。LLVM 后端的主战场在本地和嵌入式环境，下面是凹程序翻译到 LLVM-IR 的效果：</p>
+
+<p><img src="/images/2022/wa-zongjie/st0011-07.png" alt="" /></p>
+
+<p>目前已经支持素数例子的执行：</p>
+
+<p><img src="/images/2022/wa-zongjie/st0011-08.jpg" alt="" /></p>
+
+<p>更新路线图：</p>
+
+<p><img src="/images/2022/wa-zongjie/st0011-09.png" alt="" /></p>
+
+<h2 id="5-展望">5. 展望</h2>
+
+<p>目前，凹语言是一个爱好者共建的业余项目，没有设置 KPI。一门新语言真正达到实用化，所需的工作量极其巨大，我们热切的期望更多有兴趣的同学能参与共建，尤其是承担子项目负责人的职责。</p>
+
+<p>与普通贡献者相比，子项目负责人可以直接参与决策，在项目发展中获得上不封顶的话语权。由于尚处于起步阶段，可以单独成为子项目的模块遍地都是：一组堆管理函数、一个wat转二进制wasm的包、一种与其他语言交互的接口……</p>
+
+<p>出名要趁早，参与开源同样需要趁早，欢迎参与共建。</p>
+
+    </div>
+
+    
+    
+<div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">chai2010</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">2022-11-05</span>
+  </p>
+  
+  <p class="copyright-item">
+    <span class="item-title">许可协议</span>
+    <span class="item-content"><a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a></span>
+  </p>
+</div>
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/wa/">wa</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+        
+          <a class="next" href="/post/2022/sqlite3-wasm/">
+            <span class="next-text nav-default">SQLite3 官方支持 WebAssembly！</span>
+            <span class="prev-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+
+    <script src="https://giscus.app/client.js"
+    data-repo="chai2010/chai2010.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkxMjQxNjY5MDk="
+    data-category="General"
+    data-category-id="DIC_kwDOB2ai_c4CR3mk"
+    data-mapping="og:title"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async>
+  </script>
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+  
+</div>
+
+<div class="copyright">
+  
+
+  <span class="copyright-year">
+    &copy;
+    
+      2006 -
+    2022
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">chai2010</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+
+
+</body>
+</html>
