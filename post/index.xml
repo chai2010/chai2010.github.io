@@ -54,20 +54,18 @@
       
       <guid>https://chai2010.cn/post/2022/wa-zongjie/</guid>
       
-        <description>&lt;ul&gt;
+        <description>&lt;p&gt;【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;凹语言最近刚刚发布 v0.3.0，而正式开源不知不觉已经过去一个季度，这是凹语言开源的第一个季度的非正式总结，也是对未来的计划和展望。&lt;/p&gt;
+
+&lt;ul&gt;
 &lt;li&gt;责编 | 梦依丹&lt;/li&gt;
 &lt;li&gt;出品 | 凹语言技术团队官方投稿&lt;/li&gt;
 &lt;li&gt;CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？&lt;/li&gt;
 &lt;li&gt;CSDN首发地址：&lt;a href=&#34;https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q&#34;&gt;https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;凹语言最近刚刚发布 v0.3.0，而正式开源不知不觉已经过去一个季度，这是凹语言开源的第一个季度的非正式总结，也是对未来的计划和展望。&lt;/p&gt;
 
 &lt;h2 id=&#34;1-凹语言简介&#34;&gt;1. 凹语言简介&lt;/h2&gt;
 
