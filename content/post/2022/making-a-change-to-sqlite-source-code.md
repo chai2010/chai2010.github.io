@@ -9,6 +9,8 @@ categories: ["golang", "sqlite", "cgo"]
 
 本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。
 
+<!--more-->
+
 - 作者：[BRUNO CALZA](https://brunocalza.me/author/brunocalza)
 - 译者：柴树杉，[凹语言](https://github.com/wa-lang/wa) 作者、Go语言贡献者、多本Go语言图书作者，目前在蚂蚁从事 [KusionStack](https://github.com/kusionStack/kusion) 和 KCL 开发。
 - 原文：https://brunocalza.me/making-a-change-to-sqlite-source-code/

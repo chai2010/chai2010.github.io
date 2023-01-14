@@ -9,6 +9,8 @@ categories: ["sqlite3", "wasm"]
 
 SQLite 官方的 wasm 项目终于来了！这表示 WebAssembly 在 SQLite 社区完全进入工业级应用阶段！
 
+<!--more-->
+
 ![](/images/2022/sqlite3-wasm/00.png)
 
 ## 1. WASM 是什么

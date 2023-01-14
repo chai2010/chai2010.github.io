@@ -9,6 +9,9 @@ categories: ["wasm", "webassembly", "翻译"]
 
 WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。2018 年 WebAssembly 第一个规范草案诞生，2019 年成为 W3C 第四个标准语言。到了 2022 年底，WebAssembly 现在怎么样了...
 
+<!--more-->
+
+
 ![](/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/00.png)
 
 - 作者：Anders Ranum, Justin Liu, David Carter
