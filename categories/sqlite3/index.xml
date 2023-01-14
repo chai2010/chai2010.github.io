@@ -18,9 +18,9 @@
       
       <guid>https://chai2010.cn/post/2022/sqlite3-wasm/</guid>
       
-        <description>
+        <description>&lt;p&gt;SQLite 官方的 wasm 项目终于来了！这表示 WebAssembly 在 SQLite 社区完全进入工业级应用阶段！&lt;/p&gt;
 
-&lt;p&gt;SQLite 官方的 wasm 项目终于来了！这表示 WebAssembly 在 SQLite 社区完全进入工业级应用阶段！&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/sqlite3-wasm/00.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
@@ -69,8 +69,7 @@
 &lt;li&gt;WASM 只支持较新的特性，老旧特性将被乘机清除掉&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;简而言之，在提供底层 API 能力的同时，针对面向对象、多线程等环节提供简单易用的 API。&lt;/p&gt;
-</description>
+&lt;p&gt;简而言之，在提供底层 API 能力的同时，针对面向对象、多线程等环节提供简单易用的 API。&lt;/p&gt;</description>
       
     </item>
     

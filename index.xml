@@ -298,15 +298,49 @@ https://toutiao.io/subjects/318517
     </item>
     
     <item>
+      <title>2022 国产编程语言盘点</title>
+      <link>https://chai2010.cn/post/2022/china-langs/</link>
+      <pubDate>Sun, 08 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/china-langs/</guid>
+      
+        <description>&lt;p&gt;到了 2022 年，回顾国产编程语言这个方向，我发现这已经不再是之前的一片信息荒漠，而是有很多可以八卦的事件。虽然目前还没有真正形成影响力的通用国产语言，但是这些早期的故事也是非常值得关注的。刚好还没有人写，所以我在元旦前后有了写这个文章的想法。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;本文在 InfoQ 公众号头条首发，标题为：“中文编程不如英文香？今年诞生的这些国产编程语言表示不服”。&lt;/p&gt;
+
+&lt;p&gt;InfoQ 公众号头条地址：&lt;a href=&#34;https://mp.weixin.qq.com/s/3WzDYdsKJfF2uQhCuYqiSg&#34;&gt;https://mp.weixin.qq.com/s/3WzDYdsKJfF2uQhCuYqiSg&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;注：公众号有将近100条评论，建议在微信中阅读。&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>“Go 2” 正式落地，中国 Gopher 踏上新征程！</title>
+      <link>https://chai2010.cn/post/2022/golang2022/</link>
+      <pubDate>Wed, 21 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/golang2022/</guid>
+      
+        <description>&lt;p&gt;本文来自  CSDN 重磅策划的《2022 年技术年度盘点》栏目。2022 年，智能技术变革留下了深刻的脚印，各行各业数字化升级催生了更多新需求。过去一年，亦是机遇与挑战并存的一年。《2022 年技术年度盘点》将围绕编程语言、开源、云计算、人工智能、架构服务、数据库、芯片、开发工具等核心技术领域，特邀一线技术专家亲临分享自身的技术实践，借此希望能够为更多的行业从业者带来一些借鉴与思考，更好地把握技术的未来发展趋势。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;在本篇文章中，来自 Go 开发社区的资深专家柴树杉老师将围绕 Go 语言的技术演进历程，分享对「Go 2」的最新见解，深度剖析 Go 语言在中国的生态发展与企业应用现状。&lt;/p&gt;
+
+&lt;p&gt;CSDN 公众号首发：&lt;a href=&#34;https://mp.weixin.qq.com/s/_R_ktxbU0XvbrzFRotJbuw&#34;&gt;https://mp.weixin.qq.com/s/_R_ktxbU0XvbrzFRotJbuw&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
       <title>凹语言开源季度总结-CSDN</title>
       <link>https://chai2010.cn/post/2022/wa-zongjie/</link>
       <pubDate>Sat, 05 Nov 2022 00:00:00 +0000</pubDate>
       
       <guid>https://chai2010.cn/post/2022/wa-zongjie/</guid>
       
-        <description>
-
-&lt;ul&gt;
+        <description>&lt;ul&gt;
 &lt;li&gt;责编 | 梦依丹&lt;/li&gt;
 &lt;li&gt;出品 | 凹语言技术团队官方投稿&lt;/li&gt;
 &lt;li&gt;CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？&lt;/li&gt;
@@ -317,7 +351,7 @@ https://toutiao.io/subjects/318517
 &lt;p&gt;【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;hr /&gt;
+&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;凹语言最近刚刚发布 v0.3.0，而正式开源不知不觉已经过去一个季度，这是凹语言开源的第一个季度的非正式总结，也是对未来的计划和展望。&lt;/p&gt;
 
@@ -461,8 +495,7 @@ func main() {
 
 &lt;p&gt;与普通贡献者相比，子项目负责人可以直接参与决策，在项目发展中获得上不封顶的话语权。由于尚处于起步阶段，可以单独成为子项目的模块遍地都是：一组堆管理函数、一个wat转二进制wasm的包、一种与其他语言交互的接口……&lt;/p&gt;
 
-&lt;p&gt;出名要趁早，参与开源同样需要趁早，欢迎参与共建。&lt;/p&gt;
-</description>
+&lt;p&gt;出名要趁早，参与开源同样需要趁早，欢迎参与共建。&lt;/p&gt;</description>
       
     </item>
     
@@ -473,9 +506,9 @@ func main() {
       
       <guid>https://chai2010.cn/post/2022/sqlite3-wasm/</guid>
       
-        <description>
+        <description>&lt;p&gt;SQLite 官方的 wasm 项目终于来了！这表示 WebAssembly 在 SQLite 社区完全进入工业级应用阶段！&lt;/p&gt;
 
-&lt;p&gt;SQLite 官方的 wasm 项目终于来了！这表示 WebAssembly 在 SQLite 社区完全进入工业级应用阶段！&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/sqlite3-wasm/00.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
@@ -524,8 +557,7 @@ func main() {
 &lt;li&gt;WASM 只支持较新的特性，老旧特性将被乘机清除掉&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;简而言之，在提供底层 API 能力的同时，针对面向对象、多线程等环节提供简单易用的 API。&lt;/p&gt;
-</description>
+&lt;p&gt;简而言之，在提供底层 API 能力的同时，针对面向对象、多线程等环节提供简单易用的 API。&lt;/p&gt;</description>
       
     </item>
     
@@ -558,9 +590,9 @@ func main() {
       
       <guid>https://chai2010.cn/post/2022/making-a-change-to-sqlite-source-code/</guid>
       
-        <description>
+        <description>&lt;p&gt;本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。&lt;/p&gt;
 
-&lt;p&gt;本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;作者：&lt;a href=&#34;https://brunocalza.me/author/brunocalza&#34;&gt;BRUNO CALZA&lt;/a&gt;&lt;/li&gt;
@@ -810,8 +842,7 @@ func main() {
 
 &lt;p&gt;看到输出结果我才发现能够理解SQLite源代码的部分内容真的很有趣，尽管我不理解它的大部分。但是我做了一些更改并看到这些更改，并通过 Go 的驱动程序看到结果的变化。&lt;/p&gt;
 
-&lt;p&gt;老实说这种更改数据库源代码的方法风险太大。与新版本保持同步也是一个太大的问题，但这是一个值得记录的有趣经历。&lt;/p&gt;
-</description>
+&lt;p&gt;老实说这种更改数据库源代码的方法风险太大。与新版本保持同步也是一个太大的问题，但这是一个值得记录的有趣经历。&lt;/p&gt;</description>
       
     </item>
     
@@ -915,9 +946,9 @@ func main() {
       
       <guid>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</guid>
       
-        <description>
+        <description>&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。2018 年 WebAssembly 第一个规范草案诞生，2019 年成为 W3C 第四个标准语言。到了 2022 年底，WebAssembly 现在怎么样了&amp;hellip;&lt;/p&gt;
 
-&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。2018 年 WebAssembly 第一个规范草案诞生，2019 年成为 W3C 第四个标准语言。到了 2022 年底，WebAssembly 现在怎么样了&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/00.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
@@ -1072,8 +1103,7 @@ func main() {
 
 &lt;p&gt;如果你正在为Wasm生态系统做出贡献，或者正在使用Wasm为你的基础设施提供动力，请联系 anders@sapphireventures.com, liu@sapphireventures.com 或 carter@sapphireventures.com - 我们很乐意听到你的意见！&lt;/p&gt;
 
-&lt;p&gt;特别感谢Michael Yuan、Matt Butcher、Liam Randall、Connor Hicks和Alexander Gallego的宝贵观点和反馈。&lt;/p&gt;
-</description>
+&lt;p&gt;特别感谢Michael Yuan、Matt Butcher、Liam Randall、Connor Hicks和Alexander Gallego的宝贵观点和反馈。&lt;/p&gt;</description>
       
     </item>
     
@@ -3051,321 +3081,6 @@ func Py_gopkg_sum(self, args *C.PyObject) *C.PyObject {
 
 &lt;p&gt;对于不支持pkg-config的平台我们都可以基于类似的方法处理。&lt;/p&gt;
 </description>
-      
-    </item>
-    
-    <item>
-      <title>《C&#43;&#43;面向wasm编程》开源！[转]</title>
-      <link>https://chai2010.cn/post/2018/cppwasm-book/</link>
-      <pubDate>Tue, 25 Sep 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/post/2018/cppwasm-book/</guid>
-      
-        <description>&lt;p&gt;目前支持WebAssembly的各种高级语言中，与WebAssembly匹配度最高的无疑是C/C++，为此，我们将开源编写《C++面向wasm编程》一书。本书将围绕“如何开发对WebAssembly友好的C/C++程序”这一中心，从Emscripten工具链的使用、C/C++与JavaScript互操作、一般性的设计原则等多方面介绍相关知识，并分享作者在实际工程应用中总结出的诸多经验。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/3dgen/cppwasm-book/master/cover.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;原文：&lt;a href=&#34;https://mp.weixin.qq.com/s/o4NIuc67eV3U_FGODT0ufA&#34;&gt;https://mp.weixin.qq.com/s/o4NIuc67eV3U_FGODT0ufA&lt;/a&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h1 id=&#34;目录&#34;&gt;目录&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;第0章 WebAssembly简介&lt;/li&gt;
-&lt;li&gt;第1章 Emscripten快速入门
-
-&lt;ul&gt;
-&lt;li&gt;1.1 安装Emscripten&lt;/li&gt;
-&lt;li&gt;1.2 你好，世界！&lt;/li&gt;
-&lt;li&gt;1.3 胶水代码初探&lt;/li&gt;
-&lt;li&gt;1.4 编译目标及编译流程&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;第2章 C与JavaScript互操作
-
-&lt;ul&gt;
-&lt;li&gt;2.1 JavaScript调用C函数&lt;/li&gt;
-&lt;li&gt;2.2 JavaScript函数注入C&lt;/li&gt;
-&lt;li&gt;2.3 单向透明的内存模型&lt;/li&gt;
-&lt;li&gt;2.4 JavaScript与C交换数据&lt;/li&gt;
-&lt;li&gt;2.5 EM_ASM宏&lt;/li&gt;
-&lt;li&gt;2.6 emscripten_run_script函数&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;第3章 Emscripten运行时
-
-&lt;ul&gt;
-&lt;li&gt;3.1 main函数与生命周期&lt;/li&gt;
-&lt;li&gt;3.2 消息循环&lt;/li&gt;
-&lt;li&gt;3.3 文件系统&lt;/li&gt;
-&lt;li&gt;3.4 内存管理&lt;/li&gt;
-&lt;li&gt;3.5 Module定制&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;第4章 WebAssembly友好的一般性方法
-
-&lt;ul&gt;
-&lt;li&gt;4.1 消息循环分离&lt;/li&gt;
-&lt;li&gt;4.2 数据对齐&lt;/li&gt;
-&lt;li&gt;4.3 使用C接口导出C++对象&lt;/li&gt;
-&lt;li&gt;4.4 C++对象生命周期控制&lt;/li&gt;
-&lt;li&gt;4.5 使用C接口注入JavaScript对象&lt;/li&gt;
-&lt;li&gt;4.6 小心int64&lt;/li&gt;
-&lt;li&gt;4.7 忘掉文件系统&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;第5章 网络IO
-
-&lt;ul&gt;
-&lt;li&gt;5.1 websocket&lt;/li&gt;
-&lt;li&gt;5.2 ajax&lt;/li&gt;
-&lt;li&gt;5.3 fetch&lt;/li&gt;
-&lt;li&gt;5.4 一个通用的网络IO小框架&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;第6章 多线程
-
-&lt;ul&gt;
-&lt;li&gt;6.1 JavaScript中的多线模型&lt;/li&gt;
-&lt;li&gt;6.2 一个例子&lt;/li&gt;
-&lt;li&gt;6.3 一个通用的多线程小框架&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;第7章 GUI及交互
-
-&lt;ul&gt;
-&lt;li&gt;7.1 canvas&lt;/li&gt;
-&lt;li&gt;7.2 鼠标事件&lt;/li&gt;
-&lt;li&gt;7.3 键盘事件&lt;/li&gt;
-&lt;li&gt;7.4 触屏事件&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;第8章 工程管理
-
-&lt;ul&gt;
-&lt;li&gt;8.1 使用Makefile&lt;/li&gt;
-&lt;li&gt;8.2 静态库&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;项目地址：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/3dgen/cppwasm-book&#34;&gt;https://github.com/3dgen/cppwasm-book&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;欢迎围观。加星可以鼓励作者尽快更新哦！&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Go语言并发编程03 - 并发的内存模型</title>
-      <link>https://chai2010.cn/post/2018/go-concurrency-03/</link>
-      <pubDate>Mon, 24 Sep 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/post/2018/go-concurrency-03/</guid>
-      
-        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
-
-&lt;p&gt;本次整理并发的内存模型部分的内容。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;原子操作&#34;&gt;原子操作&lt;/h2&gt;
-
-&lt;p&gt;在早期，CPU都是以单核的形式顺序执行机器指令。在单核CPU时代只有一个核在读或写数据，因此数据读写不需要额外的保护。但是进入多核时代之后，同一个数据可能被运行在不同CPU上的多个线程同时读写，因此需要额外的手段保证数据的完整性。原子操作则可以保证数据在被原子读或写的操作时不会被其它线程打断，因此可以保证读写数据状态的完整性。&lt;/p&gt;
-
-&lt;p&gt;Go语言的&lt;code&gt;sync/atomic&lt;/code&gt;包提供了对原子操作的支持。&lt;code&gt;sync/atomic&lt;/code&gt;包主要针对四字节或八字节大小并且地址对齐的内存进行原子读写，可以用于整型数或指针等基础数据类型。还有针对更复杂的&lt;code&gt;atomic.Value&lt;/code&gt;类型，可以用于存储结构体对象。&lt;/p&gt;
-
-&lt;p&gt;在Go语言中，其实不使用&lt;code&gt;sync/atomic&lt;/code&gt;包也可以编程。但是&lt;code&gt;sync/atomic&lt;/code&gt;包在某些底层的代码中，可以为性能优化提供更多的灵活性。比如标准库中的sync.Once对象的Do函数：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Once struct {
-    m    Mutex
-    done uint32
-}
-
-func (o *Once) Do(f func()) {
-    if atomic.LoadUint32(&amp;amp;o.done) == 1 {
-        return
-    }
-    // Slow-path.
-    o.m.Lock()
-    defer o.m.Unlock()
-    if o.done == 0 {
-        defer atomic.StoreUint32(&amp;amp;o.done, 1)
-        f()
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中&lt;code&gt;atomic.LoadUint32(&amp;amp;o.done)&lt;/code&gt;在开始先以极小的运算代价（院子操作是sync.Mutex等高级元语的代价更低）判断Once对象是否已经运行过了，如果没有则通过sync.Muyex.Lock进行加锁后在运行once对象。如果是第一次运行，则在退出前通过&lt;code&gt;defer atomic.StoreUint32(&amp;amp;o.done, 1)&lt;/code&gt;设置已经运行过的状态标志。&lt;/p&gt;
-
-&lt;p&gt;基于原子包提供的函数可以构造更高级的sync.Mutex等并发编程的工具。不过Go语言的并发哲学是：不要通过共享内存来通信，而是通过通信来共享内存！因此我们需要尽量避免直接使用sync/atomic包提供的原子操作来进行并发编程。&lt;/p&gt;
-
-&lt;h2 id=&#34;同一个goroutine内-满足顺序一致性内存模型&#34;&gt;同一个Goroutine内: 满足顺序一致性内存模型&lt;/h2&gt;
-
-&lt;p&gt;所谓的内存一致性内存模型就是代码的书写的顺序和执行的顺序是否是一致的。对于单线程的程序来说，代码一般是以书写的顺序执行的。更准确地说，顺序一致性内存模型一般是针对代码块中的语句。&lt;/p&gt;
-
-&lt;p&gt;比如以下的代码就是满足顺序一致性内存模型的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
-var done bool = false
-
-func main() {
-    msg = &amp;quot;hello, world&amp;quot;
-    done = true
-
-    for {
-        if done {
-            println(msg)
-            break
-        }
-        println(&amp;quot;retry...&amp;quot;)
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中先初始化msg字符串变量，然后将done设置为true表示字符串初始化工作已经完成。因此我们可以通过判断done的状态来间接地推导msg字符串是否已经完成初始化。在Go语言中，同一个Goroutine内满足顺序一致性内存模型。因此上述代码可以正确工作。&lt;/p&gt;
-
-&lt;h2 id=&#34;不同goroutine之间-不满足顺序一致性&#34;&gt;不同Goroutine之间: 不满足顺序一致性!&lt;/h2&gt;
-
-&lt;p&gt;如果我们将初始化msg和done的代码放到另一个Goroutine中，情况就完成不一样了！下面的并发代码将是错误的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
-var done bool = false
-
-func main() {
-    go func() {
-        msg = &amp;quot;hello, world&amp;quot;
-        done = true
-    }()
-
-    for {
-        if done {
-            println(msg); break
-        }
-        println(&amp;quot;retry...&amp;quot;)
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;运行时，大概有几种错误类型：一是main函数无法看到被修改后的done，因此main的for循环无法正常结束；二是main函数虽然看到了done被修改为true，但是msg依然没有初始化，这将导致错误的输出。&lt;/p&gt;
-
-&lt;p&gt;出现上述错误的原因是因为，Go语言的内存模型明确说明不同Goroutine之间不满足顺序一致性！同时编译器为了优化代码，进行初始化的Goroutine可能调整msg和done的执行顺序。main函数并不能从done状态的变化推导msg的初始化状态。&lt;/p&gt;
-
-&lt;h2 id=&#34;通过channel对齐时间参考系&#34;&gt;通过Channel对齐时间参考系&lt;/h2&gt;
-
-&lt;p&gt;每个Goroutine类似一个个独立的宇宙，有着自己的时间系统。当一个Goroutine中的某些操作不可被观察的时候，那么他们的执行状态和执行顺序是未知的。只有当一个Goroutine的某些事件被另一个Goroutine观察的时候，这些事件的状态才会变得确定。观察的手段有很多，通过Channel对齐不同Goroutine的时间参考系是常用的方式。&lt;/p&gt;
-
-&lt;p&gt;下面的代码中，通过将done改为管道类型修复前面的错误：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
-var done = make(chan struct{})
-
-func main() {
-    go func() {
-        msg = &amp;quot;hello, world&amp;quot;
-        done &amp;lt;- struct{}{}
-    }()
-
-    &amp;lt;-done
-    println(msg)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;done管道的发送和接收会强制进行一次同步main函数的主Gorotuine和后台进行初始化工作的Goroutine。在main函数执行&lt;code&gt;&amp;lt;-done&lt;/code&gt;语句完成时，那么后台Goroutine比如也已经执行到了&lt;code&gt;done &amp;lt;- struct{}{}&lt;/code&gt;语句，此时后台Goroutine的msg初始化工作必然已经完成了。因为后台Goroutine的msg初始化工作被main函数通过done管道观察了，因此编译器必须要保证msg在这个时刻完成初始化。因此最后main函数可以正常打印msg字符串。&lt;/p&gt;
-
-&lt;h2 id=&#34;通过sync-mutex对齐时间参考系&#34;&gt;通过sync.Mutex对齐时间参考系&lt;/h2&gt;
-
-&lt;p&gt;对齐时间参考系的方式很多，除了通过管道来同步，还可以通过sync包的Mutex来实现同步：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
-var done sync.Mutex
-
-func main() {
-    done.Lock()
-    go func() {
-        msg = &amp;quot;hello, world&amp;quot;
-        done.Unlock()
-    }()
-
-    done.Lock()
-    println(msg)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;代码中，sync.Mutex必须先Lock然后再Unlock，因为直接Unlock一个Mutex对象会导致panic。代码中，done.Unlock()和第二个done.Lock()分别在不同的Goroutine，它们会强制做一次时间同步。因此最后main函数也可以正常打印msg字符串。&lt;/p&gt;
-
-&lt;h2 id=&#34;带缓存的管道&#34;&gt;带缓存的管道&lt;/h2&gt;
-
-&lt;p&gt;管道是Go语言内置的并发原语。在刚学习Go语言，一般使用的是没有缓存的管道，它是缓存长度为0的管道。对于带缓冲的Channel，对于Channel的第K个接收完成操作发生在第K+C个发送操作完成之前，其中C是Channel的缓存大小。 如果将C设置为0自然就对应无缓存的Channel，也即使第K个接收完成在第K个发送完成之前。因为无缓存的Channel只能同步发1个，也就简化为前面无缓存Channel的规则：对于从无缓冲Channel进行的接收，发生在对该Channel进行的发送完成之前。&lt;/p&gt;
-
-&lt;p&gt;基于带缓存的管道可以实现对并发数量的控制：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    var wg sync.WaitGroup
-    var limit = make(chan struct{}, 3)
-    for i := 0; i &amp;lt; 10; i++ {
-        wg.Add(1)
-        go func(id int) {
-            defer wg.Done()
-
-            limit &amp;lt;- struct{}{}       // len(limit) 小于 cap(limit) 才能进入
-            defer func(){ &amp;lt;-limit }() // 退出时 len(limit) 减 1
-
-            println(id)
-        }(i)
-    }
-    wg.Wait()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;因为limit管道的长度为3个，因此for循环内部创建的Goroutine在执行println语句时，在同一个时刻最多只能有3个Goroutine在并发执行。&lt;/p&gt;
-
-&lt;h2 id=&#34;初始化顺序&#34;&gt;初始化顺序&lt;/h2&gt;
-
-&lt;p&gt;Go语言中每个包被导入时都会执行包的初始化操作，包括全局包变量的初始化和init初始化函数的执行。如果在包的初始化解决启动了新的Goroutine，那么这些新启动的Goroutine将不能马上被执行，它们只有在所有的包初始化都完成之后才能被创建。在初始化阶段创建的新Goroutine将和main函数是并发执行状态。&lt;/p&gt;
-
-&lt;p&gt;包的初始化示意图如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/init.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;初始化是由runtime.main启动，伪代码如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func runtime.main() {
-    for pkg := range impported_pkg_list {
-        pkg.init()
-    }
-    go goroutines_from_init()
-    main()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;首先顺序执行导入包的初始化工作，然后并发启动包初始化阶段启动的新Goroutine，同时并发启动main函数。&lt;/p&gt;
-
-&lt;h2 id=&#34;goroutine特点&#34;&gt;Goroutine特点&lt;/h2&gt;
-
-&lt;p&gt;Goroutine是每个并发执行代码的容器，和传统操作系统中线程和进程有点类似。但是Go语言的Goroutine也有自己的特点，理解这些特色是写好并发程序的前提。&lt;/p&gt;
-
-&lt;p&gt;Goroutine特点：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;由go关键字启动, 是一种轻量级的线程&lt;/li&gt;
-&lt;li&gt;以一个很小的栈启动(可能是2KB/4KB), 可以启动很多&lt;/li&gt;
-&lt;li&gt;Goroutine栈的大小会根据需要动态地伸缩, 不用担心栈溢出&lt;/li&gt;
-&lt;li&gt;m个goroutine运行在n个操作系统线程上, n默认对应CPU核数&lt;/li&gt;
-&lt;li&gt;runtime.GOMAXPROCS用于控制当前运行运行正常非阻塞Goroutine的系统线程数目&lt;/li&gt;
-&lt;li&gt;发生在用户态, 切换的代价要比系统线程低(切换时只需要保存必要的寄存器)&lt;/li&gt;
-&lt;li&gt;Goroutine采用的是半抢占式的协作调度(在函数入口处插入协作代码)&lt;/li&gt;
-&lt;li&gt;IO/sleep/runtime.Gosched 均会导致调度&lt;/li&gt;
-&lt;li&gt;Goroutine故意设计为没有ID&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;注意：Goroutine是一种资源，也有泄露的风险！&lt;/p&gt;
-
-&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
-
-&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;幻灯片源文件：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
       
     </item>
     

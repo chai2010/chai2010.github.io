@@ -18,9 +18,9 @@
       
       <guid>https://chai2010.cn/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/</guid>
       
-        <description>
+        <description>&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。2018 年 WebAssembly 第一个规范草案诞生，2019 年成为 W3C 第四个标准语言。到了 2022 年底，WebAssembly 现在怎么样了&amp;hellip;&lt;/p&gt;
 
-&lt;p&gt;WebAssembly 是一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。2018 年 WebAssembly 第一个规范草案诞生，2019 年成为 W3C 第四个标准语言。到了 2022 年底，WebAssembly 现在怎么样了&amp;hellip;&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/whats-up-with-webassembly-computes-next-paradigm-shift/00.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
@@ -175,8 +175,7 @@
 
 &lt;p&gt;如果你正在为Wasm生态系统做出贡献，或者正在使用Wasm为你的基础设施提供动力，请联系 anders@sapphireventures.com, liu@sapphireventures.com 或 carter@sapphireventures.com - 我们很乐意听到你的意见！&lt;/p&gt;
 
-&lt;p&gt;特别感谢Michael Yuan、Matt Butcher、Liam Randall、Connor Hicks和Alexander Gallego的宝贵观点和反馈。&lt;/p&gt;
-</description>
+&lt;p&gt;特别感谢Michael Yuan、Matt Butcher、Liam Randall、Connor Hicks和Alexander Gallego的宝贵观点和反馈。&lt;/p&gt;</description>
       
     </item>
     

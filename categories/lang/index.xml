@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lang on chai2010 的博客</title>
+    <link>https://chai2010.cn/categories/lang/</link>
+    <description>Recent content in Lang on chai2010 的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 08 Jan 2023 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://chai2010.cn/categories/lang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>2022 国产编程语言盘点</title>
+      <link>https://chai2010.cn/post/2022/china-langs/</link>
+      <pubDate>Sun, 08 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/china-langs/</guid>
+      
+        <description>&lt;p&gt;到了 2022 年，回顾国产编程语言这个方向，我发现这已经不再是之前的一片信息荒漠，而是有很多可以八卦的事件。虽然目前还没有真正形成影响力的通用国产语言，但是这些早期的故事也是非常值得关注的。刚好还没有人写，所以我在元旦前后有了写这个文章的想法。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;本文在 InfoQ 公众号头条首发，标题为：“中文编程不如英文香？今年诞生的这些国产编程语言表示不服”。&lt;/p&gt;
+
+&lt;p&gt;InfoQ 公众号头条地址：&lt;a href=&#34;https://mp.weixin.qq.com/s/3WzDYdsKJfF2uQhCuYqiSg&#34;&gt;https://mp.weixin.qq.com/s/3WzDYdsKJfF2uQhCuYqiSg&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;注：公众号有将近100条评论，建议在微信中阅读。&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

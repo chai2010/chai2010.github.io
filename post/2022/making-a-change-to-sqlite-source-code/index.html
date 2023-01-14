@@ -19,7 +19,9 @@
 
 
 <meta name="author" content="chai2010" />
-  <meta name="description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是" />
+  <meta name="description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。
+
+" />
 
   <meta name="keywords" content="chai2010, Go, Golang" />
 
@@ -47,7 +49,9 @@
 
 
 <meta property="og:title" content="Go 语言 CGO 用户深度定制 SQLite 代码" />
-<meta property="og:description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是" />
+<meta property="og:description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。
+
+" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://chai2010.cn/post/2022/making-a-change-to-sqlite-source-code/" />
 
@@ -68,18 +72,22 @@
 
 
 <meta itemprop="name" content="Go 语言 CGO 用户深度定制 SQLite 代码">
-<meta itemprop="description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是">
+<meta itemprop="description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。
+
+">
 
 
 <meta itemprop="datePublished" content="2022-10-26T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2022-10-26T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="2656">
+<meta itemprop="wordCount" content="2658">
 
 
 
 <meta itemprop="keywords" content="golang,sqlite,cgo," />
 <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Go 语言 CGO 用户深度定制 SQLite 代码"/>
-<meta name="twitter:description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是"/>
+<meta name="twitter:description" content="本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。
+
+"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -176,7 +184,7 @@ ga('send', 'pageview');
               <a href="/categories/cgo/"> cgo </a>
             
           </div>
-        <span class="more-meta"> 约 2656 字 </span>
+        <span class="more-meta"> 约 2658 字 </span>
         <span class="more-meta"> 预计阅读 6 分钟 </span>
       </div>
     </header>
@@ -204,9 +212,9 @@ ga('send', 'pageview');
 
     
     <div class="post-content">
-      
+      <p>本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。</p>
 
-<p>本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。</p>
+<p></p>
 
 <ul>
 <li>作者：<a href="https://brunocalza.me/author/brunocalza">BRUNO CALZA</a></li>
@@ -457,7 +465,6 @@ func main() {
 <p>看到输出结果我才发现能够理解SQLite源代码的部分内容真的很有趣，尽管我不理解它的大部分。但是我做了一些更改并看到这些更改，并通过 Go 的驱动程序看到结果的变化。</p>
 
 <p>老实说这种更改数据库源代码的方法风险太大。与新版本保持同步也是一个太大的问题，但这是一个值得记录的有趣经历。</p>
-
     </div>
 
     
@@ -541,7 +548,7 @@ func main() {
     &copy;
     
       2006 -
-    2022
+    2023
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

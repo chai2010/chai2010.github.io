@@ -54,7 +54,7 @@
 
 
 
-<meta property="og:updated_time" content="2017-11-15T00:00:00&#43;00:00"/>
+<meta property="og:updated_time" content="2018-03-08T00:00:00&#43;00:00"/>
 
 
 
@@ -157,6 +157,64 @@ ga('send', 'pageview');
     
       <article class="post bg-white">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/gopherchina/gopherchina2018-chai2010/">Gopher China 2018 讲师专访: 柴树杉</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2018-03-08 </span>
+      <div class="post-category">
+          
+            <a href="/categories/gopherchina/"> gopherchina </a>
+          
+        </div>
+      <span class="more-meta"> 约 1197 字 </span>
+      <span class="more-meta"> 预计阅读 3 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h2 id="自我介绍">自我介绍</h2>
+
+<p>Go 语言代码的贡献者，《Go 语言圣经》翻译者，《Go 语言高级编程》开源免费图书作者，非主流Go语言码农。2010年入坑 Go 语言，因此我的网络 ID 是 chai2010（其实是王小波的一个的小说的名字）。其实我想说的是，即使当歌曲和传说都已经哑巴的时候，Go 语言代码也不会消失。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/gopherchina/gopherchina2018-chai2010/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/lua/gopherlua-strings/">lua中也能用上Go语言的strings包</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2017-12-22 </span>
+      <div class="post-category">
+          
+            <a href="/categories/lua/"> lua </a>
+          
+        </div>
+      <span class="more-meta"> 约 107 字 </span>
+      <span class="more-meta"> 预计阅读 1 分钟 </span>
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>lua内置的库非常小，我们可以将Go语言的strings包引入到Lua环境。</p>
+
+<p></p>
+    </div>
+    <div class="read-more">
+      <a href="/post/lua/gopherlua-strings/" class="read-more-link">阅读全文</a>
+    </div>
+  </div>
+</article>
+
+    
+      <article class="post bg-white">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/misc/ascii-draw/">用ASCII画图</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2017-11-15 </span>
@@ -243,82 +301,6 @@ ga('send', 'pageview');
 </article>
 
     
-      <article class="post bg-white">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/gist/cpp-js/">非主流C/C&#43;&#43;编程</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2017-01-27 </span>
-      <div class="post-category">
-          
-            <a href="/categories/c&#43;&#43;/"> c&#43;&#43; </a>
-          
-        </div>
-      <span class="more-meta"> 约 44 字 </span>
-      <span class="more-meta"> 预计阅读 1 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <pre><code class="language-c">enum class NewStyle {
-	ONE = 200,
-	TWO,
-};
-static auto init_enum_NewStyle = my_run_script_int(R&quot;==(
-	const varargs = [
-		Module.getValue(arguments[1]+4*0, 'i32'),
-		Module.getValue(arguments[1]+4*1, 'i32'),
-	];
-	Module.NewStyle = class {
-		static get ONE(){ return varargs[0] }
-		static get TWO(){ return varargs[1] }
-	};
-)==&quot;,
-	NewStyle::ONE,
-	NewStyle::TWO
-);
-</code></pre>
-
-<p></p>
-    </div>
-    <div class="read-more">
-      <a href="/post/gist/cpp-js/" class="read-more-link">阅读全文</a>
-    </div>
-  </div>
-</article>
-
-    
-      <article class="post bg-white">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/bazel/bazel-cpp/">Bazel C&#43;&#43; 基础[翻译]</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2016-06-28 </span>
-      <div class="post-category">
-          
-            <a href="/categories/bazel/"> bazel </a>
-          
-        </div>
-      <span class="more-meta"> 约 1710 字 </span>
-      <span class="more-meta"> 预计阅读 4 分钟 </span>
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <ul>
-<li>原文：<a href="http://www.bazel.io/docs/cpp.html">http://www.bazel.io/docs/cpp.html</a></li>
-<li>译者：<a href="http://github.com/chai2010">chai2010</a></li>
-</ul>
-
-<p></p>
-    </div>
-    <div class="read-more">
-      <a href="/post/bazel/bazel-cpp/" class="read-more-link">阅读全文</a>
-    </div>
-  </div>
-</article>
-
-    
   </section>
   
   <nav class="pagination">
@@ -350,7 +332,7 @@ static auto init_enum_NewStyle = my_run_script_int(R&quot;==(
     &copy;
     
       2006 -
-    2022
+    2023
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

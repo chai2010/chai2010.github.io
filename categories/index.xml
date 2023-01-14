@@ -80,7 +80,7 @@
     <item>
       <title>Golang</title>
       <link>https://chai2010.cn/categories/golang/</link>
-      <pubDate>Wed, 26 Oct 2022 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 21 Dec 2022 00:00:00 +0000</pubDate>
       
       <guid>https://chai2010.cn/categories/golang/</guid>
       
@@ -155,6 +155,17 @@
     </item>
     
     <item>
+      <title>Lang</title>
+      <link>https://chai2010.cn/categories/lang/</link>
+      <pubDate>Sun, 08 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/categories/lang/</guid>
+      
+        <description></description>
+      
+    </item>
+    
+    <item>
       <title>Lua</title>
       <link>https://chai2010.cn/categories/lua/</link>
       <pubDate>Fri, 22 Dec 2017 00:00:00 +0000</pubDate>
@@ -215,17 +226,6 @@
       <pubDate>Wed, 26 Oct 2022 00:00:00 +0000</pubDate>
       
       <guid>https://chai2010.cn/categories/sqlite/</guid>
-      
-        <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Sqlite3</title>
-      <link>https://chai2010.cn/categories/sqlite3/</link>
-      <pubDate>Mon, 31 Oct 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/categories/sqlite3/</guid>
       
         <description></description>
       

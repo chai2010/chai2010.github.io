@@ -6,10 +6,27 @@
     <description>Recent content in Golang on chai2010 的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 26 Oct 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 21 Dec 2022 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://chai2010.cn/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>“Go 2” 正式落地，中国 Gopher 踏上新征程！</title>
+      <link>https://chai2010.cn/post/2022/golang2022/</link>
+      <pubDate>Wed, 21 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/golang2022/</guid>
+      
+        <description>&lt;p&gt;本文来自  CSDN 重磅策划的《2022 年技术年度盘点》栏目。2022 年，智能技术变革留下了深刻的脚印，各行各业数字化升级催生了更多新需求。过去一年，亦是机遇与挑战并存的一年。《2022 年技术年度盘点》将围绕编程语言、开源、云计算、人工智能、架构服务、数据库、芯片、开发工具等核心技术领域，特邀一线技术专家亲临分享自身的技术实践，借此希望能够为更多的行业从业者带来一些借鉴与思考，更好地把握技术的未来发展趋势。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;在本篇文章中，来自 Go 开发社区的资深专家柴树杉老师将围绕 Go 语言的技术演进历程，分享对「Go 2」的最新见解，深度剖析 Go 语言在中国的生态发展与企业应用现状。&lt;/p&gt;
+
+&lt;p&gt;CSDN 公众号首发：&lt;a href=&#34;https://mp.weixin.qq.com/s/_R_ktxbU0XvbrzFRotJbuw&#34;&gt;https://mp.weixin.qq.com/s/_R_ktxbU0XvbrzFRotJbuw&lt;/a&gt;&lt;/p&gt;</description>
+      
+    </item>
     
     <item>
       <title>Go 语言 CGO 用户深度定制 SQLite 代码</title>
@@ -18,9 +35,9 @@
       
       <guid>https://chai2010.cn/post/2022/making-a-change-to-sqlite-source-code/</guid>
       
-        <description>
+        <description>&lt;p&gt;本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。&lt;/p&gt;
 
-&lt;p&gt;本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;作者：&lt;a href=&#34;https://brunocalza.me/author/brunocalza&#34;&gt;BRUNO CALZA&lt;/a&gt;&lt;/li&gt;
@@ -270,8 +287,7 @@ func main() {
 
 &lt;p&gt;看到输出结果我才发现能够理解SQLite源代码的部分内容真的很有趣，尽管我不理解它的大部分。但是我做了一些更改并看到这些更改，并通过 Go 的驱动程序看到结果的变化。&lt;/p&gt;
 
-&lt;p&gt;老实说这种更改数据库源代码的方法风险太大。与新版本保持同步也是一个太大的问题，但这是一个值得记录的有趣经历。&lt;/p&gt;
-</description>
+&lt;p&gt;老实说这种更改数据库源代码的方法风险太大。与新版本保持同步也是一个太大的问题，但这是一个值得记录的有趣经历。&lt;/p&gt;</description>
       
     </item>
     
@@ -3738,149 +3754,6 @@ println(max)
 
 &lt;p&gt;不过我觉得嵌套不是问题的本质，函数也能导致嵌套的滥用。
 但是不能因为滥用的行为来排斥有存在价值的语法（比如三元表达式）。&lt;/p&gt;
-</description>
-      
-    </item>
-    
-    <item>
-      <title>Go语言的国际化支持(资源文件翻译)</title>
-      <link>https://chai2010.cn/post/golang/go-gettext-2014/</link>
-      <pubDate>Mon, 27 Jan 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/post/golang/go-gettext-2014/</guid>
-      
-        <description>
-
-&lt;p&gt;在之前的 &lt;a href=&#34;http://my.oschina.net/chai2010/blog/190914&#34;&gt;Go语言的国际化支持(基于gettext-go)&lt;/a&gt; 中, 讲到了如何翻译源代码中的字符串.&lt;/p&gt;
-
-&lt;p&gt;项目地址在: &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;http://code.google.com/p/gettext-go&lt;/a&gt;. 文档在 &lt;a href=&#34;http://godoc.org/code.google.com/p/gettext-go/gettext&#34;&gt;godoc.org&lt;/a&gt; 或 &lt;a href=&#34;http://gowalker.org/code.google.com/p/gettext-go/gettext&#34;&gt;gowalker.org&lt;/a&gt; .&lt;/p&gt;
-
-&lt;p&gt;根据评论的反馈(@羊半仙), 之前版本的缺少对资源文件的支持.&lt;/p&gt;
-
-&lt;p&gt;最近对 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 做了一些改进, 主要涉及以下几点:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;支持资源文件的翻译&lt;/li&gt;
-&lt;li&gt;支持zip格式的翻译文件&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;资源文件的翻译&#34;&gt;资源文件的翻译&lt;/h2&gt;
-
-&lt;p&gt;资源文件的翻译比字符串更简单(使用&lt;code&gt;gettext.Getdata&lt;/code&gt;函数):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;import (
-    &amp;quot;code.google.com/p/gettext-go/gettext&amp;quot;
-)
-
-func main() {
-    gettext.SetLocale(&amp;quot;zh_CN&amp;quot;)
-    gettext.Textdomain(&amp;quot;hello&amp;quot;)
-
-    // translate resource
-    fmt.Println(string(gettext.Getdata(&amp;quot;poems.txt&amp;quot;)))
-    // Output: ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;输出的内容是 李白 诗歌 &lt;a href=&#34;http://code.google.com/p/gettext-go/source/browse/examples/local/zh_CN/LC_RESOURCE/hello/poems.txt&#34;&gt;&amp;lt;月下独酌&amp;gt;&lt;/a&gt;:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;简体中文版: &lt;a href=&#34;http://code.google.com/p/gettext-go/source/browse/examples/local/zh_CN/LC_RESOURCE/hello/poems.txt&#34;&gt;&amp;lt;月下独酌&amp;gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;繁体中文版: &lt;a href=&#34;http://code.google.com/p/gettext-go/source/browse/examples/local/zh_TW/LC_RESOURCE/hello/poems.txt&#34;&gt;&amp;lt;月下独酌&amp;gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;英文翻译版: &lt;a href=&#34;http://code.google.com/p/gettext-go/source/browse/examples/local/default/LC_RESOURCE/hello/poems.txt&#34;&gt;&amp;lt;月下独酌&amp;gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;zip格式的翻译文件支持&#34;&gt;zip格式的翻译文件支持&lt;/h2&gt;
-
-&lt;p&gt;可以将翻译文件目录打包为zip格式. 如果绑定的翻译文件不是一个目录, 而是一个文件, 则会当作zip文件处理.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;import (
-    &amp;quot;code.google.com/p/gettext-go/gettext&amp;quot;
-)
-
-func main() {
-    gettext.SetLocale(&amp;quot;zh_CN&amp;quot;)
-    gettext.Textdomain(&amp;quot;hello&amp;quot;)
-
-    gettext.BindTextdomain(&amp;quot;hello&amp;quot;, &amp;quot;local.zip&amp;quot;, nil)
-
-    ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Zip文件在这里: &lt;a href=&#34;http://gettext-go.googlecode.com/hg/examples/local.zip&#34;&gt;http://gettext-go.googlecode.com/hg/examples/local.zip&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;如果希望将zip文件嵌入到程序中, 可以先用工具将zip文件转换为&lt;code&gt;[]byte&lt;/code&gt;格式的数据, 然后绑定到翻译域中:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;import (
-    &amp;quot;code.google.com/p/gettext-go/gettext&amp;quot;
-)
-
-// 根据 local.zip 生成
-var local_zip_data = []byte{
-    0x00, 0x01, 0x02, 0x03, ...
-}
-
-func main() {
-    gettext.SetLocale(&amp;quot;zh_CN&amp;quot;)
-    gettext.Textdomain(&amp;quot;hello&amp;quot;)
-
-    gettext.BindTextdomain(&amp;quot;hello&amp;quot;, &amp;quot;embeded_local&amp;quot;, local_zip_data)
-
-    ...
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如果 &lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 的第三个参数不为 &lt;code&gt;nil&lt;/code&gt;, 则会将该参数传入的数据作为zip数据处理.&lt;/p&gt;
-
-&lt;h2 id=&#34;翻译目录的结构&#34;&gt;翻译目录的结构&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 包的翻译文件涉及以下几个概念:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;local&lt;/strong&gt;: 本地采用的语言. 默认值可以由&lt;code&gt;$(LC_MESSAGES)&lt;/code&gt;或&lt;code&gt;$(LANG)&lt;/code&gt;环境变量指定.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;domain&lt;/strong&gt; : 翻译的名字空间, 类似文本编辑器中的配色风格的概念,  &lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 的第一个参数.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;domain_path&lt;/strong&gt;: &lt;strong&gt;domain&lt;/strong&gt; 对应的目录路径, 也可能是zip文件路径或zip数据名,  &lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 的第二个参数.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;domain_data&lt;/strong&gt;: &lt;strong&gt;domain&lt;/strong&gt; 对应的zip数据(可以为空), &lt;code&gt;gettext.BindTextdomain&lt;/code&gt; 的第二个参数.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;不管是zip还是本地目录, 内部的目录组织结构是一致的:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Root: &amp;quot;path&amp;quot; or &amp;quot;file.zip/zipBaseName&amp;quot;
- +-default                 # local: $(LC_MESSAGES) or $(LANG) or &amp;quot;default&amp;quot;
- |  +-LC_MESSAGES            # just for `gettext.Gettext`
- |  |   +-hello.mo             # $(Root)/$(local)/LC_MESSAGES/$(domain).mo
- |  |   \-hello.po             # $(Root)/$(local)/LC_MESSAGES/$(domain).mo
- |  |
- |  \-LC_RESOURCE            # just for `gettext.Getdata`
- |      +-hello                # domain map a dir in resource translate
- |         +-favicon.ico       # $(Root)/$(local)/LC_RESOURCE/$(domain)/$(filename)
- |         \-poems.txt
- |
- \-zh_CN                   # simple chinese translate
-    +-LC_MESSAGES
-    |   +-hello.mo             # try &amp;quot;$(domain).mo&amp;quot; first
-    |   \-hello.po             # try &amp;quot;$(domain).po&amp;quot; second
-    |
-    \-LC_RESOURCE
-        +-hello
-           +-favicon.ico       # try &amp;quot;$(local)/$(domain)/file&amp;quot; first
-           \-poems.txt         # try &amp;quot;default/$(domain)/file&amp;quot; second
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中 &lt;code&gt;$(Root)/$(local)/LC_MESSAGES/&lt;/code&gt; 对应 &lt;code&gt;gettext.Gettext&lt;/code&gt; 的翻译字符串, &lt;code&gt;$(Root)/$(local)/LC_RESOURCE/$(domain)/?&lt;/code&gt; 对应 &lt;code&gt;gettext.Getdata&lt;/code&gt; 要翻译的资源文件.&lt;/p&gt;
-
-&lt;p&gt;翻译字符串时, 会先尝试&lt;code&gt;mo&lt;/code&gt;格式的二进制翻译文件, 如果失败则会继续尝试&lt;code&gt;po&lt;/code&gt;格式的原始翻译文件, 如果依然失败则返回原字符串.&lt;/p&gt;
-
-&lt;p&gt;翻译资源文件时, 如果资源文件缺失会继续尝试加载Local为&lt;code&gt;default&lt;/code&gt;的资源文件, 如果依然失败则返回&lt;code&gt;nil&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;展望&#34;&gt;展望&lt;/h2&gt;
-
-&lt;p&gt;目前 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 的运行时已经初步完备, 可以支持字符串和资源文件的翻译. 不过 &lt;a href=&#34;http://code.google.com/p/gettext-go&#34;&gt;gettext-go&lt;/a&gt; 的辅助工具依然不足, 特别是缺少可以从Go程序中自动提取字符串的&lt;code&gt;xgettext&lt;/code&gt;工具. 下一步会考虑实现一个针对Go语言的&lt;code&gt;xgettext&lt;/code&gt;工具.&lt;/p&gt;
-
-&lt;p&gt;在Go语言中还有一类比较特殊的字符串资源: 用于godoc显示的文档信息(类似的还有blog文章等). 如果&lt;code&gt;xgettext&lt;/code&gt;工具能够支持Go语言文档的信息的提取和翻译后文档的合并, 那么文档的翻译将会方便很多.&lt;/p&gt;
-
-&lt;p&gt;如果有感兴趣的同学可以一起完善.&lt;/p&gt;
 </description>
       
     </item>

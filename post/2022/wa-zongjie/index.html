@@ -19,7 +19,9 @@
 
 
 <meta name="author" content="chai2010" />
-  <meta name="description" content="责编 | 梦依丹 出品 | 凹语言技术团队官方投稿 CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？ CSDN首发地址：http" />
+  <meta name="description" content=" 责编 | 梦依丹 出品 | 凹语言技术团队官方投稿 CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？ CSDN首发地址：https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q   【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？
+ 
+" />
 
   <meta name="keywords" content="chai2010, Go, Golang" />
 
@@ -47,7 +49,18 @@
 
 
 <meta property="og:title" content="凹语言开源季度总结-CSDN" />
-<meta property="og:description" content="责编 | 梦依丹 出品 | 凹语言技术团队官方投稿 CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？ CSDN首发地址：http" />
+<meta property="og:description" content="
+责编 | 梦依丹
+出品 | 凹语言技术团队官方投稿
+CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？
+CSDN首发地址：https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q
+
+
+
+【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？
+
+
+" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://chai2010.cn/post/2022/wa-zongjie/" />
 
@@ -68,18 +81,40 @@
 
 
 <meta itemprop="name" content="凹语言开源季度总结-CSDN">
-<meta itemprop="description" content="责编 | 梦依丹 出品 | 凹语言技术团队官方投稿 CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？ CSDN首发地址：http">
+<meta itemprop="description" content="
+责编 | 梦依丹
+出品 | 凹语言技术团队官方投稿
+CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？
+CSDN首发地址：https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q
+
+
+
+【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？
+
+
+">
 
 
 <meta itemprop="datePublished" content="2022-11-05T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2022-11-05T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="2268">
+<meta itemprop="wordCount" content="2313">
 
 
 
 <meta itemprop="keywords" content="wa," />
 <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="凹语言开源季度总结-CSDN"/>
-<meta name="twitter:description" content="责编 | 梦依丹 出品 | 凹语言技术团队官方投稿 CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？ CSDN首发地址：http"/>
+<meta name="twitter:description" content="
+责编 | 梦依丹
+出品 | 凹语言技术团队官方投稿
+CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？
+CSDN首发地址：https://mp.weixin.qq.com/s/_D7gVWtF1tkvxteRGXkP-Q
+
+
+
+【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？
+
+
+"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -172,7 +207,7 @@ ga('send', 'pageview');
               <a href="/categories/wa/"> wa </a>
             
           </div>
-        <span class="more-meta"> 约 2268 字 </span>
+        <span class="more-meta"> 约 2313 字 </span>
         <span class="more-meta"> 预计阅读 5 分钟 </span>
       </div>
     </header>
@@ -208,9 +243,7 @@ ga('send', 'pageview');
 
     
     <div class="post-content">
-      
-
-<ul>
+      <ul>
 <li>责编 | 梦依丹</li>
 <li>出品 | 凹语言技术团队官方投稿</li>
 <li>CSDN首发标题：一个没有KPI的国产编程语言，开源3个月有了哪些新进展？</li>
@@ -221,7 +254,7 @@ ga('send', 'pageview');
 <p>【CSDN 编者按】放眼各大编程语言排行榜，几乎很难看到国产编程语言身影，伴随着我国基础软硬件的发力与追赶，尤其是在操作系统、数据库等技术领域的累积，我们也渐渐看到一些国产编程语言的诞生，例如由一群 Go 语言爱好者发起的凹语言，2018 年筹备再到今年 7 月正式开源，其背后有着怎样的故事，开源 3 个月后，其又进行了哪些改进与提升呢？</p>
 </blockquote>
 
-<hr />
+<p></p>
 
 <p>凹语言最近刚刚发布 v0.3.0，而正式开源不知不觉已经过去一个季度，这是凹语言开源的第一个季度的非正式总结，也是对未来的计划和展望。</p>
 
@@ -366,7 +399,6 @@ func main() {
 <p>与普通贡献者相比，子项目负责人可以直接参与决策，在项目发展中获得上不封顶的话语权。由于尚处于起步阶段，可以单独成为子项目的模块遍地都是：一组堆管理函数、一个wat转二进制wasm的包、一种与其他语言交互的接口……</p>
 
 <p>出名要趁早，参与开源同样需要趁早，欢迎参与共建。</p>
-
     </div>
 
     
@@ -400,6 +432,11 @@ func main() {
       
       <nav class="post-nav">
         
+          <a class="prev" href="/post/2022/golang2022/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">“Go 2” 正式落地，中国 Gopher 踏上新征程！</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
         
           <a class="next" href="/post/2022/sqlite3-wasm/">
             <span class="next-text nav-default">SQLite3 官方支持 WebAssembly！</span>
@@ -441,7 +478,7 @@ func main() {
     &copy;
     
       2006 -
-    2022
+    2023
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

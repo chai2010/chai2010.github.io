@@ -18,9 +18,9 @@
       
       <guid>https://chai2010.cn/post/2022/making-a-change-to-sqlite-source-code/</guid>
       
-        <description>
+        <description>&lt;p&gt;本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。&lt;/p&gt;
 
-&lt;p&gt;本文是 BRUNO CALZA 记录的关于如何改变SQLite源代码，使记录行更新时可用于 Go 的更新钩子函数的过程。原文通过深度定制 C 语言的 API 函数达成目的，这几乎是所有 CGO 深度用户必然经历的过程（关于 CGO 的基本用法可以参考译者的《Go高级编程》第2章），是一个非常有借鉴意义的技术文章。&lt;/p&gt;
+&lt;p&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;作者：&lt;a href=&#34;https://brunocalza.me/author/brunocalza&#34;&gt;BRUNO CALZA&lt;/a&gt;&lt;/li&gt;
@@ -270,8 +270,7 @@ func main() {
 
 &lt;p&gt;看到输出结果我才发现能够理解SQLite源代码的部分内容真的很有趣，尽管我不理解它的大部分。但是我做了一些更改并看到这些更改，并通过 Go 的驱动程序看到结果的变化。&lt;/p&gt;
 
-&lt;p&gt;老实说这种更改数据库源代码的方法风险太大。与新版本保持同步也是一个太大的问题，但这是一个值得记录的有趣经历。&lt;/p&gt;
-</description>
+&lt;p&gt;老实说这种更改数据库源代码的方法风险太大。与新版本保持同步也是一个太大的问题，但这是一个值得记录的有趣经历。&lt;/p&gt;</description>
       
     </item>
     
