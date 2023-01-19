@@ -24,6 +24,13 @@
   </url>
   
   <url>
+    <loc>https://chai2010.cn/post/2022/wasm2022/</loc>
+    <lastmod>2023-01-15T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://chai2010.cn/post/2022/china-langs/</loc>
     <lastmod>2023-01-08T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -1054,7 +1061,7 @@
   
   <url>
     <loc>https://chai2010.cn/post/</loc>
-    <lastmod>2023-01-08T00:00:00+00:00</lastmod>
+    <lastmod>2023-01-15T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -1208,14 +1215,14 @@
   
   <url>
     <loc>https://chai2010.cn/tags/wasm/</loc>
-    <lastmod>2022-10-31T00:00:00+00:00</lastmod>
+    <lastmod>2023-01-15T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://chai2010.cn/categories/wasm/</loc>
-    <lastmod>2022-10-31T00:00:00+00:00</lastmod>
+    <lastmod>2023-01-15T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>

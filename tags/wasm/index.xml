@@ -6,10 +6,387 @@
     <description>Recent content in Wasm on chai2010 的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 31 Oct 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 15 Jan 2023 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://chai2010.cn/tags/wasm/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>2023: WASM 原生时代已经扑面而来</title>
+      <link>https://chai2010.cn/post/2022/wasm2022/</link>
+      <pubDate>Sun, 15 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2022/wasm2022/</guid>
+      
+        <description>&lt;p&gt;作者在2018年写作《WebAssembly 标准入门》，当时有幸邀请到CSDN和极客帮的创始人蒋涛先生为该书作序，当时蒋涛先生就对WebAssembly的技术做出了高度评价。2022年我们针对WebAssembly开源凹语言，CSDN平台也在第一时间提供了报道。在此一并感谢蒋涛先生和CSDN平台！&lt;/p&gt;
+
+&lt;p&gt;这是我今年写的2022年技术盘点的最后一篇（前两篇分别是：CSDN首发的&lt;a href=&#34;https://mp.weixin.qq.com/s/_R_ktxbU0XvbrzFRotJbuw&#34;&gt;“Go2正式落地，中国 Gopher 踏上新征程！”&lt;/a&gt;和InfoQ首发的&lt;a href=&#34;https://mp.weixin.qq.com/s/3WzDYdsKJfF2uQhCuYqiSg&#34;&gt;“2022 国产编程语言盘点”&lt;/a&gt;）。WebAssembly 作为一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率。2018 年 WebAssembly 第一个规范草案诞生，2019 年成为 W3C 第四个标准语言。到了 2022 年底，WebAssembly 现在怎么样了…&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;0-wasm-原生和-ending-定律&#34;&gt;0. WASM 原生和 Ending 定律&lt;/h2&gt;
+
+&lt;h3 id=&#34;0-1-什么是-wasm-原生&#34;&gt;0.1 什么是 WASM 原生&lt;/h3&gt;
+
+&lt;p&gt;WASM 原生可以类比云原生的定义：就是天生就是为 WebAssembly 平台设计的程序和语言。比如专门为 WebAssembly 设计的 AssemblyScript 语言和 凹语言就是 WASM 原生的编程语言。如果一个应用天生就是考虑了 WebAssembly 的生态支持，那么就是 WASM 原生的应用。&lt;/p&gt;
+
+&lt;p&gt;现在 Docker 已经开始支持 WASM 程序，因此 WASM 原生软件天然也是云原生的软件，但是反之则不能成立。因为云原生受限于云的环境、导致其应用的场景和领域有较大的限制，比如云原生应用强依赖网络因此无法在很多单片机环境、甚至是本地环境运行。但是 WASM 原生的程序则可以轻松在 Arduino 等受限环境、本地台式机机环境、个人智能手机环境和 Kubernetes 等云原生环境执行。可以说 WASM 原生因为其比云原生更多的限制，换来了更普适的执行环境和更大的生态。&lt;/p&gt;
+
+&lt;p&gt;可以预期随着 WebAssembly 的普及，WASM 原生的应用将会越来越多，同时影响面也会越来越大。&lt;/p&gt;
+
+&lt;h3 id=&#34;0-2-什么是-ending-定律&#34;&gt;0.2 什么是 Ending 定律&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Ending&amp;rsquo;s law: &amp;ldquo;Any application that can be compiled to WebAssembly, will be compiled to WebAssembly eventually.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;Ending 定律：“一切可编译为 WebAssembly 的，终将被编译为 WebAssembly。”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Ending 定律也称为终结者定律，它是 Ending 在 2016 年 Emscripten 技术交流会上针对 WebAssembly 技术给出的断言。Ending定律的威力不仅仅在语言层面。WebAssembly是第一个虚拟机世界标准，以后将人手至少一个 WASM 虚拟机。不过和之前被大家鄙视的JavaScript语言大举入侵各个领域的情况不同，这次 Python、Ruby 这些语言将彻底拥抱 WebAssembly 技术，因为它是一个更底层、也更加开放的新兴生态平台。&lt;/p&gt;
+
+&lt;h2 id=&#34;1-webassembly-发展简史&#34;&gt;1. WebAssembly 发展简史&lt;/h2&gt;
+
+&lt;p&gt;WebAssembly（简称 WASM）是W3C定义的第4个标准，是Web的第四种语言。说WebAssembly是一门编程语言，但实际上它更像一个编译器，其实它是一个虚拟机，它还包含了一门低级汇编语言和对应的虚拟机体系结构，而WebAssembly这个名字从字面理解就说明了一切：“Web的汇编语言”。简而言之、WebAssembly是一种新兴的网页虚拟机标准，它的设计目标包括：高可移植性、高安全性、高效率（包括载入效率和运行效率）、尽可能小的程序体积。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch1-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;1-1-emscripten-项目&#34;&gt;1.1 Emscripten 项目&lt;/h3&gt;
+
+&lt;p&gt;WebAssembly的前身是Mozilla的创建的Emscripten项目（2010年）——通过将C/C++通过LLVM编译到JavaScript的asm.js子集来提速！JavaScript作为弱类型语言，由于其变量类型不固定，使用变量前需要先判断其类型，这样无疑增加了运算的复杂度、降低了执行效能。因为asm.js仅包含可以预判变量类型的数值运算，有效的避免了JavaScript弱类型变量语法带来的执行效能低下的顽疴。根据测试，针对asm.js优化的引擎执行速度和C/C++原生应用在一个数量级。&lt;/p&gt;
+
+&lt;p&gt;2015年6月Mozilla在asm.js的基础上发布WebAssembly项目，随后Google、Microsoft、Apple等各大主流的浏览器厂商均大力支持。WebAssembly不仅拥有比asm.js更高的执行效能，由于使用了二进制编码等一系列技术，WebAssembly编写的模块有更小的体积和更高的解析速度。目前不仅C/C++语言编写的程序可以编译为WebAssembly模块，Go、Kotlin、Rust、Python、Ruby、Node.js、AssemblyScript、凹语言等新兴的编程语言都开始对WebAssembly提供支持。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-2-webassembly-1-0草案&#34;&gt;1.2 WebAssembly 1.0草案&lt;/h3&gt;
+
+&lt;p&gt;WebAssembly技术自诞生之日就进入高速发展阶段。在2018年7月WebAssembly 1.0草案正式发布，在2019年12月正式成为W3C国际标准，成为与HTML、CSS和JavaScript并列的唯四前端技术。2019年同样诞生了WASI（WebAssembly System Interafce）规范，用于将基本的系统调用带入到WASM生态。2022年Docker对WASM提供支持，目前WebAssembly已经是一个独立的生态。&lt;/p&gt;
+
+&lt;h3 id=&#34;1-3-webassembly-生态大图&#34;&gt;1.3 WebAssembly 生态大图&lt;/h3&gt;
+
+&lt;p&gt;下面是 “WebAssembly将引领下一代计算范式” 展示的生态大图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch1-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到从工具链、基础设施、到应有和Web3均有涉及，生态已经非常丰富。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-wasm社区22年的变化&#34;&gt;3. WASM社区22年的变化&lt;/h2&gt;
+
+&lt;p&gt;2022年，自媒体社区对 WebAssembly 的评价态度可谓是完美遵循了欲扬先抑的剧本。先是有热文爆大佬 WebAssembly 创业失败引发质疑，然后是传出社区分裂、应用争议再引发炒错的方向争论，然后随着 Docker 对 WASM 支持的预览版发布带来风向转变，年底就又变成各种赞美和畅想。其实 WebAssembly 真正的从业人员始终在稳步推进，完全没有自媒体这种过山车的变化。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-1-webassembly-2-0-草案&#34;&gt;3.1 WebAssembly 2.0 草案&lt;/h3&gt;
+
+&lt;p&gt;4 月 20 日，W3C 公布了 WebAssembly 2.0 的第一批公共工作草案。主要包含向量类型、引用类型、多返回值、多Table支持和Table和内存指令增强等。向量类型的支持可以用于优化纯计算类型的并发程序、引用类型可以用于和外部的浏览器DOM对象等更好的交互、多返回值可以可以简化某些程序的表示（比如凹语言后端依赖该特性）、多Table支持可能用于灵活支持多模块连接等。可以说 WebAssembly 标准是该生态的统一基准平面，而且这些特性的实现已经相对普及，可以作为实验特性试试用。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch3.1-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;完整文档参考：&lt;a href=&#34;https://www.w3.org/TR/wasm-core-2/&#34;&gt;https://www.w3.org/TR/wasm-core-2/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-docker-支持-webassembly&#34;&gt;3.2 Docker 支持 WebAssembly&lt;/h3&gt;
+
+&lt;p&gt;2019 年，Docker 创始人 Solomon Hykes 发布了一条推文，他说如果 2008 年就诞生 WebAssembly 和 WASI 的话，Docker 就没有必要诞生了。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch3.2-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其实《WebAssembly标准入门》作者在2018年 WebAssembly 草案刚刚诞生的时候也得出过类似的结论：我们觉得 WebAssembly 更大的生命力在浏览器之外，如果配合文件系统、网络系统将得到一个更为迷你的操作系统无关的运行平台。也正是基于这个判断，在2018年底正式启动了国产凹语言项目（专门针对WebAssembly设计的通用语言）。&lt;/p&gt;
+
+&lt;p&gt;Docker 与 WasmEdge 合作创建了一个 containerd shim，此 shim 从 OCI 工件中提取 Wasm 模块并使用 WasmEdge 运行时运行。Docker 现在添加了对声明 Wasm 运行时的支持，这将允许开发者使用这个新的 shim。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch3.2-02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Docker 执行 wasm 需要指定一些额外参数：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ docker run -dp 8080:8080 \
+  --name=wasm-example \
+  --runtime=io.containerd.wasmedge.v1 \
+  --platform=wasi/wasm32 \
+  michaelirwin244/wasm-example
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;首先&lt;code&gt;runtime&lt;/code&gt;参数指定wasmedge运行时，然后&lt;code&gt;platform&lt;/code&gt;指定采用&lt;code&gt;wasi/wasm32&lt;/code&gt;规范（指定有哪些宿主api）。&lt;/p&gt;
+
+&lt;p&gt;完整的信息可以参考 Docker 的官方文档：&lt;a href=&#34;https://docs.docker.com/desktop/wasm/&#34;&gt;https://docs.docker.com/desktop/wasm/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-3-sqlite3-官方支持-webassembly&#34;&gt;3.3 SQLite3 官方支持 WebAssembly&lt;/h3&gt;
+
+&lt;p&gt;SQLite3 作为一个纯粹的 C 语言库，其实在 WebAssembly 标准诞生之前就可以通过 Emscripten 技术将 C 代码编译为 asm.js。因此，网上很早就有在浏览器的 JS 版本、甚至直接通过 Emscripten 输出 WebAssembly。不过这次是 SQLite3 官方提供了对 WebAssembly 的支持，这表示 WebAssembly 在 SQLite 社区完全进入工业级应用阶段！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch3.3-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;根据官网介绍，主要有 4 个目标：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;绑定一个低级的 sqlite3 API，在使用方面尽可能接近原生 API。&lt;/li&gt;
+&lt;li&gt;更高级别的面向对象风格 API，类似于 sql.js 和 node.js 样式的实现。&lt;/li&gt;
+&lt;li&gt;基于 Worker 的 API，以支持多线程环境更容易使用 SQLite 功能。&lt;/li&gt;
+&lt;li&gt;基于 Worker API 的 Promise 包装，对用户完全隐藏了跨线程通信方面复杂性&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;而不在此列的特性包括不支持UTF16、和清除老旧特性等。简而言之，在提供底层 API 能力的同时，针对面向对象、多线程等环节提供简单易用的 API。完整的介绍请参考：&lt;a href=&#34;https://sqlite.org/wasm&#34;&gt;https://sqlite.org/wasm&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-4-ruby-3-2-支持-webassembly&#34;&gt;3.4 Ruby 3.2 支持 WebAssembly&lt;/h3&gt;
+
+&lt;p&gt;12 月发布的 Ruby 3.2 也增加了基于 WASI 的 WebAssembly 支持。使得 CRuby 二进制内容可用于浏览器、Serverless Edge、以及其他 WebAssembly/WASI 嵌入环境。目前，此功能已通过除 Thread API 之外的 basic 和 bootstrap 测试套件。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch3.4-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;虽然目前基于安全原因，还缺少一些功能来实现纤程、异常和垃圾回收的特性，但是这已经让用户可以在浏览器中尝试原生的 CRuby：&lt;a href=&#34;https://try.ruby-lang.org/playground/&#34;&gt;https://try.ruby-lang.org/playground/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-5-python-3-11-支持-webassembly&#34;&gt;3.5 Python 3.11 支持 WebAssembly&lt;/h3&gt;
+
+&lt;p&gt;和 Ruby 社区的目标类似，Python 社区也在 4 月启动在 Python 3.11 增加对 WebAssembly 的支持。Python 3.11 对 wasm32-emscripten 和 wasm32-wasi 提供了支持，从而也实现了在浏览器执行 Python 的梦想。&lt;/p&gt;
+
+&lt;p&gt;具体细节可参考以下文档：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://pythondev.readthedocs.io/wasm.html&#34;&gt;https://pythondev.readthedocs.io/wasm.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.python.org/3/library/intro.html#webassembly-platforms&#34;&gt;https://docs.python.org/3/library/intro.html#webassembly-platforms&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://speakerdeck.com/tiran/python-3-dot-11-in-the-web-browser-a-journey-pycon-de-2022-keynote&#34;&gt;https://speakerdeck.com/tiran/python-3-dot-11-in-the-web-browser-a-journey-pycon-de-2022-keynote&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;因为有了 WebAssembly 魔法加持，Ruby 个 Python 等脚本语言也终于可以在浏览器玩耍了。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-6-为-webassembly-而生的凹语言&#34;&gt;3.6 为 WebAssembly 而生的凹语言&lt;/h3&gt;
+
+&lt;p&gt;WebAssembly 草案刚刚发布不久，国外就诞生了专门为其设计的 AssemblyScript 语言。在2022年7月，国内 Gopher 也发起了针对 WebAssembly 平台的凹语言。目前凹语言不仅仅提供了在线的Playground，还上线了用凹语言开发的贪吃蛇小游戏。希望新兴的语言可以为 WebAssembly 注入更多的活力。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;凹语言主页：&lt;a href=&#34;https://wa-lang.org/&#34;&gt;https://wa-lang.org/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;凹语言仓库：&lt;a href=&#34;https://github.com/wa-lang/wa&#34;&gt;https://github.com/wa-lang/wa&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;凹语言开发的贪吃蛇：&lt;a href=&#34;https://wa-lang.org/wa/snake/&#34;&gt;https://wa-lang.org/wa/snake/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;4-wasm虚拟机实现&#34;&gt;4. WASM虚拟机实现&lt;/h2&gt;
+
+&lt;p&gt;对于 JavaScript 用户，直接通过浏览器内置的 WebAssembly 模块即可，或者是通过 Node.js 提供的模块 API。我们这里简要介绍的是浏览器环境之外的WASM虚拟机实现，这里介绍的主要有C/C++、Rust和Go语言几类实现。总体来说，大家完全不需要担心WASM虚拟机的选择和切换代价，只要遵循WASM标准原则切换虚拟机就和换个鼠标一样容易。&lt;/p&gt;
+
+&lt;h3 id=&#34;4-1-c-c-语言-wasmedge-和-wasm3&#34;&gt;4.1 C/C++ 语言 - WasmEdge 和 wasm3&lt;/h3&gt;
+
+&lt;p&gt;WasmEdge 和 wasm3 是 C/C++ 语言实现的具有代表性的两个 WebAssembly 虚拟机（没有包含 V8 的虚拟机）。&lt;/p&gt;
+
+&lt;p&gt;WasmEdge 可以说是目前最受关注的 WebAssembly 虚拟机实现，因为它不仅仅是 CNCF 推荐的 WASM 虚拟机，更是 Docker 内置的 WebAssembly 虚拟机。WasmEdge 是由美国的袁钧涛（Michael Juntao Yuan）发起， 是由 CNCF 托管的云原生 WebAssembly runtime。它广泛应用于边缘计算、汽车、Jamstack、Serverless、SaaS、服务网格，乃至区块链应用。 WasmEdge 可以进行 AOT （提前编译）编译器优化，是当今市场上最快的 WebAssembly runtime 之一。可以预计，随着 Docker Wasm 的普及，WasmEdge 将成为最流行的 WASM 虚拟机实现之一。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch4.1-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;WasmEdge：&lt;a href=&#34;https://wasmedge.org&#34;&gt;https://wasmedge.org&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;袁钧涛（Michael Juntao Yuan）：&lt;a href=&#34;https://github.com/juntao&#34;&gt;https://github.com/juntao&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;开源中国高手问答：“WebAssembly 将会取代 Docker”，但还有后半句：&lt;a href=&#34;https://www.oschina.net/question/5324949_2323880&#34;&gt;https://www.oschina.net/question/5324949_2323880&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;wasm3 是 C 实现的 WebAssembly 引擎，可运行在嵌入式设备上。因为需要的资源比较少，目前可以运行在Arduino和树莓派环境。wasm3 仓库：&lt;a href=&#34;https://github.com/wasm3/wasm3&#34;&gt;https://github.com/wasm3/wasm3&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;4-2-rust-语言-wasmer-和-wasmtime&#34;&gt;4.2 Rust 语言 - wasmer 和 wasmtime&lt;/h3&gt;
+
+&lt;p&gt;wasmer 和 wasmtime 是 Rust 实现的两个流行的 WebAssembly 虚拟机。根据 2022 年 7 月的的调查报告（300人提交问卷），来自字节码联盟的 wasmtime 最流行、其次为 wasmer。不过从长期看，作者推测 WasmEdge 将随着 Docker/wasm 成为浏览器外最流行的 Wasm 虚拟机实现。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;wasmtime 仓库：&lt;a href=&#34;https://github.com/bytecodealliance/wasmtime&#34;&gt;https://github.com/bytecodealliance/wasmtime&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;wasmer 仓库：&lt;a href=&#34;https://github.com/wasmerio&#34;&gt;https://github.com/wasmerio&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;4-3-go-语言-wazero&#34;&gt;4.3 Go 语言 - WaZero&lt;/h3&gt;
+
+&lt;p&gt;WaZero 是纯 Go 语言实现的 WebAssembly 虚拟机，因此不需要依赖 CGO 特性。目前凹语言内置的就是 WaZero 虚拟机。仓库地址：&lt;a href=&#34;https://github.com/tetratelabs/wazero&#34;&gt;https://github.com/tetratelabs/wazero&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;另外，国内张秀宏著的《WebAssembly原理与核心技术》讨论了用Go语言如何实现 WebAssembly 虚拟机，感兴趣的读者可以参考。&lt;/p&gt;
+
+&lt;h2 id=&#34;5-支持wasm的编程语言&#34;&gt;5. 支持WASM的编程语言&lt;/h2&gt;
+
+&lt;p&gt;WebAssembly 允许开发者用几十语言（包括 AssemblyScript、C/C++、Rust、Golang、JavaScript和凹语言等）。支持WASM的编程语言主要分为3类：首先是专门为 WebAssembly 设计的新语言，比如 AssemblyScript 和凹语言等；其次是将语言编译到 WebAssembly 目标平台，比如 C/C++、Rust、Golang 这类语言（和第一类有一定重叠）；最后是将语言的虚拟机或解释器编译到 WebAssembly 平台，比如 Lua、JavaScript、Ruby和Python这些。除此之外，还有一些其它的领域语言也在支持 WebAssembly 平台。&lt;/p&gt;
+
+&lt;p&gt;支持 WebAssembly 的语言列表：&lt;a href=&#34;https://github.com/appcypher/awesome-wasm-langs&#34;&gt;https://github.com/appcypher/awesome-wasm-langs&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;5-1-javascript-webassembly-替换的目标&#34;&gt;5.1 JavaScript —— WebAssembly 替换的目标&lt;/h3&gt;
+
+&lt;p&gt;JavaScript 开始其实是 WebAssembly 要替换的目标。但是随着 WasmEdge 等引擎支持 QuickJS 的解释器，JavaScript 逐渐变成了 WebAssembly 平台之上的最流行的编程语言。这里除了有 JavaScript 语言用户比较多的因素，同时 JavaScript 的单线程模型也非常契合 WebAssembly 的单线程模型。JavaScript 和 WebAssembly 无限套娃的事情真在切实发生，同时 JavaScript 也失去了浏览器中的霸主地位降级为普通公民。&lt;/p&gt;
+
+&lt;h3 id=&#34;5-2-assemblyscript-为-webassembly-而生&#34;&gt;5.2 AssemblyScript —— 为 WebAssembly 而生&lt;/h3&gt;
+
+&lt;p&gt;AssemblyScript 是一个把 TypeScript 语法搬到 WebAssembly 的编译器。它目前是 WebAssembly 环境非常受欢迎的一个语言。AssemblyScript 只允许 TypeScript 的有限功能子集，因此不需要花太多时间就可以上手。同时它与 JavaScript 非常相似，所以 AssemblyScript 使 Web 开发人员可以轻松地将 WebAssembly 整合到他们的网站中，而不必使用完全不同的语言。&lt;/p&gt;
+
+&lt;p&gt;下面是一个 AssemblyScript 程序，和 TypeScript 几乎是一样的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ts&#34;&gt;export function add(a: i32, b: i32): i32 {
+  return a + b;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;不过 AssemblyScript 只有 WebAssembly 支持的基本类型，而复杂的类型通过内置库实现。同时为了提供灵活的扩展能力，AssemblyScript 编译器提供了扩展能力。&lt;/p&gt;
+
+&lt;p&gt;AssemblyScript主页：&lt;a href=&#34;https://www.assemblyscript.org/&#34;&gt;https://www.assemblyscript.org/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;5-3-c-c-webassembly-为其而生&#34;&gt;5.3 C/C++ —— WebAssembly 为其而生&lt;/h3&gt;
+
+&lt;p&gt;C/C++ 是 WebAssembly 该技术前身 Emscripten 诞生时的初始目标。Emscripten项目，尝试通过LLVM工具链将C/C++语言编写的程序转译为JavaScript代码，在此过程中创建了JavaScript子集asm.js，asm.js仅包含可以预判变量类型的数值运算，有效的避免了JavaScript弱类型变量语法带来的执行效能低下的顽疴。其中的核心魔法使 WebAssembly 和 C/C++ 采用相似的线性内存模型，提供为 JIT 提供了转化为相似代码的可能。&lt;/p&gt;
+
+&lt;h3 id=&#34;5-4-rust-语言-基于-llvm-的输出-webassembly-能力&#34;&gt;5.4 Rust 语言 —— 基于 LLVM 的输出 WebAssembly 能力&lt;/h3&gt;
+
+&lt;p&gt;Rust 和 Emscripten 诞生于 Mozilla 公司，因此目前 WebAssembly 社区和 Rust 社区有着很大的重叠部分。很多 Rust 实现的 WebAssembly 虚拟机，同时 Rust 编译器借助 LLVM 的能力输出 WebAssembly 模块。可以说 Rust 技术的发展和抱住 WebAssembly 这个大腿有极大的关系。当然，因为 Rust 兼容 C/C++ 内存模型同时又无 GC 依赖，使得 Rust 可以构造出非常轻量高效的 WASM 模块。不过 Rust 本身的技术门槛也为初学者带来了极大的挑战。&lt;/p&gt;
+
+&lt;h3 id=&#34;5-5-go-语言-独立的-webassembly-后端&#34;&gt;5.5 Go 语言 —— 独立的 WebAssembly 后端&lt;/h3&gt;
+
+&lt;p&gt;Go语言作为云计算等领域的主流语言，从Go1.11开始，WebAssembly开始作为一个标准平台被官方支持，这说明了Go语言官方团队也认可了WebAssembly平台的重要性和巨大潜力。目前Go语言社区已经有众多与WebAssembly相关的开源项目，比如有很多开源的WebAssembly虚拟机就是采用Go语言实现的。不过Go语言对WebAssembly被诟病的一个方面是官方生成的WASM文件不是wasi规范，同时因为GC等特性导致WASM体积比较大。&lt;/p&gt;
+
+&lt;p&gt;社区有个针对嵌入式环境等 TinyGo 变种，后端同样借助 LLVM 的能力输出 WebAssembly 模块。不过因为 LLVM 的依赖非常重，导致 TinyGo 的命令行将近 100MB、同时无法方便在浏览器环境使用。可以说 TinyGo 本身并不 Tiny，只是其目标平台是针对 Tiny 的单片机和 WASM 等平台。&lt;/p&gt;
+
+&lt;h3 id=&#34;5-6-凹语言-为-webassembly-而生的国产语言&#34;&gt;5.6 凹语言 —— 为 WebAssembly 而生的国产语言&lt;/h3&gt;
+
+&lt;p&gt;凹语言是为 WebAssembly 而设计的新语言，是国内 Gopher 发起的纯社区构建的开源国产编程语言项目。同时凹语言也是国内第一个实现纯浏览器内编译、执行全链路的自研静态类型的编译型通用编程语言。凹语言不仅仅点亮了 Arduino Nano 33 开发板，同时也通过实现了 BrainFuck 虚拟机证明了其图灵完备的能力，最近还验证了通过凹语言开发 Web 版本贪吃蛇的能力。&lt;/p&gt;
+
+&lt;p&gt;凹语言主页：&lt;a href=&#34;https://wa-lang.org/&#34;&gt;https://wa-lang.org/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;5-7-kcl-向-webassembly-迁移的领域语言&#34;&gt;5.7 KCL —— 向 WebAssembly 迁移的领域语言&lt;/h3&gt;
+
+&lt;p&gt;Kusion 配置语言（KCL）是由来自蚂蚁的徐鹏飞负责设计的、基于约束的记录及函数语言。作为领域语言，KCL 目前也是基于 LLVM 的能力输出 WebAssembly 模块。此外，KCL团队还在设计面向 Web3 领域的合约编程语言，也是天生就选择支持 WebAssembly 平台。&lt;/p&gt;
+
+&lt;p&gt;KCL 语言的主页：&lt;a href=&#34;https://kcl-lang.io/&#34;&gt;https://kcl-lang.io/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;6-wasm的一些场景&#34;&gt;6. WASM的一些场景&lt;/h2&gt;
+
+&lt;h3 id=&#34;6-1-web-应用&#34;&gt;6.1 Web 应用&lt;/h3&gt;
+
+&lt;p&gt;随着 WebAssembly 的成熟，Web 应用不在是 JavaScript 的天下。比如之前就有国外大牛基于 WASM 技术将 Windows 2000 搬到了浏览器中。而像 AutoCAD 和 谷歌地球这些重量级的应用均通过 WebAssembly 支持了浏览器。&lt;/p&gt;
+
+&lt;p&gt;当然，不仅仅是重量级的 Web 应用，随着 WASM 原生编程语言的成熟，可以预期会有更多的其他语言开发的 Web 应用。比如，下面是采用凹语言开发的贪吃蛇小游戏就是基于 WebAssembly：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch6.1-01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;贪吃蛇游戏在线地址：&lt;a href=&#34;https://wa-lang.org/wa/snake/&#34;&gt;https://wa-lang.org/wa/snake/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;6-2-web3-和元宇宙应用&#34;&gt;6.2 Web3 和元宇宙应用&lt;/h3&gt;
+
+&lt;p&gt;随着 Web3 和元宇宙概念的兴起，WebAssembly 也将作为其中的关键技术，甚至是基石技术。目前 Web3 相关的区块链行业有大量的技术基于 WebAssembly 构建，甚至专门定制 EWASM 技术标准。而元宇宙作为数字化和现实完全融合的新社会生态，其底层的软件系统更是非常依赖纯开源软件和平台无关的通用技术，因此作者推测GPL开源协议和 WebAssembly 技术将会是元宇宙的两大关键支柱。&lt;/p&gt;
+
+&lt;h3 id=&#34;6-3-serverless-应用&#34;&gt;6.3 Serverless 应用&lt;/h3&gt;
+
+&lt;p&gt;Serverless 强依赖高度优化的冷启动，Wasm非常适合作为下一代无服务器平台运行时。SecondState、Cloudflare、Netlify和Vercel等公司都支持通过其边缘运行时部署WebAssembly功能。&lt;/p&gt;
+
+&lt;p&gt;下图是 AWS Lambda 中的 WebAssembly Serverless 函数工作原理：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch6.3-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;具体细节可以参考这个文章：&lt;a href=&#34;https://www.cncf.io/blog/2021/08/25/webassembly-serverless-functions-in-aws-lambda/&#34;&gt;https://www.cncf.io/blog/2021/08/25/webassembly-serverless-functions-in-aws-lambda/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;6-4-插件系统应用&#34;&gt;6.4 插件系统应用&lt;/h3&gt;
+
+&lt;p&gt;得益于 WASM 的跨平台的特性，很多系统和框架在考虑通过 WASM 开发插件系统。比如 基于 eBPF 和 Wasm 技术实现给 Linux 打动态的补丁。比如蚂蚁开源的MOSN（Modular Open Smart Network），是一款主要使用 Go 语言开发的云原生网络代理平台。MSON 就支持通过 WASM 插件来扩展其能力。下图是 MOSN 插件的工作原理图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch6.4-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;MOSN 插件的细节可参考：&lt;a href=&#34;https://mosn.io/blog/posts/mosn-wasm-framework/&#34;&gt;https://mosn.io/blog/posts/mosn-wasm-framework/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;6-5-单片机-应用&#34;&gt;6.5 单片机 应用&lt;/h3&gt;
+
+&lt;p&gt;Wasm 不仅仅应用在浏览器、云计算等行业，在边缘计算等嵌入式领域也有应用场景。比如 wasm3 虚拟机就针对 arduino 提供的更精简的虚拟机，用户可以通过 wasm 技术为不同的单片机开发应用。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch6.5-01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;比如可以通过凹语言结合 wasm3-arduino 来开发 arduino 的例子，下图是本地模拟环境代码和执行效果图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch6.5-02.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;wasm3-arduino 仓库：&lt;a href=&#34;https://github.com/wasm3/wasm3-arduino&#34;&gt;https://github.com/wasm3/wasm3-arduino&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;7-wasm-教程推荐&#34;&gt;7. WASM 教程推荐&lt;/h2&gt;
+
+&lt;p&gt;WebAssembly 属于这个新生态的根技术、而目前正是处于根技术生态的构建阶段。因此，这类推荐的更多是偏向WebAssembly 规范、原理和实现的教程。我们希望当 WebAssembly 技术正在普及之后，用户可以通过流行的编程语言直接开发 WebAssembly 应用而不需要关系根技术的细节。&lt;/p&gt;
+
+&lt;h3 id=&#34;7-1-webassembly-规范-2022&#34;&gt;7.1 《WebAssembly 规范》—— 2022&lt;/h3&gt;
+
+&lt;p&gt;WebAssembly 规范 1.0 草案在 2018 年发布，现在最新的 WebAssembly 2.0 在 2022 年发布。WebAssembly 规范是市面上所有该技术的实现和实践的参与源头。任何希望追根溯源、获取最前沿的 WebAssembly 发展方向的同学不仅仅推荐精读该规范，甚至还建议跟踪规范的讨论和诞生的过程。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch7.1-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;该文档并非正式出版的图书，目前规范只有在线电子版，建议自行打印。&lt;/p&gt;
+
+&lt;h3 id=&#34;7-2-webassembly-标准入门-2018&#34;&gt;7.2 《WebAssembly 标准入门》—— 2018&lt;/h3&gt;
+
+&lt;p&gt;本书是本文作者和前同事于 2018 年合著，主要讲解了WebAssembly的基础知识，其内容涵盖了WASM的历史背景、WASM中汇编语言和虚拟机指令、浏览器对WASM的支持、其它高级语言对WASM的支持等。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch7.2-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;本书适合想要掌握WebAssembly技术、构建对应虚拟机工具、编程语言或希望了解底层细节的用户学习。&lt;/p&gt;
+
+&lt;h3 id=&#34;7-3-webassembly-the-definitive-guide-2021&#34;&gt;7.3 《WebAssembly: The Definitive Guide》—— 2021&lt;/h3&gt;
+
+&lt;p&gt;这是 Oreilly 出版的相对较新的 WebAssembly 专著，不仅仅覆盖了规范本身同时结合了主流编程语言的案例。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch7.3-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;目前国内还没有中文版本，大家可以阅读英文版本。&lt;/p&gt;
+
+&lt;h3 id=&#34;7-4-webassembly原理与核心技术-2021&#34;&gt;7.4 《WebAssembly原理与核心技术》—— 2021&lt;/h3&gt;
+
+&lt;p&gt;这是国内虚拟机实现专家张秀宏写的一本讲述如何实现 WebAssembly 虚拟机的专著。它不仅对WebAssembly的工作原理、核心技术和规范进行了全面的剖析和解读，而且给出了实现WebAssembly解释器和AOT编译器的思路和代码。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2022/wasm2022/ch7.4-01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;对于希望尝试自己实现 WebAssembly 的同学建议阅读本书。&lt;/p&gt;
+
+&lt;h2 id=&#34;8-2023年展望&#34;&gt;8. 2023年展望&lt;/h2&gt;
+
+&lt;p&gt;对于 WebAssembly 来说，2022年是真正润物细无声开始落地的过程：从新的2.0标准到Ruby、Python两大主流脚本语言开始官方支持，从SQLite3开始官方支持、从Docker开始官方支持等，到为其而生的凹语言等，到真正的商业应用都有巨大的发展（而完全不是因为某个大佬的项目黄了就断言WASM要凉的节奏）。在商业应用上，Figma 基于WebAssembly打造在浏览器中的高性能应用，后被 Adobe 以 200亿 美元收购，而Adobe也在项浏览器迁移。此外，WebAssembly 也是云厂商、边缘计算和Serverless 的候选人。&lt;/p&gt;
+
+&lt;p&gt;随着 WebAssembly 的普及，有一些相关技术流行趋势也日趋明朗化。作者做2个小小的趋势预测：首先是WasmEdge将成为浏览器外最流行的运行时；其次是JavaScript将成为WebAssembly平台上最流行的编程语言。不过这只是5年内的短期预测，更长的发展趋势还需要看 WebAssembly 生态其他的基础设施和编程语言发展状态。&lt;/p&gt;
+
+&lt;p&gt;尽管目前 WebAssembly 发展喜人，但百废待兴仍有许多工作要做。我们希望大家更多的是参与到 WebAssembly 建设中去，而不是仅仅作为围观者。作为凹语言作者我们希望在2023年真正解决语言的可用性和易用性的问题，让WebAssembly应用构建更加简单。WebAssembly 作为一个新兴的赛道，作为一个基础设施必将带来更大的生态洗牌，这是一个值得关注和投入的方向，让我们携手共建 WASM 原生时代。&lt;/p&gt;
+
+&lt;!--
+
+## 9. 参考资料
+
+这群 WebAssembly 大佬创业失败了：有时从 JS 迁移到 Wasm 并不值当？
+https://zhuanlan.zhihu.com/p/543090463
+
+为什么要学习 WebAssembly？
+https://jimmysong.io/blog/why-you-should-learn-wasm
+
+
+sqlite3 支持 wasm
+http://localhost:8081/post/2022/sqlite3-wasm/
+
+WebAssembly将引领下一代计算范式
+http://localhost:8081/post/2022/whats-up-with-webassembly-computes-next-paradigm-shift/
+
+2023 年将是 Wasm 年：WebAssembly 五大技术趋势预测
+https://mp.weixin.qq.com/s/pYYpxyNTMQvanOJJUrR6rQ
+
+Wasmer 3.0 发布，可在浏览器外运行 WebAssembly
+https://mp.weixin.qq.com/s/dnu9tkKeFsOxlx0HqmL1uw
+
+WebAssembly 2022 现状调查
+https://mp.weixin.qq.com/s/z2-HtRDS4LiE4uJDfze07g
+
+多领域试水，WebAssembly 距离大规模应用还有多远？
+https://mp.weixin.qq.com/s/_HcPVDVKIBfzirf02-y27g
+
+W3C 发布 WebAssembly 2.0 工作草案
+https://www.infoq.cn/article/7JLCSEfriy7gy97XRF4A
+
+Docker 发布 WebAssembly 支持工具预览版
+https://mp.weixin.qq.com/s/mFDQBY3u-HtX2sQhTkA-3A
+
+WebAssembly 的核心语言特性与未来发展
+https://mp.weixin.qq.com/s/B27LSpoFKNo8chfJCoE-DA
+
+社区分裂、应用争议，5年都没火起来的WebAssembly “炒错”方向了？
+https://mp.weixin.qq.com/s/XT2TtALBsy7944CT4dVNwA
+
+快速上手 Docker 最新 WebAssembly 技术预览版
+https://zhuanlan.zhihu.com/p/587371068
+
+
+
+社区分裂、应用争议，5年都没火起来的 WebAssembly “炒错”方向了？
+https://mp.weixin.qq.com/s/XT2TtALBsy7944CT4dVNwA
+
+
+《蚂蚁集团 WASM 编译器虚拟机基础能力建设》，？，siglepass？
+https://www.bilibili.com/video/BV1NF411B79W/
+
+
+--&gt;</description>
+      
+    </item>
     
     <item>
       <title>SQLite3 官方支持 WebAssembly！</title>
