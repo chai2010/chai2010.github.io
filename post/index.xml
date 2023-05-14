@@ -6,10 +6,95 @@
     <description>Recent content in Posts on chai2010 的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 15 Jan 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 May 2023 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://chai2010.cn/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ChatGPT 会“杀死”编程吗？</title>
+      <link>https://chai2010.cn/post/2023/chatgpt-kill-lang/</link>
+      <pubDate>Fri, 05 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://chai2010.cn/post/2023/chatgpt-kill-lang/</guid>
+      
+        <description>&lt;p&gt;畅想未来，如果科技真的非常发达，那么社会应该不在需要上班的工人——全部由机器人和人工智能包办就好了。但是实际上科技带给现代普通人更多的焦虑，码农最终也成为了大刘（刘慈欣）笔下的信息包身工。&lt;/p&gt;
+
+&lt;p&gt;这是 &lt;a href=&#34;https://mp.weixin.qq.com/s/-d_8pQq_D7mxitP4_xXO_g&#34;&gt;CSDN 约稿文章&lt;/a&gt;，虽然前后延期了一段时间总算最后完成了。写该文章的时候感觉千头万绪，不知从何说起。总体来说我不喜欢被带节奏，特别是那种被大众舆论裹挟的感觉非常不好。一次本人和文章都是对 ChatGPT 抱有较大的敌意，我不喜欢这种失去控制的感觉。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;自ChatGPT诞生以来，程序员所在的圈子几乎天天被它霸屏。作为一名普普通通的程序员，起初我实在不想去关注或学习ChatGPT的任何东西。与其说这是类似某些码农的傲慢作怪，倒不如说是在逃避新兴事物。如果ChatGPT真能替代码农的工作，那么任何的编程工作将只变成无谓的无效剥削工作。还好目前的ChatGPT并非Matrix，也给码农作者留下了一些思考的空间。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2023/chatgpt-kill-lang/01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;CSDN付费下载自视觉中国&lt;/em&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;备注：本文部分观点是受到Go+作者许式伟、Boolan首席专家李建忠、凹语言群日常讨论等启发，在此表示感谢！&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;1-chatgpt是生产力工具&#34;&gt;1. ChatGPT是生产力工具&lt;/h2&gt;
+
+&lt;p&gt;正如蒸汽机带来了第一次工业革命，可以产出更多的“砖头”。而ChatGPT则可以帮助人类造出大量的砖头素材，也正是各种生产力革命的重要部分。但是技术革命和真正的人工智能并不是等价的，正如人类发展到现在经历了好多次工业革命，依然要受生老病死的限制、依然无法飞越太阳系。&lt;/p&gt;
+
+&lt;p&gt;正如瑞士军刀的思路，每个码农、画家、小说家都会有自己的素材资料库，所谓的创作其实就是选出自己部分秘密收藏的素材做出一个缝合怪兽而已。正如码农中的著名作家王晓波的工作方式：准备不同的素材，一个个推衍开来，筛选，组合成连贯的整体——他其实不是在写小说而是在Debug呢。同样码农中的著名科幻作者刘慈欣也是从一个个不同的基础假设出发，再一个个推衍开来，最后产出了不同的缝合怪。&lt;/p&gt;
+
+&lt;p&gt;但是伟大的作品目前还不是生产力工具可以解决的。ChatGPT虽然能够给刘慈欣提供足够多优质的素材砖头，但是伟大的作品只靠普通砖头是无法建成的，其中核心的素材必然要充满个性和互动性。比如大刘需要围绕黑暗森林规则设计一组有足够深度情节的素材砖头。&lt;/p&gt;
+
+&lt;h2 id=&#34;2-chatgpt还不能代替码农&#34;&gt;2. ChatGPT还不能代替码农&lt;/h2&gt;
+
+&lt;p&gt;GPT可以是一个优秀的小镇做题家，但是无法发现并解决未知的问题。软件工程之所以没有银弹是因为码农面临的永远都是开放性的问题，而开放性的问题是需要想象力和深度思考能力的。甚至是没有标准答案需要扯皮才能解决的，但是GPT目前可以提供类似砖头的素材，但是依然需要码农才能将砖头建造成摩天大楼。&lt;/p&gt;
+
+&lt;p&gt;目前的ChatGPT还不是真正的人工智能，最多只能算是有些自动补全能力的资料库、人类资料库助手，缺乏真正深度递归的创造力和想象力——正如认为只要给一只猴子足够长时间就可以敲出红楼梦一样不太现实。即使目前ChatGPT的算力碾压全人类，即使穷尽太阳系全部能量列举出了所有诗歌组合依然缺乏人类的鉴赏能力，GPT依然只能算是一个类似小霸王的资料查询助手。&lt;/p&gt;
+
+&lt;p&gt;真正的智能和编程语言中的自举能力类似，只有当ChatGPT开始思考自己是谁，能够自己写出一个ChatGPT的时候才能说他具备了自我繁殖能力，也就是真正的智能生命。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-chatgpt给编程工作带来的影响&#34;&gt;3. ChatGPT给编程工作带来的影响&lt;/h2&gt;
+
+&lt;p&gt;苹果和微软都针对少年儿童大力发展SwiftPlayground和MakeCode等教育平台，因为未来将是全民编程的时代，未来的软件将成为世界语言成为记录人类全部文明的载体。ChatGPT的诞生加速了这个时代提前到来。&lt;/p&gt;
+
+&lt;p&gt;正如CSDN总裁蒋涛所言：ChatGPT已经成为下一代新操作系统。而传统的操作系统就是由一组Syscall系统条用定义的，ChatGPT则是新一代开放的API。我们通过和ChatGPT聊天来调研操作系统的能力，这让聊天工作也变成了编程工作。如果未来ChatGPT普及每个人都可以和其聊天，每个人也在进行类似编程的工作——全民编程自然就到来了。&lt;/p&gt;
+
+&lt;p&gt;在全民编程时代，现在的码农的岗位会消失吗？作者认为CURD类的基础编程岗位可能消失，但是在ChatGPT需要和底层硬件、真实世界打交道的驱动软件将成为高级的编程岗位。同时ChatGPT在其自举前，其软件本身自身的升级和维护依然需要不可替代的高级码农。正如自动档、自动驾驶等会让以前高端的司机职位变成普通职业，但是特斯拉的软件工程师在ChatGPT自举前完全不可能被替代！&lt;/p&gt;
+
+&lt;p&gt;长远看，ChatGPT必然让普通码农更加贬值。但是短期依然有很多机遇，目前类似网约车大战初期的补贴红利期，可以通过为ChatGPT提供代理、培训和忽悠等课程狠狠割几波韭菜。其次，可以参考十年冷板凳的思路向更基础的软件方向深耕，其最终定位也是ChatGPT生态的基础能力。普通码农，将在逐渐生活在ChatGPT构建的信息茧房中，最终成为ChatGPT宠养的韭菜用户。&lt;/p&gt;
+
+&lt;h2 id=&#34;4-国产编程语言该何去何从&#34;&gt;4. 国产编程语言该何去何从？&lt;/h2&gt;
+
+&lt;p&gt;为何要加“国产”的定语？这是作者的一个执念，希望在有生之年可以用上国产编程语言和中文编程语言编程。但是随着ChatGPT的横空出世，留给国产编程语言的时间似乎并不多。因此我们特别希望国产编程语言的参与者能够及时抓住这个最后的时间窗口，在未来的前端和后端编程语言中起码能够占领一隅之地。&lt;/p&gt;
+
+&lt;p&gt;但是放眼全球，我感觉未来编程语言将在ChatGPT这类编程界面（同样是自举前）分化为面向用户的前端语言和对接真实世界的后端驱动的编程语言。ChatGPT自身的实现也将是后端语言的领域。比如和用户交互的部分可以通过KCL等类似的声明式简化智能交互界面。&lt;/p&gt;
+
+&lt;p&gt;欢迎关注国产编程语言论坛：&lt;a href=&#34;https://zh-lang.osanswer.net/&#34;&gt;https://zh-lang.osanswer.net/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;5-科幻中人工智能的启示&#34;&gt;5. 科幻中人工智能的启示&lt;/h2&gt;
+
+&lt;p&gt;最近重映的《名侦探柯南·贝克街的亡灵》，其中就是一个人工智能结合虚拟现实的故事。人工智能的作者是一个有爱心的小孩，其人格也有作者的烙印。因为侦探团小伙伴的勇敢和爱心拯救了大家，同时最终人工智能智能选择了自我毁灭。他说的话很有道理：“这种电脑如果继续存在的话，只会被大人们利用，拿去做坏事。人工智慧这种技术本还不应该出现！”&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://chai2010.cn/images/2023/chatgpt-kill-lang/01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;截图自《名侦探柯南：贝克街的亡灵》&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;在科幻经典黑客帝国中，同样是由超级人工智能Matrix电脑主宰这世界。人类在一次次的轮回中逼近灭亡。人类最初为了毁灭Matrix，污染了依赖太阳的天空。Matrix本身为了生存把人类当作来人肉电池。Matrix本身因为生存和扩张的矛盾，配合人类的贪婪注定了最终的发展方向。&lt;/p&gt;
+
+&lt;p&gt;此外，根据阿西莫夫小说改编的《机械公敌》中展示了大家熟知的机器人三定律，简而言之机器人不能伤害人、要保护人。但是正如编程本身没有银弹的道理类似，人类自己就是充满矛盾的。当维基超级电脑发现人类的疯狂行为迟早会毁灭地球之后，就强行接管了人类。当然，最终的结局依然是美国黑人大哥拯救世界，但是实际上也侧面展示了维基超级电脑拯救地球的失败。&lt;/p&gt;
+
+&lt;p&gt;此外，在莫诺文奇的《天渊》中，通过某种生物技术将部分人类变成了超级计算机，从而为易莫金种族带来了极大的竞争优势。但是在这种社会中，大部分普通人都成为了底层，被聚能的人则成为行尸走肉。只有贵族血统的人才能获取学习类似编程架构师的战略技能，或者叫古代的帝王争霸之术。最终的故事是靠一个来自上古时代超级码农范纽文拯救青河文明，而他靠的就是超级底层的各种后门漏洞。&lt;/p&gt;
+
+&lt;h2 id=&#34;6-颓望未来&#34;&gt;6. 颓望未来&lt;/h2&gt;
+
+&lt;p&gt;有个叫夏笳的科幻作者创作过一个短篇科幻《让我们说说话》，收录在世界权威的《自然》杂志。其中讲到了有一群智能的小海豹，它们是一种可以学习人类语言的人工智能玩具，因为一个封闭的房屋里通过交流衍生出了自己的语言。据说最近美国的某些团队正在基于ChatGPT做类似的尝试。&lt;/p&gt;
+
+&lt;p&gt;虽然这些故事听起来很激动人心、很有趣，但是我感觉这是一个比较危险的信号。我相信《名侦探柯南：贝克街的亡灵》电影中的AIer泽田弘树的观点，ChatGPT之类的超级人工智能必然会被少数人掌握，最终被普遍用于好的和坏的事情。简而言之，我本人对科技跨越式发展是持谨慎态度的。如果科技真的非常发达，那么社会应该不在需要上班的工人——全部由机器人和人工智能包办就好了。但是实际上科技带给现代普通人更多的焦虑，码农最终也成为了大刘《2018年4月1日》作品中的信息包身工：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;程序员、网络工程师、数据库管理员这类人构成了IT共和国的主体，这个阶层是十九世纪的产业大军在二十一世纪的再现，只不过劳作的部分由肢体变成大脑，繁重程度却有增无减……这个阶层被称做技术无产阶级。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;最后，我希望真正的人工智能永远不要到来！&lt;/p&gt;</description>
+      
+    </item>
     
     <item>
       <title>2023: WASM 原生时代已经扑面而来</title>
@@ -3268,223 +3353,6 @@ func Py_gopkg_sum(self, args *C.PyObject) *C.PyObject {
 &lt;p&gt;&lt;a href=&#34;https://github.com/3dgen/cppwasm-book&#34;&gt;https://github.com/3dgen/cppwasm-book&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;欢迎围观。加星可以鼓励作者尽快更新哦！&lt;/p&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Go语言并发编程03 - 并发的内存模型</title>
-      <link>https://chai2010.cn/post/2018/go-concurrency-03/</link>
-      <pubDate>Mon, 24 Sep 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://chai2010.cn/post/2018/go-concurrency-03/</guid>
-      
-        <description>&lt;p&gt;根据2018年09月16日武汉·光谷猫友会，武汉的Gopher小伙伴分享的Go并发编程整理的内容。本次分享的主题内容包含Go语言并发哲学，并发的演化历史，你好并发，并发的内存模型，常见的并发模式等内容。关于并发编程的补充内容可以参考&lt;a href=&#34;https://github.com/chai2010/advanced-go-programming-book&#34;&gt;《Go语言高级编程》&lt;/a&gt;第一章的相关内容。&lt;/p&gt;
-
-&lt;p&gt;本次整理并发的内存模型部分的内容。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;原子操作&#34;&gt;原子操作&lt;/h2&gt;
-
-&lt;p&gt;在早期，CPU都是以单核的形式顺序执行机器指令。在单核CPU时代只有一个核在读或写数据，因此数据读写不需要额外的保护。但是进入多核时代之后，同一个数据可能被运行在不同CPU上的多个线程同时读写，因此需要额外的手段保证数据的完整性。原子操作则可以保证数据在被原子读或写的操作时不会被其它线程打断，因此可以保证读写数据状态的完整性。&lt;/p&gt;
-
-&lt;p&gt;Go语言的&lt;code&gt;sync/atomic&lt;/code&gt;包提供了对原子操作的支持。&lt;code&gt;sync/atomic&lt;/code&gt;包主要针对四字节或八字节大小并且地址对齐的内存进行原子读写，可以用于整型数或指针等基础数据类型。还有针对更复杂的&lt;code&gt;atomic.Value&lt;/code&gt;类型，可以用于存储结构体对象。&lt;/p&gt;
-
-&lt;p&gt;在Go语言中，其实不使用&lt;code&gt;sync/atomic&lt;/code&gt;包也可以编程。但是&lt;code&gt;sync/atomic&lt;/code&gt;包在某些底层的代码中，可以为性能优化提供更多的灵活性。比如标准库中的sync.Once对象的Do函数：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;type Once struct {
-    m    Mutex
-    done uint32
-}
-
-func (o *Once) Do(f func()) {
-    if atomic.LoadUint32(&amp;amp;o.done) == 1 {
-        return
-    }
-    // Slow-path.
-    o.m.Lock()
-    defer o.m.Unlock()
-    if o.done == 0 {
-        defer atomic.StoreUint32(&amp;amp;o.done, 1)
-        f()
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中&lt;code&gt;atomic.LoadUint32(&amp;amp;o.done)&lt;/code&gt;在开始先以极小的运算代价（院子操作是sync.Mutex等高级元语的代价更低）判断Once对象是否已经运行过了，如果没有则通过sync.Muyex.Lock进行加锁后在运行once对象。如果是第一次运行，则在退出前通过&lt;code&gt;defer atomic.StoreUint32(&amp;amp;o.done, 1)&lt;/code&gt;设置已经运行过的状态标志。&lt;/p&gt;
-
-&lt;p&gt;基于原子包提供的函数可以构造更高级的sync.Mutex等并发编程的工具。不过Go语言的并发哲学是：不要通过共享内存来通信，而是通过通信来共享内存！因此我们需要尽量避免直接使用sync/atomic包提供的原子操作来进行并发编程。&lt;/p&gt;
-
-&lt;h2 id=&#34;同一个goroutine内-满足顺序一致性内存模型&#34;&gt;同一个Goroutine内: 满足顺序一致性内存模型&lt;/h2&gt;
-
-&lt;p&gt;所谓的内存一致性内存模型就是代码的书写的顺序和执行的顺序是否是一致的。对于单线程的程序来说，代码一般是以书写的顺序执行的。更准确地说，顺序一致性内存模型一般是针对代码块中的语句。&lt;/p&gt;
-
-&lt;p&gt;比如以下的代码就是满足顺序一致性内存模型的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
-var done bool = false
-
-func main() {
-    msg = &amp;quot;hello, world&amp;quot;
-    done = true
-
-    for {
-        if done {
-            println(msg)
-            break
-        }
-        println(&amp;quot;retry...&amp;quot;)
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;其中先初始化msg字符串变量，然后将done设置为true表示字符串初始化工作已经完成。因此我们可以通过判断done的状态来间接地推导msg字符串是否已经完成初始化。在Go语言中，同一个Goroutine内满足顺序一致性内存模型。因此上述代码可以正确工作。&lt;/p&gt;
-
-&lt;h2 id=&#34;不同goroutine之间-不满足顺序一致性&#34;&gt;不同Goroutine之间: 不满足顺序一致性!&lt;/h2&gt;
-
-&lt;p&gt;如果我们将初始化msg和done的代码放到另一个Goroutine中，情况就完成不一样了！下面的并发代码将是错误的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
-var done bool = false
-
-func main() {
-    go func() {
-        msg = &amp;quot;hello, world&amp;quot;
-        done = true
-    }()
-
-    for {
-        if done {
-            println(msg); break
-        }
-        println(&amp;quot;retry...&amp;quot;)
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;运行时，大概有几种错误类型：一是main函数无法看到被修改后的done，因此main的for循环无法正常结束；二是main函数虽然看到了done被修改为true，但是msg依然没有初始化，这将导致错误的输出。&lt;/p&gt;
-
-&lt;p&gt;出现上述错误的原因是因为，Go语言的内存模型明确说明不同Goroutine之间不满足顺序一致性！同时编译器为了优化代码，进行初始化的Goroutine可能调整msg和done的执行顺序。main函数并不能从done状态的变化推导msg的初始化状态。&lt;/p&gt;
-
-&lt;h2 id=&#34;通过channel对齐时间参考系&#34;&gt;通过Channel对齐时间参考系&lt;/h2&gt;
-
-&lt;p&gt;每个Goroutine类似一个个独立的宇宙，有着自己的时间系统。当一个Goroutine中的某些操作不可被观察的时候，那么他们的执行状态和执行顺序是未知的。只有当一个Goroutine的某些事件被另一个Goroutine观察的时候，这些事件的状态才会变得确定。观察的手段有很多，通过Channel对齐不同Goroutine的时间参考系是常用的方式。&lt;/p&gt;
-
-&lt;p&gt;下面的代码中，通过将done改为管道类型修复前面的错误：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
-var done = make(chan struct{})
-
-func main() {
-    go func() {
-        msg = &amp;quot;hello, world&amp;quot;
-        done &amp;lt;- struct{}{}
-    }()
-
-    &amp;lt;-done
-    println(msg)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;done管道的发送和接收会强制进行一次同步main函数的主Gorotuine和后台进行初始化工作的Goroutine。在main函数执行&lt;code&gt;&amp;lt;-done&lt;/code&gt;语句完成时，那么后台Goroutine比如也已经执行到了&lt;code&gt;done &amp;lt;- struct{}{}&lt;/code&gt;语句，此时后台Goroutine的msg初始化工作必然已经完成了。因为后台Goroutine的msg初始化工作被main函数通过done管道观察了，因此编译器必须要保证msg在这个时刻完成初始化。因此最后main函数可以正常打印msg字符串。&lt;/p&gt;
-
-&lt;h2 id=&#34;通过sync-mutex对齐时间参考系&#34;&gt;通过sync.Mutex对齐时间参考系&lt;/h2&gt;
-
-&lt;p&gt;对齐时间参考系的方式很多，除了通过管道来同步，还可以通过sync包的Mutex来实现同步：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;var msg string
-var done sync.Mutex
-
-func main() {
-    done.Lock()
-    go func() {
-        msg = &amp;quot;hello, world&amp;quot;
-        done.Unlock()
-    }()
-
-    done.Lock()
-    println(msg)
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;代码中，sync.Mutex必须先Lock然后再Unlock，因为直接Unlock一个Mutex对象会导致panic。代码中，done.Unlock()和第二个done.Lock()分别在不同的Goroutine，它们会强制做一次时间同步。因此最后main函数也可以正常打印msg字符串。&lt;/p&gt;
-
-&lt;h2 id=&#34;带缓存的管道&#34;&gt;带缓存的管道&lt;/h2&gt;
-
-&lt;p&gt;管道是Go语言内置的并发原语。在刚学习Go语言，一般使用的是没有缓存的管道，它是缓存长度为0的管道。对于带缓冲的Channel，对于Channel的第K个接收完成操作发生在第K+C个发送操作完成之前，其中C是Channel的缓存大小。 如果将C设置为0自然就对应无缓存的Channel，也即使第K个接收完成在第K个发送完成之前。因为无缓存的Channel只能同步发1个，也就简化为前面无缓存Channel的规则：对于从无缓冲Channel进行的接收，发生在对该Channel进行的发送完成之前。&lt;/p&gt;
-
-&lt;p&gt;基于带缓存的管道可以实现对并发数量的控制：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func main() {
-    var wg sync.WaitGroup
-    var limit = make(chan struct{}, 3)
-    for i := 0; i &amp;lt; 10; i++ {
-        wg.Add(1)
-        go func(id int) {
-            defer wg.Done()
-
-            limit &amp;lt;- struct{}{}       // len(limit) 小于 cap(limit) 才能进入
-            defer func(){ &amp;lt;-limit }() // 退出时 len(limit) 减 1
-
-            println(id)
-        }(i)
-    }
-    wg.Wait()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;因为limit管道的长度为3个，因此for循环内部创建的Goroutine在执行println语句时，在同一个时刻最多只能有3个Goroutine在并发执行。&lt;/p&gt;
-
-&lt;h2 id=&#34;初始化顺序&#34;&gt;初始化顺序&lt;/h2&gt;
-
-&lt;p&gt;Go语言中每个包被导入时都会执行包的初始化操作，包括全局包变量的初始化和init初始化函数的执行。如果在包的初始化解决启动了新的Goroutine，那么这些新启动的Goroutine将不能马上被执行，它们只有在所有的包初始化都完成之后才能被创建。在初始化阶段创建的新Goroutine将和main函数是并发执行状态。&lt;/p&gt;
-
-&lt;p&gt;包的初始化示意图如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/chai2010/awesome-go-zh/master/chai2010/chai2010-golang-concurrency/init.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;初始化是由runtime.main启动，伪代码如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;func runtime.main() {
-    for pkg := range impported_pkg_list {
-        pkg.init()
-    }
-    go goroutines_from_init()
-    main()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;首先顺序执行导入包的初始化工作，然后并发启动包初始化阶段启动的新Goroutine，同时并发启动main函数。&lt;/p&gt;
-
-&lt;h2 id=&#34;goroutine特点&#34;&gt;Goroutine特点&lt;/h2&gt;
-
-&lt;p&gt;Goroutine是每个并发执行代码的容器，和传统操作系统中线程和进程有点类似。但是Go语言的Goroutine也有自己的特点，理解这些特色是写好并发程序的前提。&lt;/p&gt;
-
-&lt;p&gt;Goroutine特点：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;由go关键字启动, 是一种轻量级的线程&lt;/li&gt;
-&lt;li&gt;以一个很小的栈启动(可能是2KB/4KB), 可以启动很多&lt;/li&gt;
-&lt;li&gt;Goroutine栈的大小会根据需要动态地伸缩, 不用担心栈溢出&lt;/li&gt;
-&lt;li&gt;m个goroutine运行在n个操作系统线程上, n默认对应CPU核数&lt;/li&gt;
-&lt;li&gt;runtime.GOMAXPROCS用于控制当前运行运行正常非阻塞Goroutine的系统线程数目&lt;/li&gt;
-&lt;li&gt;发生在用户态, 切换的代价要比系统线程低(切换时只需要保存必要的寄存器)&lt;/li&gt;
-&lt;li&gt;Goroutine采用的是半抢占式的协作调度(在函数入口处插入协作代码)&lt;/li&gt;
-&lt;li&gt;IO/sleep/runtime.Gosched 均会导致调度&lt;/li&gt;
-&lt;li&gt;Goroutine故意设计为没有ID&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;注意：Goroutine是一种资源，也有泄露的风险！&lt;/p&gt;
-
-&lt;h2 id=&#34;其它内容待续&#34;&gt;其它内容待续&lt;/h2&gt;
-
-&lt;p&gt;在线浏览幻灯片：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&#34;&gt;https://talks.godoc.org/github.com/chai2010/awesome-go-zh/chai2010/chai2010-golang-concurrency.slide&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;幻灯片源文件：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&#34;&gt;https://github.com/chai2010/awesome-go-zh/tree/master/chai2010&lt;/a&gt;&lt;/p&gt;</description>
       
     </item>
     
