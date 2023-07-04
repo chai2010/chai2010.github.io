@@ -14,7 +14,7 @@ mathjax: false
 
 <img style="float: right;" src="/images/chai2010.jpg">
 
-[凹语言](https://wa-lang.org) 作者，[KusionStack](https://github.com/KusionStack) 作者，Go语言(1.2+)代码的[贡献者](https://github.com/golang/go/blob/go1.2/CONTRIBUTORS#L115)(Chaishushan), [《Go语言圣经》](https://github.com/golang-china/gopl-zh)翻译者, [《Go语言高级编程》](https://github.com/chai2010/advanced-go-programming-book)开源免费图书作者, [《WebAssembly标准入门》](https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md)等多本畅销图书作者.
+[凹语言](https://wa-lang.org) 联合发起人，[KusionStack](https://github.com/KusionStack) 作者，Go语言(1.2+)代码的[贡献者](https://github.com/golang/go/blob/go1.2/CONTRIBUTORS#L115)(Chaishushan), [《Go语言圣经》](https://github.com/golang-china/gopl-zh)翻译者, [《Go语言高级编程》](https://github.com/chai2010/advanced-go-programming-book)开源免费图书作者, [《WebAssembly标准入门》](https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md)等多本畅销图书作者.
 
 个人签名:
 
