@@ -10,7 +10,14 @@ comment: true
 mathjax: false
 ---
 
-## µGo——从头开发一个迷你Go语言编译器 - Doing
+
+## VS Code 插件开发 - Doing
+
+![](https://chai2010.cn/vscode-extdev-book/cover.png)
+
+https://github.com/chai2010/vscode-extdev-book
+
+## µGo——从头开发一个迷你Go语言编译器 - 暂停
 
 ![](/images/book-ugo.png)
 
