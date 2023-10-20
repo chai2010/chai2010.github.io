@@ -13,7 +13,7 @@ mathjax: false
 
 ## VS Code 插件开发 - Doing
 
-![](https://chai2010.cn/vscode-extdev-book/cover.png)
+![](https://chai2010.cn/vscode-extdev-book/cover.svg)
 
 https://github.com/chai2010/vscode-extdev-book
 
