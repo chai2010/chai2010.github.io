@@ -14,7 +14,7 @@ mathjax: false
 
 <img style="float: right;" src="/images/chai2010.jpg">
 
-[凹语言](https://wa-lang.org) 联合发起人，[KusionStack](https://github.com/KusionStack) 作者，Go语言(1.2+)代码的[贡献者](https://github.com/golang/go/blob/go1.2/CONTRIBUTORS#L115)(Chaishushan), [《Go语言圣经》](https://github.com/golang-china/gopl-zh)翻译者, [《Go语言高级编程》](https://github.com/chai2010/advanced-go-programming-book)开源免费图书作者, [《WebAssembly标准入门》](https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md)等多本畅销图书作者.
+[凹语言](https://wa-lang.org) 联合发起人，[编程语言开放社区](https://ploc.org.cn/ploc/) 发起人，Go语言(1.2+)代码的[贡献者](https://github.com/golang/go/blob/go1.2/CONTRIBUTORS#L115)(Chaishushan), [《Go语言圣经》](https://github.com/golang-china/gopl-zh)翻译者, [《Go语言高级编程》](https://github.com/chai2010/advanced-go-programming-book)开源免费图书作者, [《WebAssembly标准入门》](https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md)等多本畅销图书作者, 是人民邮电出版社最具影响力作者. 同时也是信息学技术的传播者, 致力于推动国产编程语言/国产芯片生态/少儿编程技术的发展和信息学奥赛普及.
 
 个人签名:
 
@@ -24,10 +24,10 @@ mathjax: false
 
 相关链接:
 
+- https://wa-lang.org
+- https://chai2010.cn
 - https://github.com/chai2010
 - https://twitter.com/chaishushan
-- https://chai2010.cn
-- https://wa-lang.org
 
 
 ## 捐助支持
